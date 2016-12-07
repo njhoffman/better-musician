@@ -1,0 +1,11 @@
+$breakpoints: (
+  zero: 0,
+  small: 320px,
+  medium: 640px,
+  large: 1024px,
+  xlarge: 1200px,
+  xxlarge: 1440px,
+) !default;
+
+$-zf-zero-breakpoint: zero !default;
+
