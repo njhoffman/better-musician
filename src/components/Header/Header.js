@@ -8,27 +8,59 @@ import SearchIcon from 'react-icons/lib/md/search';
 
 import css from './Header.scss';
 
-export const Header = () => (
+export const Header = (props) => (
   <div className={css.actionBar}>
     <Row className="display top">
-      <Column small={8} medium={3}>
+      <Column small={8} medium={3} style={{ textAlign: 'left' }}>
         <IndexLink to='/' activeClassName='route--active'>
-          <MenuIcon />
-          instrumental.com
+          <MenuIcon /> instrumental.com
         </IndexLink>
       </Column>
-      <Column showFor={Breakpoints.MEDIUM}><a href="#"><SearchIcon />Search</a></Column>
-      <Column showFor={Breakpoints.MEDIUM}><a href="#"><FilterIcon />Filters</a></Column>
-      <Column showFor={Breakpoints.MEDIUM}><a href="#"><SortIcon />Sort</a></Column>
-      <Column small={4} medium={3}><a href="#">Score &amp; Icon</a></Column>
+      <Column showFor={Breakpoints.MEDIUM}>
+        <a onClick={props.showAddSongModal}>
+          <SearchIcon />Search
+        </a>
+      </Column>
+      <Column showFor={Breakpoints.MEDIUM}>
+        <a onClick={props.showFiltersModal} >
+          <FilterIcon />Filter
+        </a>
+      </Column>
+      <Column showFor={Breakpoints.MEDIUM}>
+          <Link to='/songs' activeClassName='route--active'>
+            <SortIcon /> Sort
+          </Link>
+      </Column>
+      <Column small={4} medium={3}>
+        <Link to='/counter' activeClassName='route--active'>
+          Score (Counter)
+        </Link>
+      </Column>
 
-      <Link to='/counter' activeClassName='route--active'>
-        Counter
-      </Link>
     </Row>
     <Row className="display bottom" showOnlyFor={Breakpoints.SMALL}>
+      <Column centerOnSmall>
+          <Link to='/songs' activeClassName='route--active'>
+            <SortIcon /> Sort
+          </Link>
+      </Column>
+      <Column centerOnSmall>
+          <Link to='/songs' activeClassName='route--active'>
+            <SortIcon /> Sort
+          </Link>
+      </Column>
+      <Column centerOnSmall>
+          <Link to='/songs' activeClassName='route--active'>
+            <SortIcon /> Sort
+          </Link>
+      </Column>
     </Row>
   </div>
 );
+
+Header.propTypes = {
+  showAddSongModal: React.PropTypes.func.isRequired,
+  showFiltersModal: React.PropTypes.func.isRequired
+};
 
 export default Header;

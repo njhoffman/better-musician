@@ -1,19 +1,23 @@
 import React from 'react';
+import Dialog from 'material-ui/Dialog';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import 'coreStyles';
 import css from './CoreLayout.scss';
-import Header from 'components/Header';
+import Header from 'containers/Header';
+import ModalBase from 'containers/Modal/ModalBase';
 import instrumentalDarkTheme from 'themes/instrumentalDark';
+import { Row } from 'react-foundation';
 
 export const CoreLayout = ({ children }) => (
   <MuiThemeProvider muiTheme={getMuiTheme(instrumentalDarkTheme)}>
     <div className={css.appWrapper}>
       <Header />
-      <div className={css.appContent}>
+      <Row className={css.contentWrapper}>
         {children}
-      </div>
+      </Row>
+      <ModalBase />
     </div>
   </MuiThemeProvider>
 );

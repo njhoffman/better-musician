@@ -15,7 +15,9 @@ const __TEST__ = project.globals.__TEST__;
 const _RESOLVE_PATHS = {
   coreStyles: "src/styles/core.scss",
   themes:     "src/styles/themes",
-  components: "src/components"
+  components: "src/components",
+  containers: "src/containers",
+  interfaces: "src/interfaces"
 };
 
 let resolvePaths = _.mapValues(_RESOLVE_PATHS, function (str) {

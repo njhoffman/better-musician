@@ -1,13 +1,15 @@
 .appWrapper {
   background: #441111;
   width: 100%;
-  padding: 20px;
   min-width: 280px;
   max-width: 1025px;
 }
 
-.appContent {
-  width: 100%;
+.contentWrapper {
+  padding: 20px;
+  background: #f5f5cc;
+  border: solid 1px black;
+  max-width:90%;
   height: 100%;
   position: relative;
   margin-left: auto;

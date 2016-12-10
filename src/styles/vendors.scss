@@ -4,7 +4,18 @@
 @import "../../node_modules/foundation-sites/scss/grid/grid";
 @import "../../node_modules/foundation-sites/scss/components/flex";
 
+@import "../../node_modules/foundation-sites/scss/foundation";
+
 // foundation-everything will load foundation-grid if flex, foundation-flex-classes if not flex
+
+$breakpoints: (
+  small: 0px,
+  medium: 640px,
+  large: 1024px,
+  xlarge: 1200px,
+  xxlarge: 1440px,
+);
+
 @include foundation-flex-grid;
 @include foundation-flex-classes;
-
+@include foundation-everything;

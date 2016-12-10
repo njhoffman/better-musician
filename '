@@ -1,0 +1,28 @@
+import { connect } from 'react-redux';
+import { getVisibleSongs } from '../modules/songs';
+import SongsList from '../components/SongsList';
+
+// Song Entry:
+//     - Year
+//     - Notes
+
+
+
+const mapStateToProps = (state,action) => ({
+  songs: getVisibleSongs(state)
+});
+
+const toggleSong = () => {
+  return;
+}
+
+const mapDispatchToProps = ({
+    onSongClick: toggleSong
+});
+
+const VisibleSongsList = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(SongsList);
+
+export default VisibleSongsList;
