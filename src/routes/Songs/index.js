@@ -4,7 +4,7 @@ export default (store) => ({
   path : 'songs',
   getComponent (nextState, cb) {
     require.ensure([], (require) => {
-      const SongsContainer = require('./containers/SongsView').default;
+      const SongsContainer = require('./containers/SongsViewContainer').default;
       const reducer = require('./modules/songs').default;
 
       injectReducer(store, { key: 'songs', reducer });

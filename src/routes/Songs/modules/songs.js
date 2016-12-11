@@ -38,14 +38,14 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState: SongsStateObject  = {
-  collection: exampleSongs,
-  fetching: false,
-  currentGenres: [],
+  collection:         exampleSongs,
+  fetching:           false,
+  currentGenres:      [],
   currentInstruments: [],
-  instruments: [{ id: 0, name: "Guitar" }, { id: 1, name: "Piano" }, { id: 2, name:  "Vocal" }],
-  genres: [{ id: 0, name: "Blues"}, { id: 1, name: "Classical" }, { id: 2, name: "Jazz" }, { id: 3, name: "Rock & Roll" }],
-  visibleSongs: exampleSongs,
-  filters: []
+  instruments:        [{ id: 0, name: "Guitar" }, { id: 1, name: "Piano" }, { id: 2, name:  "Vocal" }],
+  genres:             [{ id: 0, name: "Blues"}, { id: 1, name: "Classical" }, { id: 2, name: "Jazz" }, { id: 3, name: "Rock & Roll" }],
+  visibleSongs:       exampleSongs,
+  filters:            []
 };
 
 export default function songsReducer (state: SongsStateObject = initialState, action : Action) {

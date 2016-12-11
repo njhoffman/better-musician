@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import ModalBase from 'components/Modal/ModalBase';
+import ModalBase from '../../components/Modal';
 
 const mapDispatchToProps = {
 };

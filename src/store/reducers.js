@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import locationReducer from './location';
 import modalReducer from './modal';
+import drawerMenuReducer from './drawerMenu';
 import { reducer as formReducer } from 'redux-form';
 
 export const makeRootReducer = (asyncReducers) => {
@@ -8,6 +9,7 @@ export const makeRootReducer = (asyncReducers) => {
     location: locationReducer,
     form: formReducer,
     modal: modalReducer,
+    drawerMenu: drawerMenuReducer,
     ...asyncReducers
   });
 };

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import AddSongModal from 'components/Modal/AddSongModal';
+import AddSongModal from '../../components/Modal/AddSong';
 
 export const hideModal = () => {
   return (dispatch, getState) => {

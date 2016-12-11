@@ -1,11 +1,11 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { RenderSelectField, RenderTextField, RenderSliderField } from '../Field';
+import { RenderSelectField, RenderTextField, RenderSliderField } from 'components/Field';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import MenuItem from 'material-ui/MenuItem';
 
-import css from './AddSongModal.scss';
+import css from './AddSong.scss';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
 const dialogStyle = {
@@ -26,8 +26,6 @@ const validate = (values) => {
 
 
 export const AddSongModal = (props) => {
-  console.log("PROPS", props);
-
 
   const actions = [
     <FlatButton

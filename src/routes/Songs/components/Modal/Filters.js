@@ -22,7 +22,7 @@ export const FiltersModal = (props) => {
         title="Filters Dialog"
         modal={false}
         actions={actions}
-        open={true}
+        open={false}
     >
       <p>Filters</p>
     </Dialog>
