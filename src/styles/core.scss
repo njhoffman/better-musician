@@ -30,3 +30,17 @@ span[type=button] {
 a[type=button] {
   appearance: none;
 }
+
+// negates foundation's table color setting
+table tbody, table tfoot, table thead {
+  border: none !important;
+  background-color:inherit !important;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: inherit !important;
+}
+
+table {
+  margin-bottom: 0;
+}

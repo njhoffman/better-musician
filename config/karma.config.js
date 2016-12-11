@@ -16,7 +16,19 @@ const karmaConfig = {
   ],
   singleRun     : !argv.watch,
   frameworks    : ['mocha'],
-  reporters     : ['mocha'],
+  reporters     : ['json'/*, 'mocha', 'spec'*/],
+  specReporter: {
+    maxLogLines: 5,         // limit number of lines logged per test
+    suppressErrorSummary: true,  // do not print error summary
+    suppressFailed: false,  // do not print information about failed tests
+    suppressPassed: false,  // do not print information about passed tests
+    suppressSkipped: true,  // do not print information about skipped tests
+    showSpecTiming: false // print the time elapsed for each spec
+  },
+  jsonReporter: {
+    stdout: true
+  },
+  plugins: ['karma-spec-reporter'],
   preprocessors : {
     [`${project.dir_test}/test-bundler.js`] : ['webpack']
   },
@@ -62,7 +74,7 @@ if (project.globals.__COVERAGE__) {
   karmaConfig.webpack.module.preLoaders = [{
     test    : /\.(js|jsx)$/,
     include : new RegExp(project.dir_client),
-    exclude : /node_modules/,
+    exclude : [/node_modules/, '/interfaces/'],
     loader  : 'babel',
     query   : Object.assign({}, project.compiler_babel, {
       plugins : (project.compiler_babel.plugins || []).concat('istanbul')

@@ -2,7 +2,14 @@ import { connect } from 'react-redux';
 
 import SongsView from '../components/SongsView';
 
-// const mapActionCreators = {};
-// const mapStateToProps = (state) => {};
+export const showAddSongModal = () => {
+  return (dispatch, getState) => {
+    return dispatch({ type: "SHOW_MODAL", modalType: "ADD_SONG", modalProps: {} });
+  };
+};
 
-export default connect()(SongsView);
+
+const mapActionCreators = { showAddSongModal };
+const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, mapActionCreators)(SongsView);

@@ -7,39 +7,30 @@ ul li span {
 }
 
 .title {
-  display: inline-block;
-  width: 50%;
 }
 
 .artist {
-  display: inline-block;
-  width: 30%;
 }
 
 .icons {
-  display: inline-block;
-  width: 20%;
 }
 
-.songProgress {
+.progress {
   color: #3333aa;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  width: 60px;
-  display: inline-block;
 }
 
-.songDifficulty {
-  width: 18px;
-  height: 18px;
-  padding-top: 2px;
-  vertical-align: middle;
-  text-align: center;
-  border-radius: 50%;
+.difficulty {
+  // width: 18px;
+  // height: 18px;
+  // padding-top: 2px;
+  // vertical-align: middle;
+  // text-align: center;
+  // border-radius: 50%;
   color: white;
   font-size: 11px;
   font-weight: bold;
-  background: black;
-  float: right;
+  // background: black;
 }

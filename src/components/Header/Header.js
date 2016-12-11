@@ -21,7 +21,7 @@ export const Header = (props) => {
         </a>
       </Column>
       <Column showFor={Breakpoints.MEDIUM}>
-        <a onClick={props.showAddSongModal}>
+        <a>
           <SearchIcon />Search
         </a>
       </Column>
@@ -64,7 +64,6 @@ export const Header = (props) => {
 };
 
 Header.propTypes = {
-  showAddSongModal: React.PropTypes.func.isRequired,
   showFiltersModal: React.PropTypes.func.isRequired,
   toggleDrawerMenu: React.PropTypes.func.isRequired
 };

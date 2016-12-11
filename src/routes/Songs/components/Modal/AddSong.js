@@ -4,9 +4,8 @@ import { RenderSelectField, RenderTextField, RenderSliderField } from 'component
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import MenuItem from 'material-ui/MenuItem';
-
-import css from './AddSong.scss';
 import muiThemeable from 'material-ui/styles/muiThemeable';
+import css from './AddSong.scss';
 
 const dialogStyle = {
   width: "300px",
