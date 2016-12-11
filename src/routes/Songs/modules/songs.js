@@ -42,8 +42,8 @@ const initialState: SongsStateObject  = {
   fetching: false,
   currentGenres: [],
   currentInstruments: [],
-  instruments: [],
-  genres: [],
+  instruments: [{ id: 0, name: "Guitar" }, { id: 1, name: "Piano" }, { id: 2, name:  "Vocal" }],
+  genres: [{ id: 0, name: "Blues"}, { id: 1, name: "Classical" }, { id: 2, name: "Jazz" }, { id: 3, name: "Rock & Roll" }],
   visibleSongs: exampleSongs,
   filters: []
 };

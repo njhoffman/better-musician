@@ -21,3 +21,12 @@ body {
   box-sizing: inherit;
 }
 
+
+// fixes incompatibility between normalize.css and material-ui
+// https://github.com/callemall/material-ui/issues/4008
+span[type=button] {
+  appearance: none;
+}
+a[type=button] {
+  appearance: none;
+}

@@ -21,6 +21,8 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => ({
+  genres: state.songs.genres,
+  instruments: state.songs.instruments,
   modal: state.modal,
   isOpen: isOpen(state.modal)
 });
