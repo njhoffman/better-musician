@@ -3,36 +3,38 @@ import { TableRow, TableRowColumn } from 'material-ui/Table';
 import StarIcon from 'react-icons/lib/md/star';
 import css from './Song.scss';
 
-const Song = ({ completed, title, artist, progress, difficulty, striped, selected }) => {
+const Song = ({ songValues, columnWidths, ...custom }) => {
   return (
     <TableRow
       hoverable={true}
       displayBorder={true}
-      striped={striped}
-      selected={selected}
+      {...custom}
     >
-      <TableRowColumn className={css.title}>
-        { title }
+      <TableRowColumn style={columnWidths[0]} className={css.title}>
+        { songValues.title }
       </TableRowColumn>
-      <TableRowColumn className={css.artist}>
-        { artist }
+      <TableRowColumn style={columnWidths[1]} className={css.artist}>
+        { songValues.artist }
       </TableRowColumn>
-      <TableRowColumn className={css.progress}>
-        { [...Array(progress)].map((x,i) => <StarIcon key={i} /> )}
+      <TableRowColumn style={columnWidths[2]} className={css.progress}>
+        { [...Array(songValues.progress)].map((x,i) => <StarIcon key={i} /> )}
       </TableRowColumn>
-      <TableRowColumn className={css.difficulty}>
-        { difficulty }
+      <TableRowColumn style={columnWidths[3]} className={css.difficulty}>
+        { songValues.difficulty }
       </TableRowColumn>
   </TableRow>
   );
 };
 
 Song.propTypes = {
-    completed: PropTypes.bool.isRequired,
+  songValues: PropTypes.shape({
+    completed: PropTypes.bool,
     title:     PropTypes.string.isRequired,
     artist:    PropTypes.string,
     progress:  PropTypes.number,
     difficulty: PropTypes.number
+  }),
+  columnWidths: PropTypes.array
 };
 
 export default Song;

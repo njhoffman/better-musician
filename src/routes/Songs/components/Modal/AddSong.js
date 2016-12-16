@@ -26,6 +26,8 @@ const validate = (values) => {
 
 export const AddSongModal = (props) => {
 
+  const { dispatch, addSong } = props;
+
   const actions = [
     <FlatButton
       label="Cancel"
@@ -36,7 +38,7 @@ export const AddSongModal = (props) => {
       label="Add"
       primary={true}
       keyboardFocused={true}
-      onTouchTap={ props.addSong }
+      onTouchTap={ addSong }
     />
   ];
   const textColor = props.muiTheme.palette.textColor;
@@ -48,11 +50,16 @@ export const AddSongModal = (props) => {
       actions={ actions }
       open={ props.isOpen }
       onRequestClose={ props.hideModal }
-      contentStyle={dialogStyle}
-    >
+      contentStyle={dialogStyle}>
       <form onSubmit={props.addSong}>
-        <Field name="title" component={RenderTextField} label="Song Title"/>
-        <Field name="artist" component={RenderTextField}label="Song Artist"/>
+        <Field
+          name="title"
+          component={RenderTextField}
+          label="Song Title" />
+        <Field
+          name="artist"
+          component={RenderTextField}
+          label="Song Artist" />
         <Field name="genre" component={RenderSelectField} label="Song Genre">
           {props.genres.map(genre =>
             <MenuItem
@@ -71,8 +78,20 @@ export const AddSongModal = (props) => {
             />
           )}
         </Field>
-        <Field name="difficulty" min={0} max={50} component={RenderSliderField} label="Difficulty" />
-        <Field name="progress" min={0} max={100} component={RenderSliderField} label="Progress" />
+        <Field name="difficulty"
+          min={1}
+          max={20}
+          step={1}
+          textColor={textColor}
+          component={RenderSliderField}
+          label="Difficulty" />
+        <Field name="progress"
+          min={0}
+          max={4}
+          step={1}
+          textColor={textColor}
+          component={RenderSliderField}
+          label="Progress" />
       </form>
     </Dialog>
   )
@@ -86,4 +105,4 @@ AddSongModal.propTypes = {
   isOpen:      React.PropTypes.bool
 };
 
-export default muiThemeable()(reduxForm({ form: 'addSong', validate })(AddSongModal));
+export default muiThemeable()(reduxForm({ form: 'addSongForm', validate })(AddSongModal));

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
   Checkbox,
   RadioButtonGroup,
@@ -19,7 +19,6 @@ const RenderSelectField = ({
       floatingLabelText={label}
       errorText={touched && error}
       children={children}
-      onChange={(event, index, value) => input.onChange(value)}
       input={input}
       {...custom}
     />
@@ -42,23 +41,27 @@ const RenderTextField = ({
   </div>
 );
 
-let sliderValue = 0;
-const RenderSliderField = ({
-  ...input,
-  label,
-  children,
-  meta: { touched, error },
-  ...custom }) => {
-  return (
-    <div>
-        <label>{label} {sliderValue}</label>
-        <Slider
-          onChange={(value) => sliderValue = value}
-          {...input}
-          {...custom}
-        />
-    </div>
-  )
+class RenderSliderField extends Component {
+
+  state = {
+    value: 1
+  };
+
+  render () {
+    const { input, label, textColor, children, meta: { touched, error }, ...custom } = this.props;
+    return (
+      <div>
+        <label style={{color: textColor}}> {label} {this.state.value}</label>
+          <Slider
+            onChange={(value) => this.setState({ value: value }) }
+            value={this.state.value}
+            defaultValue={this.state.value}
+            input={input}
+            {...custom}
+          />
+      </div>
+    )
+  }
 };
 
 export { RenderSelectField, RenderTextField, RenderSliderField };

@@ -4,7 +4,7 @@ export default (store) => ({
   /*  Async getComponent is only invoked when route matches   */
   getComponent (nextState, cb) {
     require.ensure([], (require) => {
-      const HomeContainer = require('./containers/HomeView').default;
+      const HomeContainer = require('./containers/HomeViewContainer').default;
       // const reducer = require('./modules/songs').default;
       //
       // injectReducer(store, { key: 'home', reducer });

@@ -14,17 +14,14 @@ describe('(Component) Header', () => {
   describe('Navigation links...', () => {
     it('Should render a Link to Home route', () => {
       expect(_wrapper.contains(
-        <IndexLink to='/' activeClassName='route--active'>
-          <MenuIcon />
-          instrumental.com
-        </IndexLink>
+        <IndexLink to='/' activeClassName='route--active'>instrumental.com</IndexLink>
       )).to.be.true;
     });
 
     it('Should render a Link to Counter route', () => {
       expect(_wrapper.contains(
         <Link activeClassName='route--active' to='/counter'>
-          Counter
+          Score (Counter)
         </Link>
       )).to.be.true;
     });

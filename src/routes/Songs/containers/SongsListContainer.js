@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { getVisibleSongs } from '../modules/songs';
+import { getVisibleSongs, setCurrentSong } from '../modules/songs';
 import SongsList from '../components/SongsList';
 
 // Song Entry:
@@ -10,12 +10,8 @@ const mapStateToProps = (state, action) => ({
   collection: getVisibleSongs(state.songs)
 });
 
-const toggleSong = () => {
-  return;
-}
-
 const mapActionCreators = ({
-    onSongClick: toggleSong
+    onSongClick: setCurrentSong
 });
 
 export default connect(

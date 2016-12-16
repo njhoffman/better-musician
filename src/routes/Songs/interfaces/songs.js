@@ -32,6 +32,7 @@ export type SongsStateObject = {
   fetching:           boolean,
   visibleSongs:       Array<number>,
   filters:            Array<FilterObject>,
+  currentSong:        number,
   currentInstruments: Array<number>,
   currentGenres:      Array<number>,
   genres:             Array<GenreObject>,

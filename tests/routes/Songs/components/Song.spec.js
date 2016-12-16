@@ -20,11 +20,9 @@ const setup = (propOverrides) => {
     };
 };
 
-describe('components', () => {
-    describe('song', () => {
-        it('should render ok', () => {
-            const { output } = setup();
-            expect(output.type).toBe('li');
-        });
+describe('(Component) Song', () => {
+    it('should render ok', () => {
+        const { output } = setup();
+        expect(output.type).toBe('li');
     });
 });

@@ -16,7 +16,7 @@ const karmaConfig = {
   ],
   singleRun     : !argv.watch,
   frameworks    : ['mocha'],
-  reporters     : ['json'/*, 'mocha', 'spec'*/],
+  reporters     : ['mocha'/*, 'mocha', 'spec', 'json', 'progress', 'dots' */],
   specReporter: {
     maxLogLines: 5,         // limit number of lines logged per test
     suppressErrorSummary: true,  // do not print error summary
@@ -28,7 +28,7 @@ const karmaConfig = {
   jsonReporter: {
     stdout: true
   },
-  plugins: ['karma-spec-reporter'],
+  // plugins: ['karma-spec-reporter'],
   preprocessors : {
     [`${project.dir_test}/test-bundler.js`] : ['webpack']
   },
@@ -43,7 +43,8 @@ const karmaConfig = {
     plugins : webpackConfig.plugins,
     module  : {
       noParse : [
-        /\/sinon\.js/
+        /\/sinon\.js/,
+        /\/interfaces\/.js/
       ],
       loaders : webpackConfig.module.loaders.concat([
         {
@@ -74,7 +75,7 @@ if (project.globals.__COVERAGE__) {
   karmaConfig.webpack.module.preLoaders = [{
     test    : /\.(js|jsx)$/,
     include : new RegExp(project.dir_client),
-    exclude : [/node_modules/, '/interfaces/'],
+    exclude : [/node_modules/, '/src/interfaces/'],
     loader  : 'babel',
     query   : Object.assign({}, project.compiler_babel, {
       plugins : (project.compiler_babel.plugins || []).concat('istanbul')

@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 
 import Header from '../components/Header';
 
+const localState = {
+  searchIsOpen: false,
+};
+
 export const showFiltersModal = () => {
   return (dispatch, getState) => {
     return dispatch({ type: "SHOW_MODAL", modalType: "FILTER_SONGS", modalProps: {} });
@@ -15,11 +19,24 @@ export const toggleDrawerMenu = () => {
   };
 };
 
-const mapDispatchToProps = {
-  showFiltersModal,
-  toggleDrawerMenu
+export const searchClose = () => {
+  debugger;
 };
 
-const mapStateToProps = (state) => ({ });
+export const toggleSearchPopover = () => {
+  return (localState.searchIsOpen = !localState.searchIsOpen);
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+const mapActionCreators = {
+  showFiltersModal,
+  toggleDrawerMenu,
+  searchClose,
+  toggleSearchPopover
+};
+
+const mapStateToProps = (state) => ({
+  searchIsOpen: localState.searchIsOpen,
+  currentSong: state.songs.currentSong
+});
+
+export default connect(mapStateToProps, mapActionCreators)(Header);

@@ -1,19 +1,6 @@
 import { connect } from 'react-redux';
 import AddSongModal from '../../components/Modal/AddSong';
-
-export const hideModal = () => {
-  return (dispatch, getState) => {
-    return dispatch({ type: "HIDE_MODAL" });
-  };
-}
-
-export const addSong = () => {
-  debugger;
-};
-
-export const isOpen = (modal) => {
-  return (modal.modalType === 'ADD_SONG');
-};
+import { addSong, isOpen, hideModal } from '../../modules/songs';
 
 const mapDispatchToProps = {
   hideModal,
@@ -21,10 +8,10 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => ({
-  genres: state.songs.genres,
+  genres:      state.songs.genres,
   instruments: state.songs.instruments,
-  modal: state.modal,
-  isOpen: isOpen(state.modal)
+  modal:       state.modal,
+  isOpen:      isOpen(state.modal)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddSongModal);
