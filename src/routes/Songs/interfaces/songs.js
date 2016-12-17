@@ -2,24 +2,33 @@
 
 export type FilterObject = {
   key: string,
-  value: string
+  value: string,
+  icon?: string
 };
 
 export type GenreObject = {
   id: number,
-  name: string
+  name: string,
+  icon?: string
 };
 
 export type InstrumentObject = {
   id: number,
-  name: string
+  name: string,
+  icon?: string
+};
+
+export type ArtistObject = {
+  id: number,
+  lastName: string,
+  firstName?: string,
+  icon?: string
 };
 
 export type SongObject = {
   id: number,
   title: string,
-  artist: string,
-  completed?: boolean,
+  artist: number,
   instrument: Array<number>,
   genre: Array<number>,
   difficulty?: number,
@@ -36,5 +45,6 @@ export type SongsStateObject = {
   currentInstruments: Array<number>,
   currentGenres:      Array<number>,
   genres:             Array<GenreObject>,
-  instruments:        Array<InstrumentObject>
+  instruments:        Array<InstrumentObject>,
+  artists:            Array<ArtistObject>
 };

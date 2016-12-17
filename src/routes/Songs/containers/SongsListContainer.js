@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import { getVisibleSongs, setCurrentSong } from '../modules/songs';
-import SongsList from '../components/SongsList';
+import { getVisibleSongs, setCurrentSong } from 'routes/Songs/modules/songs';
+import SongsList from 'routes/Songs/components/SongsList';
 
 // Song Entry:
 //     - Year

@@ -2,14 +2,17 @@
 
 import _ from 'lodash';
 import type { SongObject, SongsStateObject } from '../interfaces/songs';
+
 // TODO: set up aliases in flow
 import type { Action } from '../../../interfaces/action';
-import exampleSongs from '../data/ExampleSongs';
+import exampleSongs from '../data/exampleSongs';
+import exampleGenres from '../data/exampleGenres';
+import exampleArtists from '../data/exampleArtists';
+import exampleInstruments from '../data/exampleInstruments';
 
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const SHOW_SONGS = 'SHOW_SONGS';
 export const ADD_SONG = 'ADD_SONG';
 export const SET_CURRENT_SONG = 'SET_CURRENT_SONG';
 export const DELETE_SONG = 'DELETE_SONG';
@@ -46,6 +49,10 @@ export const addSong = (values) => {
   };
 };
 
+// ------------------------------------
+// Property Mappers
+// ------------------------------------
+
 export const isOpen = (modal) => {
   return (modal.modalType === ADD_SONG);
 };
@@ -62,12 +69,14 @@ export const getCurrentSong = (state) => {
   return _.find(state.collection, { id: currentSong });
 };
 
+export const getVisibleSongs = (state: SongsStateObject) => {
+  return state.collection ? state.collection : [];
+};
+
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [SHOW_SONGS]:  (state: SongsStateObject): SongsStateObject =>
-    ({ ...state, collection: getVisibleSongs(state) }),
   [ADD_SONG]:    (state: SongsStateObject, action): SongsStateObject =>
     ({ ...state, collection: state.collection.concat(action.payload) }),
     [SET_CURRENT_SONG]: (state: SongStateObject, action): SongStateObject =>
@@ -76,9 +85,6 @@ const ACTION_HANDLERS = {
   [UPDATE_SONG]: (state: SongsStateObject): SongsStateObject => state
 };
 
-export const getVisibleSongs = (state: SongsStateObject) => {
-  return state.collection ? state.collection : [];
-};
 
 // ------------------------------------
 // Reducer
@@ -88,8 +94,9 @@ const initialState: SongsStateObject = {
   fetching:           false,
   currentGenres:      [],
   currentInstruments: [],
-  instruments:        [{ id: 0, name: "Guitar" }, { id: 1, name: "Piano" }, { id: 2, name:  "Vocal" }],
-  genres:             [{ id: 0, name: "Blues"}, { id: 1, name: "Classical" }, { id: 2, name: "Jazz" }, { id: 3, name: "Rock & Roll" }],
+  instruments:        exampleInstruments,
+  genres:             exampleGenres,
+  artists:            exampleArtists,
   visibleSongs:       exampleSongs,
   filters:            []
 };

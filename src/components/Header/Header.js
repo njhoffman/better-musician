@@ -56,7 +56,7 @@ class Header extends Component  {
       <a onTouchTap={this.showSongPopover.bind(this)}>
         <EditIcon />Edit Song
         <ArrowDropDownIcon onTouchTap={this.showSongPopover.bind(this)} />
-        <Popover open={this.state.songPopoverOpen}>
+        <Popover open={this.state.songPopoverOpen} >
           <Row>
             <Column>
               <a><AddIcon />Add Song</a>
