@@ -1,23 +1,17 @@
-/* @flow */
 
 import _ from 'lodash';
-import type { SongObject, SongsStateObject } from '../interfaces/songs';
+import {
+  songs as songsSelector,
+  artists as artistsSelector ,
+  currentSong as currentSongSelector
+} from 'routes/Songs/modules/selectors';
 
-// TODO: set up aliases in flow
-import type { Action } from '../../../interfaces/action';
-import exampleSongs from '../data/exampleSongs';
-import exampleGenres from '../data/exampleGenres';
-import exampleArtists from '../data/exampleArtists';
-import exampleInstruments from '../data/exampleInstruments';
 
-// ------------------------------------
-// Constants
-// ------------------------------------
-export const ADD_SONG = 'ADD_SONG';
+export const INIT_SONG_VIEW   = 'INIT_SONG_VIEW';
 export const SET_CURRENT_SONG = 'SET_CURRENT_SONG';
-export const DELETE_SONG = 'DELETE_SONG';
-export const UPDATE_SONG = 'UPDATE_SONG';
-export const HIDE_MODAL = 'HIDE_MODAL';
+export const HIDE_MODAL       = 'HIDE_MODAL';
+export const SET_SORT = 'SET_SORT';
+
 
 // ------------------------------------
 // Action Creators
@@ -35,6 +29,13 @@ export const setCurrentSong = (currentSong) => {
   };
 };
 
+export const setSort = (sortField) => {
+  return (dispatch, getState) => {
+    return dispatch({ type: SET_SORT, payload: sortField });
+  };
+};
+
+
 const nextAvailableId = (songCollection) =>
   songCollection
     .map( (song) => song.id )
@@ -45,64 +46,65 @@ export const addSong = (values) => {
   return (dispatch, getState) => {
     const fieldValues = getState().form.addSongForm.values;
     const availableId = nextAvailableId(getState().songs.collection);
-    return dispatch({ type: ADD_SONG, payload: { ...fieldValues, ...{ id: availableId }} });
+    return dispatch({ type: 'ADD_SONG', payload: { ...fieldValues, ...{ id: availableId }} });
   };
 };
+
+export const actions = {
+  addSong, hideModal, setCurrentSong
+};
+
 
 // ------------------------------------
 // Property Mappers
 // ------------------------------------
 
 export const isOpen = (modal) => {
-  return (modal.modalType === ADD_SONG);
-};
-
-export const actions = {
-  addSong, hideModal, isOpen
+  return (modal.modalType === 'ADD_SONG');
 };
 
 export const getCurrentSong = (state) => {
-  if ( _.isEmpty(state.currentSong) ) {
-    return;
-  }
-  const currentSong = state.currentSong[0] ? state.currentSong[0] : state.currentSong;
-  return _.find(state.collection, { id: currentSong });
+  return currentSongSelector(state);
 };
 
-export const getVisibleSongs = (state: SongsStateObject) => {
-  return state.collection ? state.collection : [];
+export const getVisibleSongs = (state) => {
+  console.log("get songs");
+  return songsSelector(state);
 };
 
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
+
 const ACTION_HANDLERS = {
-  [ADD_SONG]:    (state: SongsStateObject, action): SongsStateObject =>
-    ({ ...state, collection: state.collection.concat(action.payload) }),
-    [SET_CURRENT_SONG]: (state: SongStateObject, action): SongStateObject =>
-      ({ ...state, currentSong: action.payload }),
-  [DELETE_SONG]: (state: SongsStateObject): SongsStateObject => state,
-  [UPDATE_SONG]: (state: SongsStateObject): SongsStateObject => state
+  [INIT_SONG_VIEW]: (state, action) => {
+    return ({ ...state, initialized: true });
+  },
+  [SET_CURRENT_SONG]: (state, action) =>
+    ({ ...state, currentSong: action.payload }),
+  [SET_SORT]: (state, action) => {
+    return ({ ...state, sortField: action.payload });
+  }
 };
 
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState: SongsStateObject = {
-  collection:         exampleSongs,
+
+
+const initialState = {
   fetching:           false,
   currentGenres:      [],
   currentInstruments: [],
-  instruments:        exampleInstruments,
-  genres:             exampleGenres,
-  artists:            exampleArtists,
-  visibleSongs:       exampleSongs,
-  filters:            []
+  initialized:        false,
+  currentFilters:     [],
+  sortField:          ''
 };
 
-export default function songsReducer (state: SongsStateObject = initialState, action : Action) {
+export default function songsReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
 
   return handler ? handler(state, action) : state;
 }
+

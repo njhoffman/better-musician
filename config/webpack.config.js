@@ -17,7 +17,9 @@ const _RESOLVE_PATHS = {
   themes:     "src/styles/themes",
   components: "src/components",
   containers: "src/containers",
-  interfaces: "src/interfaces"
+  interfaces: "src/interfaces",
+  middleware: "src/middleware",
+  "redux-orm": "src/redux-orm"
 };
 
 let resolvePaths = _.mapValues(_RESOLVE_PATHS, function (str) {

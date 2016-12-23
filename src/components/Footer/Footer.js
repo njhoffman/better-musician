@@ -23,7 +23,7 @@ class Footer extends Component  {
       <div className={css.footerWrapper}>
         <Row className={css.footer}>
           <Column>
-            { song.instrument }
+            { song.instrument.name }
           </Column>
           <Column>
             <Row>
@@ -33,7 +33,7 @@ class Footer extends Component  {
             </Row>
             <Row>
               <Column>
-                { song.artist }
+                { song.artist.fullName }
               </Column>
             </Row>
           </Column>
@@ -45,7 +45,7 @@ class Footer extends Component  {
             </Row>
             <Row>
               <Column>
-                { song.genre }
+                { song.genre.displayName }
               </Column>
             </Row>
           </Column>

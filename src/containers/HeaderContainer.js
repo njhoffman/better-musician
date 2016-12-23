@@ -36,7 +36,7 @@ const mapActionCreators = {
 
 const mapStateToProps = (state) => ({
   searchIsOpen: localState.searchIsOpen,
-  currentSong: state.songs.currentSong
+  // currentSong: state.songs.currentSong
 });
 
 export default connect(mapStateToProps, mapActionCreators)(Header);

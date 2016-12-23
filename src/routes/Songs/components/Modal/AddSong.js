@@ -61,7 +61,7 @@ export const AddSongModal = (props) => {
           component={RenderTextField}
           label="Song Artist" />
         <Field name="genre" component={RenderSelectField} label="Song Genre">
-          {props.genres.map(genre =>
+          {props.genres && props.genres.map(genre =>
             <MenuItem
               key={genre.id}
               value={genre.id}
@@ -70,7 +70,7 @@ export const AddSongModal = (props) => {
           )}
         </Field>
         <Field name="instrument" component={RenderSelectField} label="Instrument">
-          {props.instruments.map(instrument =>
+          {props.instruments && props.instruments.map(instrument =>
             <MenuItem
               key={instrument.id}
               value={instrument.id}

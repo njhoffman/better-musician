@@ -14,7 +14,7 @@ const Song = ({ songValues, columnWidths, ...custom }) => {
         { songValues.title }
       </TableRowColumn>
       <TableRowColumn style={columnWidths[1]} className={css.artist}>
-        { songValues.artist }
+        { songValues.artist.fullName }
       </TableRowColumn>
       <TableRowColumn style={columnWidths[2]} className={css.progress}>
         { [...Array(songValues.progress)].map((x,i) => <StarIcon key={i} /> )}
@@ -30,7 +30,6 @@ Song.propTypes = {
   songValues: PropTypes.shape({
     completed: PropTypes.bool,
     title:     PropTypes.string.isRequired,
-    artist:    PropTypes.string,
     progress:  PropTypes.number,
     difficulty: PropTypes.number
   }),

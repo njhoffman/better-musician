@@ -4,7 +4,7 @@ import { getCurrentSong } from 'routes/Songs/modules/songs';
 import Footer from 'components/Footer';
 
 const mapStateToProps = (state) => ({
-  song: getCurrentSong(state.songs),
+  song: getCurrentSong(state),
 });
 
 const mapActionCreators  = {};

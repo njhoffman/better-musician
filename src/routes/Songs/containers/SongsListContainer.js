@@ -1,17 +1,14 @@
 import { connect } from 'react-redux';
-import { getVisibleSongs, setCurrentSong } from 'routes/Songs/modules/songs';
+import { getVisibleSongs, setCurrentSong, setSort } from 'routes/Songs/modules/songs';
 import SongsList from 'routes/Songs/components/SongsList';
 
-// Song Entry:
-//     - Year
-//     - Notes
-
 const mapStateToProps = (state, action) => ({
-  collection: getVisibleSongs(state.songs)
+   songsCollection: getVisibleSongs(state)
 });
 
 const mapActionCreators = ({
-    onSongClick: setCurrentSong
+  onSongClick: setCurrentSong,
+  onSortClick: setSort
 });
 
 export default connect(

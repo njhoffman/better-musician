@@ -13,7 +13,7 @@ const columnWidths = [
   { width: '15%' },
 ];
 
-const SongsList = ({ collection, onSongClick }) => (
+const SongsList = ({ songsCollection, onSongClick, onSortClick }) => (
   <Table
     selectable={true}
     onRowSelection={onSongClick}
@@ -23,10 +23,30 @@ const SongsList = ({ collection, onSongClick }) => (
       adjustForCheckbox={false}
     >
       <TableRow>
-        <TableHeaderColumn style={columnWidths[0]}>Title <SortIcon /></TableHeaderColumn>
-        <TableHeaderColumn style={columnWidths[1]}>Artist <SortIcon /></TableHeaderColumn>
-        <TableHeaderColumn style={columnWidths[2]}>Progress <SortIcon /></TableHeaderColumn>
-        <TableHeaderColumn style={columnWidths[3]}>Difficulty <SortIcon /></TableHeaderColumn>
+        <TableHeaderColumn style={columnWidths[0]}>
+          <a onClick={onSortClick.bind(undefined, 'title')}>
+            Title
+            <SortIcon />
+          </a>
+        </TableHeaderColumn>
+        <TableHeaderColumn style={columnWidths[1]}>
+          <a onClick={onSortClick.bind(undefined, 'artist')}>
+            Artist
+            <SortIcon />
+          </a>
+        </TableHeaderColumn>
+        <TableHeaderColumn style={columnWidths[2]}>
+          <a onClick={onSortClick.bind(undefined, 'progress')}>
+            Progress
+            <SortIcon />
+          </a>
+        </TableHeaderColumn>
+        <TableHeaderColumn style={columnWidths[3]}>
+          <a onClick={onSortClick.bind(undefined, 'difficulty')}>
+            Difficulty
+            <SortIcon />
+          </a>
+        </TableHeaderColumn>
       </TableRow>
     </TableHeader>
     <TableBody
@@ -34,7 +54,7 @@ const SongsList = ({ collection, onSongClick }) => (
       deselectOnClickaway={false}
       stripedRows={true}
     >
-      {collection.map(song =>
+      {songsCollection && songsCollection.map(song =>
         <Song
           key={song.id}
           songValues={song}
@@ -46,13 +66,13 @@ const SongsList = ({ collection, onSongClick }) => (
 );
 
 SongsList.propTypes = {
-    collection: PropTypes.arrayOf(
+    songsCollection: PropTypes.arrayOf(
         PropTypes.shape({
             id:        PropTypes.number,
-            completed: PropTypes.bool,
             title:     PropTypes.string
-        }).isRequired).isRequired,
-    onSongClick: PropTypes.func.isRequired
+        }).isRequired),
+  onSongClick: PropTypes.func.isRequired,
+  onSortClick: PropTypes.func.isRequired
 };
 
 export default (SongsList);

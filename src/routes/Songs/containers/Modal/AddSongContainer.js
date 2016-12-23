@@ -7,9 +7,16 @@ const mapDispatchToProps = {
   addSong
 };
 
+const defObj = {
+  songs: {
+    genres: [],
+    instruments: []
+  }
+}
+
 const mapStateToProps = (state) => ({
-  genres:      state.songs.genres,
-  instruments: state.songs.instruments,
+  genres:      state.songs && state.songs.genres,
+  instruments: state.songs && state.songs.instruments,
   modal:       state.modal,
   isOpen:      isOpen(state.modal)
 });
