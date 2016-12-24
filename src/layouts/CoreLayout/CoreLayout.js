@@ -3,6 +3,8 @@ import { Dialog, Paper } from 'material-ui';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
+import { AuthGlobals } from 'redux-auth/material-ui-theme';
+
 import 'coreStyles';
 import css from './CoreLayout.scss';
 import Header from 'containers/HeaderContainer';
@@ -18,6 +20,7 @@ const style = {
 export const CoreLayout = ({ children }) => (
   <MuiThemeProvider muiTheme={getMuiTheme(instrumentalDarkTheme)}>
     <div className={css.appWrapper}>
+      {AuthGlobals}
       <DrawerMenu />
       <Header />
       <Row className={css.contentWrapper}>

@@ -23,6 +23,12 @@ export const searchClose = () => {
   debugger;
 };
 
+export const showAddSongModal = () => {
+  return (dispatch, getState) => {
+    return dispatch({ type: "SHOW_MODAL", modalType: "ADD_SONG", modalProps: {} });
+  };
+};
+
 export const toggleSearchPopover = () => {
   return (localState.searchIsOpen = !localState.searchIsOpen);
 };
@@ -31,12 +37,13 @@ const mapActionCreators = {
   showFiltersModal,
   toggleDrawerMenu,
   searchClose,
-  toggleSearchPopover
+  toggleSearchPopover,
+  showAddSongModal
 };
 
 const mapStateToProps = (state) => ({
   searchIsOpen: localState.searchIsOpen,
-  // currentSong: state.songs.currentSong
+  currentSong: state.songsView ? state.songsView.currentSong : null
 });
 
 export default connect(mapStateToProps, mapActionCreators)(Header);

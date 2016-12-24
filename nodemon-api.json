@@ -1,0 +1,14 @@
+{
+  "verbose" : true,
+  "ignore" : [
+    ".git",
+    "node_modules/**/node_modules"
+  ],
+  "watch" : [
+    "api/",
+    "bin/"
+  ],
+  "env" : {
+    "NODE_ENV" : "development"
+  }
+}

@@ -20,18 +20,18 @@ class Header extends Component  {
   constructor(props) {
     super(props);
     this.state = {
-      searchOpen: false,
+      searchPopoverOpen: false,
       songPopoverOpen: false
     };
   };
 
   toggleSearchPopover() {
     this.setState({
-      searchOpen: !this.state.searchOpen
+      searchPopoverOpen: !this.state.searchPopoverOpen
     });
   }
 
-  showSongPopover() {
+  toggleSongPopover() {
     this.setState({
       songPopoverOpen: true
     });
@@ -39,27 +39,36 @@ class Header extends Component  {
 
   onRequestClose() {
     this.setState({
-      searchOpen: false
+      searchPopoverOpen: false,
+      songPopoverOpen: false
     });
   }
+
+  showAddSongModal() {
+    this.onRequestClose();
+    this.props.showAddSongModal();
+  };
 
   renderSongActionButton() {
     if ( _.isEmpty(this.props.currentSong) ) {
       return (
-        <a>
+        <a onClick={ this.props.showAddSongModal }>
           <AddIcon />Add Song
         </a>
       );
     }
 
     return (
-      <a onTouchTap={this.showSongPopover.bind(this)}>
+      <a>
         <EditIcon />Edit Song
-        <ArrowDropDownIcon onTouchTap={this.showSongPopover.bind(this)} />
-        <Popover open={this.state.songPopoverOpen} >
+        <ArrowDropDownIcon onTouchTap={this.toggleSongPopover.bind(this)} />
+        <Popover
+          open={this.state.songPopoverOpen}
+          onRequestClose={this.onRequestClose.bind(this)} >
           <Row>
             <Column>
-              <a><AddIcon />Add Song</a>
+              <a onClick={ this.showAddSongModal.bind(this) } >
+                <AddIcon />Add Song</a>
             </Column>
           </Row>
           <Row>
@@ -78,7 +87,7 @@ class Header extends Component  {
       <div className={css.actionBar}>
         <Row className="display top">
           <Column small={8} medium={3} style={{ textAlign: 'left' }}>
-            <a onClick={props.toggleDrawerMenu}>
+            <a onClick={this.props.toggleDrawerMenu}>
               <MenuIcon />
             </a>
             <IndexLink to ='/' activeClassName='route--active'>
@@ -99,7 +108,7 @@ class Header extends Component  {
             <a onClick={ this.toggleSearchPopover.bind(this) }>
               <SearchIcon />Search
               <SearchPopover
-                open={ this.state.searchOpen }
+                open={ this.state.searchPopoverOpen }
                 onRequestClose={ this.onRequestClose.bind(this) } />
             </a>
           </Column>
@@ -135,7 +144,8 @@ class Header extends Component  {
 Header.propTypes = {
   showFiltersModal: React.PropTypes.func.isRequired,
   toggleDrawerMenu: React.PropTypes.func.isRequired,
-  searchClose: React.PropTypes.func.isRequired
+  searchClose: React.PropTypes.func.isRequired,
+  showAddSongModal: React.PropTypes.func.isRequired
 };
 
 export default Header;

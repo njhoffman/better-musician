@@ -9,7 +9,6 @@ import { RaisedButton } from 'material-ui';
 
 export const SongView = (props) => (
     <Column small={12} className={css.home}>
-      <RaisedButton onClick={ props.showAddSongModal } label="Add Song" />
       <SongsList />
       <ModalBase />
     </Column>

@@ -5,8 +5,46 @@ const webpackConfig = require('../config/webpack.config');
 const project = require('../config/project.config');
 const compress = require('compression');
 const morgan = require('morgan');
+const httpProxy = require('http-proxy');
+const http = require('http');
+const writeMorgan = require('../server.morgan.js');
 
 const app = express();
+const server = new http.Server(app);
+
+const targetUrl = 'http://localhost:4000';
+const proxy = httpProxy.createProxyServer({
+    target: targetUrl,
+    ws: true
+});
+
+
+// Proxy to API server
+app.use('/api', (req, res) => {
+  proxy.web(req, res, {target: targetUrl});
+});
+
+app.use('/ws', (req, res) => {
+  proxy.web(req, res, {target: targetUrl + '/ws'});
+});
+
+server.on('upgrade', (req, socket, head) => {
+  proxy.ws(req, socket, head);
+});
+
+// added the error handling to avoid https://github.com/nodejitsu/node-http-proxy/issues/527
+proxy.on('error', (error, req, res) => {
+  let json;
+  if (error.code !== 'ECONNRESET') {
+    console.error('proxy error', error);
+  }
+  if (!res.headersSent) {
+    res.writeHead(500, {'content-type': 'application/json'});
+  }
+
+  json = {error: 'proxy_error', reason: error.message};
+  res.end(JSON.stringify(json));
+});
 
 // This rewrites all routes requests to the root /index.html file
 // (ignoring file requests). If you want to implement universal
@@ -17,6 +55,16 @@ app.use(require('connect-history-api-fallback')());
 // turned off as it squashes eventsource messages
 // app.use(compress());
 
+
+const webpackDebug = require('debug')('app:server:webpack');
+const webpackLog = function (message) {
+  // message = message.split('\n').map( function (line) { return webpackDebug(line); }).join('\n');
+  if (message.indexOf('\n') !== -1) {
+    message = "\n\n" + message + "\n\n";
+  }
+  return webpackDebug(message);
+};
+
 // ------------------------------------
 // Apply Webpack HMR Middleware
 // ------------------------------------
@@ -25,7 +73,7 @@ if (project.env === 'development') {
 
   // log requests with morgan
   // TODO: create own stream for requests to format
-  app.use(morgan('dev'));
+  app.use(morgan(writeMorgan('app:server:request')));
 
   debug('Enabling webpack dev and HMR middleware');
   app.use(require('webpack-dev-middleware')(compiler, {
@@ -35,6 +83,7 @@ if (project.env === 'development') {
     quiet       : project.compiler_quiet,
     noInfo      : project.compiler_quiet,
     lazy        : false,
+    log         : webpackLog,
     stats       : project.compiler_stats,
     watchOptions : {
       aggregateTimeout: 300,
@@ -42,7 +91,7 @@ if (project.env === 'development') {
     }
   }));
   app.use(require('webpack-hot-middleware')(compiler, {
-    log: debug,
+    log: webpackLog,
     heartbeat: 3 * 1000
   }));
 

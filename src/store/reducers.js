@@ -3,9 +3,10 @@ import locationReducer from './location';
 import modalReducer from './modal';
 import drawerMenuReducer from './drawerMenu';
 import { reducer as formReducer } from 'redux-form';
+import { authStateReducer } from 'redux-auth';
 
 // import { register as registerSchema } from 'store/orm';
-import baseModels from './model'
+import baseModels from './baseModels'
 import { ORM } from 'redux-orm';
 
 export function selectedUserIdReducer(state = 0, action) {
@@ -50,6 +51,7 @@ export const makeRootReducer = (asyncReducers, injectedModels = []) => {
     form:           formReducer,
     modal:          modalReducer,
     drawerMenu:     drawerMenuReducer,
+    auth:           authStateReducer,
     ...asyncReducers
   });
 };
