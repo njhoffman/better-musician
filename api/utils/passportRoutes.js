@@ -1,56 +1,50 @@
-export default function passportRoutes(app, passport) {
-  app.post('/login', 
-           passport.authenticate('local-login'),
-           (req, res) => {
-             console.log(`User ${req.user.username} logged in`);
-             res.json(
-               {
-                 status: 'ok',
-                 user: {
-                   email: req.user.email
-                 }
-               });
-           }
-          );
+const debug = require("debug")("api:passport");
 
-  app.post('/signup', 
-           passport.authenticate('local-signup'),
-           (req, res) => {
-             // req.user now contains the right user
-             console.log(`User ${req.user.email} signed up`);
-             res.json(
-               {
-                 status: 'ok',
-                 user: {
-                   email: req.user.email
-                 }
-               });
-           }
-          );
+export default function passportRoutes(app, passport) {
+  app.post('/login', passport.authenticate('local-login'),
+    (req, res) => {
+      debug(`User ${req.user.username} logged in`);
+      res.json({
+          status: 'ok',
+        user: {
+          email: req.user.email }
+      });
+    }
+  );
+
+  app.post('/signup', passport.authenticate('local-signup'),
+    (req, res) => {
+      // req.user now contains the right user
+      debug(`User ${req.user.email} signed up`);
+      res.json({
+        status: 'ok',
+        user: {
+          email: req.user.email }
+      });
+    }
+  );
 
   app.get('/me',
-           (req, res) => {
-             console.log(`Me is ${req.user}`);
-             if(!req.user){
-               res.json({user:null});
-             }else{
-               res.json(
-                 {
-                   user: {
-                     email: req.user.email
-                   }
-                 });
-             }
-           });
+    (req, res) => {
+      debug(`Me is ${req.user}`);
+      if (!req.user) {
+        res.json({user:null});
+      } else {
+        res.json({
+          user: {
+            email: req.user.email }
+        });
+      }
+    });
 
   app.get('/logout',
-          (req, res) => {
-            req.logout();
-            res.json({status: 'ok'});
-          }
-         );
+    (req, res) => {
+      req.logout();
+      res.json({status: 'ok'});
+    }
+  );
 
-/* 
+/*
 # Facebook login routes
 app.get '/auth/facebook', passport.authenticate 'facebook', æ scope: 'email'
 app.get '/auth/facebook/callback', passport.authenticate 'facebook', æ successRedirect : '/profile',  failureRedirect : '/' å

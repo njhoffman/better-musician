@@ -1,52 +1,27 @@
-import Sequelize from 'sequelize';
-import bcrypt from 'bcrypt-nodejs';
+const bcrypt = require("bcrypt");
+const db = require("../db").db;
+const conn = require("../db").conn;
 
-export function createSequelize() { 
 
-  var sequelize = new Sequelize('database', 'username', 'password', {
-    host: 'localhost',
-    dialect: 'sqlite',
+class User {
+  static get tableName() { return "users" }
+  constructor(user) {
+    this.tableName = "users";
+    this.email = user.email;
+    this.password = user.password;
+  }
+  static generateHash(password) {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+  }
+  static findById(id) {
+    return db.table(tableName()).get(id).coerceTo('array').run(conn);
+  }
+  static findByEmail(email) {
+    return db.table(tableName()).filter({ email: email }).coerceTo('array').run(conn);
+  }
+  validPassword(password) {
+    return bcrypt.compareSync(password, this.password);
+  }
+};
 
-    pool: {
-      max: 5,
-      min: 0,
-      idle: 10000
-    },
-
-    // SQLite only
-    storage: './database.sqlite'
-  });
-
-  initializeModels(sequelize);
-  return sequelize;
-}
-
-export var User = null;
-
-function initializeModels(sequelize) {
-   User = sequelize.define('user', {
-     email: {
-       type: Sequelize.STRING,
-       unique: true,
-     },
-     password: Sequelize.STRING,
-   },{
-     classMethods: {
-       generateHash: password => {
-         return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-       }
-     },
-     instanceMethods: {
-       validPassword: function(password) {
-         return bcrypt.compareSync(password, this.password);
-       }
-     }
-   }); 
-
-   if(process.env.TEST_DATABASE){
-     sequelize.sync({force: true});
-   }else{
-     sequelize.sync();
-   }
-}
-
+exports.User = User

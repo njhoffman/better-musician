@@ -1,5 +1,5 @@
 const express = require('express');
-const debug = require('debug')('app:server');
+const debug = require('debug')('app:server        ');
 const webpack = require('webpack');
 const webpackConfig = require('../config/webpack.config');
 const project = require('../config/project.config');
@@ -7,12 +7,14 @@ const compress = require('compression');
 const morgan = require('morgan');
 const httpProxy = require('http-proxy');
 const http = require('http');
-const writeMorgan = require('../server.morgan.js');
+
+const writeMorgan = require('../server.morgan.js').writeMorgan;
+const bodyOutput = require("../server.morgan.js").bodyOutput;
 
 const app = express();
 const server = new http.Server(app);
 
-const targetUrl = 'http://localhost:4000';
+const targetUrl = 'http://localhost:3001';
 const proxy = httpProxy.createProxyServer({
     target: targetUrl,
     ws: true
@@ -71,9 +73,8 @@ const webpackLog = function (message) {
 if (project.env === 'development') {
   const compiler = webpack(webpackConfig);
 
-  // log requests with morgan
-  // TODO: create own stream for requests to format
-  app.use(morgan(writeMorgan('app:server:request')));
+  app.use(bodyOutput('app:request       '));
+  app.use(morgan(writeMorgan('app:request       ')));
 
   debug('Enabling webpack dev and HMR middleware');
   app.use(require('webpack-dev-middleware')(compiler, {

@@ -3,7 +3,16 @@
   "ignore" : [
     ".git",
     "node_modules/**/node_modules",
-    "api/"
+    "api",
+    "dist",
+    "coverage",
+    "test",
+    "src",
+    "rethinkdb_data"
+  ],
+  "watch" : [
+    "bin",
+    "server"
   ],
   "env" : {
     "NODE_ENV" : "development"

@@ -28,6 +28,13 @@ const config = {
   server_port : process.env.PORT || 3000,
 
   // ----------------------------------
+  // Database Configuration
+  // ----------------------------------
+  db_host : process.env.DB_HOST || 'localhost' ,
+  db_port : process.env.DB_PORT || 28015,
+  db_name : process.env.DB_NAME || 'instrumental',
+
+  // ----------------------------------
   // Compiler Configuration
   // ----------------------------------
   compiler_babel : {

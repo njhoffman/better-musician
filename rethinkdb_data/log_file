@@ -1,0 +1,78 @@
+2016-12-23T20:09:19.965133102 0.099062s notice: Recursively removing directory /home/vagrant/projects/instrumental/rethinkdb_data/tmp
+2016-12-23T20:09:19.973178005 0.107110s notice: Initializing directory /home/vagrant/projects/instrumental/rethinkdb_data
+2016-12-23T20:09:19.973814073 0.107743s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/home/vagrant/projects/instrumental/rethinkdb_data' did not already exist or is empty.)
+2016-12-23T20:09:19.973849230 0.107804s notice: Running rethinkdb 2.3.5~0jessie (GCC 4.9.2)...
+2016-12-23T20:09:19.976597085 0.110527s notice: Running on Linux 3.16.0-4-amd64 x86_64
+2016-12-23T20:09:19.977080089 0.111009s notice: Loading data from directory /home/vagrant/projects/instrumental/rethinkdb_data
+2016-12-23T20:09:20.074896994 0.208828s info: Automatically using cache size of 414 MB
+2016-12-23T20:09:20.092417306 0.226346s notice: Listening for intracluster connections on port 29015
+2016-12-23T20:09:20.099040232 0.232969s notice: Listening for client driver connections on port 28015
+2016-12-23T20:09:20.099223822 0.233150s notice: Listening for administrative HTTP connections on port 4000
+2016-12-23T20:09:20.117994537 0.251923s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, 10.0.2.15, ::1, fe80::a00:27ff:fee1:6ec5%2
+2016-12-23T20:09:20.128987462 0.262916s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, 10.0.2.15, ::1, fe80::a00:27ff:fee1:6ec5%2
+2016-12-23T20:09:20.142265692 0.276194s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, 10.0.2.15, ::1, fe80::a00:27ff:fee1:6ec5%2
+2016-12-23T20:09:20.142296089 0.276224s notice: Server ready, "jessie_i5f" 68dfbf6b-bb4a-4758-bba5-91ec5c68d501
+2016-12-23T20:11:20.862020399 120.995948s info: Table 9791195a-209f-4fc7-96f4-4dcbaa547e9e: Starting a new Raft election for term 1.
+2016-12-23T20:11:20.863673161 120.997601s info: Table 9791195a-209f-4fc7-96f4-4dcbaa547e9e: Added replica on this server.
+2016-12-23T20:11:20.883339288 121.017268s info: Table 9791195a-209f-4fc7-96f4-4dcbaa547e9e: This server is Raft leader for term 1. Latest log index is 0.
+2016-12-23T20:13:19.717745518 239.851675s notice: Removing file /home/vagrant/projects/instrumental/rethinkdb_data/9791195a-209f-4fc7-96f4-4dcbaa547e9e
+2016-12-23T20:13:19.718203022 239.852131s info: Table 9791195a-209f-4fc7-96f4-4dcbaa547e9e: Deleted the table.
+2016-12-23T20:14:08.546502268 288.680430s info: Table daa24c89-5530-41ec-a6ae-ac27994390b9: Starting a new Raft election for term 1.
+2016-12-23T20:14:08.547100972 288.681028s info: Table daa24c89-5530-41ec-a6ae-ac27994390b9: Added replica on this server.
+2016-12-23T20:14:08.548254189 288.682182s info: Table daa24c89-5530-41ec-a6ae-ac27994390b9: This server is Raft leader for term 1. Latest log index is 0.
+2016-12-23T20:15:24.814696047 364.948625s notice: Removing file /home/vagrant/projects/instrumental/rethinkdb_data/daa24c89-5530-41ec-a6ae-ac27994390b9
+2016-12-23T20:15:24.814710213 364.948638s info: Table daa24c89-5530-41ec-a6ae-ac27994390b9: Deleted the table.
+2016-12-23T20:15:24.880676946 365.014603s info: Table 7780725f-027f-4c27-8a62-39454b2c5224: Added replica on this server.
+2016-12-23T20:15:24.880676979 365.014603s info: Table 7780725f-027f-4c27-8a62-39454b2c5224: Starting a new Raft election for term 1.
+2016-12-23T20:15:24.888521123 365.022450s info: Table 7780725f-027f-4c27-8a62-39454b2c5224: This server is Raft leader for term 1. Latest log index is 0.
+2016-12-23T22:51:10.773741427 9710.907670s notice: Removing file /home/vagrant/projects/instrumental/rethinkdb_data/7780725f-027f-4c27-8a62-39454b2c5224
+2016-12-23T22:51:10.773765560 9710.907693s info: Table 7780725f-027f-4c27-8a62-39454b2c5224: Deleted the table.
+2016-12-23T22:51:10.836721368 9710.970650s info: Table 17a92964-45a0-48d9-95b2-a7476b9788d9: Starting a new Raft election for term 1.
+2016-12-23T22:51:10.837290936 9710.971219s info: Table 17a92964-45a0-48d9-95b2-a7476b9788d9: Added replica on this server.
+2016-12-23T22:51:10.849355933 9710.983285s info: Table 17a92964-45a0-48d9-95b2-a7476b9788d9: This server is Raft leader for term 1. Latest log index is 0.
+2016-12-23T22:51:54.195788287 9754.329717s notice: Removing file /home/vagrant/projects/instrumental/rethinkdb_data/17a92964-45a0-48d9-95b2-a7476b9788d9
+2016-12-23T22:51:54.195814896 9754.329742s info: Table 17a92964-45a0-48d9-95b2-a7476b9788d9: Deleted the table.
+2016-12-23T22:51:54.254850846 9754.388779s info: Table df4fd9b4-e59f-4ffd-a387-97f035146863: Starting a new Raft election for term 1.
+2016-12-23T22:51:54.255033209 9754.388961s info: Table df4fd9b4-e59f-4ffd-a387-97f035146863: Added replica on this server.
+2016-12-23T22:51:54.256851060 9754.390780s info: Table df4fd9b4-e59f-4ffd-a387-97f035146863: This server is Raft leader for term 1. Latest log index is 0.
+2016-12-23T22:52:35.599985615 9795.733914s notice: Removing file /home/vagrant/projects/instrumental/rethinkdb_data/df4fd9b4-e59f-4ffd-a387-97f035146863
+2016-12-23T22:52:35.600009937 9795.733937s info: Table df4fd9b4-e59f-4ffd-a387-97f035146863: Deleted the table.
+2016-12-23T22:52:35.643397549 9795.777326s info: Table fe75c7f5-d09d-4a7d-87a3-b09035d20925: Starting a new Raft election for term 1.
+2016-12-23T22:52:35.643584967 9795.777512s info: Table fe75c7f5-d09d-4a7d-87a3-b09035d20925: Added replica on this server.
+2016-12-23T22:52:35.646598614 9795.780527s info: Table fe75c7f5-d09d-4a7d-87a3-b09035d20925: This server is Raft leader for term 1. Latest log index is 0.
+2016-12-23T22:53:38.286467664 9858.420421s notice: Removing file /home/vagrant/projects/instrumental/rethinkdb_data/fe75c7f5-d09d-4a7d-87a3-b09035d20925
+2016-12-23T22:53:38.286513959 9858.420441s info: Table fe75c7f5-d09d-4a7d-87a3-b09035d20925: Deleted the table.
+2016-12-23T22:53:38.362978328 9858.496906s info: Table 67317bff-b28d-41b1-b2f7-525a6ba8ba79: Starting a new Raft election for term 1.
+2016-12-23T22:53:38.363185150 9858.497113s info: Table 67317bff-b28d-41b1-b2f7-525a6ba8ba79: Added replica on this server.
+2016-12-23T22:53:38.365716456 9858.499645s info: Table 67317bff-b28d-41b1-b2f7-525a6ba8ba79: This server is Raft leader for term 1. Latest log index is 0.
+2016-12-23T22:54:03.190493255 9883.324440s notice: Removing file /home/vagrant/projects/instrumental/rethinkdb_data/67317bff-b28d-41b1-b2f7-525a6ba8ba79
+2016-12-23T22:54:03.190524945 9883.324452s info: Table 67317bff-b28d-41b1-b2f7-525a6ba8ba79: Deleted the table.
+2016-12-23T22:54:03.258543602 9883.392472s info: Table 1a5fcc9c-4322-4e8d-a869-f0f7597a389d: Starting a new Raft election for term 1.
+2016-12-23T22:54:03.258863340 9883.392791s info: Table 1a5fcc9c-4322-4e8d-a869-f0f7597a389d: Added replica on this server.
+2016-12-23T22:54:03.265222268 9883.399184s info: Table 1a5fcc9c-4322-4e8d-a869-f0f7597a389d: This server is Raft leader for term 1. Latest log index is 0.
+2016-12-23T22:54:47.528175357 9927.662115s notice: Removing file /home/vagrant/projects/instrumental/rethinkdb_data/1a5fcc9c-4322-4e8d-a869-f0f7597a389d
+2016-12-23T22:54:47.528197013 9927.662124s info: Table 1a5fcc9c-4322-4e8d-a869-f0f7597a389d: Deleted the table.
+2016-12-23T22:54:47.569522453 9927.703451s info: Table 4cc1dce2-2137-4847-9acd-8f7b44c44726: Starting a new Raft election for term 1.
+2016-12-23T22:54:47.569768361 9927.703696s info: Table 4cc1dce2-2137-4847-9acd-8f7b44c44726: Added replica on this server.
+2016-12-23T22:54:47.572539434 9927.706468s info: Table 4cc1dce2-2137-4847-9acd-8f7b44c44726: This server is Raft leader for term 1. Latest log index is 0.
+2016-12-23T23:05:46.952625203 10587.086554s info: Table f14d512f-2c5f-4b9d-a702-aee8f9e7c47b: Starting a new Raft election for term 1.
+2016-12-23T23:05:46.952840558 10587.086768s info: Table f14d512f-2c5f-4b9d-a702-aee8f9e7c47b: Added replica on this server.
+2016-12-23T23:05:46.954973566 10587.088901s info: Table f14d512f-2c5f-4b9d-a702-aee8f9e7c47b: This server is Raft leader for term 1. Latest log index is 0.
+2016-12-23T23:16:43.147067202 11243.280995s info: Table dcf9562a-c75c-4823-840d-715b20a1a5df: Starting a new Raft election for term 1.
+2016-12-23T23:16:43.147318266 11243.281246s info: Table dcf9562a-c75c-4823-840d-715b20a1a5df: Added replica on this server.
+2016-12-23T23:16:43.151490996 11243.285419s info: Table dcf9562a-c75c-4823-840d-715b20a1a5df: This server is Raft leader for term 1. Latest log index is 0.
+2016-12-23T23:16:43.449601806 11243.583528s info: Table b649401a-9907-43d1-b00e-c22f447a76b1: Starting a new Raft election for term 1.
+2016-12-23T23:16:43.449806947 11243.583734s info: Table b649401a-9907-43d1-b00e-c22f447a76b1: Added replica on this server.
+2016-12-23T23:16:43.452887868 11243.586817s info: Table b649401a-9907-43d1-b00e-c22f447a76b1: This server is Raft leader for term 1. Latest log index is 0.
+2016-12-23T23:16:43.752475705 11243.886404s info: Table 80ed73fd-9527-41a8-bfba-753768aef32c: Starting a new Raft election for term 1.
+2016-12-23T23:16:43.752806640 11243.886735s info: Table 80ed73fd-9527-41a8-bfba-753768aef32c: Added replica on this server.
+2016-12-23T23:16:43.754471969 11243.888797s info: Table 80ed73fd-9527-41a8-bfba-753768aef32c: This server is Raft leader for term 1. Latest log index is 0.
+2016-12-23T23:16:44.059453352 11244.193381s info: Table d719f4b9-98aa-4a50-b152-e876ef3675ab: Added replica on this server.
+2016-12-23T23:16:44.059533373 11244.193461s info: Table d719f4b9-98aa-4a50-b152-e876ef3675ab: Starting a new Raft election for term 1.
+2016-12-23T23:16:44.062433218 11244.196362s info: Table d719f4b9-98aa-4a50-b152-e876ef3675ab: This server is Raft leader for term 1. Latest log index is 0.
+2016-12-23T23:16:44.375890606 11244.509819s info: Table 4967b521-927c-4720-94e3-e1dbe47c4b1d: Starting a new Raft election for term 1.
+2016-12-23T23:16:44.377681874 11244.511638s info: Table 4967b521-927c-4720-94e3-e1dbe47c4b1d: Added replica on this server.
+2016-12-23T23:16:44.380561392 11244.514489s info: Table 4967b521-927c-4720-94e3-e1dbe47c4b1d: This server is Raft leader for term 1. Latest log index is 0.
+2016-12-23T23:16:44.678363755 11244.812292s info: Table 127c02e4-5769-465c-8f86-49d0cd872588: Starting a new Raft election for term 1.
+2016-12-23T23:16:44.678716132 11244.812644s info: Table 127c02e4-5769-465c-8f86-49d0cd872588: Added replica on this server.
+2016-12-23T23:16:44.685632077 11244.819560s info: Table 127c02e4-5769-465c-8f86-49d0cd872588: This server is Raft leader for term 1. Latest log index is 0.
