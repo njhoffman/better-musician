@@ -43,7 +43,9 @@ const mapActionCreators = {
 
 const mapStateToProps = (state) => ({
   searchIsOpen: localState.searchIsOpen,
-  currentSong: state.songsView ? state.songsView.currentSong : null
+  currentSong: state.songsView ? state.songsView.currentSong : null,
+  user: state.auth.get("user"),
+  location: state.location ? state.location.pathname : null
 });
 
 export default connect(mapStateToProps, mapActionCreators)(Header);

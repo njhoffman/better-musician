@@ -70,6 +70,7 @@ export const ORM = class ORM {
             this.registry.push(model);
         });
         this.db = this.createDatabase(this.generateSchemaSpec());
+      console.info("REGISERING", this.db);
     }
 
     registerManyToManyModelsFor(model) {

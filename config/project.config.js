@@ -13,6 +13,7 @@ const config = {
 
   // ----------------------------------
   // Project Structure
+
   // ----------------------------------
   path_base  : path.resolve(__dirname, '..'),
   dir_client : 'src',
@@ -34,6 +35,11 @@ const config = {
   db_port : process.env.DB_PORT || 28015,
   db_name : process.env.DB_NAME || 'instrumental',
 
+  // API Configuration
+  api_host   : process.env.API_HOST || 'localhost',
+  api_port   : process.env.API_PORT || 3001,
+  api_secret : 'asjdkfjsdkgh',
+
   // ----------------------------------
   // Compiler Configuration
   // ----------------------------------
@@ -54,9 +60,13 @@ const config = {
   },
   compiler_vendors : [
     'react',
+    'react-dom',
     'react-redux',
     'react-router',
-    'redux'
+    'react-foundation',
+    'redux',
+    'redux-thunk',
+    'material-ui'
   ],
 
   // ----------------------------------

@@ -1,0 +1,22 @@
+{
+  "verbose" : true,
+  "ignore" : [
+    ".git",
+    "node_modules/**/node_modules",
+    "server/api",
+    "server/api.js",
+    "dist",
+    "coverage",
+    "test",
+    "src",
+    "rethinkdb_data"
+  ],
+  "watch" : [
+    "bin",
+    "server/main.js",
+    "server/server.*.js"
+  ],
+  "env" : {
+    "NODE_ENV" : "development"
+  }
+}

@@ -1,10 +1,5 @@
 import { connect } from 'react-redux';
-
 import DrawerMenu from 'components/DrawerMenu';
-
-export const isOpen = (drawerMenu) => {
-  return (drawerMenu.isOpen ? true : false);
-};
 
 export const hideDrawerMenu = () => {
   return (dispatch) => {
@@ -12,9 +7,12 @@ export const hideDrawerMenu = () => {
   };
 }
 
-const mapDispatchToProps = { hideDrawerMenu };
+const mapDispatchToProps = {
+  hideDrawerMenu
+};
+
 const mapStateToProps = (state) => ({
-  isOpen: isOpen(state.drawerMenu)
+  isOpen: state.drawerMenu.isOpen
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DrawerMenu);

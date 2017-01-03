@@ -20,6 +20,7 @@ const _RESOLVE_PATHS = {
   interfaces: "src/interfaces",
   middleware: "src/middleware",
   "redux-orm": "src/redux-orm"
+  // "redux-auth": "src/redux-auth"
 };
 
 let resolvePaths = _.mapValues(_RESOLVE_PATHS, function (str) {

@@ -13,7 +13,7 @@ const columnWidths = [
   { width: '15%' },
 ];
 
-const SongsList = ({ songsCollection, onSongClick, onSortClick }) => (
+const SongsList = ({ songsCollection, onSongClick, onSortClick, currentSong }) => (
   <Table
     selectable={true}
     onRowSelection={onSongClick}
@@ -59,6 +59,7 @@ const SongsList = ({ songsCollection, onSongClick, onSortClick }) => (
           key={song.id}
           songValues={song}
           columnWidths={columnWidths}
+          selected={song.id === currentSong}
         />
       )}
     </TableBody>
@@ -66,13 +67,14 @@ const SongsList = ({ songsCollection, onSongClick, onSortClick }) => (
 );
 
 SongsList.propTypes = {
-    songsCollection: PropTypes.arrayOf(
-        PropTypes.shape({
-            id:        PropTypes.number,
-            title:     PropTypes.string
-        }).isRequired),
+  songsCollection: PropTypes.arrayOf(
+    PropTypes.shape({
+      id:        PropTypes.number,
+      title:     PropTypes.string
+    }).isRequired),
   onSongClick: PropTypes.func.isRequired,
-  onSortClick: PropTypes.func.isRequired
+  onSortClick: PropTypes.func.isRequired,
+  currentSong: PropTypes.number.isRequired
 };
 
 export default (SongsList);

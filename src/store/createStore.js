@@ -7,17 +7,11 @@ import createLogger from 'redux-logger';
 import middlewareApi from 'middleware/api';
 
 export default (initialState = {}) => {
-  // ======================================================
-  // Middleware Configuration
-  // ======================================================
+
   // const middleware = [thunk, middlewareApi, createLogger()];
   const middleware = [thunk, middlewareApi];
 
-  // ======================================================
-  // Store Enhancers
-  // ======================================================
   const enhancers = [];
-
   let composeEnhancers = compose;
 
   if (__DEV__) {
@@ -47,4 +41,5 @@ export default (initialState = {}) => {
   }
 
   return store;
+
 };

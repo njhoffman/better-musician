@@ -2,14 +2,11 @@ import {fk, many, Model, ORM as Schema} from 'redux-orm';
 import {
   ADD_SONG,
   SET_CURRENT_SONG,
+	FETCH_SONGS,
   SHOW_SONGS,
   DELETE_SONG,
   UPDATE_SONG
 } from './actionTypes';
-import exampleSongs from 'routes/Songs/data/exampleSongs';
-import exampleArtists from 'routes/Songs/data/exampleArtists';
-import exampleGenres from 'routes/Songs/data/exampleGenres';
-import exampleInstruments from 'routes/Songs/data/exampleInstruments';
 
 
 // ------------------------------------
@@ -21,12 +18,17 @@ class Song extends Model {
     super(song);
   }
   static reducer(action, Song, session) {
+    console.info("SONG REDUCER", action);
     const { payload, type } = action;
     switch (type) {
       case ADD_SONG:
+        debugger;
         const newSong = action.payload.song;
         const props = Object.assign({}, payload, { newSong });
         Song.create(props);
+        break;
+      case 'SONGS_SUCCESS':
+        debugger;
         break;
       case DELETE_SONG:
         Song.withId(payload).delete();
@@ -34,11 +36,6 @@ class Song extends Model {
       case UPDATE_SONG:
         break;
     }
-  }
-  static generateExamples() {
-    exampleSongs.forEach( exSong => {
-      this.create(exSong);
-    });
   }
   toString() {
     return `Song: ${this.title}`;
@@ -99,11 +96,6 @@ class Genre extends Model {
         break;
     }
   }
-  static generateExamples() {
-    exampleGenres.forEach( exGenre => {
-      this.create(exGenre);
-    });
-  }
   toString() {
     return `Genre: ${this.name}`;
   }
@@ -130,11 +122,6 @@ class Instrument extends Model {
       default:
         break;
     }
-  }
-  static generateExamples() {
-    exampleInstruments.forEach( exInstrument => {
-      this.create(exInstrument);
-    });
   }
   toString() {
     return `Instrument: ${this.name}`;
@@ -167,11 +154,6 @@ class Artist extends Model {
       default:
         break;
     }
-  }
-  static generateExamples() {
-    exampleArtists.forEach( exArtist => {
-      this.create(exArtist);
-    });
   }
   toString() {
     return `Artist: ${this.lastName}`;

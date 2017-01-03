@@ -1,43 +1,74 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import { Link, IndexLink } from 'react-router';
 
-import muiThemeable from 'material-ui/styles/muiThemeable';
 
-export const DrawerMenu = (props) => {
-
-  return (
-    <div>
-      <Drawer
-        open={props.isOpen}
-        docked={false}
-        onRequestChange={props.hideDrawerMenu}
-      >
-          <MenuItem>
-              <Link to='/' activeClassName='route--active'>Home</Link>
-          </MenuItem>
-          <MenuItem>
-              <Link to='/login' activeClassName='route--active'>Login</Link>
-          </MenuItem>
-          <MenuItem>
-              <Link to='/songs' activeClassName='route--active'>Songs</Link>
-          </MenuItem>
-          <MenuItem>
-              <Link to='/settings' activeClassName='route--active'>Settings</Link>
-          </MenuItem>
-          <MenuItem>
-              <Link to='/profile' activeClassName='route--active'>Profile</Link>
-          </MenuItem>
-      </Drawer>
-    </div>
-  );
+const linkStyle = {
+  width: "100%"
 }
 
-DrawerMenu.propTypes = {
-  isOpen:      React.PropTypes.bool.isRequired,
-  hideDrawerMenu: React.PropTypes.func.isRequired
-};
+class DrawerMenu extends Component {
+  render() {
+    const { props } = this;
+    return (
+      <div>
+        <Drawer
+          open={props.isOpen}
+          docked={false}
+          onRequestChange={props.hideDrawerMenu}>
+            <MenuItem>
+              <Link
+                to='/'
+                onClick={props.hideDrawerMenu}
+                activeClassName='active'>
+                Home
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <Link
+                to='/register'
+                onClick={props.hideDrawerMenu}
+                style={linkStyle}
+                activeClassName='active'>
+                Register
+              </Link>
+            </MenuItem>
+            <MenuItem>
+                <Link style={linkStyle} to='/login' activeClassName='active'>Login</Link>
+            </MenuItem>
+            <MenuItem>
+              <Link
+                to='/songs'
+                onClick={props.hideDrawerMenu}
+                style={linkStyle}
+                activeClassName='active'>
+                Songs
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <Link
+                to='/settings'
+                onClick={props.hideDrawerMenu}
+                style={linkStyle}
+                activeClassName='active'>
+                Settings
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <Link
+                to='/profile'
+                onClick={props.hideDrawerMenu}
+                style={linkStyle}
+                activeClassName='active'>
+                Profile
+              </Link>
+            </MenuItem>
+        </Drawer>
+      </div>
+    );
+  }
+}
 
 
-export default muiThemeable()(DrawerMenu);
+export default DrawerMenu;

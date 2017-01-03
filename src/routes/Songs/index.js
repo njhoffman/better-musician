@@ -1,4 +1,5 @@
 import { injectReducer } from 'store/reducers';
+import { fetchSongs } from './modules/songs';
 
 export default (store) => ({
   path : 'songs',
@@ -12,6 +13,7 @@ export default (store) => ({
       const SongsContainer = require('./containers/SongsViewContainer').default;
 
       store.dispatch({ type: "INIT_SONG_VIEW" });
+      fetchSongs(store.dispatch);
 
       cb(null, SongsContainer);
 

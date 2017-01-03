@@ -1,7 +1,8 @@
 import React, { Component }  from 'react';
 import { IndexLink, Link } from 'react-router';
 import { Row, Column, Breakpoints } from 'react-foundation';
-import { Drawer, MenuItem, Popover } from 'material-ui';
+import { Drawer, MenuItem, Popover, RaisedButton } from 'material-ui';
+import _ from 'lodash';
 
 import MenuIcon from 'react-icons/lib/md/menu';
 import FilterIcon from 'react-icons/lib/md/filter-list';
@@ -50,14 +51,21 @@ class Header extends Component  {
   };
 
   renderSongActionButton() {
-    if ( _.isEmpty(this.props.currentSong) ) {
+    if (this.props.location !== '/songs') {
+      return (
+        <a>
+          <Link to='/songs' activeClassName='route--active'>
+            View Songs
+          </Link>
+        </a>
+      )
+    } else if ( _.isEmpty(this.props.currentSong) ) {
       return (
         <a onClick={ this.props.showAddSongModal }>
           <AddIcon />Add Song
         </a>
       );
     }
-
     return (
       <a>
         <EditIcon />Edit Song
@@ -81,59 +89,88 @@ class Header extends Component  {
     );
   }
 
+  renderScoreButton() {
+    if (this.props.user.get("isSignedIn")) {
+      return (
+        <span>{ this.props.user.get("attributes").get("email") }</span>
+      );
+    }
+    return (
+      <div>
+        <Link to='/login'>
+          <RaisedButton className={css.loginButton} label="LOGIN" primary={true} />
+        </Link>
+        <Link to='/register'>
+          <RaisedButton className={css.registerButton} label="REGISTER" />
+        </Link>
+      </div>
+    );
+  }
+
+
   render () {
     const props = this.props;
     return (
       <div className={css.actionBar}>
         <Row className="display top">
           <Column small={8} medium={3} style={{ textAlign: 'left' }}>
-            <a onClick={this.props.toggleDrawerMenu}>
-              <MenuIcon />
-            </a>
-            <IndexLink to ='/' activeClassName='route--active'>
-              instrumental.com
-            </IndexLink>
+            <div className={css.columnWrapper}>
+              <a onClick={this.props.toggleDrawerMenu}>
+                <MenuIcon />
+              </a>
+              <IndexLink to ='/' activeClassName='route--active'>
+                instrumental.com
+              </IndexLink>
+            </div>
           </Column>
           <Column showFor={Breakpoints.MEDIUM}>
 
-              { this.renderSongActionButton(props) }
+            { this.renderSongActionButton(props) }
 
           </Column>
           <Column showFor={Breakpoints.MEDIUM}>
-            <a onClick={props.showFiltersModal} >
-              <FilterIcon />Filters
-            </a>
+            <div className={css.columnWrapper}>
+              <a onClick={props.showFiltersModal} >
+                <FilterIcon />Filters
+              </a>
+            </div>
           </Column>
           <Column showFor={Breakpoints.MEDIUM}>
-            <a onClick={ this.toggleSearchPopover.bind(this) }>
-              <SearchIcon />Search
-              <SearchPopover
-                open={ this.state.searchPopoverOpen }
-                onRequestClose={ this.onRequestClose.bind(this) } />
-            </a>
+            <div className={css.columnWrapper}>
+              <a onClick={ this.toggleSearchPopover.bind(this) }>
+                <SearchIcon />Search
+                <SearchPopover
+                  open={ this.state.searchPopoverOpen }
+                  onRequestClose={ this.onRequestClose.bind(this) } />
+              </a>
+            </div>
           </Column>
           <Column small={4} medium={3}>
-            <Link to='/counter' activeClassName='route--active'>
-              Score (Counter)
-            </Link>
+            { this.renderScoreButton() }
           </Column>
 
         </Row>
         <Row className="display bottom" showOnlyFor={Breakpoints.SMALL}>
           <Column centerOnSmall>
+            <div className={css.columnWrapper}>
               <Link to='/songs' activeClassName='route--active'>
                 <SortIcon /> Sort
               </Link>
+            </div>
           </Column>
           <Column centerOnSmall>
+            <div className={css.columnWrapper}>
               <Link to='/songs' activeClassName='route--active'>
                 <SortIcon /> Sort
               </Link>
+            </div>
           </Column>
           <Column centerOnSmall>
+            <div className={css.columnWrapper}>
               <Link to='/songs' activeClassName='route--active'>
                 <SortIcon /> Sort
               </Link>
+            </div>
           </Column>
         </Row>
       </div>
@@ -144,7 +181,7 @@ class Header extends Component  {
 Header.propTypes = {
   showFiltersModal: React.PropTypes.func.isRequired,
   toggleDrawerMenu: React.PropTypes.func.isRequired,
-  searchClose: React.PropTypes.func.isRequired,
+  searchClose:      React.PropTypes.func.isRequired,
   showAddSongModal: React.PropTypes.func.isRequired
 };
 

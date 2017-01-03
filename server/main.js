@@ -1,71 +1,40 @@
 const express = require('express');
-const debug = require('debug')('app:server        ');
 const webpack = require('webpack');
 const webpackConfig = require('../config/webpack.config');
 const project = require('../config/project.config');
 const compress = require('compression');
 const morgan = require('morgan');
-const httpProxy = require('http-proxy');
-const http = require('http');
+const cookieParser = require("cookie-parser");
+const session = require('express-session');
+const setupProxy = require('./main/proxy');
 
-const writeMorgan = require('../server.morgan.js').writeMorgan;
-const bodyOutput = require("../server.morgan.js").bodyOutput;
+const morganOutput = require('./server.utils').morganOutput;
+const requestOutput = require('./server.utils').requestOutput;
+const webpackLog = require('./server.utils').webpackLog;
+
+const debug              = require('debug')('app:server');
+const requestDebug       = require('debug')('app:request');
+const responseDebug      = require('debug')('app:response');
+const webpackDebug       = require('debug')('app:server:webpack');
 
 const app = express();
-const server = new http.Server(app);
+setupProxy(app);
 
-const targetUrl = 'http://localhost:3001';
-const proxy = httpProxy.createProxyServer({
-    target: targetUrl,
-    ws: true
-});
+app.use(session({
+  secret: 'somesecret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 60000 }
+}));
 
 
-// Proxy to API server
-app.use('/api', (req, res) => {
-  proxy.web(req, res, {target: targetUrl});
-});
-
-app.use('/ws', (req, res) => {
-  proxy.web(req, res, {target: targetUrl + '/ws'});
-});
-
-server.on('upgrade', (req, socket, head) => {
-  proxy.ws(req, socket, head);
-});
-
-// added the error handling to avoid https://github.com/nodejitsu/node-http-proxy/issues/527
-proxy.on('error', (error, req, res) => {
-  let json;
-  if (error.code !== 'ECONNRESET') {
-    console.error('proxy error', error);
-  }
-  if (!res.headersSent) {
-    res.writeHead(500, {'content-type': 'application/json'});
-  }
-
-  json = {error: 'proxy_error', reason: error.message};
-  res.end(JSON.stringify(json));
-});
-
-// This rewrites all routes requests to the root /index.html file
-// (ignoring file requests). If you want to implement universal
-// rendering, you'll want to remove this middleware.
+// Rewrites all routes requests to the root /index.html file (ignoring file requests).
+// Remove this middleware if universal rendering is desired
 app.use(require('connect-history-api-fallback')());
 
 // Apply gzip compression
 // turned off as it squashes eventsource messages
 // app.use(compress());
-
-
-const webpackDebug = require('debug')('app:server:webpack');
-const webpackLog = function (message) {
-  // message = message.split('\n').map( function (line) { return webpackDebug(line); }).join('\n');
-  if (message.indexOf('\n') !== -1) {
-    message = "\n\n" + message + "\n\n";
-  }
-  return webpackDebug(message);
-};
 
 // ------------------------------------
 // Apply Webpack HMR Middleware
@@ -73,8 +42,8 @@ const webpackLog = function (message) {
 if (project.env === 'development') {
   const compiler = webpack(webpackConfig);
 
-  app.use(bodyOutput('app:request       '));
-  app.use(morgan(writeMorgan('app:request       ')));
+  // app.use(requestOutput(requestDebug));
+  // app.use(morgan(morganOutput(responseDebug)));
 
   debug('Enabling webpack dev and HMR middleware');
   app.use(require('webpack-dev-middleware')(compiler, {
@@ -116,6 +85,13 @@ if (project.env === 'development') {
   app.use(express.static(project.paths.dist()));
 }
 
+// error handling
+app.use(function (err, req, res, next) {
+    debug("\n\n*** ERROR ***");
+    console.error(err);
+    debug("*** ERROR ***\n\n");
+    res.status(err.status ? err.status : 500).send(err.message)
+});
 
 
 module.exports = app;

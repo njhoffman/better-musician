@@ -44,3 +44,14 @@ table tbody tr:nth-child(even) {
 table {
   margin-bottom: 0;
 }
+
+// fix for autofill override transparent text fields
+// http://stackoverflow.com/questions/2781549/removing-input-background-colour-for-chrome-autocomplete
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: white !important;
+}
+
