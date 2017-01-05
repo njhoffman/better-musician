@@ -61,6 +61,9 @@ class Song extends BaseModel {
   static get tableKeys() {
     return ["email", "uid", "id"];
   }
+  static get foreignKeys() {
+    return { artist: 'artists', instrument: 'instruments', genre: 'genre' };
+  }
   static get exampleData() { return exampleSongs; }
   constructor(song) {
     super();
@@ -72,6 +75,51 @@ class Song extends BaseModel {
       .filter({ user: uid })
       .coerceTo('array')
       .run(getDbModule().conn);
+  }
+  static findRelatedByUserId(uid) {
+    let retObj = {};
+    let songs;
+
+    const rArgs = getDbModule().r.args;
+    return this.findByUserId(uid)
+      .then(_songs => {
+        retObj.songs = songs = _songs;
+        let artists = songs.map(song => song.artist);
+        artists = artists.filter((artist, pos, self) => self.indexOf(artist) === pos);
+        debug('trying to get %O', artists);
+        return getDbModule()
+          .db
+          .table('artists')
+          .getAll(rArgs(artists))
+          .coerceTo('array')
+          .run(getDbModule().conn);
+      }).then(artists => {
+        retObj.artists = artists;
+        let instruments = songs.map(song => song.instrument);
+        instruments = instruments.filter((instrument, pos, self) => self.indexOf(instrument) === pos);
+        debug('trying to get %O %O', instruments, artists);
+        return getDbModule()
+          .db
+          .table('instruments')
+          .getAll(rArgs(instruments))
+          .coerceTo('array')
+          .run(getDbModule().conn);
+      }).then(instruments => {
+        retObj.instruments = instruments;
+        let genres = songs.map(song => song.genre);
+        genres = genres.filter((genre, pos, self) => self.indexOf(genre) === pos);
+        debug('trying to get %O %O', genres, instruments);
+        return getDbModule()
+          .db
+          .table('genres')
+          .getAll(rArgs(genres))
+          .coerceTo('array')
+          .run(getDbModule().conn);
+      }).then(genres => {
+        retObj.genres = genres;
+        return retObj;
+      });
+
   }
   save() {
     return getDbModule()

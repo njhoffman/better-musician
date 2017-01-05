@@ -31,8 +31,8 @@ export const songs = createSelector(
 );
 
 const currentSongSelector = ormCreateSelector(orm, (session, state) => {
-  return state.songsView && typeof state.songsView.currentSong !== 'undefined'
-    ? session.Song.withId(state.songsView.currentSong[0])
+  return state.songsView && typeof state.songsView.currentSong !== 'undefined' && session.Song.count() > 0
+    ? session.Song.withId(state.songsView.currentSong)
     : null;
 });
 

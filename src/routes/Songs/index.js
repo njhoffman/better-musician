@@ -13,7 +13,7 @@ export default (store) => ({
       const SongsContainer = require('./containers/SongsViewContainer').default;
 
       store.dispatch({ type: "INIT_SONG_VIEW" });
-      fetchSongs(store.dispatch);
+      store.dispatch(fetchSongs());
 
       cb(null, SongsContainer);
 

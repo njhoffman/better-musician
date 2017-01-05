@@ -15,7 +15,6 @@ export function defaultUpdater(session, action) {
 
 export const createReducer = (orm, updater = defaultUpdater) =>
     (state, action) => {
-      console.info("CREATE REDUCER");
         const session = orm.session(state || orm.getEmptyState());
         updater(session, action);
         return session.state;

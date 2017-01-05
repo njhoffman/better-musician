@@ -3,9 +3,9 @@ import { getVisibleSongs, setCurrentSong, setSort } from 'routes/Songs/modules/s
 import SongsList from 'routes/Songs/components/SongsList';
 
 const getCurrentSong = (state) => {
-  return state.songsView && state.songsView.currentSong && state.songsView.currentSong[0]
-    ? state.songsView.currentSong[0]
-    : -1;
+  return state.songsView && state.songsView.currentSong
+    ? state.songsView.currentSong
+    : "";
 };
 
 const mapStateToProps = (state, action) => ({

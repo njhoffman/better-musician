@@ -17,12 +17,12 @@ export default function (passport) {
     (req, res) => {
       const uid = req.user.id;
       debug(`Songs User ${req.user.email} logged in`);
-      SongModel.findByUserId(uid)
-        .then(songs => {
+      SongModel.findRelatedByUserId(uid)
+        .then(tables => {
           res.json({
             status: 'ok',
             data: {
-              songs: songs
+              tables: tables
             }
           });
         });
@@ -51,7 +51,21 @@ export default function (passport) {
     (req, res, next) => {
       const uid = req.user.id;
       const num = req.params.number ? req.params.number : 5;
-      debug("inside generate songs %s %o", num, req.user);
+      SongModel.generate(num, { user: uid })
+        .then(results => {
+          if (results.errors === 0) {
+            res.json({status: 'ok'});
+          } else {
+            throw new Error(results.first_error);
+          }
+        }).catch(next);
+    }, passportError);
+
+  router.get('/empty',
+    passport.authenticate('jwt', { failWithError: true, session: false }),
+    (req, res, next) => {
+      const uid = req.user.id;
+      const num = req.params.number ? req.params.number : 5;
       SongModel.generate(num, { user: uid })
         .then(results => {
           if (results.errors === 0) {

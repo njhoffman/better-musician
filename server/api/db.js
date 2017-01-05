@@ -49,7 +49,7 @@ exports.init = function init() {
 }
 
 exports.getDbModule = function() {
-    return { conn, db };
+    return { conn, db, r };
 }
 
 exports.getTables = function getTables() {

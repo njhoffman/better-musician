@@ -66,6 +66,7 @@ const config = {
     'react-foundation',
     'redux',
     'redux-thunk',
+    'redux-orm',
     'material-ui'
   ],
 

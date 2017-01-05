@@ -1,6 +1,18 @@
 const chalk = require("chalk");
 const verbose = true;
 const util = require("util");
+const pjson = require('prettyjson-256');
+
+const pjsonOptions = {
+  colors:     {
+    // keys:    { fg:  [1,3,2] },
+    keys:    { fg:  [0,2,1] },
+    number:  { grayscale: 11 }
+  },
+  alphKeys:   true,
+  alphArrays: true
+};
+
 
 function padLeft(str, len) {
   return len > str.length
@@ -92,7 +104,8 @@ const requestOutput = function(debug) {
       }
     }
     if (Object.keys(body).length > 0) {
-      debug("Body \n %O", body);
+      const bodyJson = pjson.render(JSON.parse(body), pjsonOptions, 4);
+      debug(bodyJson);
     }
     if (Object.keys(query).length > 0) {
       debug("Query \n %O", query);
@@ -110,7 +123,8 @@ const responseOutput = function(debug) {
     res.on('data', function(chunk) {
       body += chunk;
       if (isJson(body)) {
-        debug("Response Body:\n%O", JSON.parse(body));
+        const bodyJson = pjson.render(JSON.parse(body), pjsonOptions, 4);
+        debug(bodyJson);
       }
     });
     const status = res.statusCode;
@@ -137,7 +151,9 @@ const responseOutput = function(debug) {
     if (verbose) {
       debug(outputHeaders(res.headers ? res.headers : req.headers));
       debug(outputSession(req.session));
-      debug(outputCookies(res.cookies));
+      if (req.cookies && Object.keys(req.cookies).length > 0) {
+        debug(outputCookies(res.cookies));
+      }
       if (res.locals && Object.keys(res.locals).length > 0) {
         debug("%O", res.locals);
       }

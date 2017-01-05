@@ -66,7 +66,7 @@ export default function (passport) {
       }
     });
 
-  router.get('/logout',
+  router.all('/logout',
     (req, res) => {
       req.logout();
       res.json({status: 'ok'});

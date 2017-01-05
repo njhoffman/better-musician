@@ -1,4 +1,5 @@
 const getDbModule = require("../db").getDbModule;
+const _ = require("lodash");
 
 class BaseModel {
   static get db() { return getDbModule().db; }
@@ -25,8 +26,8 @@ class BaseModel {
   }
   static generate(num, mergeObj) {
     let exampleData = num && num > 0
-      ? this.exampleData.slice(0, num)
-      : this.exampleData;
+      ? _.shuffle(this.exampleData).slice(0, num)
+      : _.shuffle(this.exampleData);
     if (mergeObj) {
       exampleData = exampleData.map(data => {
         return Object.assign(data, mergeObj);

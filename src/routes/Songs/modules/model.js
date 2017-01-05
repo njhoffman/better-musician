@@ -9,26 +9,33 @@ import {
 } from './actionTypes';
 
 
+class BaseModel extends Model {
+  static loadData(data, Model) {
+    data.forEach(d => {
+      this.create(d);
+    });
+  }
+}
+
 // ------------------------------------
 // Song
 // ------------------------------------
 
-class Song extends Model {
-  constructor(song) {
-    super(song);
-  }
+class Song extends BaseModel {
   static reducer(action, Song, session) {
-    console.info("SONG REDUCER", action);
     const { payload, type } = action;
     switch (type) {
       case ADD_SONG:
-        debugger;
         const newSong = action.payload.song;
         const props = Object.assign({}, payload, { newSong });
         Song.create(props);
         break;
-      case 'SONGS_SUCCESS':
-        debugger;
+      case 'SONGS_REQUEST':
+        // remove all songs when fetching
+        this.all().delete();
+        break;
+      case 'LOAD_SONGS':
+        this.loadData(action.payload, Song);
         break;
       case DELETE_SONG:
         Song.withId(payload).delete();
@@ -58,11 +65,47 @@ Song.shallowFields = {
 };
 
 // ------------------------------------
+// Artist
+// ------------------------------------
+
+
+class Artist extends BaseModel {
+  constructor(artist) {
+    artist.fullName = artist.lastName + ', ' + artist.firstName;
+    super(artist);
+  }
+  static reducer(action, Artist, session) {
+    const { payload, type } = action;
+    switch (type) {
+      case 'LOAD_ARTISTS':
+        this.loadData(action.payload, Artist);
+        break;
+      default:
+        break;
+    }
+  }
+  toString() {
+    return `Artist: ${this.lastName}`;
+  }
+}
+
+Artist.modelName = 'Artist';
+
+Artist.fields = {};
+
+Artist.shallowFields = {
+  id: 'number',
+  name: 'string',
+  icon: 'string'
+};
+
+
+// ------------------------------------
 // Filter
 // ------------------------------------
 
 
-class Filter extends Model {
+class Filter extends BaseModel {
   static reducer(action, Filter, session) {
     const { payload, type } = action;
     switch (type) {
@@ -88,10 +131,13 @@ Filter.shallowFields = {
 // Genre
 // ------------------------------------
 
-class Genre extends Model {
+class Genre extends BaseModel {
   static reducer(action, Genre, session) {
     const { payload, type } = action;
     switch (type) {
+      case 'LOAD_GENRES':
+        this.loadData(action.payload, this);
+        break;
       default:
         break;
     }
@@ -115,10 +161,13 @@ Genre.shallowFields = {
 // Instruments
 // ------------------------------------
 
-class Instrument extends Model {
+class Instrument extends BaseModel {
   static reducer(action, Instrument, session) {
     const { payload, type } = action;
     switch (type) {
+      case 'LOAD_INSTRUMENTS':
+        this.loadData(action.payload, this);
+        break;
       default:
         break;
     }
@@ -138,37 +187,10 @@ Instrument.shallowFields = {
   icon: 'string'
 };
 
-// ------------------------------------
-// Artist
-// ------------------------------------
 
-
-class Artist extends Model {
-  constructor(artist) {
-    artist.fullName = artist.lastName + ', ' + artist.firstName;
-    super(artist);
-  }
-  static reducer(action, Artist, session) {
-    const { payload, type } = action;
-    switch (type) {
-      default:
-        break;
-    }
-  }
-  toString() {
-    return `Artist: ${this.lastName}`;
-  }
-}
-
-Artist.modelName = 'Artist';
-
-Artist.fields = {};
-
-Artist.shallowFields = {
-  id: 'number',
-  name: 'string',
-  icon: 'string'
-};
-
-
+exports.Song = Song;
+exports.Artist = Artist;
+exports.Instrument = Instrument;
+exports.Genre = Genre;
+exports.Filter = Filter;
 export const models = [Song, Filter, Genre, Instrument, Artist];

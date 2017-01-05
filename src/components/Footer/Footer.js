@@ -68,7 +68,8 @@ class Footer extends Component  {
 
   render () {
     const { song } = this.props;
-    if (song) {
+    // TODO: figure out why this is double firing
+    if (song && song.artist) {
       return this.renderSong(song);
     } else {
       return this.renderBlank();

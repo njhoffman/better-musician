@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Drawer from 'material-ui/Drawer';
+import Divider from 'material-ui/Divider';
 import MenuItem from 'material-ui/MenuItem';
 import { Link, IndexLink } from 'react-router';
+import { SignOutButton } from 'redux-auth/material-ui-theme';
 
 
 const linkStyle = {
@@ -63,6 +65,10 @@ class DrawerMenu extends Component {
                 activeClassName='active'>
                 Profile
               </Link>
+            </MenuItem>
+            <Divider />
+            <MenuItem>
+              <SignOutButton />
             </MenuItem>
         </Drawer>
       </div>

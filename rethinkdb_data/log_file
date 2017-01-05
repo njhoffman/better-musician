@@ -133,3 +133,41 @@
 2017-01-02T12:35:50.774126654 2.308757s info: Table f14d512f-2c5f-4b9d-a702-aee8f9e7c47b: This server is Raft leader for term 3. Latest log index is 6.
 2017-01-02T12:35:50.822623387 2.357254s info: Table dcf9562a-c75c-4823-840d-715b20a1a5df: Starting a new Raft election for term 3.
 2017-01-02T12:35:50.824937171 2.359677s info: Table dcf9562a-c75c-4823-840d-715b20a1a5df: This server is Raft leader for term 3. Latest log index is 6.
+2017-01-03T17:19:09.764101060 103401.298733s notice: Server got SIGINT from pid 0, uid 0; shutting down...
+2017-01-03T17:19:09.766338182 103401.300969s notice: Shutting down client connections...
+2017-01-03T17:19:09.767662332 103401.302293s notice: All client connections closed.
+2017-01-03T17:19:09.767671127 103401.302302s notice: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
+2017-01-03T17:19:09.859000911 103401.393631s notice: Storage engine shut down.
+2017-01-03T17:19:14.982980278 0.115004s notice: Running rethinkdb 2.3.5~0jessie (GCC 4.9.2)...
+2017-01-03T17:19:14.988394281 0.120275s notice: Running on Linux 3.16.0-4-amd64 x86_64
+2017-01-03T17:19:14.989467180 0.121345s notice: Loading data from directory /home/vagrant/projects/instrumental/rethinkdb_data
+2017-01-03T17:19:15.029261685 0.161140s info: Automatically using cache size of 100 MB
+2017-01-03T17:19:15.029519966 0.161396s warn: Cache size does not leave much memory for server and query overhead (available memory: 1066 MB).
+2017-01-03T17:19:15.029527454 0.161403s warn: Cache size is very low and may impact performance.
+2017-01-03T17:19:15.047517871 0.179394s notice: Listening for intracluster connections on port 29015
+2017-01-03T17:19:15.214616738 0.346492s notice: Listening for client driver connections on port 28015
+2017-01-03T17:19:15.214825641 0.346702s notice: Listening for administrative HTTP connections on port 4000
+2017-01-03T17:19:15.230448831 0.362325s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, 10.0.2.15, ::1, fe80::a00:27ff:fee1:6ec5%2
+2017-01-03T17:19:15.248520684 0.380397s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, 10.0.2.15, ::1, fe80::a00:27ff:fee1:6ec5%2
+2017-01-03T17:19:15.264817556 0.396693s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, 10.0.2.15, ::1, fe80::a00:27ff:fee1:6ec5%2
+2017-01-03T17:19:15.265280815 0.397166s notice: Server ready, "jessie_i5f" 68dfbf6b-bb4a-4758-bba5-91ec5c68d501
+2017-01-03T17:19:16.279964263 1.411841s info: Table 4967b521-927c-4720-94e3-e1dbe47c4b1d: Starting a new Raft election for term 4.
+2017-01-03T17:19:16.280946027 1.412823s info: Table d719f4b9-98aa-4a50-b152-e876ef3675ab: Starting a new Raft election for term 4.
+2017-01-03T17:19:16.297955151 1.429833s info: Table 4967b521-927c-4720-94e3-e1dbe47c4b1d: This server is Raft leader for term 4. Latest log index is 9.
+2017-01-03T17:19:16.299326648 1.431203s info: Table d719f4b9-98aa-4a50-b152-e876ef3675ab: This server is Raft leader for term 4. Latest log index is 9.
+2017-01-03T17:19:16.478286527 1.610163s info: Table f14d512f-2c5f-4b9d-a702-aee8f9e7c47b: Starting a new Raft election for term 4.
+2017-01-03T17:19:16.485837287 1.617714s info: Table f14d512f-2c5f-4b9d-a702-aee8f9e7c47b: This server is Raft leader for term 4. Latest log index is 9.
+2017-01-03T17:19:16.516247253 1.648124s info: Table 80ed73fd-9527-41a8-bfba-753768aef32c: Starting a new Raft election for term 4.
+2017-01-03T17:19:16.533429243 1.665344s info: Table 80ed73fd-9527-41a8-bfba-753768aef32c: This server is Raft leader for term 4. Latest log index is 9.
+2017-01-03T17:19:16.561678653 1.693572s info: Table dcf9562a-c75c-4823-840d-715b20a1a5df: Starting a new Raft election for term 4.
+2017-01-03T17:19:16.585284789 1.717161s info: Table dcf9562a-c75c-4823-840d-715b20a1a5df: This server is Raft leader for term 4. Latest log index is 9.
+2017-01-03T17:19:16.732579260 1.864458s info: Table b649401a-9907-43d1-b00e-c22f447a76b1: Starting a new Raft election for term 4.
+2017-01-03T17:19:16.760094297 1.891971s info: Table b649401a-9907-43d1-b00e-c22f447a76b1: This server is Raft leader for term 4. Latest log index is 9.
+2017-01-03T17:19:16.778603153 1.910479s info: Table 4cc1dce2-2137-4847-9acd-8f7b44c44726: Starting a new Raft election for term 4.
+2017-01-03T17:19:16.782388888 1.914265s info: Table 4cc1dce2-2137-4847-9acd-8f7b44c44726: This server is Raft leader for term 4. Latest log index is 9.
+2017-01-03T17:19:16.844589438 1.976465s info: Table 127c02e4-5769-465c-8f86-49d0cd872588: Starting a new Raft election for term 4.
+2017-01-03T17:19:16.846900697 1.978777s info: Table 127c02e4-5769-465c-8f86-49d0cd872588: This server is Raft leader for term 4. Latest log index is 9.
+2017-01-03T17:19:29.841135574 14.973012s error: Failed to parse one or more lines from the log file, the contents of the `logs` system table will be incomplete. The following parse error occurred: cannot parse log message (1) while parsing ""
+2017-01-04T15:02:15.812253902 78180.944638s warn: Some RethinkDB data on this server has been placed into swap memory. This may impact performance.
+2017-01-04T16:04:15.838577086 81900.970455s warn: Some RethinkDB data on this server has been placed into swap memory. This may impact performance.
+2017-01-05T01:33:16.099498772 116041.231375s warn: Some RethinkDB data on this server has been placed into swap memory. This may impact performance.

@@ -7,11 +7,11 @@ import { reducer as formReducer } from 'redux-form';
 import { authStateReducer } from './auth';
 import Immutable from 'immutable'
 
-// import { register as registerSchema } from 'store/orm';
-import baseModels from './baseModels'
 import { ORM, createReducer } from 'redux-orm';
 
-
+import baseModels from './baseModels';
+// selectors need access to ORM
+// TODO: put orm in own module
 export const orm = new ORM();
 orm.register(...baseModels);
 const ormReducer = createReducer(orm);

@@ -75,6 +75,21 @@ export default function (passport) {
       });
   };
 
+  const emptyModel = (name, isCurl) => {
+    // TODO: setup custom error handling
+    if (! Models[name]) {
+      return Promise.resolve(`\nModel ${name} does not exist`);
+    }
+    return Models[name].empty()
+      .then( (results) => {
+        if (results.errors === 0) {
+          return `\nEmptied model ${name}`;
+        } else {
+          throw Error(`Error emptying model ${name}`);
+        }
+      });
+  };
+
   // lists all models and record count
   router.get('/list/models',
     // passport.authenticate('jwt', { failWithError: true, session: false }),
@@ -135,9 +150,8 @@ export default function (passport) {
       debug("inside reset all");
       Promise.map(Object.keys(Models), (modelName) => {
         const isCurl = req._isCurl;
-        return  resetModel(modelName, isCurl);
+        return resetModel(modelName, isCurl);
       }).then(output => {
-        debug("return from reset all %O", output);
         res.status(200).send(output.join(''));
       }).catch(promiseError.bind(undefined, res));
     });
@@ -152,12 +166,16 @@ export default function (passport) {
       }).catch(promiseError.bind(undefined, res));
     });
 
-  router.use('/empty', () => {
-    router.get('/all',
-      passport.authenticate('jwt', { failWithError: true, session: false }),
-      (req, res) => {
-      })
-  });
+  router.use('/empty/:model',
+    // passport.authenticate('jwt', { failWithError: true, session: false }),
+    (req, res) => {
+      const model = req.params.model;
+      const isCurl = req._isCurl;
+      return emptyModel(model, isCurl).then(output => {
+        res.status(200).send(output);
+      }).catch(promiseError.bind(undefined, res));
+
+    });
 
   return router;
 }

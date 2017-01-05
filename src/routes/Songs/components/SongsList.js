@@ -16,7 +16,7 @@ const columnWidths = [
 const SongsList = ({ songsCollection, onSongClick, onSortClick, currentSong }) => (
   <Table
     selectable={true}
-    onRowSelection={onSongClick}
+    onCellClick={onSongClick}
   >
     <TableHeader
       displaySelectAll={false}
@@ -69,12 +69,12 @@ const SongsList = ({ songsCollection, onSongClick, onSortClick, currentSong }) =
 SongsList.propTypes = {
   songsCollection: PropTypes.arrayOf(
     PropTypes.shape({
-      id:        PropTypes.number,
+      id:        PropTypes.string,
       title:     PropTypes.string
     }).isRequired),
   onSongClick: PropTypes.func.isRequired,
   onSortClick: PropTypes.func.isRequired,
-  currentSong: PropTypes.number.isRequired
+  currentSong: PropTypes.string.isRequired
 };
 
 export default (SongsList);

@@ -10,16 +10,28 @@ const Song = ({ songValues, columnWidths, ...custom }) => {
       displayBorder={true}
       {...custom}
     >
-      <TableRowColumn style={columnWidths[0]} className={css.title}>
+      <TableRowColumn
+        data-rowId={songValues.id}
+        style={columnWidths[0]}
+        className={css.title}>
         { songValues.title }
       </TableRowColumn>
-      <TableRowColumn style={columnWidths[1]} className={css.artist}>
+      <TableRowColumn
+        data-rowId={songValues.id}
+        style={columnWidths[1]}
+        className={css.artist}>
         { songValues.artist.fullName }
       </TableRowColumn>
-      <TableRowColumn style={columnWidths[2]} className={css.progress}>
+      <TableRowColumn
+        data-rowId={songValues.id}
+        style={columnWidths[2]}
+        className={css.progress}>
         { [...Array(songValues.progress)].map((x,i) => <StarIcon key={i} /> )}
       </TableRowColumn>
-      <TableRowColumn style={columnWidths[3]} className={css.difficulty}>
+      <TableRowColumn
+        data-rowId={songValues.id}
+        style={columnWidths[3]}
+        className={css.difficulty}>
         { songValues.difficulty }
       </TableRowColumn>
   </TableRow>

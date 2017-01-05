@@ -11,7 +11,7 @@ export default (store) => ({
 
       cb(null, HomeContainer);
 
-    }, 'home');
+    }, 'homeView');
   }
 });
 

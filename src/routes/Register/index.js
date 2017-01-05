@@ -4,13 +4,13 @@ export default (store) => ({
   path : 'register',
   getComponent (nextState, cb) {
     require.ensure([], (require) => {
-      const RegisterContainer = require('./containers/RegisterContainer').default;
+      const RegisterViewContainer = require('./containers/RegisterViewContainer').default;
       const reducer = require('./modules/register').default;
 
       injectReducer(store, { key: 'registerView', reducer });
 
-      cb(null, RegisterContainer);
+      cb(null, RegisterViewContainer);
 
-    }, 'register');
+    }, 'registerView');
   }
 });
