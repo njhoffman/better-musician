@@ -104,8 +104,12 @@ const requestOutput = function(debug) {
       }
     }
     if (Object.keys(body).length > 0) {
-      const bodyJson = pjson.render(JSON.parse(body), pjsonOptions, 4);
-      debug(bodyJson);
+      if (isJson(body)) {
+        const bodyJson = pjson.render(JSON.parse(body), pjsonOptions, 4);
+        debug(bodyJson);
+      } else {
+        debug(body);
+      }
     }
     if (Object.keys(query).length > 0) {
       debug("Query \n %O", query);

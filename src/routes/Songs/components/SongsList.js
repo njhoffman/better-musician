@@ -7,10 +7,10 @@ import css from './SongList.scss';
 
 
 const columnWidths = [
-  { width: '35%' },
-  { width: '30%' },
-  { width: '20%' },
-  { width: '15%' },
+  { width: '35%', textAlign: 'center' },
+  { width: '30%', textAlign: 'center' },
+  { width: '20%', textAlign: 'center' },
+  { width: '15%', textAlign: 'center' },
 ];
 
 const SongsList = ({ songsCollection, onSongClick, onSortClick, currentSong }) => (

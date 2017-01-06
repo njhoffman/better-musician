@@ -1,0 +1,225 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof2 = require("babel-runtime/helpers/typeof");
+
+var _typeof3 = _interopRequireDefault(_typeof2);
+
+var _extends2 = require("babel-runtime/helpers/extends");
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require("babel-runtime/helpers/inherits");
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _redboxReact2 = require("redbox-react");
+
+var _redboxReact3 = _interopRequireDefault(_redboxReact2);
+
+var _react2 = require("react");
+
+var _react3 = _interopRequireDefault(_react2);
+
+var _reactTransformCatchErrors3 = require("react-transform-catch-errors");
+
+var _reactTransformCatchErrors4 = _interopRequireDefault(_reactTransformCatchErrors3);
+
+var _class, _temp;
+
+var _RaisedButton = require("material-ui/RaisedButton");
+
+var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
+
+var _favorite = require("material-ui/svg-icons/action/favorite");
+
+var _favorite2 = _interopRequireDefault(_favorite);
+
+var _colors = require("material-ui/styles/colors");
+
+var Colors = _interopRequireWildcard(_colors);
+
+var _reactLoader = require("react-loader");
+
+var _reactLoader2 = _interopRequireDefault(_reactLoader);
+
+var _MuiThemeProvider = require("material-ui/styles/MuiThemeProvider");
+
+var _MuiThemeProvider2 = _interopRequireDefault(_MuiThemeProvider);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _components = {
+  ButtonLoader: {
+    displayName: "ButtonLoader"
+  }
+};
+
+var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
+  filename: "/home/vagrant/projects/instrumental/src/routes/Login/components/ButtonLoader.js",
+  components: _components,
+  locals: [],
+  imports: [_react3.default, _redboxReact3.default]
+});
+
+function _wrapComponent(id) {
+  return function (Component) {
+    return _reactTransformCatchErrors2(Component, id);
+  };
+}
+
+var ButtonLoader = _wrapComponent("ButtonLoader")((_temp = _class = function (_React$Component) {
+  (0, _inherits3.default)(ButtonLoader, _React$Component);
+
+  function ButtonLoader() {
+    (0, _classCallCheck3.default)(this, ButtonLoader);
+    return (0, _possibleConstructorReturn3.default)(this, (ButtonLoader.__proto__ || (0, _getPrototypeOf2.default)(ButtonLoader)).apply(this, arguments));
+  }
+
+  (0, _createClass3.default)(ButtonLoader, [{
+    key: "handleClick",
+    value: function handleClick(ev) {
+      ev.preventDefault();
+      this.props.onClick(ev);
+    }
+  }, {
+    key: "getColor",
+    value: function getColor() {
+      if (this.props.disabled) {
+        return this.props.spinColorDisabled;
+      } else if (this.props.primary || this.props.secondary) {
+        return this.props.spinColorLight;
+      } else {
+        return this.props.spinColorDark;
+      }
+    }
+  }, {
+    key: "renderIcon",
+    value: function renderIcon() {
+      var icon = void 0,
+          color = this.getColor();
+
+      if (this.props.loading) {
+        icon = _react3.default.createElement(
+          "div",
+          { style: { position: "absolute", top: 15, left: 7 } },
+          _react3.default.createElement(_reactLoader2.default, (0, _extends3.default)({
+            ref: "spinner"
+          }, this.props.spinConfig, {
+            color: color,
+            loaded: false }))
+        );
+      } else {
+        if ((0, _typeof3.default)(this.props.icon) === "object") {
+          icon = this.props.icon;
+        } else {
+          icon = _react3.default.createElement(this.props.icon, { color: color, style: { width: 15, height: 15 } });
+        }
+      }
+
+      return _react3.default.createElement(
+        "span",
+        { style: {
+            width: 15,
+            height: 15,
+            position: "absolute",
+            left: 10,
+            top: 3
+          } },
+        icon
+      );
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var color = this.getColor();
+
+      var props = {
+        backgroundColor: this.props.backgroundColor,
+        children: this.props.children,
+        className: this.props.className,
+        disabled: this.props.disabled || this.props.loading,
+        disabledBackgroundColor: this.props.disabledBackgroundColor,
+        disabledLabelColor: this.props.disabledLabelColor,
+        fullWidth: this.props.fullWidth,
+        href: this.props.href,
+        label: this.props.label || _react3.default.createElement(
+          "span",
+          { style: { paddingLeft: 15, color: color } },
+          this.props.children
+        ),
+        labelColor: this.props.labelColor || color,
+        labelPosition: this.props.labelPosition || "after",
+        labelStyle: this.props.labelStyle,
+        primary: this.props.primary,
+        rippleStyle: this.props.rippleStyle,
+        secondary: this.props.secondary,
+        style: this.props.style,
+        type: this.props.type
+      };
+
+      return _react3.default.createElement(
+        _MuiThemeProvider2.default,
+        null,
+        _react3.default.createElement(
+          _RaisedButton2.default,
+          (0, _extends3.default)({}, props, {
+            onClick: this.handleClick.bind(this) }),
+          this.renderIcon()
+        )
+      );
+    }
+  }]);
+  return ButtonLoader;
+}(_react3.default.Component), _class.propTypes = {
+  icon: _react2.PropTypes.any,
+  loading: _react2.PropTypes.bool,
+  spinConfig: _react2.PropTypes.object,
+  spinColorDark: _react2.PropTypes.string,
+  spinColorLight: _react2.PropTypes.string,
+  spinColorDisabled: _react2.PropTypes.string,
+  children: _react2.PropTypes.node,
+  onClick: _react2.PropTypes.func.isRequired,
+  style: _react2.PropTypes.object
+}, _class.defaultProps = {
+  icon: _favorite2.default,
+  loading: false,
+  spinConfig: {
+    lines: 10,
+    length: 4,
+    width: 2,
+    radius: 3
+  },
+  spinColorDark: Colors.darkBlack,
+  spinColorLight: Colors.darkWhite,
+  spinColorDisabled: Colors.minBlack,
+  children: _react3.default.createElement(
+    "span",
+    null,
+    "Submit"
+  ),
+  style: {}
+}, _temp));
+
+exports.default = ButtonLoader;

@@ -1,0 +1,77 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.CoreLayout = undefined;
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _materialUi = require('material-ui');
+
+var _MuiThemeProvider = require('material-ui/styles/MuiThemeProvider');
+
+var _MuiThemeProvider2 = _interopRequireDefault(_MuiThemeProvider);
+
+var _getMuiTheme = require('material-ui/styles/getMuiTheme');
+
+var _getMuiTheme2 = _interopRequireDefault(_getMuiTheme);
+
+require('coreStyles');
+
+var _CoreLayout = require('./CoreLayout.scss');
+
+var _CoreLayout2 = _interopRequireDefault(_CoreLayout);
+
+var _AuthGlobals = require('components/AuthGlobals');
+
+var _AuthGlobals2 = _interopRequireDefault(_AuthGlobals);
+
+var _HeaderContainer = require('containers/HeaderContainer');
+
+var _HeaderContainer2 = _interopRequireDefault(_HeaderContainer);
+
+var _FooterContainer = require('containers/FooterContainer');
+
+var _FooterContainer2 = _interopRequireDefault(_FooterContainer);
+
+var _DrawerMenuContainer = require('containers/DrawerMenuContainer');
+
+var _DrawerMenuContainer2 = _interopRequireDefault(_DrawerMenuContainer);
+
+var _instrumentalDark = require('themes/instrumentalDark');
+
+var _instrumentalDark2 = _interopRequireDefault(_instrumentalDark);
+
+var _reactFoundation = require('react-foundation');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var CoreLayout = exports.CoreLayout = function CoreLayout(_ref) {
+  var children = _ref.children;
+  return _react2.default.createElement(
+    _MuiThemeProvider2.default,
+    { muiTheme: (0, _getMuiTheme2.default)(_instrumentalDark2.default) },
+    _react2.default.createElement(
+      'div',
+      { className: _CoreLayout2.default.appWrapper },
+      _react2.default.createElement(_AuthGlobals2.default, null),
+      _react2.default.createElement(_DrawerMenuContainer2.default, null),
+      _react2.default.createElement(_HeaderContainer2.default, null),
+      _react2.default.createElement(
+        _reactFoundation.Row,
+        { className: _CoreLayout2.default.contentWrapper },
+        children
+      ),
+      _react2.default.createElement(_FooterContainer2.default, null)
+    )
+  );
+};
+
+CoreLayout.propTypes = {
+  children: _react2.default.PropTypes.element.isRequired
+};
+
+exports.default = CoreLayout;

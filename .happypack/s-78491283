@@ -1,0 +1,61 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _defineProperty2 = require("babel-runtime/helpers/defineProperty");
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+var _createReducer;
+
+var _immutable = require("immutable");
+
+var _immutable2 = _interopRequireDefault(_immutable);
+
+var _reduxImmutablejs = require("redux-immutablejs");
+
+var _configure = require("../actions/configure");
+
+var A = _interopRequireWildcard(_configure);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var initialState = _immutable2.default.fromJS({
+  loading: true,
+  errors: null,
+  config: null,
+  endpointKeys: null,
+  defaultEndpointKey: null,
+  currentEndpointKey: null
+});
+
+exports.default = (0, _reduxImmutablejs.createReducer)(initialState, (_createReducer = {}, (0, _defineProperty3.default)(_createReducer, A.CONFIGURE_START, function (state) {
+  return state.set("loading", true);
+}), (0, _defineProperty3.default)(_createReducer, A.STORE_CURRENT_ENDPOINT_KEY, function (state, _ref) {
+  var currentEndpointKey = _ref.currentEndpointKey;
+  return state.merge({ currentEndpointKey: currentEndpointKey });
+}), (0, _defineProperty3.default)(_createReducer, A.SET_ENDPOINT_KEYS, function (state, _ref2) {
+  var endpointKeys = _ref2.endpointKeys,
+      defaultEndpointKey = _ref2.defaultEndpointKey,
+      currentEndpointKey = _ref2.currentEndpointKey;
+  return state.merge({
+    endpointKeys: endpointKeys, defaultEndpointKey: defaultEndpointKey, currentEndpointKey: currentEndpointKey
+  });
+}), (0, _defineProperty3.default)(_createReducer, A.CONFIGURE_COMPLETE, function (state, _ref3) {
+  var config = _ref3.config;
+  return state.merge({
+    loading: false,
+    errors: null,
+    config: config
+  });
+}), (0, _defineProperty3.default)(_createReducer, A.CONFIGURE_ERROR, function (state, _ref4) {
+  var errors = _ref4.errors;
+  return state.merge({
+    loading: false,
+    errors: errors
+  });
+}), _createReducer));

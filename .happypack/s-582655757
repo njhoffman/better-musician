@@ -1,0 +1,62 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _defineProperty2 = require("babel-runtime/helpers/defineProperty");
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+var _createReducer;
+
+var _immutable = require("immutable");
+
+var _immutable2 = _interopRequireDefault(_immutable);
+
+var _reduxImmutablejs = require("redux-immutablejs");
+
+var _emailSignIn = require("../actions/email-sign-in");
+
+var A = _interopRequireWildcard(_emailSignIn);
+
+var _configure = require("../actions/configure");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var initialState = {
+  loading: false,
+  errors: null,
+  form: {}
+};
+
+exports.default = (0, _reduxImmutablejs.createReducer)(_immutable2.default.fromJS({}), (_createReducer = {}, (0, _defineProperty3.default)(_createReducer, _configure.SET_ENDPOINT_KEYS, function (state, _ref) {
+  var endpoints = _ref.endpoints;
+  return state.merge(endpoints.reduce(function (coll, k) {
+    coll[k] = _immutable2.default.fromJS(initialState);
+    return coll;
+  }, {}));
+}), (0, _defineProperty3.default)(_createReducer, A.EMAIL_SIGN_IN_START, function (state, _ref2) {
+  var endpoint = _ref2.endpoint;
+  return state.setIn([endpoint, "loading"], true);
+}), (0, _defineProperty3.default)(_createReducer, A.EMAIL_SIGN_IN_COMPLETE, function (state, _ref3) {
+  var endpoint = _ref3.endpoint;
+  return state.merge((0, _defineProperty3.default)({}, endpoint, initialState));
+}), (0, _defineProperty3.default)(_createReducer, A.EMAIL_SIGN_IN_ERROR, function (state, _ref4) {
+  var endpoint = _ref4.endpoint,
+      errors = _ref4.errors;
+  return state.mergeDeep((0, _defineProperty3.default)({}, endpoint, {
+    loading: false,
+    errors: errors
+  }));
+}), (0, _defineProperty3.default)(_createReducer, A.EMAIL_SIGN_IN_FORM_UPDATE, function (state, _ref5) {
+  var endpoint = _ref5.endpoint,
+      key = _ref5.key,
+      value = _ref5.value;
+
+  return state.mergeDeep((0, _defineProperty3.default)({}, endpoint, {
+    form: (0, _defineProperty3.default)({}, key, value)
+  }));
+}), _createReducer));

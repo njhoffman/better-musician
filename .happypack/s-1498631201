@@ -1,0 +1,208 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _defineProperty2 = require("babel-runtime/helpers/defineProperty");
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+var _createReducer;
+
+var _immutable = require("immutable");
+
+var _immutable2 = _interopRequireDefault(_immutable);
+
+var _reduxImmutablejs = require("redux-immutablejs");
+
+var _ui = require("../actions/ui");
+
+var uiActions = _interopRequireWildcard(_ui);
+
+var _emailSignIn = require("../actions/email-sign-in");
+
+var emailSignInActions = _interopRequireWildcard(_emailSignIn);
+
+var _emailSignUp = require("../actions/email-sign-up");
+
+var emailSignUpActions = _interopRequireWildcard(_emailSignUp);
+
+var _signOut = require("../actions/sign-out");
+
+var signOutActions = _interopRequireWildcard(_signOut);
+
+var _requestPasswordReset = require("../actions/request-password-reset");
+
+var requestPasswordResetActions = _interopRequireWildcard(_requestPasswordReset);
+
+var _oauthSignIn = require("../actions/oauth-sign-in");
+
+var oAuthSignInActions = _interopRequireWildcard(_oauthSignIn);
+
+var _updatePassword = require("../actions/update-password");
+
+var updatePasswordActions = _interopRequireWildcard(_updatePassword);
+
+var _destroyAccount = require("../actions/destroy-account");
+
+var destroyAccountActions = _interopRequireWildcard(_destroyAccount);
+
+var _updatePasswordModal = require("../actions/update-password-modal");
+
+var updatePasswordModalActions = _interopRequireWildcard(_updatePasswordModal);
+
+var _server = require("../actions/server");
+
+var serverActions = _interopRequireWildcard(_server);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var initialState = _immutable2.default.fromJS({
+  emailSignInSuccessModalVisible: false,
+  emailSignInErrorModalVisible: false,
+  oAuthSignInSuccessModalVisible: false,
+  oAuthSignInErrorModalVisible: false,
+  oAuthSignInLoadingProvider: null,
+  signOutSuccessModalVisible: false,
+  signOutErrorModalVisible: false,
+  emailSignUpSuccessModalVisible: false,
+  emailSignUpAddress: null,
+  firstTimeLoginSuccessModalVisible: false,
+  firstTimeLoginErrorModalVisible: false,
+  requestPasswordResetSuccessModalVisible: false,
+  requestPasswordResetErrorModalVisible: false,
+  requestPasswordResetSuccessMessage: null,
+  updatePasswordSuccessModalVisible: false,
+  updatePasswordErrorModalVisible: false,
+  destroyAccountSuccessModalVisible: false,
+  destroyAccountErrorModalVisible: false,
+  destroyAccountMessage: null,
+  passwordResetSuccessModalVisible: false,
+  passwordResetErrorModalVisible: false
+});
+
+exports.default = (0, _reduxImmutablejs.createReducer)(initialState, (_createReducer = {}, (0, _defineProperty3.default)(_createReducer, emailSignInActions.EMAIL_SIGN_IN_COMPLETE, function (state) {
+  return state.set("emailSignInSuccessModalVisible", true);
+}), (0, _defineProperty3.default)(_createReducer, emailSignInActions.EMAIL_SIGN_IN_ERROR, function (state) {
+  return state.set("emailSignInErrorModalVisible", true);
+}), (0, _defineProperty3.default)(_createReducer, oAuthSignInActions.OAUTH_SIGN_IN_COMPLETE, function (state) {
+  return state.merge({
+    oAuthSignInSuccessModalVisible: true,
+    oAuthSignInLoadingProvider: null
+  });
+}), (0, _defineProperty3.default)(_createReducer, oAuthSignInActions.OAUTH_SIGN_IN_ERROR, function (state) {
+  return state.merge({
+    oAuthSignInErrorModalVisible: true,
+    oAuthSignInLoadingProvider: null
+  });
+}), (0, _defineProperty3.default)(_createReducer, oAuthSignInActions.OAUTH_SIGN_IN_START, function (state, _ref) {
+  var provider = _ref.provider;
+  return state.merge({
+    oAuthSignInLoadingProvider: provider
+  });
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL, function (state) {
+  return state.set("emailSignInSuccessModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_EMAIL_SIGN_IN_ERROR_MODAL, function (state) {
+  return state.set("emailSignInErrorModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, signOutActions.SIGN_OUT_COMPLETE, function (state) {
+  return state.set("signOutSuccessModalVisible", true);
+}), (0, _defineProperty3.default)(_createReducer, signOutActions.SIGN_OUT_ERROR, function (state) {
+  return state.set("signOutErrorModalVisible", true);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_SIGN_OUT_SUCCESS_MODAL, function (state) {
+  return state.set("signOutSuccessModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_SIGN_OUT_ERROR_MODAL, function (state) {
+  return state.set("signOutErrorModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, emailSignUpActions.EMAIL_SIGN_UP_COMPLETE, function (state, _ref2) {
+  var user = _ref2.user;
+  return state.merge({
+    emailSignUpSuccessModalVisible: true,
+    emailSignUpAddress: user.email
+  });
+}), (0, _defineProperty3.default)(_createReducer, emailSignUpActions.EMAIL_SIGN_UP_ERROR, function (state) {
+  return state.set("emailSignUpErrorModalVisible", true);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_EMAIL_SIGN_UP_SUCCESS_MODAL, function (state) {
+  return state.merge({
+    emailSignUpSuccessModalVisible: false,
+    emailSignUpAddress: null
+  });
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_EMAIL_SIGN_UP_ERROR_MODAL, function (state) {
+  return state.set("emailSignUpErrorModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.SHOW_FIRST_TIME_LOGIN_SUCCESS_MODAL, function (state) {
+  return state.set("firstTimeLoginSuccessModalVisible", true);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_FIRST_TIME_LOGIN_SUCCESS_MODAL, function (state) {
+  return state.set("firstTimeLoginSuccessModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_PASSWORD_RESET_SUCCESS_MODAL, function (state) {
+  return state.set("passwordResetSuccessModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.SHOW_PASSWORD_RESET_SUCCESS_MODAL, function (state) {
+  return state.set("passwordResetSuccessModalVisible", true);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.SHOW_FIRST_TIME_LOGIN_ERROR_MODAL, function (state) {
+  return state.set("firstTimeLoginErrorModalVisible", true);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_FIRST_TIME_LOGIN_ERROR_MODAL, function (state) {
+  return state.set("firstTimeLoginErrorModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_PASSWORD_RESET_ERROR_MODAL, function (state) {
+  return state.set("passwordResetErrorModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.SHOW_PASSWORD_RESET_ERROR_MODAL, function (state) {
+  return state.set("passwordResetErrorModalVisible", true);
+}), (0, _defineProperty3.default)(_createReducer, requestPasswordResetActions.REQUEST_PASSWORD_RESET_COMPLETE, function (state, _ref3) {
+  var message = _ref3.message;
+
+  return state.merge({
+    requestPasswordResetSuccessModalVisible: true,
+    requestPasswordResetSuccessMessage: message
+  });
+}), (0, _defineProperty3.default)(_createReducer, requestPasswordResetActions.REQUEST_PASSWORD_RESET_ERROR, function (state) {
+  return state.set("requestPasswordResetErrorModalVisible", true);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_REQUEST_PASSWORD_RESET_SUCCESS_MODAL, function (state) {
+  return state.merge({
+    requestPasswordResetSuccessModalVisible: false,
+    requestPasswordResetSuccessMessage: null
+  });
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_REQUEST_PASSWORD_RESET_ERROR_MODAL, function (state) {
+  return state.set("requestPasswordResetErrorModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_OAUTH_SIGN_IN_SUCCESS_MODAL, function (state) {
+  return state.set("oAuthSignInSuccessModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_OAUTH_SIGN_IN_ERROR_MODAL, function (state) {
+  return state.set("oAuthSignInErrorModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, updatePasswordActions.UPDATE_PASSWORD_COMPLETE, function (state) {
+  return state.set("updatePasswordSuccessModalVisible", true);
+}), (0, _defineProperty3.default)(_createReducer, updatePasswordActions.UPDATE_PASSWORD_ERROR, function (state) {
+  return state.set("updatePasswordErrorModalVisible", true);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_UPDATE_PASSWORD_SUCCESS_MODAL, function (state) {
+  return state.set("updatePasswordSuccessModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_UPDATE_PASSWORD_ERROR_MODAL, function (state) {
+  return state.set("updatePasswordErrorModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, destroyAccountActions.DESTROY_ACCOUNT_COMPLETE, function (state, _ref4) {
+  var message = _ref4.message;
+  return state.merge({
+    destroyAccountSuccessModalVisible: true,
+    destroyAccountMessage: message
+  });
+}), (0, _defineProperty3.default)(_createReducer, destroyAccountActions.DESTROY_ACCOUNT_ERROR, function (state) {
+  return state.set("destroyAccountErrorModalVisible", true);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_DESTROY_ACCOUNT_SUCCESS_MODAL, function (state) {
+  return state.merge({
+    destroyAccountSuccessModalVisible: false,
+    destroyAccountMessage: null
+  });
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_DESTROY_ACCOUNT_ERROR_MODAL, function (state) {
+  return state.set("destroyAccountErrorModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, serverActions.SS_AUTH_TOKEN_UPDATE, function (state, _ref5) {
+  var mustResetPassword = _ref5.mustResetPassword,
+      firstTimeLogin = _ref5.firstTimeLogin;
+  return state.merge({
+    passwordResetSuccessModalVisible: mustResetPassword,
+    firstTimeLoginSuccessModalVisible: firstTimeLogin
+  });
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_PASSWORD_RESET_SUCCESS_MODAL, function (state) {
+  return state.set("passwordResetSuccessModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, uiActions.HIDE_PASSWORD_RESET_ERROR_MODAL, function (state) {
+  return state.set("passwordResetSuccessModalVisible", false);
+}), (0, _defineProperty3.default)(_createReducer, updatePasswordModalActions.UPDATE_PASSWORD_MODAL_COMPLETE, function (state) {
+  return state.merge({
+    passwordResetSuccessModalVisible: false,
+    updatePasswordSuccessModalVisible: true
+  });
+}), _createReducer));

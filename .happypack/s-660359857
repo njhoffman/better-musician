@@ -1,0 +1,64 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.toggleSearchPopover = exports.showAddSongModal = exports.searchClose = exports.toggleDrawerMenu = exports.showFiltersModal = undefined;
+
+var _reactRedux = require('react-redux');
+
+var _Header = require('../components/Header');
+
+var _Header2 = _interopRequireDefault(_Header);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var localState = {
+  searchIsOpen: false
+};
+// import { showModal } from '../store/modal';
+
+var showFiltersModal = exports.showFiltersModal = function showFiltersModal() {
+  return function (dispatch, getState) {
+    return dispatch({ type: "SHOW_MODAL", modalType: "FILTER_SONGS", modalProps: {} });
+  };
+};
+
+var toggleDrawerMenu = exports.toggleDrawerMenu = function toggleDrawerMenu() {
+  return function (dispatch, getState) {
+    return dispatch({ type: "TOGGLE_DRAWER_MENU" });
+  };
+};
+
+var searchClose = exports.searchClose = function searchClose() {
+  debugger;
+};
+
+var showAddSongModal = exports.showAddSongModal = function showAddSongModal() {
+  return function (dispatch, getState) {
+    return dispatch({ type: "SHOW_MODAL", modalType: "ADD_SONG", modalProps: {} });
+  };
+};
+
+var toggleSearchPopover = exports.toggleSearchPopover = function toggleSearchPopover() {
+  return localState.searchIsOpen = !localState.searchIsOpen;
+};
+
+var mapActionCreators = {
+  showFiltersModal: showFiltersModal,
+  toggleDrawerMenu: toggleDrawerMenu,
+  searchClose: searchClose,
+  toggleSearchPopover: toggleSearchPopover,
+  showAddSongModal: showAddSongModal
+};
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    searchIsOpen: localState.searchIsOpen,
+    currentSong: state.songsView ? state.songsView.currentSong : null,
+    user: state.auth.get("user"),
+    location: state.location ? state.location.pathname : null
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapActionCreators)(_Header2.default);

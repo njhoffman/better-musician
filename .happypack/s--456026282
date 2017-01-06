@@ -1,0 +1,98 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Table = require('material-ui/Table');
+
+var _star = require('react-icons/lib/md/star');
+
+var _star2 = _interopRequireDefault(_star);
+
+var _Song = require('./Song.scss');
+
+var _Song2 = _interopRequireDefault(_Song);
+
+var _muiThemeable = require('material-ui/styles/muiThemeable');
+
+var _muiThemeable2 = _interopRequireDefault(_muiThemeable);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Song = function Song(_ref) {
+  var songValues = _ref.songValues,
+      columnWidths = _ref.columnWidths,
+      muiTheme = _ref.muiTheme,
+      custom = (0, _objectWithoutProperties3.default)(_ref, ['songValues', 'columnWidths', 'muiTheme']);
+
+  return _react2.default.createElement(
+    _Table.TableRow,
+    (0, _extends3.default)({
+      hoverable: true,
+      displayBorder: true
+    }, custom),
+    _react2.default.createElement(
+      _Table.TableRowColumn,
+      {
+        'data-rowId': songValues.id,
+        style: columnWidths[0],
+        className: _Song2.default.title },
+      songValues.title
+    ),
+    _react2.default.createElement(
+      _Table.TableRowColumn,
+      {
+        'data-rowId': songValues.id,
+        style: columnWidths[1],
+        className: _Song2.default.artist },
+      songValues.artist.fullName
+    ),
+    _react2.default.createElement(
+      _Table.TableRowColumn,
+      {
+        'data-rowId': songValues.id,
+        style: columnWidths[2],
+        className: _Song2.default.progress },
+      [].concat((0, _toConsumableArray3.default)(Array(songValues.progress))).map(function (x, i) {
+        return _react2.default.createElement(_star2.default, { key: i, style: { color: muiTheme.starColor } });
+      })
+    ),
+    _react2.default.createElement(
+      _Table.TableRowColumn,
+      {
+        'data-rowId': songValues.id,
+        style: columnWidths[3],
+        className: _Song2.default.difficulty },
+      songValues.difficulty
+    )
+  );
+};
+
+Song.propTypes = {
+  songValues: _react.PropTypes.shape({
+    completed: _react.PropTypes.bool,
+    title: _react.PropTypes.string.isRequired,
+    progress: _react.PropTypes.number,
+    difficulty: _react.PropTypes.number
+  }),
+  columnWidths: _react.PropTypes.array
+};
+
+exports.default = (0, _muiThemeable2.default)()(Song);

@@ -1,0 +1,61 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.HIDE_DRAWER_MENU = exports.SHOW_DRAWER_MENU = exports.TOGGLE_DRAWER_MENU = undefined;
+
+var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _ACTION_HANDLERS;
+
+exports.default = drawerMenuReducer;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// ------------------------------------
+// Constants
+// ------------------------------------
+var TOGGLE_DRAWER_MENU = exports.TOGGLE_DRAWER_MENU = 'TOGGLE_DRAWER_MENU';
+var SHOW_DRAWER_MENU = exports.SHOW_DRAWER_MENU = 'SHOW_DRAWER_MENU';
+var HIDE_DRAWER_MENU = exports.HIDE_DRAWER_MENU = 'HIDE_DRAWER_MENU';
+
+var toggleDrawerMenu = function toggleDrawerMenu(state) {
+  return (0, _extends3.default)({}, state, { isOpen: !state.isOpen });
+};
+
+var showDrawerMenu = function showDrawerMenu(state) {
+  return (0, _extends3.default)({}, state, { isOpen: true });
+};
+
+var hideDrawerMenu = function hideDrawerMenu(state) {
+  return (0, _extends3.default)({}, state, { isOpen: false });
+};
+
+// ------------------------------------
+// Action Handlers
+// ------------------------------------
+var ACTION_HANDLERS = (_ACTION_HANDLERS = {}, (0, _defineProperty3.default)(_ACTION_HANDLERS, TOGGLE_DRAWER_MENU, toggleDrawerMenu), (0, _defineProperty3.default)(_ACTION_HANDLERS, SHOW_DRAWER_MENU, showDrawerMenu), (0, _defineProperty3.default)(_ACTION_HANDLERS, HIDE_DRAWER_MENU, hideDrawerMenu), _ACTION_HANDLERS);
+
+// ------------------------------------
+// Reducer
+// ------------------------------------
+var initialState = {
+  isOpen: false,
+  menuProps: {}
+};
+
+function drawerMenuReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+  var action = arguments[1];
+
+  var handler = ACTION_HANDLERS[action.type];
+
+  return handler ? handler(state, action) : state;
+}

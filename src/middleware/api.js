@@ -76,7 +76,7 @@ export default (store) => next => action => {
         error: error.message || 'Something bad happened'
       }))
 
-  debugger;
+  console.info("Fetching: " + endpoint);
   return apiFetch(endpoint)
     .then(responseSuccess, responseFailure);
 };

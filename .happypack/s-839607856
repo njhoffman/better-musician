@@ -1,0 +1,152 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _promise = require("babel-runtime/core-js/promise");
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _keys = require("babel-runtime/core-js/object/keys");
+
+var _keys2 = _interopRequireDefault(_keys);
+
+exports.applyConfig = applyConfig;
+
+var _constants = require("./constants");
+
+var C = _interopRequireWildcard(_constants);
+
+var _extend = require("extend");
+
+var _extend2 = _interopRequireDefault(_extend);
+
+var _fetch = require("./fetch");
+
+var _fetch2 = _interopRequireDefault(_fetch);
+
+var _parseEndpointConfig2 = require("./parse-endpoint-config");
+
+var _parseEndpointConfig3 = _interopRequireDefault(_parseEndpointConfig2);
+
+var _configure = require("../actions/configure");
+
+var _sessionStorage = require("./session-storage");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// can't use "window" with node app
+var root = Function("return this")() || (42, eval)("this");
+
+var defaultSettings = {
+  proxyIf: function proxyIf() {
+    return false;
+  },
+  proxyUrl: "/proxy",
+  forceHardRedirect: false,
+  storage: "cookies",
+  cookieExpiry: 14,
+  cookiePath: "/",
+  initialCredentials: null,
+
+  passwordResetSuccessUrl: function passwordResetSuccessUrl() {
+    return root.location.href;
+  },
+
+  confirmationSuccessUrl: function confirmationSuccessUrl() {
+    return root.location.href;
+  },
+
+  tokenFormat: {
+    "access-token": "{{ access-token }}",
+    "token-type": "Bearer",
+    client: "{{ client }}",
+    expiry: "{{ expiry }}",
+    uid: "{{ uid }}"
+  },
+
+  parseExpiry: function parseExpiry(headers) {
+    // convert from ruby time (seconds) to js time (millis)
+    return parseInt(headers["expiry"], 10) * 1000 || null;
+  },
+
+  handleLoginResponse: function handleLoginResponse(resp) {
+    return resp.data;
+  },
+
+  handleAccountUpdateResponse: function handleAccountUpdateResponse(resp) {
+    return resp.data;
+  },
+
+  handleTokenValidationResponse: function handleTokenValidationResponse(resp) {
+    return resp.data;
+  }
+};
+
+// save session configuration
+function applyConfig() {
+  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+      dispatch = _ref.dispatch,
+      _ref$endpoint = _ref.endpoint,
+      endpoint = _ref$endpoint === undefined ? {} : _ref$endpoint,
+      _ref$settings = _ref.settings,
+      settings = _ref$settings === undefined ? {} : _ref$settings,
+      _ref$reset = _ref.reset,
+      reset = _ref$reset === undefined ? false : _ref$reset;
+
+  var currentEndpointKey = void 0;
+
+  if (reset) {
+    resetConfig();
+  }
+
+  if (settings.initialCredentials) {
+    currentEndpointKey = settings.initialCredentials.currentEndpointKey;
+  }
+
+  (0, _sessionStorage.setCurrentSettings)((0, _extend2.default)({}, defaultSettings, settings));
+
+  var _parseEndpointConfig = (0, _parseEndpointConfig3.default)(endpoint, (0, _sessionStorage.getInitialEndpointKey)()),
+      defaultEndpointKey = _parseEndpointConfig.defaultEndpointKey,
+      currentEndpoint = _parseEndpointConfig.currentEndpoint;
+
+  if (!currentEndpointKey) {
+    currentEndpointKey = defaultEndpointKey;
+  }
+
+  // persist default config key with session storage
+  (0, _sessionStorage.setDefaultEndpointKey)(defaultEndpointKey);
+  (0, _sessionStorage.setCurrentEndpoint)(currentEndpoint);
+
+  dispatch((0, _configure.setEndpointKeys)((0, _keys2.default)(currentEndpoint), currentEndpointKey, defaultEndpointKey));
+  (0, _sessionStorage.setCurrentEndpointKey)(currentEndpointKey);
+
+  var savedCreds = (0, _sessionStorage.retrieveData)(C.SAVED_CREDS_KEY);
+
+  if ((0, _sessionStorage.getCurrentSettings)().initialCredentials) {
+    // skip initial headers check (i.e. check was already done server-side)
+    var _getCurrentSettings$i = (0, _sessionStorage.getCurrentSettings)().initialCredentials,
+        user = _getCurrentSettings$i.user,
+        headers = _getCurrentSettings$i.headers;
+
+    (0, _sessionStorage.persistData)(C.SAVED_CREDS_KEY, headers);
+    return _promise2.default.resolve(user);
+  } else if (savedCreds) {
+    // verify session credentials with API
+    return (0, _fetch2.default)("" + (0, _sessionStorage.getApiUrl)(currentEndpointKey) + currentEndpoint[currentEndpointKey].tokenValidationPath).then(function (response) {
+      if (response.status >= 200 && response.status < 300) {
+        return response.json().then(function (_ref2) {
+          var data = _ref2.data;
+          return data;
+        });
+      }
+      (0, _sessionStorage.removeData)(C.SAVED_CREDS_KEY);
+      return _promise2.default.reject({ reason: "No credentials." });
+    });
+  } else {
+    return _promise2.default.reject({ reason: "No credentials." });
+  }
+}

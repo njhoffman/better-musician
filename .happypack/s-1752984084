@@ -1,0 +1,78 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = parseEndpointConfig;
+
+var _constants = require("./constants");
+
+var C = _interopRequireWildcard(_constants);
+
+var _extend = require("extend");
+
+var _extend2 = _interopRequireDefault(_extend);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+// base endpoint that other endpoints extend from
+var defaultEndpoint = {
+  apiUrl: "/api",
+  signOutPath: "/auth/sign_out",
+  emailSignInPath: "/auth/sign_in",
+  emailRegistrationPath: "/auth",
+  accountUpdatePath: "/auth",
+  accountDeletePath: "/auth",
+  passwordResetPath: "/auth/password",
+  passwordUpdatePath: "/auth/password",
+  tokenValidationPath: "/auth/validate_token",
+
+  authProviderPaths: {
+    github: "/auth/github",
+    facebook: "/auth/facebook",
+    google: "/auth/google_oauth2"
+  }
+};
+
+function getFirstObjectKey(obj) {
+  for (var key in obj) {
+    return key;
+  }
+};
+
+function parseEndpointConfig(endpoint) {
+  var defaultEndpointKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+  // normalize so opts is always an array of objects
+  if (endpoint.constructor !== Array) {
+    // single config will always be called 'default' unless set
+    // by previous session
+    defaultEndpointKey = C.INITIAL_CONFIG_KEY;
+
+    // config should look like {default: {...}}
+    var defaultConfig = {};
+    defaultConfig[defaultEndpointKey] = endpoint;
+
+    // endpoint should look like [{default: {...}}]
+    endpoint = [defaultConfig];
+  }
+
+  var currentEndpoint = {};
+
+  // iterate over config items, extend each from defaults
+  for (var i = 0; i < endpoint.length; i++) {
+    var configName = getFirstObjectKey(endpoint[i]);
+
+    // set first as default config
+    if (!defaultEndpointKey) {
+      defaultEndpointKey = configName;
+    }
+
+    // save config to `configs` hash
+    currentEndpoint[configName] = (0, _extend2.default)({}, defaultEndpoint, endpoint[i][configName]);
+  }
+
+  return { defaultEndpointKey: defaultEndpointKey, currentEndpoint: currentEndpoint };
+}

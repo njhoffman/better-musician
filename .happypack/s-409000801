@@ -1,0 +1,155 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require("babel-runtime/helpers/inherits");
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _redboxReact2 = require("redbox-react");
+
+var _redboxReact3 = _interopRequireDefault(_redboxReact2);
+
+var _react2 = require("react");
+
+var _react3 = _interopRequireDefault(_react2);
+
+var _reactTransformCatchErrors3 = require("react-transform-catch-errors");
+
+var _reactTransformCatchErrors4 = _interopRequireDefault(_reactTransformCatchErrors3);
+
+var _class, _temp;
+
+var _colors = require("material-ui/styles/colors");
+
+var Colors = _interopRequireWildcard(_colors);
+
+var _error = require("material-ui/svg-icons/alert/error");
+
+var _error2 = _interopRequireDefault(_error);
+
+var _immutable = require("immutable");
+
+var _immutable2 = _interopRequireDefault(_immutable);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _components = {
+  ErrorList: {
+    displayName: "ErrorList"
+  }
+};
+
+var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
+  filename: "/home/vagrant/projects/instrumental/src/components/ErrorList.js",
+  components: _components,
+  locals: [],
+  imports: [_react3.default, _redboxReact3.default]
+});
+
+function _wrapComponent(id) {
+  return function (Component) {
+    return _reactTransformCatchErrors2(Component, id);
+  };
+}
+
+var ErrorList = _wrapComponent("ErrorList")((_temp = _class = function (_React$Component) {
+  (0, _inherits3.default)(ErrorList, _React$Component);
+
+  function ErrorList() {
+    (0, _classCallCheck3.default)(this, ErrorList);
+    return (0, _possibleConstructorReturn3.default)(this, (ErrorList.__proto__ || (0, _getPrototypeOf2.default)(ErrorList)).apply(this, arguments));
+  }
+
+  (0, _createClass3.default)(ErrorList, [{
+    key: "renderErrorList",
+    value: function renderErrorList() {
+      var errorCount = (this.props.errors || _immutable2.default.fromJS([])).size;
+
+      if (errorCount > 0) {
+        // pluralize message
+        var errorWord = "error";
+        errorWord += errorCount === 1 ? "" : "s";
+
+        return _react3.default.createElement(
+          "div",
+          { className: "has-error" },
+          _react3.default.createElement(
+            "p",
+            null,
+            "Please correct the following ",
+            errorWord,
+            ":"
+          ),
+          this.props.errors.map(function (err, i) {
+            return _react3.default.createElement(
+              "p",
+              {
+                key: i,
+                className: "control-label modal-error-item",
+                style: { paddingLeft: "20px", position: "relative" } },
+              _react3.default.createElement(_error2.default, {
+                viewBox: "0 0 50 50",
+                color: Colors.red500,
+                style: {
+                  position: "absolute",
+                  left: 0,
+                  top: 3 } }),
+              " ",
+              err
+            );
+          })
+        );
+      } else {
+        return _react3.default.createElement(
+          "p",
+          { style: { paddingLeft: "20px", position: "relative" } },
+          _react3.default.createElement(_error2.default, {
+            viewBox: "0 0 50 50",
+            style: {
+              position: "absolute",
+              left: 0,
+              top: 3 },
+            color: Colors.red500 }),
+          " There was an error processing this form. Please check each field and try again."
+        );
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return _react3.default.createElement(
+        "div",
+        { className: "auth-error-message" },
+        this.renderErrorList()
+      );
+    }
+  }]);
+  return ErrorList;
+}(_react3.default.Component), _class.propTypes = {
+  errors: _react2.PropTypes.object
+}, _class.defaultProps = {
+  errors: _immutable2.default.fromJS([])
+}, _temp));
+
+exports.default = ErrorList;

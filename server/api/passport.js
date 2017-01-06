@@ -78,27 +78,27 @@ export default function configPassport(passport) {
         });
     }
   ));
-  //
-  // passport.use('local-login', new LocalStrategy({
-  //   usernameField:'email',
-  //   passwordField:'password',
-  //   passReqToCallback: true},
-  //   (req, email, password, done) => {
-  //     User.findByEmail(email)
-  //       .then(user => {
-  //         if(!user){
-  //           done(null, false);
-  //         }
-  //         if(!user.validPassword(password)){
-  //           done(null, false);
-  //         }
-  //         done(null, user);
-  //       }).catch(err => {
-  //         done(err);
-  //       });
-  //   }
-  // ));
-  //
+
+  passport.use('local-login', new LocalStrategy({
+    usernameField:'email-sign-in-email',
+    passwordField:'email-sign-in-password',
+    passReqToCallback: true},
+    (req, email, password, done) => {
+      User.findByEmail(email)
+        .then(user => {
+          if(!user){
+            done(null, false);
+          }
+          const newUser = new User(user[0]);
+          if(!newUser.validPassword(password)){
+            debug("invalid password %s", password);
+            done(null, false);
+          }
+          done(null, newUser);
+        });
+    }
+  ));
+
   User.getAll().then(users => {
     users.forEach(function(user) {
       debug('user %s', user.email);

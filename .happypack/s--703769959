@@ -1,0 +1,27 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _reactRedux = require('react-redux');
+
+var _settings = require('../modules/settings');
+
+var _SettingsView = require('../components/SettingsView');
+
+var _SettingsView2 = _interopRequireDefault(_SettingsView);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var mapActionCreators = {
+  increment: _settings.increment
+};
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    settings: state.settings
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapActionCreators)(_SettingsView2.default);

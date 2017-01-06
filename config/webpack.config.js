@@ -4,9 +4,12 @@ const webpack = require('webpack');
 const cssnano = require('cssnano');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const StatsPlugin = require('stats-webpack-plugin');
 const project = require('./project.config');
-const debug = require('debug')('app:config:webpack');
+const HappyPack = require('happypack');
 const _ = require("lodash");
+
+const debug = require('debug')('app:config:webpack');
 
 const __DEV__ = project.globals.__DEV__;
 const __PROD__ = project.globals.__PROD__;
@@ -31,6 +34,8 @@ let resolvePaths = _.mapValues(_RESOLVE_PATHS, function (str) {
 debug('Creating configuration.');
 const webpackConfig = {
   name    : 'client',
+  profile : false,
+  hints   : true,
   target  : 'web',
   devtool : project.compiler_devtool,
   resolve : {
@@ -78,6 +83,9 @@ webpackConfig.externals['react/addons'] = true;
 // ------------------------------------
 webpackConfig.plugins = [
   new webpack.DefinePlugin(project.globals),
+  // new StatsPlugin('./webpack.stats.json',{
+  //   chunkModules: true, exclude: [/node_modules [\\\/]react/]
+  // }),
   new HtmlWebpackPlugin({
     template : project.paths.client('index.html'),
     hash     : false,
@@ -107,8 +115,11 @@ if (__TEST__ && !argv.watch) {
 }
 
 if (__DEV__) {
-  debug('Enabling plugins for live development (HMR, NoErrors).');
+  debug('Enabling plugins for live development (HappyPack, HMR, NoErrors).');
   webpackConfig.plugins.push(
+    new HappyPack({
+      loaders: [ 'babel?presets[]=' + project.compiler_babel.presets.join(',presets[]=') ]
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin()
   );
@@ -139,16 +150,31 @@ if (!__TEST__) {
 // ------------------------------------
 // Loaders
 // ------------------------------------
-// JavaScript / JSON
-webpackConfig.module.loaders = [{
+webpackConfig.module.loaders = [];
+
+
+// happypack loader
+webpackConfig.module.loaders.push({
   test    : /\.(js|jsx)$/,
-  exclude : /node_modules/,
-  loader  : 'babel',
+  include : [/src/],
+  exclude : [/node_modules/],
+  loader  : 'happypack/loader',
   query   : project.compiler_babel
 }, {
   test   : /\.json$/,
   loader : 'json'
-}];
+});
+
+// JavaScript / JSON
+// webpackConfig.module.loaders.push({
+//   test    : /\.(js|jsx)$/,
+//   exclude : /node_modules/,
+//   loader  : 'babel',
+//   query   : project.compiler_babel
+// }, {
+//   test   : /\.json$/,
+//   loader : 'json'
+// });
 
 // ------------------------------------
 // Style Loaders
@@ -160,11 +186,11 @@ const BASE_CSS_LOADER = 'css?sourceMap&-minimize';
 const BASE_CSS_MODULE_LOADER = 'css?sourceMap&modules&importLoaders=2&-minimize';
 
 
-
 // vendor global scss/css
 webpackConfig.module.loaders.push({
   test    : /\.scss$/,
   include : [/styles/],
+  exclude : [/node_modules/],
   loaders : [
     'style',
     BASE_CSS_LOADER,
@@ -175,6 +201,7 @@ webpackConfig.module.loaders.push({
 webpackConfig.module.loaders.push({
   test    : /\.css$/,
   include : [/styles/],
+  exclude : [/node_modules/],
   loaders : [
     'style',
     BASE_CSS_LOADER,
@@ -185,7 +212,8 @@ webpackConfig.module.loaders.push({
 // app scss/css to be processed by css-module
 webpackConfig.module.loaders.push({
   test    : /\.scss$/,
-  exclude : [/styles/],
+  include : [/src/],
+  exclude : [/styles/, /node_modules/],
   loaders : [
     'style',
     BASE_CSS_MODULE_LOADER,
@@ -195,7 +223,8 @@ webpackConfig.module.loaders.push({
 });
 webpackConfig.module.loaders.push({
   test    : /\.css$/,
-  exclude : [/styles/],
+  include : [/src/],
+  exclude : [/styles/, /node_modules/],
   loaders : [
     'style',
     BASE_CSS_MODULE_LOADER,

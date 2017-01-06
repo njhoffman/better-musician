@@ -1,0 +1,54 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.SIGN_OUT_ERROR = exports.SIGN_OUT_COMPLETE = exports.SIGN_OUT_START = undefined;
+exports.signOutStart = signOutStart;
+exports.signOutComplete = signOutComplete;
+exports.signOutError = signOutError;
+exports.signOut = signOut;
+
+var _sessionStorage = require("../utils/session-storage");
+
+var _handleFetchResponse = require("../utils/handle-fetch-response");
+
+var _configure = require("./configure");
+
+var _fetch = require("../utils/fetch");
+
+var _fetch2 = _interopRequireDefault(_fetch);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var SIGN_OUT_START = exports.SIGN_OUT_START = "SIGN_OUT_START";
+var SIGN_OUT_COMPLETE = exports.SIGN_OUT_COMPLETE = "SIGN_OUT_COMPLETE";
+var SIGN_OUT_ERROR = exports.SIGN_OUT_ERROR = "SIGN_OUT_ERROR";
+
+function signOutStart(endpoint) {
+  return { type: SIGN_OUT_START, endpoint: endpoint };
+}
+function signOutComplete(endpoint, user) {
+  return { type: SIGN_OUT_COMPLETE, user: user, endpoint: endpoint };
+}
+function signOutError(endpoint, errors) {
+  return { type: SIGN_OUT_ERROR, endpoint: endpoint, errors: errors };
+}
+function signOut(endpoint) {
+  return function (dispatch) {
+    dispatch(signOutStart(endpoint));
+
+    return (0, _fetch2.default)((0, _sessionStorage.getSignOutUrl)(endpoint), { method: "delete" }).then(_handleFetchResponse.parseResponse).then(function (user) {
+      dispatch(signOutComplete(endpoint, user));
+      dispatch((0, _configure.storeCurrentEndpointKey)(null));
+      (0, _sessionStorage.destroySession)();
+    }).catch(function (_ref) {
+      var errors = _ref.errors;
+
+      dispatch(signOutError(endpoint, errors));
+      dispatch((0, _configure.storeCurrentEndpointKey)(null));
+      (0, _sessionStorage.destroySession)();
+      throw errors;
+    });
+  };
+}

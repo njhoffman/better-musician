@@ -1,0 +1,112 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.CALL_API = undefined;
+
+var _slicedToArray2 = require('babel-runtime/helpers/slicedToArray');
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _symbol = require('babel-runtime/core-js/symbol');
+
+var _symbol2 = _interopRequireDefault(_symbol);
+
+var _fetch = require('store/auth/utils/fetch');
+
+var _fetch2 = _interopRequireDefault(_fetch);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// TODO: make api return nested data, implement normalizing here
+
+// Action key that carries API call info interpreted by this Redux middleware.
+var CALL_API = exports.CALL_API = (0, _symbol2.default)('Call API');
+
+// Fetches an API response and normalizes the result JSON according to schema.
+// This makes every API response have the same shape, regardless of how nested it was.
+var apiFetch = function apiFetch(endpoint, schema) {
+
+  endpoint = 'http://localhost:3000/api' + endpoint;
+  return (0, _fetch2.default)(endpoint).then(function (response) {
+    return response.json().then(function (json) {
+      if (!response.ok) {
+        return _promise2.default.reject(json);
+      }
+      return json.data;
+    });
+  });
+};
+
+exports.default = function (store) {
+  return function (next) {
+    return function (action) {
+      var callAPI = action[CALL_API];
+      if (typeof callAPI === 'undefined') {
+        return next(action);
+      }
+
+      var endpoint = callAPI.endpoint;
+      var types = callAPI.types;
+
+
+      if (typeof endpoint === 'function') {
+        endpoint = endpoint(store.getState());
+      }
+      if (typeof endpoint !== 'string') {
+        throw new Error('Specify a string endpoint URL.');
+      }
+      if (!Array.isArray(types) || types.length !== 3) {
+        throw new Error('Expected an array of three action types.');
+      }
+      if (!types.every(function (type) {
+        return typeof type === 'string' || typeof type === 'function';
+      })) {
+        throw new Error('Expected action types to be strings or functions.');
+      }
+
+      var actionWith = function actionWith(data) {
+        var finalAction = (0, _assign2.default)({}, action, data);
+        delete finalAction[CALL_API];
+        return finalAction;
+      };
+
+      var _types = (0, _slicedToArray3.default)(types, 3),
+          requestType = _types[0],
+          successType = _types[1],
+          failureType = _types[2];
+
+      next(actionWith({ type: requestType }));
+
+      var responseSuccess = function responseSuccess(response) {
+        if (typeof successType === 'function') {
+          return next(successType(response));
+        } else {
+          return next(actionWith({
+            payload: response,
+            type: successType
+          }));
+        }
+      };
+
+      var responseFailure = function responseFailure(error) {
+        return next(actionWith({
+          type: failureType,
+          error: error.message || 'Something bad happened'
+        }));
+      };
+
+      console.info("Fetching: " + endpoint);
+      return apiFetch(endpoint).then(responseSuccess, responseFailure);
+    };
+  };
+};

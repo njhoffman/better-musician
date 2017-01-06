@@ -1,0 +1,186 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require("babel-runtime/helpers/inherits");
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _redboxReact2 = require("redbox-react");
+
+var _redboxReact3 = _interopRequireDefault(_redboxReact2);
+
+var _react2 = require("react");
+
+var _react3 = _interopRequireDefault(_react2);
+
+var _reactTransformCatchErrors3 = require("react-transform-catch-errors");
+
+var _reactTransformCatchErrors4 = _interopRequireDefault(_reactTransformCatchErrors3);
+
+var _class, _temp;
+
+var _EmailSignUpSuccessModal = require("./modals/EmailSignUpSuccessModal");
+
+var _EmailSignUpSuccessModal2 = _interopRequireDefault(_EmailSignUpSuccessModal);
+
+var _EmailSignUpErrorModal = require("./modals/EmailSignUpErrorModal");
+
+var _EmailSignUpErrorModal2 = _interopRequireDefault(_EmailSignUpErrorModal);
+
+var _TokenBridge = require("./TokenBridge");
+
+var _TokenBridge2 = _interopRequireDefault(_TokenBridge);
+
+var _reactRedux = require("react-redux");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _components = {
+  AuthGlobals: {
+    displayName: "AuthGlobals"
+  }
+};
+
+var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
+  filename: "/home/vagrant/projects/instrumental/src/components/AuthGlobals.js",
+  components: _components,
+  locals: [],
+  imports: [_react3.default, _redboxReact3.default]
+});
+
+function _wrapComponent(id) {
+  return function (Component) {
+    return _reactTransformCatchErrors2(Component, id);
+  };
+}
+// import EmailSignInSuccessModal from "./modals/EmailSignInSuccessModal";
+// import EmailSignInErrorModal from "./modals/EmailSignInErrorModal";
+// import OAuthSignInSuccessModal from "./modals/OAuthSignInSuccessModal";
+// import OAuthSignInErrorModal from "./modals/OAuthSignInErrorModal";
+
+// import SignOutSuccessModal from "./modals/SignOutSuccessModal";
+// import SignOutErrorModal from "./modals/SignOutErrorModal";
+// import FirstTimeLoginSuccessModal from "./modals/FirstTimeLoginSuccessModal";
+// import FirstTimeLoginErrorModal from "./modals/FirstTimeLoginErrorModal";
+// import RequestPasswordResetErrorModal from "./modals/RequestPasswordResetErrorModal";
+// import RequestPasswordResetSuccessModal from "./modals/RequestPasswordResetSuccessModal";
+// import UpdatePasswordErrorModal from "./modals/UpdatePasswordErrorModal";
+// import UpdatePasswordSuccessModal from "./modals/UpdatePasswordSuccessModal";
+// import DestroyAccountErrorModal from "./modals/DestroyAccountErrorModal";
+// import DestroyAccountSuccessModal from "./modals/DestroyAccountSuccessModal";
+// import PasswordResetSuccessModal from "./modals/PasswordResetSuccessModal";
+
+
+var AuthGlobals = _wrapComponent("AuthGlobals")((_temp = _class = function (_React$Component) {
+  (0, _inherits3.default)(AuthGlobals, _React$Component);
+
+  function AuthGlobals() {
+    (0, _classCallCheck3.default)(this, AuthGlobals);
+    return (0, _possibleConstructorReturn3.default)(this, (AuthGlobals.__proto__ || (0, _getPrototypeOf2.default)(AuthGlobals)).apply(this, arguments));
+  }
+
+  (0, _createClass3.default)(AuthGlobals, [{
+    key: "render",
+    value: function render() {
+      var showEmailSignInSuccess = this.props.emailSignInSuccessEnabled && this.props.auth.getIn(["ui", "emailSignInSuccessModalVisible"]);
+
+      var showEmailSignInError = this.props.emailSignInErrorEnabled && this.props.auth.getIn(["ui", "emailSignInErrorModalVisible"]);
+
+      var showEmailSignUpSuccess = this.props.emailSignUpSuccessEnabled && this.props.auth.getIn(["ui", "emailSignUpSuccessModalVisible"]);
+
+      var showEmailSignUpError = this.props.emailSignUpErrorEnabled && this.props.auth.getIn(["ui", "emailSignUpErrorModalVisible"]);
+
+      var showSignOutSuccess = this.props.signOutSuccessEnabled && this.props.auth.getIn(["ui", "signOutSuccessModalVisible"]);
+
+      var showSignOutError = this.props.signOutErrorEnabled && this.props.auth.getIn(["ui", "signOutErrorModalVisible"]);
+
+      var showFirstTimeLoginSuccess = this.props.firstTimeLoginSuccessEnabled && this.props.auth.getIn(["ui", "firstTimeLoginSuccessModalVisible"]);
+
+      var showFirstTimeLoginError = this.props.firstTimeLoginErrorEnabled && this.props.auth.getIn(["ui", "firstTimeLoginErrorModalVisible"]);
+
+      var showRequestPasswordResetError = this.props.requestPasswordResetErrorEnabled && this.props.auth.getIn(["ui", "requestPasswordResetErrorModalVisible"]);
+
+      var showRequestPasswordResetSuccess = this.props.requestPasswordResetSuccessEnabled && this.props.auth.getIn(["ui", "requestPasswordResetSuccessModalVisible"]);
+
+      var showOAuthSignInSuccess = this.props.oAuthSignInSuccessEnabled && this.props.auth.getIn(["ui", "oAuthSignInSuccessModalVisible"]);
+
+      var showOAuthSignInError = this.props.oAuthSignInErrorEnabled && this.props.auth.getIn(["ui", "oAuthSignInErrorModalVisible"]);
+
+      var updatePasswordSuccess = this.props.updatePasswordSuccessEnabled && this.props.auth.getIn(["ui", "updatePasswordSuccessModalVisible"]);
+
+      var updatePasswordError = this.props.updatePasswordErrorEnabled && this.props.auth.getIn(["ui", "updatePasswordErrorModalVisible"]);
+
+      var destroyAccountSuccess = this.props.destroyAccountSuccessEnabled && this.props.auth.getIn(["ui", "destroyAccountSuccessModalVisible"]);
+
+      var destroyAccountError = this.props.destroyAccountErrorEnabled && this.props.auth.getIn(["ui", "destroyAccountErrorModalVisible"]);
+
+      var passwordResetSuccess = this.props.passwordResetSuccessEnabled && this.props.auth.getIn(["ui", "passwordResetSuccessModalVisible"]);
+
+      //let passwordResetError = (
+      //this.props.passwordResetErrorEnabled &&
+      //this.props.auth.getIn(["ui", "passwordResetErrorModalVisible"])
+      //);
+
+      return _react3.default.createElement(
+        "div",
+        { id: "auth-modals" },
+        _react3.default.createElement(_EmailSignUpSuccessModal2.default, { show: showEmailSignUpSuccess }),
+        _react3.default.createElement(_EmailSignUpErrorModal2.default, { show: showEmailSignUpError }),
+        _react3.default.createElement(_TokenBridge2.default, null)
+      );
+    }
+  }]);
+  return AuthGlobals;
+}(_react3.default.Component), _class.propTypes = {
+  // signOutSuccessEnabled: PropTypes.bool,
+  // signOutErrorEnabled: PropTypes.bool,
+  // emailSignInSuccessEnabled: PropTypes.bool,
+  // emailSignInErrorEnabled: PropTypes.bool,
+  // oAuthSignInSuccessEnabled: PropTypes.bool,
+  // oAuthSignInErrorEnabled: PropTypes.bool,
+  emailSignUpSuccessEnabled: _react2.PropTypes.bool,
+  emailSignUpErrorEnabled: _react2.PropTypes.bool
+}, _class.defaultProps = {
+  signOutSuccessEnabled: true,
+  signOutErrorEnabled: true,
+  emailSignInSuccessEnabled: true,
+  emailSignInErrorEnabled: true,
+  oAuthSignInSuccessEnabled: true,
+  oAuthSignInErrorEnabled: true,
+  emailSignUpSuccessEnabled: true,
+  emailSignUpErrorEnabled: true,
+  firstTimeLoginSuccessEnabled: true,
+  firstTimeLoginErrorEnabled: true,
+  requestPasswordResetErrorEnabled: true,
+  requestPasswordResetSuccessEnabled: true,
+  updatePasswordErrorEnabled: true,
+  updatePasswordSuccessEnabled: true,
+  destroyAccountErrorEnabled: true,
+  destroyAccountSuccessEnabled: true,
+  passwordResetSuccessEnabled: true,
+  passwordResetErrorEnabled: true
+}, _temp));
+
+exports.default = (0, _reactRedux.connect)(function (_ref) {
+  var auth = _ref.auth;
+  return { auth: auth };
+})(AuthGlobals);

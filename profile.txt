@@ -1,0 +1,6 @@
+https://chrisbateman.github.io/webpack-visualizer/
+http://webpack.github.io/analyse/#hints
+https://www.npmjs.com/package/webpack-bundle-analyzer
+https://www.npmjs.com/package/stats-webpack-plugin
+https://alexkuz.github.io/stellar-webpack/
+https://alexkuz.github.io/webpack-chart/

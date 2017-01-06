@@ -3,10 +3,9 @@ import { Paper } from 'material-ui';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-import { AuthGlobals } from 'redux-auth/material-ui-theme';
-
 import 'coreStyles';
 import css from './CoreLayout.scss';
+import AuthGlobals from 'components/AuthGlobals';
 import Header from 'containers/HeaderContainer';
 import Footer from 'containers/FooterContainer';
 import DrawerMenu from 'containers/DrawerMenuContainer';
@@ -16,7 +15,7 @@ import { Row } from 'react-foundation';
 export const CoreLayout = ({ children }) => (
   <MuiThemeProvider muiTheme={getMuiTheme(instrumentalDarkTheme)}>
     <div className={css.appWrapper}>
-      {AuthGlobals}
+      <AuthGlobals />
       <DrawerMenu />
       <Header />
       <Row className={css.contentWrapper}>

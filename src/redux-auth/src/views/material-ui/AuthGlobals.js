@@ -178,4 +178,4 @@ class AuthGlobals extends React.Component {
   }
 }
 
-export default connect(({auth}) => ({auth}))(AuthGlobals);
+export default connect( ({auth}) => ({auth}) )(AuthGlobals);

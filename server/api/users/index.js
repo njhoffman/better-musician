@@ -29,7 +29,7 @@ export default function (passport) {
     });
 
   router.post('/login',
-    passport.authenticate('jwt', { failWithError: true, session: false }),
+    passport.authenticate('local-login', { failWithError: true, session: false }),
     (req, res) => {
       debug(`User ${req.user.username} logged in`);
       res.json({

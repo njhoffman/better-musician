@@ -6,13 +6,18 @@
 
 .contentWrapper {
   padding: 5px;
-  // background: #f5f5cc;
-  // border: solid 1px black;
-  // max-width:95%;
   min-width: 280px;
   max-width: 1025px;
   height: 100%;
   position: relative;
   margin-left: auto;
   margin-right: auto;
+}
+
+.contentWrapper
+> div:first-child
+> div:first-child
+> div:first-child {
+  padding: 30px;
+  margin: 30px;
 }

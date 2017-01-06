@@ -20,7 +20,8 @@
     "deploy": "better-npm-run deploy",
     "deploy:dev": "better-npm-run deploy:dev",
     "deploy:prod": "better-npm-run deploy:prod",
-    "codecov": "cat coverage/*/lcov.info | codecov"
+    "codecov": "cat coverage/*/lcov.info | codecov",
+    "stats": "webpack --env development --profile --json > stats.json"
   },
   "betterScripts": {
     "compile": {
@@ -175,6 +176,7 @@
     "event-source-polyfill": "0.0.7",
     "eventsource-polyfill": "^0.9.6",
     "express": "^4.14.0",
+    "happypack": "^3.0.2",
     "karma": "^1.0.0",
     "karma-coverage": "^1.0.0",
     "karma-json-reporter": "^1.2.0",
@@ -195,6 +197,7 @@
     "redux-logger": "^2.7.4",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0",
+    "stats-webpack-plugin": "^0.4.2",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hmr": "^1.0.2",
     "webpack-hot-middleware": "^2.12.2"

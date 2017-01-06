@@ -1,0 +1,21 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.authenticateStart = authenticateStart;
+exports.authenticateComplete = authenticateComplete;
+exports.authenticateError = authenticateError;
+var AUTHENTICATE_START = exports.AUTHENTICATE_START = "AUTHENTICATE_START";
+var AUTHENTICATE_COMPLETE = exports.AUTHENTICATE_COMPLETE = "AUTHENTICATE_COMPLETE";
+var AUTHENTICATE_ERROR = exports.AUTHENTICATE_ERROR = "AUTHENTICATE_ERROR";
+
+function authenticateStart() {
+  return { type: AUTHENTICATE_START };
+}
+function authenticateComplete(user) {
+  return { type: AUTHENTICATE_COMPLETE, user: user };
+}
+function authenticateError(errors) {
+  return { type: AUTHENTICATE_ERROR, errors: errors };
+}

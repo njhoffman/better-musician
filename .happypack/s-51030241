@@ -1,0 +1,66 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _redux = require('redux');
+
+var _reactRouter = require('react-router');
+
+var _reducers = require('./reducers');
+
+var _reducers2 = _interopRequireDefault(_reducers);
+
+var _location = require('./location');
+
+var _reduxLogger = require('redux-logger');
+
+var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
+
+var _api = require('middleware/api');
+
+var _api2 = _interopRequireDefault(_api);
+
+var _reduxPromiseMiddleware = require('redux-promise-middleware');
+
+var _reduxPromiseMiddleware2 = _interopRequireDefault(_reduxPromiseMiddleware);
+
+var _reduxThunk = require('redux-thunk');
+
+var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function () {
+  var initialState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+
+  // const middleware = [thunk, middlewareApi, createLogger()];
+  var middleware = [_api2.default, _reduxThunk2.default, (0, _reduxPromiseMiddleware2.default)()];
+
+  var enhancers = [];
+  var composeEnhancers = _redux.compose;
+
+  if (__DEV__) {
+    var composeWithDevToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+    if (typeof composeWithDevToolsExtension === 'function') {
+      composeEnhancers = composeWithDevToolsExtension;
+    }
+  }
+
+  var store = (0, _redux.createStore)((0, _reducers2.default)(), composeEnhancers.apply(undefined, [_redux.applyMiddleware.apply(undefined, middleware)].concat(enhancers)));
+  store.asyncReducers = {};
+
+  // to unsubscribe, invoke `store.unsubscribeHistory()` anytime
+  store.unsubscribeHistory = _reactRouter.browserHistory.listen((0, _location.updateLocation)(store));
+
+  if (module.hot) {
+    module.hot.accept('./reducers', function () {
+      var reducers = require('./reducers').default;
+      store.replaceReducer(reducers(store.asyncReducers));
+    });
+  }
+
+  return store;
+};

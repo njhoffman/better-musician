@@ -2,8 +2,9 @@ import React, { PropTypes } from 'react';
 import { TableRow, TableRowColumn } from 'material-ui/Table';
 import StarIcon from 'react-icons/lib/md/star';
 import css from './Song.scss';
+import muiThemeable from 'material-ui/styles/muiThemeable';
 
-const Song = ({ songValues, columnWidths, ...custom }) => {
+const Song = ({ songValues, columnWidths, muiTheme, ...custom }) => {
   return (
     <TableRow
       hoverable={true}
@@ -26,7 +27,9 @@ const Song = ({ songValues, columnWidths, ...custom }) => {
         data-rowId={songValues.id}
         style={columnWidths[2]}
         className={css.progress}>
-        { [...Array(songValues.progress)].map((x,i) => <StarIcon key={i} /> )}
+        { [...Array(songValues.progress)].map((x,i) =>
+          <StarIcon key={i} style={{color: muiTheme.starColor}} />
+        ) }
       </TableRowColumn>
       <TableRowColumn
         data-rowId={songValues.id}
@@ -48,4 +51,4 @@ Song.propTypes = {
   columnWidths: PropTypes.array
 };
 
-export default Song;
+export default muiThemeable()(Song);

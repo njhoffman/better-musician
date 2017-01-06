@@ -1,0 +1,1 @@
+{"version":3,"sources":["src/components/Footer/index.js"],"names":[],"mappings":";;;;;;AAAA","file":"index.js","sourceRoot":"/home/vagrant/projects/instrumental","sourcesContent":["import Footer from './Footer';\n\nexport default Footer;\n"]}

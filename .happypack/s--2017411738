@@ -1,0 +1,51 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LoginView = undefined;
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _materialUi = require('material-ui');
+
+var _reactFoundation = require('react-foundation');
+
+var _muiThemeable = require('material-ui/styles/muiThemeable');
+
+var _muiThemeable2 = _interopRequireDefault(_muiThemeable);
+
+var _LoginView = require('./LoginView.scss');
+
+var _LoginView2 = _interopRequireDefault(_LoginView);
+
+var _EmailSignInForm = require('./EmailSignInForm');
+
+var _EmailSignInForm2 = _interopRequireDefault(_EmailSignInForm);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var LoginView = exports.LoginView = function LoginView(props) {
+  return _react2.default.createElement(
+    _reactFoundation.Column,
+    { small: 8, centerOnSmall: true },
+    _react2.default.createElement(
+      _materialUi.Paper,
+      { zDepth: 5 },
+      _react2.default.createElement(
+        'div',
+        { className: _LoginView2.default.loginContainer },
+        _react2.default.createElement(
+          'h2',
+          null,
+          'This is the Login Page'
+        ),
+        _react2.default.createElement(_EmailSignInForm2.default, null)
+      )
+    )
+  );
+};
+
+exports.default = (0, _muiThemeable2.default)()(LoginView);

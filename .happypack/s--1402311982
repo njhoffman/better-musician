@@ -1,0 +1,76 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EMAIL_SIGN_IN_FORM_UPDATE = exports.EMAIL_SIGN_IN_ERROR = exports.EMAIL_SIGN_IN_COMPLETE = exports.EMAIL_SIGN_IN_START = undefined;
+
+var _stringify = require("babel-runtime/core-js/json/stringify");
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+exports.emailSignInFormUpdate = emailSignInFormUpdate;
+exports.emailSignInStart = emailSignInStart;
+exports.emailSignInComplete = emailSignInComplete;
+exports.emailSignInError = emailSignInError;
+exports.emailSignIn = emailSignIn;
+
+var _sessionStorage = require("../utils/session-storage");
+
+var _configure = require("./configure");
+
+var _handleFetchResponse = require("../utils/handle-fetch-response");
+
+var _fetch = require("../utils/fetch");
+
+var _fetch2 = _interopRequireDefault(_fetch);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var EMAIL_SIGN_IN_START = exports.EMAIL_SIGN_IN_START = "EMAIL_SIGN_IN_START";
+var EMAIL_SIGN_IN_COMPLETE = exports.EMAIL_SIGN_IN_COMPLETE = "EMAIL_SIGN_IN_COMPLETE";
+var EMAIL_SIGN_IN_ERROR = exports.EMAIL_SIGN_IN_ERROR = "EMAIL_SIGN_IN_ERROR";
+var EMAIL_SIGN_IN_FORM_UPDATE = exports.EMAIL_SIGN_IN_FORM_UPDATE = "EMAIL_SIGN_IN_FORM_UPDATE";
+
+function emailSignInFormUpdate(endpoint, key, value) {
+  return { type: EMAIL_SIGN_IN_FORM_UPDATE, endpoint: endpoint, key: key, value: value };
+}
+function emailSignInStart(endpoint) {
+  return { type: EMAIL_SIGN_IN_START, endpoint: endpoint };
+}
+function emailSignInComplete(endpoint, user) {
+  return { type: EMAIL_SIGN_IN_COMPLETE, user: user, endpoint: endpoint };
+}
+function emailSignInError(endpoint, errors) {
+  return { type: EMAIL_SIGN_IN_ERROR, errors: errors, endpoint: endpoint };
+}
+function emailSignIn(body, endpointKey) {
+  return function (dispatch) {
+    // save previous endpoint key in case of failure
+    var prevEndpointKey = (0, _sessionStorage.getCurrentEndpointKey)();
+
+    // necessary for fetch to recognize the response as an api request
+    (0, _sessionStorage.setCurrentEndpointKey)(endpointKey);
+    var currentEndpointKey = (0, _sessionStorage.getCurrentEndpointKey)();
+
+    dispatch((0, _configure.storeCurrentEndpointKey)(currentEndpointKey));
+    dispatch(emailSignInStart(currentEndpointKey));
+
+    return (0, _fetch2.default)((0, _sessionStorage.getEmailSignInUrl)(currentEndpointKey), {
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      method: "post",
+      body: (0, _stringify2.default)(body)
+    }).then(_handleFetchResponse.parseResponse).then(function (user) {
+      return dispatch(emailSignInComplete(currentEndpointKey, user));
+    }).catch(function (errors) {
+      // revert endpoint key to what it was before failed request
+      (0, _sessionStorage.setCurrentEndpointKey)(prevEndpointKey);
+      dispatch((0, _configure.storeCurrentEndpointKey)(prevEndpointKey));
+      dispatch(emailSignInError(currentEndpointKey, errors));
+      throw errors;
+    });
+  };
+}

@@ -1,21 +1,19 @@
 import React from 'react';
+import { Paper } from 'material-ui';
+import { Row, Column } from 'react-foundation';
+import muiThemeable from 'material-ui/styles/muiThemeable';
 import css from './LoginView.scss';
-import { EmailSignInForm } from 'redux-auth/material-ui-theme';
+import EmailSignInForm from './EmailSignInForm';
 
 export const LoginView = (props) => (
   <Column small={8} centerOnSmall={true}>
     <Paper zDepth={5}>
       <div className={css.loginContainer}>
         <h2>This is the Login Page</h2>
-        <EmailSignInForm  />
+        <EmailSignInForm />
       </div>
     </Paper>
   </Column>
 );
 
-LoginView.propTypes = {
-  settings: React.PropTypes.number.isRequired,
-  increment   : React.PropTypes.func.isRequired
-};
-
-export default LoginView;
+export default muiThemeable()(LoginView);

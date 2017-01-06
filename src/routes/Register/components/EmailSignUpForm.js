@@ -1,11 +1,11 @@
 import React, { PropTypes } from "react";
-import { RenderTextField } from 'components/Field';
 import ContentSend from "material-ui/svg-icons/content/send";
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import ButtonLoader from './ButtonLoader';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
+import ButtonLoader from './ButtonLoader';
+import { RenderTextField } from 'components/Field';
 import { emailSignUp } from 'store/auth/actions/email-sign-up';
 
 class EmailSignUpForm extends React.Component {
@@ -58,13 +58,15 @@ class EmailSignUpForm extends React.Component {
 
     return (
       <form className='redux-auth email-sign-up-form clearfix'
-            style={{clear: "both", overflow: "hidden"}}
-            onSubmit={this.handleSubmit.bind(this)}>
-          <div>
-            { errors && errors.map(error =>
-                <p>{error}</p>
-            )}
-          </div>
+        style={{clear: "both", overflow: "hidden"}}
+        onSubmit={this.handleSubmit.bind(this)}>
+
+        <div>
+          { errors && errors.map(error =>
+            <p>{error}</p>
+          )}
+        </div>
+
         <Field
           component={RenderTextField}
           floatingLabelText="Email"
@@ -86,7 +88,8 @@ class EmailSignUpForm extends React.Component {
           disabled={disabled}
           {...this.props.inputProps.passwordConfirmation} />
 
-        <ButtonLoader loading={this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "loading"])}
+        <ButtonLoader
+          loading={this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "loading"])}
           type="submit"
           name="email-sign-up-submit"
           primary={true}

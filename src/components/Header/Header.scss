@@ -2,41 +2,52 @@
   background: #2b2d30;
   text-align: center;
   font-size: 0.9em;
+
+  a {
+    white-space: nowrap;
+    color: #aaaacc;
+    text-decoration: none;
+    vertical-align: middle;
+  }
+
+  .wrapper {
+    height: 40px;
+  }
+
+
+  .loginButton {
+    margin-right: 5px;
+  }
+
+  .headerLink {
+    width: 100%;
+    height: 100%;
+    display: table;
+  }
+
+  .leftColumn.headerLink:hover {
+    background-color: inherit;
+  }
+
+  .headerLink:hover {
+    background-color: rgba(255, 255, 255, 0.078430);
+  }
+
+  .headerLink span {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .menuIcon {
+    margin-right: 10px;
+    font-size: 1.5em;
+  }
+
+  .menuIcon:hover,
+  .homeLink:hover {
+    background-color: none;
+  }
 }
 
-.actionBar .wrapper {
-  height: 40px;
-}
 
-
-.actionBar .loginButton {
-  margin-right: 5px;
-}
-
-.actionBar .headerLink {
-  width: 100%;
-  height: 100%;
-  display: table;
-}
-
-.actionBar .headerLink:hover {
-  background-color: rgba(255, 255, 255, 0.0784314);
-}
-
-.actionBar .headerLink span {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.actionBar a {
-  white-space: nowrap;
-  color: #aaaacc;
-  text-decoration: none;
-}
-
-.actionBar a svg {
-  margin-right: 5px;
-  margin-left: -5px;
-  font-size: 1.0em;
-}
 

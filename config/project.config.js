@@ -48,15 +48,18 @@ const config = {
     plugins        : ['transform-runtime'],
     presets        : ['es2015', 'react', 'stage-0']
   },
-  compiler_devtool         : 'source-map',
+  compiler_devtool         : process.env.NODE_ENV === 'development' ? 'cheap-eval-source-map' : 'source-map',
+  // source maps in order of speed <--> performance, dev compiles sourcemap into original js
+  // (dev) eval => cheap-eval-source-map => cheap-module-eval-source-map => eval-source-map
+  // (prod) cheap-source-map => cheap-module-source-map => source-map => hidden-source-map
   compiler_hash_type       : 'hash',
   compiler_fail_on_warning : false,
   compiler_quiet           : false,
   compiler_public_path     : '/',
   compiler_stats           : {
-    chunks : false,
-    chunkModules : false,
-    colors : true
+    chunks:       false,
+    chunkModules: false,
+    colors:       true
   },
   compiler_vendors : [
     'react',

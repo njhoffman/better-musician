@@ -1,0 +1,424 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _redboxReact2 = require('redbox-react');
+
+var _redboxReact3 = _interopRequireDefault(_redboxReact2);
+
+var _react2 = require('react');
+
+var _react3 = _interopRequireDefault(_react2);
+
+var _reactTransformCatchErrors3 = require('react-transform-catch-errors');
+
+var _reactTransformCatchErrors4 = _interopRequireDefault(_reactTransformCatchErrors3);
+
+var _reactRouter = require('react-router');
+
+var _reactFoundation = require('react-foundation');
+
+var _materialUi = require('material-ui');
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _menu = require('react-icons/lib/md/menu');
+
+var _menu2 = _interopRequireDefault(_menu);
+
+var _filterList = require('react-icons/lib/md/filter-list');
+
+var _filterList2 = _interopRequireDefault(_filterList);
+
+var _importExport = require('react-icons/lib/md/import-export');
+
+var _importExport2 = _interopRequireDefault(_importExport);
+
+var _search = require('react-icons/lib/md/search');
+
+var _search2 = _interopRequireDefault(_search);
+
+var _libraryAdd = require('react-icons/lib/md/library-add');
+
+var _libraryAdd2 = _interopRequireDefault(_libraryAdd);
+
+var _modeEdit = require('react-icons/lib/md/mode-edit');
+
+var _modeEdit2 = _interopRequireDefault(_modeEdit);
+
+var _delete = require('react-icons/lib/md/delete');
+
+var _delete2 = _interopRequireDefault(_delete);
+
+var _arrowDropDown = require('react-icons/lib/md/arrow-drop-down');
+
+var _arrowDropDown2 = _interopRequireDefault(_arrowDropDown);
+
+var _accountCircle = require('react-icons/lib/md/account-circle');
+
+var _accountCircle2 = _interopRequireDefault(_accountCircle);
+
+var _SearchPopover = require('./SearchPopover');
+
+var _SearchPopover2 = _interopRequireDefault(_SearchPopover);
+
+var _Header = require('./Header.scss');
+
+var _Header2 = _interopRequireDefault(_Header);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _components = {
+  Header: {
+    displayName: 'Header'
+  }
+};
+
+var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
+  filename: '/home/vagrant/projects/instrumental/src/components/Header/Header.js',
+  components: _components,
+  locals: [],
+  imports: [_react3.default, _redboxReact3.default]
+});
+
+function _wrapComponent(id) {
+  return function (Component) {
+    return _reactTransformCatchErrors2(Component, id);
+  };
+}
+
+var Header = _wrapComponent('Header')(function (_Component) {
+  (0, _inherits3.default)(Header, _Component);
+
+  function Header(props) {
+    (0, _classCallCheck3.default)(this, Header);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (Header.__proto__ || (0, _getPrototypeOf2.default)(Header)).call(this, props));
+
+    _this.state = {
+      searchPopoverOpen: false,
+      songPopoverOpen: false
+    };
+    return _this;
+  }
+
+  (0, _createClass3.default)(Header, [{
+    key: 'toggleSearchPopover',
+    value: function toggleSearchPopover() {
+      this.setState({
+        searchPopoverOpen: !this.state.searchPopoverOpen
+      });
+    }
+  }, {
+    key: 'toggleSongPopover',
+    value: function toggleSongPopover() {
+      this.setState({
+        songPopoverOpen: true
+      });
+    }
+  }, {
+    key: 'onRequestClose',
+    value: function onRequestClose() {
+      this.setState({
+        searchPopoverOpen: false,
+        songPopoverOpen: false
+      });
+    }
+  }, {
+    key: 'showAddSongModal',
+    value: function showAddSongModal() {
+      this.onRequestClose();
+      this.props.showAddSongModal();
+    }
+  }, {
+    key: 'renderSongActionButton',
+    value: function renderSongActionButton() {
+      if (this.props.location !== '/songs') {
+        return _react3.default.createElement(
+          _reactRouter.Link,
+          { className: _Header2.default.headerLink, to: '/songs' },
+          _react3.default.createElement(
+            'span',
+            null,
+            'View Songs'
+          )
+        );
+      } else if (_lodash2.default.isEmpty(this.props.currentSong)) {
+        return _react3.default.createElement(
+          'a',
+          { className: _Header2.default.headerLink, onClick: this.props.showAddSongModal },
+          _react3.default.createElement(
+            'span',
+            null,
+            _react3.default.createElement(_libraryAdd2.default, null),
+            'Add Song'
+          )
+        );
+      }
+      return _react3.default.createElement(
+        'a',
+        { className: _Header2.default.headerLink },
+        _react3.default.createElement(
+          'span',
+          null,
+          _react3.default.createElement(_modeEdit2.default, null),
+          'Edit Song',
+          _react3.default.createElement(_arrowDropDown2.default, { onTouchTap: this.toggleSongPopover.bind(this) }),
+          _react3.default.createElement(
+            _materialUi.Popover,
+            {
+              open: this.state.songPopoverOpen,
+              onRequestClose: this.onRequestClose.bind(this) },
+            _react3.default.createElement(
+              _reactFoundation.Row,
+              null,
+              _react3.default.createElement(
+                _reactFoundation.Column,
+                null,
+                _react3.default.createElement(
+                  'a',
+                  { onClick: this.showAddSongModal.bind(this) },
+                  _react3.default.createElement(_libraryAdd2.default, null),
+                  'Add Song'
+                )
+              )
+            ),
+            _react3.default.createElement(
+              _reactFoundation.Row,
+              null,
+              _react3.default.createElement(
+                _reactFoundation.Column,
+                null,
+                _react3.default.createElement(
+                  'a',
+                  null,
+                  _react3.default.createElement(_delete2.default, null),
+                  'Delete Song'
+                )
+              )
+            )
+          )
+        )
+      );
+    }
+  }, {
+    key: 'renderLeftColumn',
+    value: function renderLeftColumn() {
+      debugger;
+      return _react3.default.createElement(
+        'span',
+        { className: _Header2.default.headerLink + '  ' + _Header2.default.leftColumn },
+        _react3.default.createElement(
+          'span',
+          null,
+          _react3.default.createElement(
+            'a',
+            { className: _Header2.default.menuIcon, onClick: this.props.toggleDrawerMenu },
+            _react3.default.createElement(_menu2.default, null)
+          ),
+          _react3.default.createElement(
+            _reactRouter.IndexLink,
+            { className: _Header2.default.homeLink, to: '/' },
+            'instrumental.com'
+          )
+        )
+      );
+    }
+  }, {
+    key: 'renderRightColumn',
+    value: function renderRightColumn() {
+      if (this.props.user && this.props.user.get("isSignedIn")) {
+        return _react3.default.createElement(
+          'div',
+          { className: _Header2.default.headerLink },
+          _react3.default.createElement(
+            _reactRouter.Link,
+            { to: '/profile', style: { display: 'table-cell', verticalAlign: 'middle', paddingRight: '5px' } },
+            _react3.default.createElement(
+              'span',
+              null,
+              this.props.user.get("attributes").get("email")
+            ),
+            _react3.default.createElement(
+              'span',
+              null,
+              _react3.default.createElement(_materialUi.Avatar, {
+                icon: _react3.default.createElement(_accountCircle2.default, null),
+                color: '#3333ff',
+                backgroundColor: '#33ff33',
+                size: 35
+              })
+            )
+          )
+        );
+      }
+      return _react3.default.createElement(
+        'div',
+        { style: { float: 'right', height: '100%', fontSize: '0.9em', paddingRight: '10px' } },
+        _react3.default.createElement(
+          'div',
+          { style: { display: 'table', height: '100%' } },
+          _react3.default.createElement(
+            _reactRouter.Link,
+            { to: '/login', style: { display: 'table-cell', verticalAlign: 'middle', paddingRight: '5px' } },
+            _react3.default.createElement(_materialUi.RaisedButton, {
+              style: { height: '25px', display: 'table-cell', minWidth: '0px' },
+              labelStyle: { padding: '5px 10px', paddingLeft: '10px', display: 'table-cell' },
+              className: _Header2.default.loginButton,
+              label: 'LOGIN',
+              primary: true })
+          ),
+          _react3.default.createElement(
+            _reactRouter.Link,
+            { to: '/register', style: { display: 'table-cell', verticalAlign: 'middle' } },
+            _react3.default.createElement(_materialUi.RaisedButton, {
+              style: { height: '25px', display: 'table-cell', minWidth: '0px' },
+              labelStyle: { padding: '5px 10px', paddingLeft: '10px', display: 'table-cell' },
+              className: _Header2.default.registerButton,
+              label: 'REGISTER' })
+          )
+        )
+      );
+    }
+  }, {
+    key: 'renderSongButton',
+    value: function renderSongButton(Breakpoint) {
+      return _react3.default.createElement(
+        _reactFoundation.Column,
+        { showFor: Breakpoint, style: { padding: '0px' } },
+        this.renderSongActionButton(this.props)
+      );
+    }
+  }, {
+    key: 'renderFiltersButton',
+    value: function renderFiltersButton(Breakpoint) {
+      return _react3.default.createElement(
+        _reactFoundation.Column,
+        { showFor: Breakpoint, style: { padding: '0px' } },
+        _react3.default.createElement(
+          'a',
+          { className: _Header2.default.headerLink, onClick: this.props.showFiltersModal },
+          _react3.default.createElement(
+            'span',
+            null,
+            _react3.default.createElement(_filterList2.default, null),
+            'Filters'
+          )
+        )
+      );
+    }
+  }, {
+    key: 'renderSearchButton',
+    value: function renderSearchButton(Breakpoint) {
+      return _react3.default.createElement(
+        _reactFoundation.Column,
+        { showFor: Breakpoint, style: { padding: '0px' } },
+        _react3.default.createElement(
+          'a',
+          { className: _Header2.default.headerLink,
+            onClick: this.toggleSearchPopover.bind(this) },
+          _react3.default.createElement(
+            'span',
+            null,
+            _react3.default.createElement(_search2.default, null),
+            'Search',
+            _react3.default.createElement(_SearchPopover2.default, {
+              open: this.state.searchPopoverOpen,
+              onRequestClose: this.onRequestClose.bind(this) })
+          )
+        )
+      );
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var props = this.props;
+      var signedIn = this.props.user.get('isSignedIn');
+      if (signedIn) {
+        return _react3.default.createElement(
+          'div',
+          { className: _Header2.default.actionBar },
+          _react3.default.createElement(
+            _reactFoundation.Row,
+            { className: _Header2.default.wrapper },
+            _react3.default.createElement(
+              _reactFoundation.Column,
+              { small: 6, medium: 3, style: { padding: '0px 0px 0px 15px', textAlign: 'left' } },
+              this.renderLeftColumn()
+            ),
+            this.renderSongButton(_reactFoundation.Breakpoints.MEDIUM),
+            this.renderFiltersButton(_reactFoundation.Breakpoints.MEDIUM),
+            this.renderSearchButton(_reactFoundation.Breakpoints.MEDIUM),
+            _react3.default.createElement(
+              _reactFoundation.Column,
+              { small: 6, medium: 3, style: { textAlign: 'right', padding: '0px' } },
+              this.renderRightColumn()
+            )
+          ),
+          _react3.default.createElement(
+            _reactFoundation.Row,
+            { className: _Header2.default.wrapper, showOnlyFor: _reactFoundation.Breakpoints.SMALL },
+            this.renderSongButton(),
+            this.renderFiltersButton(),
+            this.renderSearchButton()
+          )
+        );
+      } else {
+        return _react3.default.createElement(
+          'div',
+          { className: _Header2.default.actionBar },
+          _react3.default.createElement(
+            _reactFoundation.Row,
+            { className: _Header2.default.wrapper },
+            _react3.default.createElement(
+              _reactFoundation.Column,
+              { small: 6, style: { padding: '0px 0px 0px 15px', textAlign: 'left' } },
+              this.renderLeftColumn()
+            ),
+            _react3.default.createElement(
+              _reactFoundation.Column,
+              { small: 6, style: { textAlign: 'right', padding: '0px' } },
+              this.renderRightColumn()
+            )
+          )
+        );
+      }
+    }
+  }]);
+  return Header;
+}(_react2.Component));
+
+;
+
+Header.propTypes = {
+  showFiltersModal: _react3.default.PropTypes.func.isRequired,
+  toggleDrawerMenu: _react3.default.PropTypes.func.isRequired,
+  searchClose: _react3.default.PropTypes.func.isRequired,
+  showAddSongModal: _react3.default.PropTypes.func.isRequired
+};
+
+exports.default = Header;

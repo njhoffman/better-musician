@@ -3,6 +3,8 @@ import CoreLayout from '../layouts/CoreLayout/CoreLayout';
 import HomeRoute from './Home';
 import SongsRoute from './Songs';
 import SettingsRoute from './Settings';
+import ProfileRoute from './Profile';
+import ResetRoute from './Reset';
 import LoginRoute from './Login';
 import RegisterRoute from './Register';
 
@@ -17,7 +19,9 @@ export const createRoutes = (store) => ({
     SongsRoute(store),
     SettingsRoute(store),
     LoginRoute(store),
-    RegisterRoute(store)
+    RegisterRoute(store),
+    ResetRoute(store),
+    ProfileRoute(store)
   ]
 });
 

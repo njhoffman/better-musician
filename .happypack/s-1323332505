@@ -1,0 +1,106 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _assign = require("babel-runtime/core-js/object/assign");
+
+var _assign2 = _interopRequireDefault(_assign);
+
+exports.addAuthorizationHeader = addAuthorizationHeader;
+
+exports.default = function (url) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  if (!options.headers) {
+    options.headers = {};
+  }
+  (0, _extend2.default)(options.headers, getAuthHeaders(url));
+  return (0, _isomorphicFetch2.default)(url, options).then(function (resp) {
+    return updateAuthCredentials(resp);
+  });
+};
+
+var _isomorphicFetch = require("isomorphic-fetch");
+
+var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
+var _constants = require("./constants");
+
+var C = _interopRequireWildcard(_constants);
+
+var _extend = require("extend");
+
+var _extend2 = _interopRequireDefault(_extend);
+
+var _sessionStorage = require("./session-storage");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var isApiRequest = function isApiRequest(url) {
+  return url.match((0, _sessionStorage.getApiUrl)((0, _sessionStorage.getSessionEndpointKey)()));
+};
+
+/**
+ * Add access token as a bearer token in accordance to RFC 6750
+ *
+ * @param {string} accessToken
+ * @param {object} headers
+ * @returns {object} New extended headers object, with Authorization property
+ */
+function addAuthorizationHeader(accessToken, headers) {
+  return (0, _assign2.default)({}, headers, {
+    Authorization: "Bearer " + accessToken
+  });
+}
+
+function getAuthHeaders(url) {
+  if (isApiRequest(url)) {
+    // fetch current auth headers from storage
+    var currentHeaders = (0, _sessionStorage.retrieveData)(C.SAVED_CREDS_KEY) || {},
+        nextHeaders = {};
+
+    // bust IE cache
+    nextHeaders["If-Modified-Since"] = "Mon, 26 Jul 1997 05:00:00 GMT";
+
+    // set header for each key in `tokenFormat` config
+    for (var key in (0, _sessionStorage.getTokenFormat)()) {
+      nextHeaders[key] = currentHeaders[key];
+    }
+
+    return addAuthorizationHeader(currentHeaders['access-token'], nextHeaders);
+  } else {
+    return {};
+  }
+}
+
+function updateAuthCredentials(resp) {
+  // check config apiUrl matches the current response url
+  if (isApiRequest(resp.url)) {
+    // set header for each key in `tokenFormat` config
+    var newHeaders = {};
+
+    // set flag to ensure that we don't accidentally nuke the headers
+    // if the response tokens aren't sent back from the API
+    var blankHeaders = true;
+
+    // set header key + val for each key in `tokenFormat` config
+    for (var key in (0, _sessionStorage.getTokenFormat)()) {
+      newHeaders[key] = resp.headers.get(key);
+
+      if (newHeaders[key]) {
+        blankHeaders = false;
+      }
+    }
+
+    // persist headers for next request
+    if (!blankHeaders) {
+      (0, _sessionStorage.persistData)(C.SAVED_CREDS_KEY, newHeaders);
+    }
+  }
+
+  return resp;
+}

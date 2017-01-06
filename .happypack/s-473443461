@@ -1,0 +1,23 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _reducers = require('../../store/reducers');
+
+exports.default = function (store) {
+  return {
+    path: 'login',
+    getComponent: function getComponent(nextState, cb) {
+      require.ensure([], function (require) {
+        var LoginViewContainer = require('./containers/LoginViewContainer').default;
+        var reducer = require('./modules/login').default;
+
+        (0, _reducers.injectReducer)(store, { key: 'loginView', reducer: reducer });
+
+        cb(null, LoginViewContainer);
+      }, 'loginView');
+    }
+  };
+};

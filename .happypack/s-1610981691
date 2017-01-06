@@ -1,0 +1,24 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _promise = require("babel-runtime/core-js/promise");
+
+var _promise2 = _interopRequireDefault(_promise);
+
+exports.parseResponse = parseResponse;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function parseResponse(response) {
+  var json = response.json();
+  if (response.status >= 200 && response.status < 300) {
+    return json;
+  } else {
+    return json.then(function (err) {
+      return _promise2.default.reject(err);
+    });
+  }
+}

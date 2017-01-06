@@ -1,0 +1,1 @@
+{"version":3,"sources":["src/redux-orm/db/index.js"],"names":["createDatabase"],"mappings":";;;;;;;AAAA;;;;;;QAGIA,c","file":"index.js","sourceRoot":"/home/vagrant/projects/instrumental","sourcesContent":["import createDatabase from './Database';\n\nexport {\n    createDatabase,\n};\n\nexport default createDatabase;\n"]}

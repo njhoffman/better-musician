@@ -1,0 +1,132 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.OAUTH_SIGN_IN_ERROR = exports.OAUTH_SIGN_IN_COMPLETE = exports.OAUTH_SIGN_IN_START = undefined;
+
+var _promise = require("babel-runtime/core-js/promise");
+
+var _promise2 = _interopRequireDefault(_promise);
+
+exports.oAuthSignInStart = oAuthSignInStart;
+exports.oAuthSignInComplete = oAuthSignInComplete;
+exports.oAuthSignInError = oAuthSignInError;
+exports.oAuthSignIn = oAuthSignIn;
+
+var _constants = require("../utils/constants");
+
+var C = _interopRequireWildcard(_constants);
+
+var _parseUrl = require("../utils/parse-url");
+
+var _sessionStorage = require("../utils/session-storage");
+
+var _configure = require("./configure");
+
+var _handleFetchResponse = require("../utils/handle-fetch-response");
+
+var _fetch = require("../utils/fetch");
+
+var _fetch2 = _interopRequireDefault(_fetch);
+
+var _popup = require("../utils/popup");
+
+var _popup2 = _interopRequireDefault(_popup);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var OAUTH_SIGN_IN_START = exports.OAUTH_SIGN_IN_START = "OAUTH_SIGN_IN_START";
+var OAUTH_SIGN_IN_COMPLETE = exports.OAUTH_SIGN_IN_COMPLETE = "OAUTH_SIGN_IN_COMPLETE";
+var OAUTH_SIGN_IN_ERROR = exports.OAUTH_SIGN_IN_ERROR = "OAUTH_SIGN_IN_ERROR";
+
+// hook for rewire
+var openPopup = _popup2.default;
+
+function listenForCredentials(endpointKey, popup, provider, resolve, reject) {
+  if (!resolve) {
+    return new _promise2.default(function (resolve, reject) {
+      listenForCredentials(endpointKey, popup, provider, resolve, reject);
+    });
+  } else {
+    var creds = void 0;
+
+    try {
+      creds = (0, _parseUrl.getAllParams)(popup.location);
+    } catch (err) {}
+
+    if (creds && creds.uid) {
+      popup.close();
+      (0, _sessionStorage.persistData)(C.SAVED_CREDS_KEY, (0, _parseUrl.normalizeTokenKeys)(creds));
+      (0, _fetch2.default)((0, _sessionStorage.getTokenValidationPath)(endpointKey)).then(_handleFetchResponse.parseResponse).then(function (_ref) {
+        var data = _ref.data;
+        return resolve(data);
+      }).catch(function (_ref2) {
+        var errors = _ref2.errors;
+        return reject({ errors: errors });
+      });
+    } else if (popup.closed) {
+      reject({ errors: "Authentication was cancelled." });
+    } else {
+      setTimeout(function () {
+        listenForCredentials(endpointKey, popup, provider, resolve, reject);
+      }, 0);
+    }
+  }
+}
+
+function authenticate(_ref3) {
+  var endpointKey = _ref3.endpointKey,
+      provider = _ref3.provider,
+      url = _ref3.url,
+      _ref3$tab = _ref3.tab,
+      tab = _ref3$tab === undefined ? false : _ref3$tab;
+
+  var name = tab ? "_blank" : provider;
+  var popup = openPopup(provider, url, name);
+  return listenForCredentials(endpointKey, popup, provider);
+}
+
+function oAuthSignInStart(provider, endpoint) {
+  return { type: OAUTH_SIGN_IN_START, provider: provider, endpoint: endpoint };
+}
+function oAuthSignInComplete(user, endpoint) {
+  return { type: OAUTH_SIGN_IN_COMPLETE, user: user, endpoint: endpoint };
+}
+function oAuthSignInError(errors, endpoint) {
+  return { type: OAUTH_SIGN_IN_ERROR, errors: errors, endpoint: endpoint };
+}
+function oAuthSignIn(_ref4) {
+  var provider = _ref4.provider,
+      params = _ref4.params,
+      endpointKey = _ref4.endpointKey;
+
+  return function (dispatch) {
+    // save previous endpoint key in case of failure
+    var prevEndpointKey = (0, _sessionStorage.getCurrentEndpointKey)();
+
+    // necessary for `fetch` to recognize the response as an api request
+    (0, _sessionStorage.setCurrentEndpointKey)(endpointKey);
+    dispatch((0, _configure.storeCurrentEndpointKey)(endpointKey));
+
+    var currentEndpointKey = (0, _sessionStorage.getCurrentEndpointKey)();
+
+    dispatch(oAuthSignInStart(provider, currentEndpointKey));
+
+    var url = (0, _sessionStorage.getOAuthUrl)({ provider: provider, params: params, currentEndpointKey: currentEndpointKey });
+
+    return authenticate({ endpointKey: endpointKey, provider: provider, url: url }).then(function (user) {
+      return dispatch(oAuthSignInComplete(user, currentEndpointKey));
+    }).catch(function (_ref5) {
+      var errors = _ref5.errors;
+
+      // revert endpoint key to what it was before failed request
+      (0, _sessionStorage.setCurrentEndpointKey)(prevEndpointKey);
+      dispatch((0, _configure.storeCurrentEndpointKey)(prevEndpointKey));
+      dispatch(oAuthSignInError(errors, currentEndpointKey));
+      throw errors;
+    });
+  };
+}

@@ -1,0 +1,250 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _stringify = require("babel-runtime/core-js/json/stringify");
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _keys = require("babel-runtime/core-js/object/keys");
+
+var _keys2 = _interopRequireDefault(_keys);
+
+var _typeof2 = require("babel-runtime/helpers/typeof");
+
+var _typeof3 = _interopRequireDefault(_typeof2);
+
+var _getIterator2 = require("babel-runtime/core-js/get-iterator");
+
+var _getIterator3 = _interopRequireDefault(_getIterator2);
+
+var _iterator2 = require("babel-runtime/core-js/symbol/iterator");
+
+var _iterator3 = _interopRequireDefault(_iterator2);
+
+exports.normalizeTokenKeys = normalizeTokenKeys;
+exports.getAllParams = getAllParams;
+exports.default = getRedirectInfo;
+
+var _querystring = require("querystring");
+
+var _querystring2 = _interopRequireDefault(_querystring);
+
+var _extend = require("extend");
+
+var _extend2 = _interopRequireDefault(_extend);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function normalizeTokenKeys(params) {
+  // normalize keys
+  if (params.token) {
+    params["access-token"] = params.token;
+    delete params.token;
+  }
+  if (params.auth_token) {
+    params["access-token"] = params.auth_token;
+    delete params.auth_token;
+  }
+  if (params.client_id) {
+    params.client = params.client_id;
+    delete params.client_id;
+  }
+  if (params.config) {
+    params.endpointKey = params.config;
+    delete params.config;
+  }
+
+  return params;
+};
+
+var getAnchorSearch = function getAnchorSearch(location) {
+  var rawAnchor = location.anchor || "",
+      arr = rawAnchor.split("?");
+  return arr.length > 1 ? arr[1] : null;
+};
+
+var getSearchQs = function getSearchQs(location) {
+  var rawQs = location.search || "",
+      qs = rawQs.replace("?", ""),
+      qsObj = qs ? _querystring2.default.parse(qs) : {};
+
+  return qsObj;
+};
+
+var getAnchorQs = function getAnchorQs(location) {
+  var anchorQs = getAnchorSearch(location),
+      anchorQsObj = anchorQs ? _querystring2.default.parse(anchorQs) : {};
+
+  return anchorQsObj;
+};
+
+var stripKeys = function stripKeys(obj, keys) {
+  for (var q in keys) {
+    delete obj[keys[q]];
+  }
+
+  return obj;
+};
+
+function getAllParams(location) {
+  return (0, _extend2.default)({}, getAnchorQs(location), getSearchQs(location));
+};
+
+var buildCredentials = function buildCredentials(location, keys) {
+  var params = getAllParams(location);
+  var authHeaders = {};
+
+  if (!(keys && (typeof keys[_iterator3.default] === 'function' || Array.isArray(keys)))) {
+    throw new TypeError("Expected keys to be iterable, got " + _inspect(keys));
+  }
+
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = (0, _getIterator3.default)(keys), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var key = _step.value;
+
+      authHeaders[key] = params[key];
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return normalizeTokenKeys(authHeaders);
+};
+
+// this method is tricky. we want to reconstruct the current URL with the
+// following conditions:
+// 1. search contains none of the supplied keys
+// 2. anchor search (i.e. `#/?key=val`) contains none of the supplied keys
+// 3. all of the keys NOT supplied are presevered in their original form
+// 4. url protocol, host, and path are preserved
+var getLocationWithoutParams = function getLocationWithoutParams(currentLocation, keys) {
+  // strip all values from both actual and anchor search params
+  var newSearch = _querystring2.default.stringify(stripKeys(getSearchQs(currentLocation), keys)),
+      newAnchorQs = _querystring2.default.stringify(stripKeys(getAnchorQs(currentLocation), keys)),
+      newAnchor = (currentLocation.hash || "").split("?")[0];
+
+  if (newSearch) {
+    newSearch = "?" + newSearch;
+  }
+
+  if (newAnchorQs) {
+    newAnchor += "?" + newAnchorQs;
+  }
+
+  if (newAnchor && !newAnchor.match(/^#/)) {
+    newAnchor = "#/" + newAnchor;
+  }
+
+  // reconstruct location with stripped auth keys
+  var newLocation = currentLocation.pathname + newSearch + newAnchor;
+
+  return newLocation;
+};
+
+function getRedirectInfo(currentLocation) {
+  if (!currentLocation) {
+    return {};
+  } else {
+    var authKeys = ["access-token", "token", "auth_token", "config", "client", "client_id", "expiry", "uid", "reset_password", "account_confirmation_success"];
+
+    var authRedirectHeaders = buildCredentials(currentLocation, authKeys);
+    var authRedirectPath = getLocationWithoutParams(currentLocation, authKeys);
+
+    if (authRedirectPath !== currentLocation) {
+      return { authRedirectHeaders: authRedirectHeaders, authRedirectPath: authRedirectPath };
+    } else {
+      return {};
+    }
+  }
+}
+
+function _inspect(input, depth) {
+  var maxDepth = 4;
+  var maxKeys = 15;
+
+  if (depth === undefined) {
+    depth = 0;
+  }
+
+  depth += 1;
+
+  if (input === null) {
+    return 'null';
+  } else if (input === undefined) {
+    return 'void';
+  } else if (typeof input === 'string' || typeof input === 'number' || typeof input === 'boolean') {
+    return typeof input === "undefined" ? "undefined" : (0, _typeof3.default)(input);
+  } else if (Array.isArray(input)) {
+    if (input.length > 0) {
+      var _ret = function () {
+        if (depth > maxDepth) return {
+            v: '[...]'
+          };
+
+        var first = _inspect(input[0], depth);
+
+        if (input.every(function (item) {
+          return _inspect(item, depth) === first;
+        })) {
+          return {
+            v: first.trim() + '[]'
+          };
+        } else {
+          return {
+            v: '[' + input.slice(0, maxKeys).map(function (item) {
+              return _inspect(item, depth);
+            }).join(', ') + (input.length >= maxKeys ? ', ...' : '') + ']'
+          };
+        }
+      }();
+
+      if ((typeof _ret === "undefined" ? "undefined" : (0, _typeof3.default)(_ret)) === "object") return _ret.v;
+    } else {
+      return 'Array';
+    }
+  } else {
+    var keys = (0, _keys2.default)(input);
+
+    if (!keys.length) {
+      if (input.constructor && input.constructor.name && input.constructor.name !== 'Object') {
+        return input.constructor.name;
+      } else {
+        return 'Object';
+      }
+    }
+
+    if (depth > maxDepth) return '{...}';
+    var indent = '  '.repeat(depth - 1);
+    var entries = keys.slice(0, maxKeys).map(function (key) {
+      return (/^([A-Z_$][A-Z0-9_$]*)$/i.test(key) ? key : (0, _stringify2.default)(key)) + ': ' + _inspect(input[key], depth) + ';';
+    }).join('\n  ' + indent);
+
+    if (keys.length >= maxKeys) {
+      entries += '\n  ' + indent + '...';
+    }
+
+    if (input.constructor && input.constructor.name && input.constructor.name !== 'Object') {
+      return input.constructor.name + ' {\n  ' + indent + entries + '\n' + indent + '}';
+    } else {
+      return '{\n  ' + indent + entries + '\n' + indent + '}';
+    }
+  }
+}

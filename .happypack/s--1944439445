@@ -1,0 +1,259 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _stringify = require("babel-runtime/core-js/json/stringify");
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+exports.setCurrentSettings = setCurrentSettings;
+exports.getCurrentSettings = getCurrentSettings;
+exports.setCurrentEndpoint = setCurrentEndpoint;
+exports.getCurrentEndpoint = getCurrentEndpoint;
+exports.setCurrentEndpointKey = setCurrentEndpointKey;
+exports.getCurrentEndpointKey = getCurrentEndpointKey;
+exports.setDefaultEndpointKey = setDefaultEndpointKey;
+exports.getDefaultEndpointKey = getDefaultEndpointKey;
+exports.resetConfig = resetConfig;
+exports.destroySession = destroySession;
+exports.getInitialEndpointKey = getInitialEndpointKey;
+exports.getSessionEndpointKey = getSessionEndpointKey;
+exports.getSessionEndpoint = getSessionEndpoint;
+exports.getDestroyAccountUrl = getDestroyAccountUrl;
+exports.getSignOutUrl = getSignOutUrl;
+exports.getEmailSignInUrl = getEmailSignInUrl;
+exports.getEmailSignUpUrl = getEmailSignUpUrl;
+exports.getPasswordResetRequestUrl = getPasswordResetRequestUrl;
+exports.getPasswordUpdateUrl = getPasswordUpdateUrl;
+exports.getTokenValidationPath = getTokenValidationPath;
+exports.getOAuthUrl = getOAuthUrl;
+exports.getConfirmationSuccessUrl = getConfirmationSuccessUrl;
+exports.getPasswordResetRedirectUrl = getPasswordResetRedirectUrl;
+exports.getApiUrl = getApiUrl;
+exports.getTokenFormat = getTokenFormat;
+exports.removeData = removeData;
+exports.persistData = persistData;
+exports.retrieveData = retrieveData;
+
+var _browserCookies = require("browser-cookies");
+
+var _browserCookies2 = _interopRequireDefault(_browserCookies);
+
+var _constants = require("./constants");
+
+var C = _interopRequireWildcard(_constants);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// even though this code shouldn't be used server-side, node will throw
+// errors if "window" is used
+var root = Function("return this")() || (42, eval)("this");
+
+// stateful variables that persist throughout session
+root.authState = {
+  currentSettings: {},
+  currentEndpoint: {},
+  defaultEndpointKey: null
+};
+
+function setCurrentSettings(s) {
+  root.authState.currentSettings = s;
+}
+
+function getCurrentSettings() {
+  return root.authState.currentSettings;
+}
+
+function setCurrentEndpoint(e) {
+  root.authState.currentEndpoint = e;
+}
+
+function getCurrentEndpoint() {
+  return root.authState.currentEndpoint;
+}
+
+function setCurrentEndpointKey(k) {
+  persistData(C.SAVED_CONFIG_KEY, k || getDefaultEndpointKey());
+}
+
+function getCurrentEndpointKey() {
+  return retrieveData(C.SAVED_CONFIG_KEY) || getDefaultEndpointKey();
+}
+
+function setDefaultEndpointKey(k) {
+  persistData(C.DEFAULT_CONFIG_KEY, k);
+}
+
+function getDefaultEndpointKey() {
+  return retrieveData(C.DEFAULT_CONFIG_KEY);
+}
+
+// reset stateful variables
+function resetConfig() {
+  root.authState = root.authState || {};
+  root.authState.currentSettings = {};
+  root.authState.currentEndpoint = {};
+  destroySession();
+}
+
+function destroySession() {
+  var sessionKeys = [C.SAVED_CREDS_KEY, C.SAVED_CONFIG_KEY];
+
+  for (var key in sessionKeys) {
+    key = sessionKeys[key];
+
+    // kill all local storage keys
+    if (root.localStorage) {
+      root.localStorage.removeItem(key);
+    }
+
+    // remove from base path in case config is not specified
+    _browserCookies2.default.erase(key, {
+      path: root.authState.currentSettings.cookiePath || "/"
+    });
+  }
+}
+
+function unescapeQuotes(val) {
+  return val && val.replace(/("|')/g, "");
+};
+
+function getInitialEndpointKey() {
+  return unescapeQuotes(_browserCookies2.default.get(C.SAVED_CONFIG_KEY) || root.localStorage && root.localStorage.getItem(C.SAVED_CONFIG_KEY));
+}
+
+// TODO: make this really work
+function getSessionEndpointKey(k) {
+  var key = k || getCurrentEndpointKey();
+  if (!key) {
+    throw "You must configure redux-auth before use.";
+  } else {
+    return key;
+  }
+}
+
+function getSessionEndpoint(k) {
+  return getCurrentEndpoint()[getSessionEndpointKey(k)];
+}
+
+// only should work for current session
+function getDestroyAccountUrl(endpointKey) {
+  return "" + getApiUrl(endpointKey) + getSessionEndpoint(endpointKey).accountDeletePath;
+}
+
+// only should work for current session
+function getSignOutUrl(endpointKey) {
+  return "" + getApiUrl(endpointKey) + getSessionEndpoint(endpointKey).signOutPath;
+}
+
+function getEmailSignInUrl(endpointKey) {
+  return "" + getApiUrl(endpointKey) + getSessionEndpoint(endpointKey).emailSignInPath;
+}
+
+function getEmailSignUpUrl(endpointKey) {
+  return "" + getApiUrl(endpointKey) + getSessionEndpoint(endpointKey).emailRegistrationPath + "?config_name=" + endpointKey;
+}
+
+function getPasswordResetRequestUrl(endpointKey) {
+  return "" + getApiUrl(endpointKey) + getSessionEndpoint(endpointKey).passwordResetPath + "?config_name=" + endpointKey;
+}
+
+function getPasswordUpdateUrl(endpointKey) {
+  return "" + getApiUrl(endpointKey) + getSessionEndpoint(endpointKey).passwordUpdatePath;
+}
+
+function getTokenValidationPath(endpointKey) {
+  return "" + getApiUrl(endpointKey) + getSessionEndpoint(endpointKey).tokenValidationPath;
+}
+
+function getOAuthUrl(_ref) {
+  var provider = _ref.provider,
+      params = _ref.params,
+      endpointKey = _ref.endpointKey;
+
+  var oAuthUrl = getApiUrl(endpointKey) + getSessionEndpoint(endpointKey).authProviderPaths[provider] + "?auth_origin_url=" + encodeURIComponent(root.location.href) + "&config_name=" + encodeURIComponent(getSessionEndpointKey(endpointKey));
+
+  if (params) {
+    for (var key in params) {
+      oAuthUrl += "&";
+      oAuthUrl += encodeURIComponent(key);
+      oAuthUrl += "=";
+      oAuthUrl += encodeURIComponent(params[key]);
+    }
+  }
+
+  return oAuthUrl;
+}
+
+function getConfirmationSuccessUrl() {
+  return root.authState.currentSettings.confirmationSuccessUrl();
+}
+
+function getPasswordResetRedirectUrl() {
+  return root.authState.currentSettings.confirmationSuccessUrl();
+}
+
+function getApiUrl(key) {
+  var configKey = getSessionEndpointKey(key);
+  return root.authState.currentEndpoint[configKey].apiUrl;
+}
+
+function getTokenFormat() {
+  return root.authState.currentSettings.tokenFormat;
+}
+
+function removeData(key) {
+
+  switch (root.authState.currentSettings.storage) {
+    case "localStorage":
+      root.localStorage.removeItem(key);
+      break;
+    default:
+      _browserCookies2.default.erase(key);
+  }
+}
+
+function persistData(key, val) {
+  val = (0, _stringify2.default)(val);
+
+  switch (root.authState.currentSettings.storage) {
+    case "localStorage":
+      root.localStorage.setItem(key, val);
+      break;
+
+    default:
+      var res = _browserCookies2.default.set(key, val, {
+        expires: root.authState.currentSettings.cookieExpiry,
+        path: root.authState.currentSettings.cookiePath
+      });
+      break;
+  }
+};
+
+function retrieveData(key, storage) {
+  var val = null;
+
+  switch (storage || root.authState.currentSettings.storage) {
+    case "localStorage":
+      val = root.localStorage && root.localStorage.getItem(key);
+      break;
+
+    default:
+      val = _browserCookies2.default.get(key);
+      break;
+  }
+
+  // if value is a simple string, the parser will fail. in that case, simply
+  // unescape the quotes and return the string.
+  try {
+    // return parsed json response
+    return JSON.parse(val);
+  } catch (err) {
+    // unescape quotes
+    return unescapeQuotes(val);
+  }
+};

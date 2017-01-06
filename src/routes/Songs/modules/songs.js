@@ -35,7 +35,6 @@ export const setSort = (sortField) => (dispatch, getState) => {
   return dispatch({ type: SET_SORT, payload: sortField });
 };
 
-
 const nextAvailableId = (songCollection) =>
   songCollection
     .map( (song) => song.id )

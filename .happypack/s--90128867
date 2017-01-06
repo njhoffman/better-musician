@@ -1,0 +1,80 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.authStateReducer = undefined;
+
+var _authenticate = require("./reducers/authenticate");
+
+var _authenticate2 = _interopRequireDefault(_authenticate);
+
+var _configure = require("./reducers/configure");
+
+var _configure2 = _interopRequireDefault(_configure);
+
+var _user = require("./reducers/user");
+
+var _user2 = _interopRequireDefault(_user);
+
+var _ui = require("./reducers/ui");
+
+var _ui2 = _interopRequireDefault(_ui);
+
+var _emailSignIn = require("./reducers/email-sign-in");
+
+var _emailSignIn2 = _interopRequireDefault(_emailSignIn);
+
+var _emailSignUp = require("./reducers/email-sign-up");
+
+var _emailSignUp2 = _interopRequireDefault(_emailSignUp);
+
+var _oauthSignIn = require("./reducers/oauth-sign-in");
+
+var _oauthSignIn2 = _interopRequireDefault(_oauthSignIn);
+
+var _requestPasswordReset = require("./reducers/request-password-reset");
+
+var _requestPasswordReset2 = _interopRequireDefault(_requestPasswordReset);
+
+var _updatePassword = require("./reducers/update-password");
+
+var _updatePassword2 = _interopRequireDefault(_updatePassword);
+
+var _updatePasswordModal = require("./reducers/update-password-modal");
+
+var _updatePasswordModal2 = _interopRequireDefault(_updatePasswordModal);
+
+var _server = require("./reducers/server");
+
+var _server2 = _interopRequireDefault(_server);
+
+var _signOut = require("./reducers/sign-out");
+
+var _signOut2 = _interopRequireDefault(_signOut);
+
+var _destroyAccount = require("./reducers/destroy-account");
+
+var _destroyAccount2 = _interopRequireDefault(_destroyAccount);
+
+var _reduxImmutablejs = require("redux-immutablejs");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// import { combineReducers } from 'redux';
+
+var authStateReducer = exports.authStateReducer = (0, _reduxImmutablejs.combineReducers)({
+  configure: _configure2.default,
+  emailSignIn: _emailSignIn2.default,
+  emailSignUp: _emailSignUp2.default,
+  signOut: _signOut2.default,
+  authentication: _authenticate2.default,
+  requestPasswordReset: _requestPasswordReset2.default,
+  oAuthSignIn: _oauthSignIn2.default,
+  updatePassword: _updatePassword2.default,
+  updatePasswordModal: _updatePasswordModal2.default,
+  destroyAccount: _destroyAccount2.default,
+  server: _server2.default,
+  ui: _ui2.default,
+  user: _user2.default
+});

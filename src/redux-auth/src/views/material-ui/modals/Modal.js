@@ -4,6 +4,7 @@ import FlatButton from "material-ui/FlatButton";
 import ErrorList from "../ErrorList";
 import { connect } from "react-redux";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import muiThemeable from 'material-ui/styles/muiThemeable';
 
 class BaseModal extends React.Component {
   static propTypes = {
@@ -46,7 +47,6 @@ class BaseModal extends React.Component {
       : this.props.children;
 
     return (
-      <MuiThemeProvider>
         <Dialog
           open={this.props.show}
           contentClassName={`redux-auth-modal ${this.props.containerClass}`}
@@ -62,9 +62,8 @@ class BaseModal extends React.Component {
           ]}>
           {body}
         </Dialog>
-      </MuiThemeProvider>
     );
   }
 }
 
-export default connect(({auth}) => ({auth}))(BaseModal);
+export default connect(({auth}) => ({auth}))(muiThemeable())(BaseModal);

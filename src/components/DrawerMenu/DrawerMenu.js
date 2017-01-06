@@ -37,7 +37,12 @@ class DrawerMenu extends Component {
               </Link>
             </MenuItem>
             <MenuItem>
-                <Link style={linkStyle} to='/login' activeClassName='active'>Login</Link>
+              <Link
+                style={linkStyle}
+                to='/login'
+                activeClassName='active'>
+                Login
+              </Link>
             </MenuItem>
             <MenuItem>
               <Link

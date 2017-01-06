@@ -1,0 +1,54 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.artists = exports.currentSong = exports.songs = exports.ormSelector = undefined;
+
+var _reducers = require('store/reducers');
+
+var _reduxOrm = require('redux-orm');
+
+var _reselect = require('reselect');
+
+var ormSelector = exports.ormSelector = function ormSelector(state) {
+  return state.orm;
+};
+
+var songSelector = (0, _reduxOrm.createSelector)(_reducers.orm, function (session, state) {
+  var songsView = state ? state.songsView : false;
+  var sortField = songsView ? songsView.sortField : 'title';
+  var modelObj = session.Song ? session.Song.all().toModelArray() : [];
+  if (sortField) {
+    return modelObj.sort(function (a, b) {
+      if (sortField === 'artist') {
+        return a.artist.fullName > b.artist.fullName;
+      } else {
+        return a[sortField] > b[sortField];
+      }
+    });
+  } else {
+    return modelObj;
+  }
+});
+
+var songs = exports.songs = (0, _reselect.createSelector)(ormSelector, function (state) {
+  return state;
+}, songSelector);
+
+var currentSongSelector = (0, _reduxOrm.createSelector)(_reducers.orm, function (session, state) {
+  return state.songsView && typeof state.songsView.currentSong !== 'undefined' && session.Song.count() > 0 ? session.Song.withId(state.songsView.currentSong) : null;
+});
+
+var currentSong = exports.currentSong = (0, _reselect.createSelector)(ormSelector, function (state) {
+  return state;
+}, currentSongSelector);
+
+var artistSelector = (0, _reduxOrm.createSelector)(_reducers.orm, function (session) {
+  var modelObj = session.Artist ? session.Artist.all().toModelArray() : [];
+  return modelObj;
+});
+
+var artists = exports.artists = (0, _reselect.createSelector)(ormSelector, function (state) {
+  return state;
+}, artistSelector);

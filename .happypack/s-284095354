@@ -1,0 +1,59 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.DESTROY_ACCOUNT_ERROR = exports.DESTROY_ACCOUNT_COMPLETE = exports.DESTROY_ACCOUNT_START = undefined;
+exports.destroyAccountStart = destroyAccountStart;
+exports.destroyAccountComplete = destroyAccountComplete;
+exports.destroyAccountError = destroyAccountError;
+exports.destroyAccount = destroyAccount;
+
+var _sessionStorage = require("../utils/session-storage");
+
+var _handleFetchResponse = require("../utils/handle-fetch-response");
+
+var _configure = require("./configure");
+
+var _fetch = require("../utils/fetch");
+
+var _fetch2 = _interopRequireDefault(_fetch);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var DESTROY_ACCOUNT_START = exports.DESTROY_ACCOUNT_START = "DESTROY_ACCOUNT_START";
+var DESTROY_ACCOUNT_COMPLETE = exports.DESTROY_ACCOUNT_COMPLETE = "DESTROY_ACCOUNT_COMPLETE";
+var DESTROY_ACCOUNT_ERROR = exports.DESTROY_ACCOUNT_ERROR = "DESTROY_ACCOUNT_ERROR";
+
+function destroyAccountStart(endpoint) {
+  return { type: DESTROY_ACCOUNT_START, endpoint: endpoint };
+}
+function destroyAccountComplete(message, endpoint) {
+  return { type: DESTROY_ACCOUNT_COMPLETE, endpoint: endpoint, message: message };
+}
+function destroyAccountError(errors, endpoint) {
+  return { type: DESTROY_ACCOUNT_ERROR, endpoint: endpoint, errors: errors };
+}
+function destroyAccount(endpoint) {
+  return function (dispatch) {
+    dispatch(destroyAccountStart(endpoint));
+
+    return (0, _fetch2.default)((0, _sessionStorage.getDestroyAccountUrl)(endpoint), { method: "delete" }).then(_handleFetchResponse.parseResponse).then(function (_ref) {
+      var message = _ref.message;
+
+      dispatch(destroyAccountComplete(message, endpoint));
+
+      // revert current session endpoint to default
+      var defaultEndpointKey = (0, _sessionStorage.getDefaultEndpointKey)();
+
+      // set in store
+      dispatch((0, _configure.storeCurrentEndpointKey)(defaultEndpointKey));
+
+      // and in session
+      (0, _sessionStorage.setCurrentEndpointKey)(defaultEndpointKey);
+    }).catch(function (_ref2) {
+      var errors = _ref2.errors;
+      return dispatch(destroyAccountError(errors, endpoint));
+    });
+  };
+}

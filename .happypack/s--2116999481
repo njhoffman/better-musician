@@ -1,0 +1,77 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EMAIL_SIGN_UP_FORM_UPDATE = exports.EMAIL_SIGN_UP_ERROR = exports.EMAIL_SIGN_UP_COMPLETE = exports.EMAIL_SIGN_UP_START = undefined;
+
+var _stringify = require("babel-runtime/core-js/json/stringify");
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+exports.emailSignUpFormUpdate = emailSignUpFormUpdate;
+exports.emailSignUpStart = emailSignUpStart;
+exports.emailSignUpComplete = emailSignUpComplete;
+exports.emailSignUpError = emailSignUpError;
+exports.emailSignUp = emailSignUp;
+
+var _sessionStorage = require("../utils/session-storage");
+
+var _handleFetchResponse = require("../utils/handle-fetch-response");
+
+var _extend = require("extend");
+
+var _extend2 = _interopRequireDefault(_extend);
+
+var _fetch = require("../utils/fetch");
+
+var _fetch2 = _interopRequireDefault(_fetch);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var EMAIL_SIGN_UP_START = exports.EMAIL_SIGN_UP_START = "EMAIL_SIGN_UP_START";
+var EMAIL_SIGN_UP_COMPLETE = exports.EMAIL_SIGN_UP_COMPLETE = "EMAIL_SIGN_UP_COMPLETE";
+var EMAIL_SIGN_UP_ERROR = exports.EMAIL_SIGN_UP_ERROR = "EMAIL_SIGN_UP_ERROR";
+var EMAIL_SIGN_UP_FORM_UPDATE = exports.EMAIL_SIGN_UP_FORM_UPDATE = "EMAIL_SIGN_UP_FORM_UPDATE";
+
+function emailSignUpFormUpdate(endpoint, key, value) {
+  return { type: EMAIL_SIGN_UP_FORM_UPDATE, endpoint: endpoint, key: key, value: value };
+}
+function emailSignUpStart(endpoint) {
+  return { type: EMAIL_SIGN_UP_START, endpoint: endpoint };
+}
+function emailSignUpComplete(user, endpoint) {
+  return { type: EMAIL_SIGN_UP_COMPLETE, user: user, endpoint: endpoint };
+}
+function emailSignUpError(errors, endpoint) {
+  return { type: EMAIL_SIGN_UP_ERROR, errors: errors, endpoint: endpoint };
+}
+function emailSignUp(body, endpointKey) {
+  return function (dispatch) {
+    dispatch(emailSignUpStart(endpointKey));
+
+    return (0, _fetch2.default)((0, _sessionStorage.getEmailSignUpUrl)(endpointKey), {
+      headers: {
+        "Accept": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
+      },
+      // mode: 'no-cors',
+      method: "POST",
+      body: (0, _stringify2.default)((0, _extend2.default)(body, {
+        confirm_success_url: (0, _sessionStorage.getConfirmationSuccessUrl)()
+      }))
+    }).then(_handleFetchResponse.parseResponse).then(function (_ref) {
+      var data = _ref.data;
+      return dispatch(emailSignUpComplete(data, endpointKey));
+    }).catch(function (res) {
+
+      if (res.errors) {
+        dispatch(emailSignUpError(res.errors, endpointKey));
+      } else {
+        debugger;
+        throw res;
+      }
+    });
+  };
+}

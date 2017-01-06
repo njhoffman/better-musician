@@ -1,0 +1,30 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _reducers = require('store/reducers');
+
+var _songs = require('./modules/songs');
+
+exports.default = function (store) {
+  return {
+    path: 'songs',
+    getComponent: function getComponent(nextState, cb) {
+      require.ensure([], function (require) {
+
+        var songsViewReducer = require('./modules/songs').default;
+        var songsModels = require('./modules/model').models;
+
+        (0, _reducers.injectReducer)(store, { key: 'songsView', reducer: songsViewReducer, models: songsModels });
+        var SongsContainer = require('./containers/SongsViewContainer').default;
+
+        store.dispatch({ type: "INIT_SONG_VIEW" });
+        store.dispatch((0, _songs.fetchSongs)());
+
+        cb(null, SongsContainer);
+      }, 'songsView');
+    }
+  };
+};

@@ -1,0 +1,55 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.SongsView = undefined;
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactFoundation = require('react-foundation');
+
+var _materialUi = require('material-ui');
+
+var _SongsListContainer = require('../containers/SongsListContainer');
+
+var _SongsListContainer2 = _interopRequireDefault(_SongsListContainer);
+
+var _Modal = require('../containers/Modal');
+
+var _Modal2 = _interopRequireDefault(_Modal);
+
+var _muiThemeable = require('material-ui/styles/muiThemeable');
+
+var _muiThemeable2 = _interopRequireDefault(_muiThemeable);
+
+var _SongsView = require('./SongsView.scss');
+
+var _SongsView2 = _interopRequireDefault(_SongsView);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var SongsView = exports.SongsView = function SongsView(props) {
+  return _react2.default.createElement(
+    _reactFoundation.Column,
+    { small: 12 },
+    _react2.default.createElement(
+      _materialUi.Paper,
+      { zDepth: 5 },
+      _react2.default.createElement(
+        'div',
+        { className: _SongsView2.default.songsContainer },
+        _react2.default.createElement(_SongsListContainer2.default, null),
+        _react2.default.createElement(_Modal2.default, null)
+      )
+    )
+  );
+};
+
+SongsView.PropTypes = {
+  showAddSongModal: _react2.default.PropTypes.func.isRequired
+};
+
+exports.default = SongsView;

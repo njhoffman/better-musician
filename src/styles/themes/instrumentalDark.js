@@ -2,6 +2,7 @@ import {
   cyan700,
   grey600,
   pinkA100, pinkA200, pinkA400,
+  yellowA200,
   fullWhite,
 } from 'material-ui/styles/colors';
 import {fade} from 'material-ui/utils/colorManipulator';
@@ -26,4 +27,6 @@ export default {
     pickerHeaderColor: fade(fullWhite, 0.12),
     clockCircleColor: fade(fullWhite, 0.12),
   },
+  starColor: yellowA200,
+
 };

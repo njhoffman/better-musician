@@ -1,0 +1,83 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.HomeView = undefined;
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = require('react-router');
+
+var _Duck = require('../assets/Duck.jpg');
+
+var _Duck2 = _interopRequireDefault(_Duck);
+
+var _materialUi = require('material-ui');
+
+var _reactFoundation = require('react-foundation');
+
+var _HomeView = require('./HomeView.scss');
+
+var _HomeView2 = _interopRequireDefault(_HomeView);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var HomeView = exports.HomeView = function HomeView(props) {
+  return _react2.default.createElement(
+    _reactFoundation.Column,
+    { small: 8, centerOnSmall: true },
+    _react2.default.createElement(
+      _materialUi.Paper,
+      { zDepth: 5 },
+      _react2.default.createElement(
+        'div',
+        { className: _HomeView2.default.homeContainer },
+        _react2.default.createElement(
+          'h2',
+          null,
+          'This is the home screen'
+        ),
+        _react2.default.createElement(
+          _reactRouter.Link,
+          { to: '/songs', activeClassName: 'route--active' },
+          ' Songs'
+        ),
+        _react2.default.createElement('br', null),
+        _react2.default.createElement(
+          _reactRouter.Link,
+          { to: '/profile', activeClassName: 'route--active' },
+          ' Profile'
+        ),
+        _react2.default.createElement('br', null),
+        _react2.default.createElement(
+          _reactRouter.Link,
+          { to: '/login', activeClassName: 'route--active' },
+          ' Login'
+        ),
+        _react2.default.createElement('br', null),
+        _react2.default.createElement(
+          _reactRouter.Link,
+          { to: '/register', activeClassName: 'route--active' },
+          ' Register'
+        ),
+        _react2.default.createElement('br', null),
+        _react2.default.createElement(
+          _reactRouter.Link,
+          { to: '/reset', activeClassName: 'route--active' },
+          ' Reset'
+        ),
+        _react2.default.createElement('br', null),
+        _react2.default.createElement(
+          _reactRouter.Link,
+          { to: '/settings', activeClassName: 'route--active' },
+          ' Settings'
+        )
+      )
+    )
+  );
+};
+
+exports.default = HomeView;

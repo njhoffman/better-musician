@@ -1,0 +1,30 @@
+[BABEL] /home/vagrant/projects/instrumental/src/main.js: Unknown option: base.es2015. Check out http://babeljs.io/docs/usage/options/ for more information about options.
+
+A common cause of this error is the presence of a configuration options object without the corresponding preset name. Example:
+
+Invalid:
+  `{ presets: [{option: value}] }`
+Valid:
+  `{ presets: [['presetName', {option: value}]] }`
+
+For more detailed information on preset configuration, please see http://babeljs.io/docs/plugins/#pluginpresets-options.
+ReferenceError: [BABEL] /home/vagrant/projects/instrumental/src/main.js: Unknown option: base.es2015. Check out http://babeljs.io/docs/usage/options/ for more information about options.
+
+A common cause of this error is the presence of a configuration options object without the corresponding preset name. Example:
+
+Invalid:
+  `{ presets: [{option: value}] }`
+Valid:
+  `{ presets: [['presetName', {option: value}]] }`
+
+For more detailed information on preset configuration, please see http://babeljs.io/docs/plugins/#pluginpresets-options.
+    at Logger.error (/home/vagrant/projects/instrumental/node_modules/babel-core/lib/transformation/file/logger.js:41:11)
+    at OptionManager.mergeOptions (/home/vagrant/projects/instrumental/node_modules/babel-core/lib/transformation/file/options/option-manager.js:221:20)
+    at OptionManager.init (/home/vagrant/projects/instrumental/node_modules/babel-core/lib/transformation/file/options/option-manager.js:374:12)
+    at File.initOptions (/home/vagrant/projects/instrumental/node_modules/babel-core/lib/transformation/file/index.js:216:65)
+    at new File (/home/vagrant/projects/instrumental/node_modules/babel-core/lib/transformation/file/index.js:139:24)
+    at Pipeline.transform (/home/vagrant/projects/instrumental/node_modules/babel-core/lib/transformation/pipeline.js:46:16)
+    at transpile (/home/vagrant/projects/instrumental/node_modules/babel-loader/lib/index.js:38:20)
+    at Object.module.exports (/home/vagrant/projects/instrumental/node_modules/babel-loader/lib/index.js:133:12)
+    at applySyncOrAsync (/home/vagrant/projects/instrumental/node_modules/happypack/lib/applyLoaders.js:341:21)
+    at apply (/home/vagrant/projects/instrumental/node_modules/happypack/lib/applyLoaders.js:268:5)

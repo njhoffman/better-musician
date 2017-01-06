@@ -10,8 +10,8 @@ export const RegisterView = (props) => (
   <Column small={8} centerOnSmall={true}>
     <Paper zDepth={5}>
       <div className={css.registerContainer}>
-        <h2>This is the Register Page</h2>
-        <EmailSignUpForm  />
+        <h2>This is the Register Page.</h2>
+        <EmailSignUpForm next={() => { browserHistory.push('/songs') }}  />
       </div>
     </Paper>
   </Column>

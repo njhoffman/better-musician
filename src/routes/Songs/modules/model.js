@@ -77,6 +77,10 @@ class Artist extends BaseModel {
   static reducer(action, Artist, session) {
     const { payload, type } = action;
     switch (type) {
+      case 'SONGS_REQUEST':
+        // remove all songs when fetching
+        this.all().delete();
+        break;
       case 'LOAD_ARTISTS':
         this.loadData(action.payload, Artist);
         break;
@@ -135,6 +139,10 @@ class Genre extends BaseModel {
   static reducer(action, Genre, session) {
     const { payload, type } = action;
     switch (type) {
+      case 'SONGS_REQUEST':
+        // remove all songs when fetching
+        this.all().delete();
+        break;
       case 'LOAD_GENRES':
         this.loadData(action.payload, this);
         break;
@@ -165,6 +173,10 @@ class Instrument extends BaseModel {
   static reducer(action, Instrument, session) {
     const { payload, type } = action;
     switch (type) {
+      case 'SONGS_REQUEST':
+        // remove all songs when fetching
+        this.all().delete();
+        break;
       case 'LOAD_INSTRUMENTS':
         this.loadData(action.payload, this);
         break;

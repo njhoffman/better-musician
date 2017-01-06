@@ -1,0 +1,27 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _reactRedux = require('react-redux');
+
+var _login = require('../modules/login');
+
+var _LoginView = require('../components/LoginView');
+
+var _LoginView2 = _interopRequireDefault(_LoginView);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var mapActionCreators = {
+  increment: _login.increment
+};
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    settings: state.login
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapActionCreators)(_LoginView2.default);

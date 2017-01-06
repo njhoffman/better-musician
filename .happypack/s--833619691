@@ -1,0 +1,151 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _toConsumableArray2 = require("babel-runtime/helpers/toConsumableArray");
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+var _toArray2 = require("babel-runtime/helpers/toArray");
+
+var _toArray3 = _interopRequireDefault(_toArray2);
+
+var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require("babel-runtime/helpers/inherits");
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _redboxReact2 = require("redbox-react");
+
+var _redboxReact3 = _interopRequireDefault(_redboxReact2);
+
+var _react2 = require("react");
+
+var _react3 = _interopRequireDefault(_react2);
+
+var _reactTransformCatchErrors3 = require("react-transform-catch-errors");
+
+var _reactTransformCatchErrors4 = _interopRequireDefault(_reactTransformCatchErrors3);
+
+var _class, _temp;
+
+var _Dialog = require("material-ui/Dialog");
+
+var _Dialog2 = _interopRequireDefault(_Dialog);
+
+var _FlatButton = require("material-ui/FlatButton");
+
+var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+var _ErrorList = require("../ErrorList");
+
+var _ErrorList2 = _interopRequireDefault(_ErrorList);
+
+var _reactRedux = require("react-redux");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _components = {
+  BaseModal: {
+    displayName: "BaseModal"
+  }
+};
+
+var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
+  filename: "/home/vagrant/projects/instrumental/src/components/modals/Modal.js",
+  components: _components,
+  locals: [],
+  imports: [_react3.default, _redboxReact3.default]
+});
+
+function _wrapComponent(id) {
+  return function (Component) {
+    return _reactTransformCatchErrors2(Component, id);
+  };
+}
+
+var BaseModal = _wrapComponent("BaseModal")((_temp = _class = function (_React$Component) {
+  (0, _inherits3.default)(BaseModal, _React$Component);
+
+  function BaseModal() {
+    (0, _classCallCheck3.default)(this, BaseModal);
+    return (0, _possibleConstructorReturn3.default)(this, (BaseModal.__proto__ || (0, _getPrototypeOf2.default)(BaseModal)).apply(this, arguments));
+  }
+
+  (0, _createClass3.default)(BaseModal, [{
+    key: "close",
+    value: function close() {
+      this.props.dispatch(this.props.closeAction());
+    }
+  }, {
+    key: "getEndpoint",
+    value: function getEndpoint() {
+      return this.props.endpoint || this.props.auth.getIn(["configure", "currentEndpointKey"]) || this.props.auth.getIn(["configure", "defaultEndpointKey"]);
+    }
+  }, {
+    key: "getErrorList",
+    value: function getErrorList() {
+      var _props$errorAddr = (0, _toArray3.default)(this.props.errorAddr),
+          base = _props$errorAddr[0],
+          rest = _props$errorAddr.slice(1);
+
+      return _react3.default.createElement(_ErrorList2.default, { errors: this.props.auth.getIn([base, this.getEndpoint()].concat((0, _toConsumableArray3.default)(rest))) });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var body = this.props.errorAddr ? this.getErrorList() : this.props.children;
+
+      return _react3.default.createElement(
+        _Dialog2.default,
+        {
+          open: this.props.show,
+          contentClassName: "redux-auth-modal " + this.props.containerClass,
+          title: this.props.title,
+          actions: [_react3.default.createElement(
+            _FlatButton2.default,
+            {
+              key: "close",
+              className: this.props.containerClass + "-close",
+              onClick: this.close.bind(this) },
+            this.props.closeBtnLabel
+          )].concat((0, _toConsumableArray3.default)(this.props.actions)) },
+        body
+      );
+    }
+  }]);
+  return BaseModal;
+}(_react3.default.Component), _class.propTypes = {
+  show: _react2.PropTypes.bool,
+  errorAddr: _react2.PropTypes.array,
+  closeBtnLabel: _react2.PropTypes.string,
+  actions: _react2.PropTypes.array,
+  closeAction: _react2.PropTypes.func
+}, _class.defaultProps = {
+  show: false,
+  errorAddr: null,
+  closeBtnLabel: "Ok",
+  actions: []
+}, _temp));
+
+exports.default = (0, _reactRedux.connect)(function (_ref) {
+  var auth = _ref.auth;
+  return { auth: auth };
+})(BaseModal);

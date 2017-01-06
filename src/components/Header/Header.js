@@ -1,7 +1,7 @@
 import React, { Component }  from 'react';
 import { IndexLink, Link } from 'react-router';
 import { Row, Column, Breakpoints } from 'react-foundation';
-import { Drawer, MenuItem, Popover, RaisedButton } from 'material-ui';
+import { Drawer, MenuItem, Popover, RaisedButton, Avatar } from 'material-ui';
 import _ from 'lodash';
 
 import MenuIcon from 'react-icons/lib/md/menu';
@@ -12,6 +12,7 @@ import AddIcon from 'react-icons/lib/md/library-add';
 import EditIcon from 'react-icons/lib/md/mode-edit';
 import DeleteIcon from 'react-icons/lib/md/delete';
 import ArrowDropDownIcon from 'react-icons/lib/md/arrow-drop-down';
+import AvatarIcon from 'react-icons/lib/md/account-circle';
 
 import SearchPopover from './SearchPopover';
 import css from './Header.scss';
@@ -94,13 +95,14 @@ class Header extends Component  {
   }
 
   renderLeftColumn() {
+    debugger;
     return (
-      <span className={css.headerLink}>
+      <span className={css.headerLink + ' ' +  css.leftColumn}>
         <span>
-          <a onClick={this.props.toggleDrawerMenu}>
+          <a className={css.menuIcon} onClick={this.props.toggleDrawerMenu}>
             <MenuIcon />
           </a>
-          <IndexLink to ='/'>
+          <IndexLink className={css.homeLink} to ='/'>
             instrumental.com
           </IndexLink>
         </span>
@@ -109,9 +111,21 @@ class Header extends Component  {
   }
 
   renderRightColumn() {
-    if (this.props.user.get("isSignedIn")) {
+    if (this.props.user && this.props.user.get("isSignedIn")) {
       return (
-        <span>{ this.props.user.get("attributes").get("email") }</span>
+        <div className={css.headerLink}>
+          <Link to='/profile' style={{ display: 'table-cell', verticalAlign: 'middle', paddingRight: '5px' }}>
+            <span>{ this.props.user.get("attributes").get("email") }</span>
+            <span>
+              <Avatar
+                icon={<AvatarIcon />}
+                color={'#3333ff'}
+                backgroundColor={'#33ff33'}
+                size={35}
+              />
+            </span>
+          </Link>
+        </div>
       );
     }
     return (
