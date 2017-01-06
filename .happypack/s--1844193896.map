@@ -1,1 +1,0 @@
-{"version":3,"sources":["src/components/DrawerMenu/index.js"],"names":[],"mappings":";;;;;;AAAA","file":"index.js","sourceRoot":"/home/vagrant/projects/instrumental","sourcesContent":["import DrawerMenu from './DrawerMenu';\n\nexport default DrawerMenu;\n"]}

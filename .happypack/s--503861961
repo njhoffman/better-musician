@@ -1,9 +1,0 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var INITIAL_CONFIG_KEY = exports.INITIAL_CONFIG_KEY = "default";
-var DEFAULT_CONFIG_KEY = exports.DEFAULT_CONFIG_KEY = "defaultConfigKey";
-var SAVED_CONFIG_KEY = exports.SAVED_CONFIG_KEY = "currentConfigName";
-var SAVED_CREDS_KEY = exports.SAVED_CREDS_KEY = "authHeaders";
