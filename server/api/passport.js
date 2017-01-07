@@ -45,7 +45,8 @@ export default function configPassport(passport) {
         if (user) {
           return done(null, {
             email: user['email'],
-            id: user['id']
+            id: user['id'],
+            points: user['points']
           });
         } else {
           return done(new Error("User not found"), null);
@@ -67,6 +68,7 @@ export default function configPassport(passport) {
             let newUser = new User({
               email: email,
               password: User.generateHash(password),
+              points: 2507
             });
             return newUser.save();
           }

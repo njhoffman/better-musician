@@ -2,6 +2,7 @@ import React, { Component }  from 'react';
 import { IndexLink, Link } from 'react-router';
 import { Row, Column, Breakpoints } from 'react-foundation';
 import { Drawer, MenuItem, Popover, RaisedButton, Avatar } from 'material-ui';
+import muiThemeable from 'material-ui/styles/muiThemeable';
 import _ from 'lodash';
 
 import MenuIcon from 'react-icons/lib/md/menu';
@@ -95,7 +96,6 @@ class Header extends Component  {
   }
 
   renderLeftColumn() {
-    debugger;
     return (
       <span className={css.headerLink + ' ' +  css.leftColumn}>
         <span>
@@ -114,17 +114,21 @@ class Header extends Component  {
     if (this.props.user && this.props.user.get("isSignedIn")) {
       return (
         <div className={css.headerLink}>
-          <Link to='/profile' style={{ display: 'table-cell', verticalAlign: 'middle', paddingRight: '5px' }}>
-            <span>{ this.props.user.get("attributes").get("email") }</span>
-            <span>
+          <div className={css.profileDisplay}>
+            <Link to='/profile' style={{ display: 'table-cell', verticalAlign: 'middle', paddingRight: '5px' }}>
+              <div className={css.profilePoints}>{ this.props.user.get("attributes").get("points") }</div>
+              <div className={css.profileName}>{ this.props.user.get("attributes").get("email") }</div>
+            </Link>
+          </div>
+          <div className={css.profileAvatar}>
+            <Link to='/profile' style={{ display: 'table-cell', verticalAlign: 'middle', paddingRight: '5px' }}>
               <Avatar
                 icon={<AvatarIcon />}
-                color={'#3333ff'}
-                backgroundColor={'#33ff33'}
+                backgroundColor={this.props.muiTheme.palette.primary1Color}
                 size={35}
               />
-            </span>
-          </Link>
+            </Link>
+          </div>
         </div>
       );
     }
@@ -192,7 +196,7 @@ class Header extends Component  {
     const signedIn = this.props.user.get('isSignedIn');
     if (signedIn) {
       return (
-        <div className={css.actionBar}>
+        <div className={css.header + ' ' + css.loggedIn }>
           <Row className={css.wrapper}>
             <Column small={6} medium={3} style={{ padding: '0px 0px 0px 15px', textAlign: 'left' }}>
               { this.renderLeftColumn() }
@@ -213,7 +217,7 @@ class Header extends Component  {
       );
     } else {
       return (
-        <div className={css.actionBar}>
+        <div className={css.header + ' ' + css.loggedOut}>
           <Row className={css.wrapper}>
             <Column small={6} style={{ padding: '0px 0px 0px 15px', textAlign: 'left' }}>
               { this.renderLeftColumn() }
@@ -235,4 +239,4 @@ Header.propTypes = {
   showAddSongModal: React.PropTypes.func.isRequired
 };
 
-export default Header;
+export default muiThemeable()(Header);

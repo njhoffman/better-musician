@@ -1,13 +1,23 @@
 import { connect } from 'react-redux';
-import { increment } from '../modules/profile';
 import ProfileView from '../components/ProfileView';
+import { updateProfile } from '../modules/profile';
 
 const mapActionCreators = {
-  increment
+  updateProfile
 };
 
-const mapStateToProps = (state) => ({
-  settings: state.login
-});
+const mapStateToProps = (state) => {
+  const user = state.auth.get('user').get('attributes');
+  const initialValues = {
+    firstName: user.get('firstName'),
+    lastName: user.get('lastName'),
+    points: user.get('points')
+  };
+
+  return ({
+    user: state.auth.get('user'),
+    initialValues: initialValues
+  });
+}
 
 export default connect(mapStateToProps, mapActionCreators)(ProfileView);

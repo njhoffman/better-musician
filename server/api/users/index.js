@@ -16,6 +16,7 @@ export default function (passport) {
       res.set('token-type', 'JWT');
       res.set('uid', req.user.uid);
       // app.set('expiry', 6666666);
+      debug("created user: %O", req.user);
       res.json({
         data: req.user
       });
@@ -34,8 +35,7 @@ export default function (passport) {
       debug(`User ${req.user.username} logged in`);
       res.json({
         status: 'ok',
-        user: {
-          email: req.user.email }
+        user: req.user
       });
     }, (err, req, res, next) => {
       debug("Passport Error: %s %s", err.name, err.message);
@@ -60,8 +60,7 @@ export default function (passport) {
         res.json({user:null});
       } else {
         res.json({
-          user: {
-            email: req.user.email }
+          user: req.user
         });
       }
     });

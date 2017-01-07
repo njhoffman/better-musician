@@ -1,10 +1,31 @@
 
 .addSongModal {
-  width: 100%;
-  max-width: none;
+  form {
+    width: 100%;
+    max-width: none;
+    display: flex;
+    flex-wrap: wrap;
+    box-align: stretch;
+    align-items: stretch;
+    justify-content: space-around;
 
-  input {
-    margin: 0;
+    input {
+      margin: 0;
+    }
+
+    .flexLeft {
+      flex: 0 0 250px;
+      width: 250px;
+    }
+
+    .flexRight {
+      width: 250px;
+      flex: 0px 0px 250px;
+    }
+
+    .bottom {
+      width: 80%;
+    }
   }
 }
 

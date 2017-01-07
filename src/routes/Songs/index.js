@@ -1,21 +1,33 @@
 import { injectReducer } from 'store/reducers';
 import { fetchSongs } from './modules/songs';
 
-export default (store) => ({
+export default (store, auth) => ({
   path : 'songs',
   getComponent (nextState, cb) {
     require.ensure([], (require) => {
 
-      const songsViewReducer = require('./modules/songs').default;
-      const songsModels = require('./modules/model').models;
+      if (auth && (auth() === false)) {
+        console.info('authentication failed');
+        return;
+      }
 
-      injectReducer(store, { key: 'songsView', reducer: songsViewReducer, models: songsModels });
-      const SongsContainer = require('./containers/SongsViewContainer').default;
+      // const renderRoute = loadModule(cb, UserIsAuthenticated);
+      const importModules = Promise.all([
+        require('./containers/SongsViewContainer').default,
+        require('./modules/songs').default,
+        require('./modules/model').default
+      ]);
 
-      store.dispatch({ type: "INIT_SONG_VIEW" });
-      store.dispatch(fetchSongs());
+      importModules.then( ([container, reducer, models]) => {
+        injectReducer(store, { key: 'songsView', reducer: reducer, models: models });
+        store.dispatch({ type: "INIT_SONG_VIEW" });
+        store.dispatch(fetchSongs());
+        cb(null, container);
+      });
 
-      cb(null, SongsContainer);
+      importModules.catch(error => {
+        debugger;
+      });
 
     }, 'songsView');
   }

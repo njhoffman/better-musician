@@ -17,6 +17,7 @@ const __TEST__ = project.globals.__TEST__;
 
 const _RESOLVE_PATHS = {
   coreStyles: "src/styles/core.scss",
+  assets:     "src/assets",
   themes:     "src/styles/themes",
   components: "src/components",
   containers: "src/containers",

@@ -1,11 +1,13 @@
 const exampleArtists = [{
   id: 0,
   firstName: "Frederic",
-  lastName: "Chopin"
+  lastName: "Chopin",
+  picture: 'chopin.jpg'
 }, {
   id: 1,
   firstName: "Ludwig van",
-  lastName: "Beethoven"
+  lastName: "Beethoven",
+  picture: 'beethoven.jpg'
 }, {
   id: 2,
   firstName: "Nikolai",
@@ -25,7 +27,8 @@ const exampleArtists = [{
 }, {
   id: 6,
   firstName: "Johann Sebastian",
-  lastName: "Bach"
+  lastName: "Bach",
+  picture: 'bach.jpg'
 }, {
   id: 7,
   firstName: "Pyotr Ilyich",

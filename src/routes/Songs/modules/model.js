@@ -205,4 +205,4 @@ exports.Artist = Artist;
 exports.Instrument = Instrument;
 exports.Genre = Genre;
 exports.Filter = Filter;
-export const models = [Song, Filter, Genre, Instrument, Artist];
+export default [Song, Filter, Genre, Instrument, Artist];

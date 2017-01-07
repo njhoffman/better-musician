@@ -1,7 +1,7 @@
-.actionBar {
+.header {
   background: #2b2d30;
   text-align: center;
-  font-size: 0.9em;
+  font-size: 1.0em;
 
   a {
     white-space: nowrap;
@@ -11,12 +11,7 @@
   }
 
   .wrapper {
-    height: 40px;
-  }
-
-
-  .loginButton {
-    margin-right: 5px;
+    height: 45px;
   }
 
   .headerLink {
@@ -46,6 +41,32 @@
   .menuIcon:hover,
   .homeLink:hover {
     background-color: none;
+  }
+
+  &.loggedIn {
+    .profileDisplay {
+      display: inline-block;
+      .profilePoints {
+        font-size: 1.3em;
+        line-height:1.3em;
+      }
+      .profileName {
+        font-size: 0.8em;
+        line-height: 0.8em;
+      }
+    }
+    .profileAvatar {
+      margin-top: 2px;
+      display: inline-block;
+      width: 50px;
+      margin-left: 5px;
+    }
+  }
+
+  &.loggedOut {
+    .loginButton {
+      margin-right: 5px;
+    }
   }
 }
 

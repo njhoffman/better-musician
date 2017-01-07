@@ -5,6 +5,8 @@ import SongsList from '../containers/SongsListContainer';
 import ModalBase from '../containers/Modal';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { RaisedButton } from 'material-ui';
+import { UserAuthWrapper }  from 'redux-auth-wrapper';
+import { updateLocation } from 'store/location';
 
 import css from './SongsView.scss';
 
@@ -23,4 +25,10 @@ SongsView.PropTypes = {
   showAddSongModal: React.PropTypes.func.isRequired
 };
 
-export default SongsView;
+const UserIsAuthenticated = UserAuthWrapper({
+    authSelector: state => state.auth.get('user').toJS(), // how to get the user state
+    redirectAction: updateLocation, // the redux action to dispatch for redirect
+    wrapperDisplayName: 'UserIsAuthenticated' // a nice name for this auth check
+});
+
+export default UserIsAuthenticated(SongsView);

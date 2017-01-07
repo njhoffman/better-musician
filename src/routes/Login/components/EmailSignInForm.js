@@ -82,7 +82,6 @@ class EmailSignInForm extends React.Component {
         <ButtonLoader
           loading={this.props.auth.getIn(["emailSignIn", "loading"])}
           type="submit"
-          style={{float: "right"}}
           icon={ActionExitToApp}
           className='email-sign-in-submit'
           disabled={disabled}

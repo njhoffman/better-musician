@@ -7,23 +7,39 @@ import ProfileRoute from './Profile';
 import ResetRoute from './Reset';
 import LoginRoute from './Login';
 import RegisterRoute from './Register';
+import {browserHistory} from 'react-router';
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
 
-export const createRoutes = (store) => ({
-  path        : '/',
-  component   : CoreLayout,
-  indexRoute  : HomeRoute(store),
-  childRoutes : [
-    SongsRoute(store),
-    SettingsRoute(store),
-    LoginRoute(store),
-    RegisterRoute(store),
-    ResetRoute(store),
-    ProfileRoute(store)
-  ]
-});
+
+export const createRoutes = (store) => {
+
+
+  const auth = (level) => () => {
+    const user = store.getState().auth ? store.getState().auth.get('user') : null;
+    if (!user || !user.get('isSignedIn')) {
+      browserHistory.push('login?redirect=' +
+        encodeURIComponent(window.location.pathname.substr(1)));
+      return false;
+    }
+    return true;
+  };
+
+  return ({
+    path        : '/',
+    component   : CoreLayout,
+    indexRoute  : HomeRoute(store),
+    childRoutes : [
+      LoginRoute(store),
+      RegisterRoute(store),
+      ResetRoute(store),
+      SongsRoute(store, auth('user')),
+      SettingsRoute(store, auth('user')),
+      ProfileRoute(store, auth('user'))
+    ]
+  });
+}
 
 /*  Note: childRoutes can be chunked or otherwise loaded programmatically
     using getChildRoutes with the following signature:

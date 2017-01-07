@@ -1,34 +1,32 @@
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const COUNTER_INCREMENT = 'COUNTER_INCREMENT';
+export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 
 // ------------------------------------
-// Actions
+// Actions Creators
 // ------------------------------------
-export function increment (value = 1) {
-  return {
-    type    : COUNTER_INCREMENT,
-    payload : value
-  };
-}
+
+export const updateProfile = (values) => (dispatch, getState) => {
+  const fieldValues = getState().form.updateProfileForm.values;
+  return dispatch({ type: UPDATE_PROFILE, payload: { ...fieldValues } });
+};
 
 export const actions = {
-  increment
+   updateProfile
 };
 
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [COUNTER_INCREMENT] : (state, action) => state + action.payload
 };
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 const initialState = 0;
-export default function loginReducer (state = initialState, action) {
+export default function profileReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
 
   return handler ? handler(state, action) : state;

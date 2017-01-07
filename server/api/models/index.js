@@ -20,6 +20,7 @@ class User extends BaseModel {
     super();
     this.email = user.email;
     this.password = user.password;
+    this.points = user.points;
   }
   static generateHash(password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
@@ -41,13 +42,18 @@ class User extends BaseModel {
       .table(User.tableName)
       .insert({
         email: this.email,
-        password: this.password
+        password: this.password,
+        points: this.points
       })
       .run(getDbModule().conn)
       .then((res) => {
         if (res.inserted === 1) {
           this.id = res.generated_keys[0];
-          return { email: this.email, id: this.id };
+          return {
+            email: this.email,
+            id: this.id,
+            points: this.points
+          };
         } else {
           debug("ERROR %O", res);
         }
