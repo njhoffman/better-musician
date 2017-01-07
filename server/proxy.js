@@ -1,9 +1,9 @@
 const http = require('http');
 const httpProxy = require('http-proxy');
 const proxyRequestDebug  = require('debug')('app:request:proxy');
-const project = require('../../config/project.config');
-const requestOutput = require('../server.utils').requestOutput;
-const responseOutput = require('../server.utils').responseOutput;
+const project = require('../config/project.config');
+const requestOutput = require('./server.utils').requestOutput;
+const responseOutput = require('./server.utils').responseOutput;
 // const proxyResponseDebug = require('debug')('app:response:proxy');
 const proxyResponseDebug = proxyRequestDebug;
 

@@ -5,8 +5,7 @@ const project = require('../config/project.config');
 const compress = require('compression');
 const morgan = require('morgan');
 const cookieParser = require("cookie-parser");
-const session = require('express-session');
-const setupProxy = require('./main/proxy');
+const setupProxy = require('./proxy');
 
 const morganOutput = require('./server.utils').morganOutput;
 const requestOutput = require('./server.utils').requestOutput;
@@ -19,13 +18,6 @@ const webpackDebug       = require('debug')('app:server:webpack');
 
 const app = express();
 setupProxy(app);
-
-app.use(session({
-  secret: 'somesecret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { maxAge: 60000 }
-}));
 
 
 // Rewrites all routes requests to the root /index.html file (ignoring file requests).

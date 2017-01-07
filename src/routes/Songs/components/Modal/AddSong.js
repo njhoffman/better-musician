@@ -53,14 +53,18 @@ export const AddSongModal = (props) => {
       contentStyle={dialogStyle}>
       <form onSubmit={props.addSong}>
         <div className={css.flexLeft}>
-          <Field
-            name="title"
-            component={RenderTextField}
-            label="Song Title" />
-          <Field
-            name="artist"
-            component={RenderTextField}
-            label="Song Artist" />
+          <div className={css.songTitle}>
+            <Field
+              name="title"
+              component={RenderTextField}
+              label="Song Title" />
+          </div>
+          <div className={css.artistName}>
+            <Field
+              name="artist"
+              component={RenderTextField}
+              label="Song Artist" />
+          </div>
         </div>
         <div className={css.flexRight}>
           <Field name="genre"

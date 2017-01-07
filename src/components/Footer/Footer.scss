@@ -4,5 +4,28 @@
   height: 75px;
 }
 .footer {
-  width: 75%;
+  width: 95%;
+
+  .artistPicture,
+  .instrumentPicture {
+    height: 75px;
+    display: inline-block;
+  }
+  .artistPicture {
+    margin-left: 20px;
+  }
+  .artistName {
+    font-size: 0.8em;
+  }
+  .songTitle {
+    margin-top: 10px;
+    font-size: 1.2em;
+  }
+
+
+  .rightColumn {
+    margin-top: 10px;
+    text-align: center;
+  }
+
 }

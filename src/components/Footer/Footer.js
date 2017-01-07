@@ -1,5 +1,7 @@
 import React, { Component }  from 'react';
+import StarIcon from 'react-icons/lib/md/star';
 import { Row, Column, Breakpoints } from 'react-foundation';
+import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import css from './Footer.scss';
 
@@ -22,42 +24,51 @@ class Footer extends Component  {
     return (
       <div className={css.footerWrapper}>
         <Row className={css.footer}>
-          <Column>
-            { song.instrument.name }
+          <Column
+            small={3}
+            className={css.leftColumn}>
+            <img
+              className={css.instrumentPicture}
+              src={"instruments/" + song.instrument.picture} />
+            <img
+              className={css.artistPicture}
+              src={"artists/" + song.artist.picture} />
           </Column>
-          <Column>
+          <Column
+            small={7}
+            className={css.middleColumn}>
             <Row>
               <Column>
-                { song.title }
+                <div className={css.songTitle}>
+                  { song.title }
+                </div>
               </Column>
             </Row>
             <Row>
               <Column>
-                { song.artist.fullName }
+                <div className={css.artistName}>
+                  { song.artist.fullName }
+                </div>
+                <div className={css.genreName}>
+                  { song.genre.displayName }
+                </div>
+
               </Column>
             </Row>
           </Column>
-          <Column>
-            <Row>
-              <Column>
-                (Year)
-              </Column>
-            </Row>
-            <Row>
-              <Column>
-                { song.genre.displayName }
-              </Column>
-            </Row>
-          </Column>
-          <Column>
-            <Row>
-              <Column>
-                { song.progress }
-              </Column>
-            </Row>
+          <Column
+            small={2}
+            className={css.rightColumn}>
             <Row>
               <Column>
                 { song.difficulty }
+              </Column>
+            </Row>
+            <Row>
+              <Column>
+                { [...Array(song.progress)].map((x,i) =>
+                  <StarIcon key={i} style={{color: this.props.muiTheme.starColor}} />
+                ) }
               </Column>
             </Row>
           </Column>
@@ -80,4 +91,4 @@ class Footer extends Component  {
 Footer.propTypes = {
 };
 
-export default Footer;
+export default muiThemeable()(Footer);
