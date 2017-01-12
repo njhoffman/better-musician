@@ -1,10 +1,14 @@
 import { connect } from 'react-redux';
+import {
+  userDisplay as userDisplaySelector,
+  userPoints as userPointsSelector
+} from 'routes/Songs/modules/selectors';
 // import { showModal } from '../store/modal';
 
 import Header from './Header';
 
 const localState = {
-  searchIsOpen: false,
+  searchIsOpen: false
 };
 
 // TODO: these are Songs route specific actionCreators but are in global headerContainer
@@ -52,6 +56,8 @@ const mapStateToProps = (state) => ({
   searchIsOpen: localState.searchIsOpen,
   currentSong: state.songsView ? state.songsView.currentSong : null,
   user: state.auth.get("user"),
+  userDisplayName: userDisplaySelector(state),
+  getUserPoints: userPointsSelector(state),
   currentView: state.location ? state.location.currentView : null,
 });
 

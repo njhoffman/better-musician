@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/components/Header/Header.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/components/Header/Header.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">71.56</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">248</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">28.42</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.58</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import React, { Component }  from &#039;react&#039;;
+import { IndexLink, Link } from &#039;react-router&#039;;
+import { Row, Column, Breakpoints } from &#039;react-foundation&#039;;
+import { Drawer, MenuItem, Popover, RaisedButton, Avatar } from &#039;material-ui&#039;;
+import muiThemeable from &#039;material-ui/styles/muiThemeable&#039;;
+import _ from &#039;lodash&#039;;
+
+import {
+  MdFilterList    as FilterIcon,
+  MdImportExport  as SortIcon,
+  MdSearch        as SearchIcon,
+  MdLibraryAdd    as AddIcon,
+  MdModeEdit      as EditIcon,
+  MdDelete        as DeleteIcon,
+  MdDashboard     as ViewIcon,
+  MdArrowDropDown as ArrowDropDownIcon
+} from &#039;react-icons/lib/md&#039;;
+
+import HeaderLeft from &#039;./HeaderLeft&#039;;
+import HeaderRight from &#039;./HeaderRight&#039;;
+import SearchPopover from &#039;./SearchPopover&#039;;
+import css from &#039;./Header.scss&#039;;
+
+class Header extends Component  {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchPopoverOpen: false,
+      searchPopoverAnchor: {},
+      songPopoverOpen: false,
+      songPopoverAnchor: {}
+    };
+  };
+
+  toggleSearchPopover(e) {
+    e.preventDefault();
+    this.setState({
+      searchPopoverOpen: !this.state.searchPopoverOpen,
+      searchPopoverAnchor: e.currentTarget.parentElement
+    });
+  }
+
+  toggleSongPopover(e) {
+    e.preventDefault();
+    this.setState({
+      songPopoverOpen: true,
+      songPopoverAnchor: e.currentTarget.parentElement
+    });
+  }
+
+  onRequestClose() {
+    this.setState({
+      searchPopoverOpen: false,
+      songPopoverOpen: false
+    });
+  }
+
+  showEditSongModal() {
+    this.onRequestClose();
+    this.props.showAddSongModal(&#039;edit&#039;);
+  };
+
+  showAddSongModal() {
+    this.onRequestClose();
+    this.props.showAddSongModal(&#039;add&#039;);
+  };
+
+  renderSongButtonOther() {
+      return (
+        &lt;Link className={css.headerLink} to=&#039;/songs&#039;&gt;
+          &lt;span className={css.iconWrapper}&gt;
+            &lt;ViewIcon className={css.icon} /&gt;
+            &lt;span className={css.iconText}&gt;View Songs&lt;/span&gt;
+          &lt;/span&gt;
+        &lt;/Link&gt;
+      )
+  }
+
+  renderSongButtonAdd() {
+      return (
+        &lt;a className={css.headerLink} onClick={ this.showAddSongModal.bind(this) }&gt;
+          &lt;span className={css.iconWrapper}&gt;
+            &lt;AddIcon className={css.icon} /&gt;
+            &lt;span className={css.iconText}&gt;Add Song&lt;/span&gt;
+          &lt;/span&gt;
+        &lt;/a&gt;
+      );
+  }
+
+  renderSongButtonEdit() {
+    return (
+      &lt;a className={css.headerLink}&gt;
+        &lt;span className={css.iconWrapper}&gt;
+          &lt;EditIcon className={css.icon} /&gt;
+          &lt;span className={css.iconText}&gt;Edit Song&lt;/span&gt;
+          &lt;ArrowDropDownIcon
+            className={css.downArrow}
+            onTouchTap={this.toggleSongPopover.bind(this)} /&gt;
+          &lt;Popover
+            open={this.state.songPopoverOpen}
+            anchorEl={this.state.songPopoverAnchor}
+            anchorOrigin={{ horizontal: &#039;left&#039;, vertical: &#039;bottom&#039; }}
+            targetOrigin={{ horizontal: &#039;left&#039;, vertical: &#039;top&#039; }}
+            style={{ width: &#039;15%&#039; }}
+            onRequestClose={this.onRequestClose.bind(this)} &gt;
+            &lt;Row&gt;
+              &lt;Column style={{ padding: &#039;0px&#039;, textAlign: &#039;center&#039; }}&gt;
+                &lt;a style={{ padding: &quot;5px 0px&quot; }} className={css.headerLink} onClick={ this.showEditSongModal.bind(this) } &gt;
+                  &lt;span className={css.iconWrapper}&gt;
+                    &lt;AddIcon style={{ margin: &quot;0px 12px 0px -12px&quot; }} className={css.icon} /&gt;
+                    &lt;span className={css.iconText}&gt;Add Song&lt;/span&gt;
+                  &lt;/span&gt;
+                &lt;/a&gt;
+              &lt;/Column&gt;
+            &lt;/Row&gt;
+            &lt;Row style={{ padding: &quot;5px 0px&quot; }}&gt;
+              &lt;Column style={{ padding: &#039;0px&#039;, textAlign: &#039;center&#039; }}&gt;
+                &lt;a style={{ padding: &quot;5px 0px&quot; }} className={css.headerLink}&gt;
+                  &lt;span className={css.iconWrapper}&gt;
+                    &lt;DeleteIcon className={css.icon} /&gt;
+                    &lt;span className={css.iconText}&gt;Delete Song&lt;/span&gt;
+                  &lt;/span&gt;
+                &lt;/a&gt;
+              &lt;/Column&gt;
+            &lt;/Row&gt;
+          &lt;/Popover&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+    );
+  }
+
+  renderSongButton() {
+    if (this.props.currentView === &#039;songsView&#039;) {
+      if (this.props.currentSong) {
+        return this.renderSongButtonEdit();
+      }
+      return this.renderSongButtonAdd()
+    }
+    return this.renderSongButtonOther()
+  }
+
+
+  renderFiltersButton() {
+    return (
+      &lt;a className={css.headerLink} onClick={this.props.showFiltersModal} &gt;
+        &lt;span className={css.iconWrapper}&gt;
+          &lt;FilterIcon className={css.icon} /&gt;
+          &lt;span className={css.iconText}&gt;Filters&lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+    );
+  }
+
+  renderSearchButton() {
+    return (
+      &lt;a className={css.headerLink}
+        onTouchTap={ this.toggleSearchPopover.bind(this) }&gt;
+        &lt;span className={css.iconWrapper}&gt;
+          &lt;SearchIcon className={css.icon} /&gt;
+          &lt;span className={css.iconText}&gt;Search&lt;/span&gt;
+          &lt;SearchPopover
+            open={ this.state.searchPopoverOpen }
+            anchorEl={this.state.searchPopoverAnchor}
+            anchorOrigin={{ horizontal: &#039;left&#039;, vertical: &#039;bottom&#039; }}
+            targetOrigin={{ horizontal: &#039;left&#039;, vertical: &#039;top&#039; }}
+            onRequestClose={ this.onRequestClose.bind(this) } /&gt;
+        &lt;/span&gt;
+      &lt;/a&gt;
+    );
+  }
+
+  renderMiddleColumn() {
+    return (
+      &lt;Row className={css.wrapper}&gt;
+        &lt;Column style={{ padding: &#039;0px&#039; }}&gt;
+          { this.renderSongButton() }
+        &lt;/Column&gt;
+        &lt;Column style={{ padding: &#039;0px&#039; }}&gt;
+          { this.renderFiltersButton() }
+        &lt;/Column&gt;
+        &lt;Column style={{ padding: &#039;0px&#039; }}&gt;
+          { this.renderSearchButton() }
+        &lt;/Column&gt;
+      &lt;/Row&gt;
+    );
+  }
+
+  render () {
+    const props = this.props;
+    const signedIn = this.props.user.get(&#039;isSignedIn&#039;);
+    if (signedIn) {
+      return (
+        &lt;div className={css.header + &#039; &#039; + css.loggedIn }&gt;
+          &lt;Row className={css.wrapper}&gt;
+            &lt;Column
+              small={6}
+              medium={3}
+              style={{ padding: &#039;0px 0px 0px 15px&#039;, textAlign: &#039;left&#039; }}&gt;
+              &lt;HeaderLeft {...props} /&gt;
+            &lt;/Column&gt;
+            &lt;Column
+              showFor={Breakpoints.MEDIUM} &gt;
+              { this.renderMiddleColumn() }
+            &lt;/Column&gt;
+            &lt;Column
+              small={6}
+              medium={3}
+              style={{ textAlign: &#039;right&#039;, padding: &#039;0px&#039; }}&gt;
+              &lt;HeaderRight {...props} /&gt;
+            &lt;/Column&gt;
+          &lt;/Row&gt;
+          &lt;Row className={css.wrapper} showOnlyFor={Breakpoints.SMALL}&gt;
+            &lt;Column&gt;
+              { this.renderMiddleColumn() }
+            &lt;/Column&gt;
+          &lt;/Row&gt;
+        &lt;/div&gt;
+      );
+    } else {
+      return (
+        &lt;div className={css.header + &#039; &#039; + css.loggedOut}&gt;
+          &lt;Row className={css.wrapper}&gt;
+            &lt;Column
+              small={6}
+              style={{ padding: &#039;0px 0px 0px 15px&#039;, textAlign: &#039;left&#039; }}&gt;
+              &lt;HeaderLeft {...props} /&gt;
+            &lt;/Column&gt;
+            &lt;Column
+              small={6}
+              style={{ textAlign: &#039;right&#039;, padding: &#039;0px&#039; }}&gt;
+              &lt;HeaderRight {...props} /&gt;
+            &lt;/Column&gt;
+          &lt;/Row&gt;
+        &lt;/div&gt;
+      );
+    }
+  }
+};
+
+Header.propTypes = {
+  showFiltersModal: React.PropTypes.func.isRequired,
+  toggleDrawerMenu: React.PropTypes.func.isRequired,
+  searchClose:      React.PropTypes.func.isRequired,
+  showAddSongModal: React.PropTypes.func.isRequired
+};
+
+export default muiThemeable()(Header);</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

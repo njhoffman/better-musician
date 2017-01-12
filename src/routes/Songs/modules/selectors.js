@@ -5,28 +5,38 @@ import { createSelector } from 'reselect';
 
 export const ormSelector = state => state.orm;
 
-const songSelector = ormCreateSelector(orm, (session, state) => {
-  const songsView = state ? state.songsView : false;
+const songSelector = ormCreateSelector(orm, (session, songsView) => {
   const sortField = songsView ? songsView.sortField : 'title';
-  const modelObj = session.Song
-    ? session.Song.all().toModelArray()
-    : [];
+  const perPage = songsView ? songsView.paginationPerPage : false;
+  const paginationCurrent = songsView ? songsView.paginationCurrent : 1;
+
+
+  let retObj = session.Song.all().toModelArray();
+
   if (sortField) {
-    return modelObj.sort( (a,b) => {
+    retObj = retObj.sort( (a,b) => {
       if (sortField === 'artist') {
         return a.artist.fullName > b.artist.fullName;
       } else {
         return (a[sortField] > b[sortField]);
       }
     });
-  } else {
-    return modelObj;
+    if (songsView.sortInverse) {
+      retObj = retObj.reverse();
+    }
   }
+
+  if (perPage) {
+    const start = (paginationCurrent - 1) * perPage;
+    const end = start + parseInt(perPage);
+    retObj = retObj.slice(start, end);
+  }
+  return retObj;
 });
 
 export const songs = createSelector(
   ormSelector,
-  state => state,
+  state => state.songsView,
   songSelector
 );
 
@@ -44,7 +54,7 @@ export const currentSong = createSelector(
 
 
 const artistSelector = ormCreateSelector(orm, session => {
-  const modelObj = session.Artist? session.Artist.all().toModelArray() : [];
+  const modelObj = session.Artist ? session.Artist.all().toModelArray() : [];
   return modelObj;
 });
 
@@ -53,3 +63,83 @@ export const artists = createSelector(
   state => state,
   artistSelector
 );
+
+
+
+
+
+const paginationTotalSelector = ormCreateSelector(orm, session => {
+  return session.Song.count();
+});
+
+export const paginationTotal = createSelector(
+  ormSelector,
+  state => state.songsView,
+  paginationTotalSelector
+);
+
+
+const paginationStartSelector = ormCreateSelector(orm, (session, songsView) => {
+  return (1 + (songsView.paginationCurrent - 1) * parseInt(songsView.paginationPerPage));
+});
+
+export const paginationStart = createSelector(
+  ormSelector,
+  state => state.songsView,
+  paginationStartSelector
+);
+
+
+const paginationEndSelector = ormCreateSelector(orm, (session, songsView) => {
+  return songsView.paginationCurrent * songsView.paginationPerPage > session.Song.count()
+    ? session.Song.count()
+    : songsView.paginationCurrent * songsView.paginationPerPage
+});
+
+export const paginationEnd = createSelector(
+  ormSelector,
+  state => state.songsView,
+  paginationEndSelector
+);
+
+const paginationPagesSelector = ormCreateSelector(orm, (session, songsView) => {
+  return parseInt(Math.ceil(session.Song.count() / songsView.paginationPerPage));
+});
+
+export const paginationPages = createSelector(
+  ormSelector,
+  state => state.songsView,
+  paginationPagesSelector
+);
+
+
+
+const userPointsSelector = ormCreateSelector(orm, (session, user) => {
+  const points = session.Song && session.Song.getPointTotal();
+  return isNaN(points) ? 0 : points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+});
+
+export const userPoints = createSelector(
+  ormSelector,
+  state => state.user,
+  userPointsSelector
+);
+
+
+const userDisplaySelector = ormCreateSelector(orm, (session, user) => {
+  if (user.get('attributes').get('lastName')
+    || user.get('attributes').get('firstName')) {
+      return user.get('attributes').get('firstName')
+        + ' ' + user.get('attributes').get('lastName');
+  }
+  return user.get('attributes').get('email');
+});
+
+export const userDisplay = createSelector(
+  ormSelector,
+  state => state.auth.get('user'),
+  userDisplaySelector
+);
+
+
+

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/store/auth/utils/session-storage.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/store/auth/utils/session-storage.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">78.08</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">218</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">48.18</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.54</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import Cookies from &quot;browser-cookies&quot;;
+import * as C from &quot;./constants&quot;;
+
+
+// even though this code shouldn&#039;t be used server-side, node will throw
+// errors if &quot;window&quot; is used
+var root = Function(&quot;return this&quot;)() || (42, eval)(&quot;this&quot;);
+
+// stateful variables that persist throughout session
+root.authState = {
+  currentSettings:    {},
+  currentEndpoint:    {},
+  defaultEndpointKey: null
+}
+
+export function setCurrentSettings (s) {
+  root.authState.currentSettings = s;
+}
+
+export function getCurrentSettings () {
+  return root.authState.currentSettings;
+}
+
+export function setCurrentEndpoint (e) {
+  root.authState.currentEndpoint = e;
+}
+
+export function getCurrentEndpoint () {
+  return root.authState.currentEndpoint;
+}
+
+export function setCurrentEndpointKey (k) {
+  persistData(C.SAVED_CONFIG_KEY, k || getDefaultEndpointKey());
+}
+
+export function getCurrentEndpointKey () {
+  return retrieveData(C.SAVED_CONFIG_KEY) || getDefaultEndpointKey();
+}
+
+export function setDefaultEndpointKey (k) {
+  persistData(C.DEFAULT_CONFIG_KEY, k);
+}
+
+export function getDefaultEndpointKey () {
+  return retrieveData(C.DEFAULT_CONFIG_KEY);
+}
+
+// reset stateful variables
+export function resetConfig () {
+  root.authState = root.authState || {};
+  root.authState.currentSettings    = {};
+  root.authState.currentEndpoint    = {};
+  destroySession();
+}
+
+export function destroySession () {
+  var sessionKeys = [
+    C.SAVED_CREDS_KEY,
+    C.SAVED_CONFIG_KEY
+  ];
+
+  for (var key in sessionKeys) {
+    key = sessionKeys[key];
+
+    // kill all local storage keys
+    if (root.localStorage) {
+      root.localStorage.removeItem(key);
+    }
+
+    // remove from base path in case config is not specified
+    Cookies.erase(key, {
+      path: root.authState.currentSettings.cookiePath || &quot;/&quot;
+    });
+  }
+}
+
+function unescapeQuotes (val) {
+  return val &amp;&amp; val.replace(/(&quot;|&#039;)/g, &quot;&quot;);
+};
+
+
+export function getInitialEndpointKey () {
+  return unescapeQuotes(
+    Cookies.get(C.SAVED_CONFIG_KEY) ||
+    (root.localStorage &amp;&amp; root.localStorage.getItem(C.SAVED_CONFIG_KEY))
+  );
+}
+
+// TODO: make this really work
+export function getSessionEndpointKey (k) {
+  let key = k || getCurrentEndpointKey();
+  if (!key) {
+    throw &quot;You must configure redux-auth before use.&quot;;
+  } else {
+    return key;
+  }
+}
+
+export function getSessionEndpoint (k) {
+  return getCurrentEndpoint()[getSessionEndpointKey(k)];
+}
+
+// only should work for current session
+export function getDestroyAccountUrl (endpointKey) {
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).accountDeletePath}`
+}
+
+// only should work for current session
+export function getSignOutUrl (endpointKey) {
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).signOutPath}`
+}
+
+export function getEmailSignInUrl (endpointKey) {
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).emailSignInPath}`
+}
+
+export function getEmailSignUpUrl (endpointKey) {
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).emailRegistrationPath}?config_name=${endpointKey}`
+}
+
+export function getPasswordResetRequestUrl (endpointKey) {
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).passwordResetPath}?config_name=${endpointKey}`
+}
+
+export function getPasswordUpdateUrl (endpointKey) {
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).passwordUpdatePath}`
+}
+
+export function getTokenValidationPath (endpointKey) {
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).tokenValidationPath}`
+}
+
+export function getOAuthUrl ({provider, params, endpointKey}) {
+  var oAuthUrl = getApiUrl(endpointKey) + getSessionEndpoint(endpointKey).authProviderPaths[provider] +
+    &quot;?auth_origin_url=&quot;+encodeURIComponent(root.location.href) +
+    &quot;&amp;config_name=&quot;+encodeURIComponent(getSessionEndpointKey(endpointKey));
+
+  if (params) {
+    for(var key in params) {
+      oAuthUrl += &quot;&amp;&quot;;
+      oAuthUrl += encodeURIComponent(key);
+      oAuthUrl += &quot;=&quot;;
+      oAuthUrl += encodeURIComponent(params[key]);
+    }
+  }
+
+  return oAuthUrl;
+}
+
+export function getConfirmationSuccessUrl () {
+  return root.authState.currentSettings.confirmationSuccessUrl();
+}
+
+export function getPasswordResetRedirectUrl () {
+  return root.authState.currentSettings.confirmationSuccessUrl();
+}
+
+export function getApiUrl(key) {
+  let configKey = getSessionEndpointKey(key);
+  return root.authState.currentEndpoint[configKey].apiUrl;
+}
+
+export function getTokenFormat() {
+  return root.authState.currentSettings.tokenFormat;
+}
+
+export function removeData(key) {
+
+  switch(root.authState.currentSettings.storage) {
+    case &quot;localStorage&quot;:
+      root.localStorage.removeItem(key);
+      break;
+    default:
+      Cookies.erase(key);
+  }
+}
+
+export function persistData (key, val) {
+  val = JSON.stringify(val);
+
+  switch (root.authState.currentSettings.storage) {
+    case &quot;localStorage&quot;:
+      root.localStorage.setItem(key, val);
+      break;
+
+    default:
+      var res = Cookies.set(key, val, {
+        expires: root.authState.currentSettings.cookieExpiry,
+        path:    root.authState.currentSettings.cookiePath
+      });
+      break;
+  }
+};
+
+
+export function retrieveData (key, storage) {
+  var val = null;
+
+  switch (storage || root.authState.currentSettings.storage) {
+    case &quot;localStorage&quot;:
+      val = root.localStorage &amp;&amp; root.localStorage.getItem(key);
+      break;
+
+    default:
+      val = Cookies.get(key);
+      break;
+  }
+
+  // if value is a simple string, the parser will fail. in that case, simply
+  // unescape the quotes and return the string.
+  try {
+    // return parsed json response
+    return JSON.parse(val);
+  } catch (err) {
+    // unescape quotes
+    return unescapeQuotes(val);
+  }
+};</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/redux-orm/Model.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/redux-orm/Model.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">72.69</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">501</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">62.22</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.89</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import forOwn from &#039;lodash/forOwn&#039;;
+import isArray from &#039;lodash/isArray&#039;;
+import uniq from &#039;lodash/uniq&#039;;
+
+import Session from &#039;./Session&#039;;
+import QuerySet from &#039;./QuerySet&#039;;
+import {
+    ManyToMany,
+    ForeignKey,
+    OneToOne,
+    attr,
+} from &#039;./fields&#039;;
+import { CREATE, UPDATE, DELETE, FILTER } from &#039;./constants&#039;;
+import {
+    normalizeEntity,
+    arrayDiffActions,
+    objectShallowEquals,
+} from &#039;./utils&#039;;
+
+
+// Generates a query specification
+// to get a single row from a table identified
+// by a primary key.
+function getByIdQuery(modelInstance) {
+    const modelClass = modelInstance.getClass();
+    return {
+        table: modelClass.modelName,
+        clauses: [
+            {
+                type: FILTER,
+                payload: {
+                    [modelClass.idAttribute]: modelInstance.getId(),
+                },
+            },
+        ],
+    };
+}
+
+
+/**
+ * The heart of an ORM, the data model.
+ *
+ * The fields you specify to the Model will be used to generate
+ * a schema to the database, related property accessors, and
+ * possibly through models.
+ *
+ * In each {@link Session} you instantiate from an {@link ORM} instance,
+ * you will receive a session-specific subclass of this Model. The methods
+ * you define here will be available to you in sessions.
+ *
+ * An instance of {@link Model} represents a record in the database, though
+ * it is possible to generate multiple instances from the same record in the database.
+ *
+ * To create data models in your schema, subclass {@link Model}. To define
+ * information about the data model, override static class methods. Define instance
+ * logic by defining prototype methods (without `static` keyword).
+ */
+const Model = class Model {
+    /**
+     * Creates a Model instance from it&#039;s properties.
+     * Don&#039;t use this to create a new record; Use the static method {@link Model#create}.
+     * @param  {Object} props - the properties to instantiate with
+     */
+    constructor(props) {
+        this._initFields(props);
+    }
+
+    _initFields(props) {
+        this._fields = Object.assign({}, props);
+
+        const ThisModel = this.getClass();
+
+        forOwn(props, (fieldValue, fieldName) =&gt; {
+            // In this case, we got a prop that wasn&#039;t defined as a field.
+            // Assuming it&#039;s an arbitrary data field, making an instance-specific
+            // descriptor for it.
+            // Using the in operator as the property could be defined anywhere
+            // on the prototype chain.
+            if (!(fieldName in this)) {
+                Object.defineProperty(this, fieldName, {
+                    get: () =&gt; this._fields[fieldName],
+                    set: value =&gt; this.set(fieldName, value),
+                    configurable: true,
+                    enumerable: true,
+                });
+            }
+        });
+    }
+
+    static toString() {
+        return `ModelClass: ${this.modelName}`;
+    }
+
+    /**
+     * Returns the options object passed to the database for the table that represents
+     * this Model class.
+     *
+     * Returns an empty object by default, which means the database
+     * will use default options. You can either override this function to return the options
+     * you want to use, or assign the options object as a static property of the same name to the
+     * Model class.
+     *
+     * @return {Object} the options object passed to the database for the table
+     *                  representing this Model class.
+     */
+    static options() {
+        return {};
+    }
+
+    static _getTableOpts() {
+        if (typeof this.options === &#039;function&#039;) {
+            return this.options();
+        }
+        return this.options;
+    }
+
+    static get _sessionData() {
+        if (!this.session) return {};
+        return this.session.getDataForModel(this.modelName);
+    }
+
+    static markAccessed() {
+        this.session.markAccessed(this);
+    }
+
+    /**
+     * Returns the id attribute of this {@link Model}.
+     *
+     * @return {string} The id attribute of this {@link Model}.
+     */
+    static get idAttribute() {
+        return this.session.db.describe(this.modelName).idAttribute;
+    }
+
+    /**
+     * Connect the model class to a {@link Session}.
+     *
+     * @private
+     * @param  {Session} session - The session to connect to.
+     */
+    static connect(session) {
+        if (!session instanceof Session) {
+            throw Error(&#039;A model can only connect to a Session instance.&#039;);
+        }
+        this._session = session;
+    }
+
+    /**
+     * Get the current {@link Session} instance.
+     *
+     * @private
+     * @return {Session} The current {@link Session} instance.
+     */
+    static get session() {
+        return this._session;
+    }
+
+    static getQuerySet() {
+        const QuerySetClass = this.querySetClass;
+        return new QuerySetClass(this);
+    }
+
+    static invalidateClassCache() {
+        this.isSetUp = undefined;
+        this.virtualFields = {};
+    }
+
+    static get query() {
+        return this.getQuerySet();
+    }
+
+    /**
+     * Returns a {@link QuerySet} containing all {@link Model} instances.
+     * @return {QuerySet} a QuerySet containing all {@link Model} instances
+     */
+    static all() {
+        return this.getQuerySet();
+    }
+
+    /**
+     * Creates a new record in the database, instantiates a {@link Model} and returns it.
+     *
+     * If you pass values for many-to-many fields, instances are created on the through
+     * model as well.
+     *
+     * @param  {props} props - the new {@link Model}&#039;s properties.
+     * @return {Model} a new {@link Model} instance.
+     */
+    static create(userProps) {
+        const props = Object.assign({}, userProps);
+
+        const m2mVals = {};
+
+        const declaredFieldNames = Object.keys(this.fields);
+
+        declaredFieldNames.forEach(key =&gt; {
+            const field = this.fields[key];
+            const valuePassed = userProps.hasOwnProperty(key);
+            if (!valuePassed &amp;&amp; !(field instanceof ManyToMany)) {
+                if (field.getDefault) {
+                    props[key] = field.getDefault();
+                }
+            } else {
+                const value = userProps[key];
+                props[key] = normalizeEntity(value);
+
+                // If a value is supplied for a ManyToMany field,
+                // discard them from props and save for later processing.
+                if (isArray(value)) {
+                    if (this.fields.hasOwnProperty(key) &amp;&amp; this.fields[key] instanceof ManyToMany) {
+                        m2mVals[key] = value;
+                        delete props[key];
+                    }
+                }
+            }
+        });
+
+        const newEntry = this.session.applyUpdate({
+            action: CREATE,
+            table: this.modelName,
+            payload: props,
+        });
+
+        const ModelClass = this;
+        const instance = new ModelClass(newEntry);
+
+        forOwn(m2mVals, (value, key) =&gt; {
+            const ids = value.map(normalizeEntity);
+            const uniqueIds = uniq(ids);
+
+            if (ids.length !== uniqueIds.length) {
+                const idsString = ids;
+                throw new Error(`Found duplicate id(s) when passing &quot;${idsString}&quot; to ${this.modelName}.${key} value on create`);
+            }
+            instance[key].add(...ids);
+        });
+
+        return instance;
+    }
+
+    /**
+     * Returns a {@link Model} instance for the object with id `id`.
+     * This throws if the `id` doesn&#039;t exist. Use {@link Model#hasId}
+     * to check for existence first if you&#039;re not certain.
+     *
+     * @param  {*} id - the `id` of the object to get
+     * @throws If object with id `id` doesn&#039;t exist
+     * @return {Model} {@link Model} instance with id `id`
+     */
+    static withId(id) {
+        const ModelClass = this;
+        const rows = this._findDatabaseRows({ [ModelClass.idAttribute]: id });
+        if (rows.length === 0) {
+            throw new Error(`${ModelClass.modelName} instance with id ${id} not found`);
+        }
+
+        return new ModelClass(rows[0]);
+    }
+
+    /**
+     * Returns a boolean indicating if an entity with the id `id` exists
+     * in the state.
+     *
+     * @param  {*}  id - a value corresponding to the id attribute of the {@link Model} class.
+     * @return {Boolean} a boolean indicating if entity with `id` exists in the state
+     */
+    static hasId(id) {
+        const rows = this._findDatabaseRows({ [this.idAttribute]: id });
+        return rows.length === 1;
+    }
+
+    static _findDatabaseRows(lookupObj) {
+        const ModelClass = this;
+        return ModelClass
+            .session
+            .query({
+                table: ModelClass.modelName,
+                clauses: [
+                    {
+                        type: FILTER,
+                        payload: lookupObj,
+                    },
+                ],
+            }).rows;
+    }
+
+    /**
+     * Gets the {@link Model} instance that matches properties in `lookupObj`.
+     * Throws an error if {@link Model} is not found, or multiple records match
+     * the properties.
+     *
+     * @param  {Object} lookupObj - the properties used to match a single entity.
+     * @return {Model} a {@link Model} instance that matches `lookupObj` properties.
+     */
+    static get(lookupObj) {
+        const ModelClass = this;
+
+        const rows = this._findDatabaseRows(lookupObj);
+
+        if (rows.length === 0) {
+            throw new Error(&#039;Model instance not found when calling get method&#039;);
+        } else if (rows.length &gt; 1) {
+            throw new Error(`Expected to find a single row in Model.get. Found ${rows.length}.`);
+        }
+
+        return new ModelClass(rows[0]);
+    }
+
+    /**
+     * Gets the {@link Model} class or subclass constructor (the class that
+     * instantiated this instance).
+     *
+     * @return {Model} The {@link Model} class or subclass constructor used to instantiate
+     *                 this instance.
+     */
+    getClass() {
+        return this.constructor;
+    }
+
+    /**
+     * Gets the id value of the current instance by looking up the id attribute.
+     * @return {*} The id value of the current instance.
+     */
+    getId() {
+        return this._fields[this.getClass().idAttribute];
+    }
+
+    /**
+     * Returns a reference to the plain JS object in the store.
+     * Make sure to not mutate this.
+     *
+     * @return {Object} a reference to the plain JS object in the store
+     */
+    get ref() {
+        const ModelClass = this.getClass();
+        return ModelClass._findDatabaseRows({
+            [ModelClass.idAttribute]: this.getId(),
+        })[0];
+    }
+
+    /**
+     * Returns a string representation of the {@link Model} instance.
+     *
+     * @return {string} A string representation of this {@link Model} instance.
+     */
+    toString() {
+        const ThisModel = this.getClass();
+        const className = ThisModel.modelName;
+        const fieldNames = Object.keys(ThisModel.fields);
+        const fields = fieldNames.map(fieldName =&gt; {
+            const field = ThisModel.fields[fieldName];
+            if (field instanceof ManyToMany) {
+                const ids = this[fieldName].toModelArray().map(
+                    model =&gt; model.getId()
+                );
+                return `${fieldName}: [${ids.join(&#039;, &#039;)}]`;
+            }
+            const val = this._fields[fieldName];
+            return `${fieldName}: ${val}`;
+        }).join(&#039;, &#039;);
+        return `${className}: {${fields}}`;
+    }
+
+    /**
+     * Returns a boolean indicating if `otherModel` equals this {@link Model} instance.
+     * Equality is determined by shallow comparing their attributes.
+     *
+     * @param  {Model} otherModel - a {@link Model} instance to compare
+     * @return {Boolean} a boolean indicating if the {@link Model} instance&#039;s are equal.
+     */
+    equals(otherModel) {
+        return objectShallowEquals(this._fields, otherModel._fields);
+    }
+
+    /**
+     * Updates a property name to given value for this {@link Model} instance.
+     * The values are immediately committed to the database.
+     *
+     * @param {string} propertyName - name of the property to set
+     * @param {*} value - value assigned to the property
+     * @return {undefined}
+     */
+    set(propertyName, value) {
+        this.update({ [propertyName]: value });
+    }
+
+    /**
+     * Assigns multiple fields and corresponding values to this {@link Model} instance.
+     * The updates are immediately committed to the database.
+     *
+     * @param  {Object} userMergeObj - an object that will be merged with this instance.
+     * @return {undefined}
+     */
+    update(userMergeObj) {
+        const ThisModel = this.getClass();
+        const relFields = ThisModel.fields;
+        const mergeObj = Object.assign({}, userMergeObj);
+
+        // If an array of entities or id&#039;s is supplied for a
+        // many-to-many related field, clear the old relations
+        // and add the new ones.
+        for (const mergeKey in mergeObj) { // eslint-disable-line no-restricted-syntax
+            if (relFields.hasOwnProperty(mergeKey)) {
+                const field = relFields[mergeKey];
+                if (field) {
+                    if (field instanceof ManyToMany) {
+                        const currentIds = this[mergeKey].toRefArray()
+                            .map(row =&gt; row[ThisModel.idAttribute]);
+
+                        const normalizedNewIds = mergeObj[mergeKey].map(normalizeEntity);
+                        const diffActions = arrayDiffActions(currentIds, normalizedNewIds);
+                        if (diffActions) {
+                            const idsToDelete = diffActions.delete;
+                            const idsToAdd = diffActions.add;
+                            if (idsToDelete.length &gt; 0) {
+                                this[mergeKey].remove(...idsToDelete);
+                            }
+                            if (idsToAdd.length &gt; 0) {
+                                this[mergeKey].add(...idsToAdd);
+                            }
+                        }
+                        delete mergeObj[mergeKey];
+                    } else if (field instanceof ForeignKey || field instanceof OneToOne) {
+                        mergeObj[mergeKey] = normalizeEntity(mergeObj[mergeKey]);
+                    }
+                }
+            }
+        }
+
+        this._initFields(Object.assign({}, this._fields, mergeObj));
+
+        ThisModel.session.applyUpdate({
+            action: UPDATE,
+            query: getByIdQuery(this),
+            payload: mergeObj,
+        });
+    }
+
+
+    /**
+     * Updates {@link Model} instance attributes to reflect the
+     * database state in the current session.
+     * @return {undefined}
+     */
+    refreshFromState() {
+        this._initFields(this.ref);
+    }
+
+    /**
+     * Deletes the record for this {@link Model} instance.
+     * You&#039;ll still be able to access fields and values on the instance.
+     *
+     * @return {undefined}
+     */
+    delete() {
+        this._onDelete();
+        this.getClass().session.applyUpdate({
+            action: DELETE,
+            query: getByIdQuery(this),
+        });
+    }
+
+    _onDelete() {
+        const virtualFields = this.getClass().virtualFields;
+        for (const key in virtualFields) { // eslint-disable-line
+            const field = virtualFields[key];
+            if (field instanceof ManyToMany) {
+                // Delete any many-to-many rows the entity is included in.
+                this[key].clear();
+            } else if (field instanceof ForeignKey) {
+                const relatedQs = this[key];
+                if (relatedQs.exists()) {
+                    relatedQs.update({ [field.relatedName]: null });
+                }
+            } else if (field instanceof OneToOne) {
+                // Set null to any foreign keys or one to ones pointed to
+                // this instance.
+                if (this[key] !== null) {
+                    this[key][field.relatedName] = null;
+                }
+            }
+        }
+    }
+
+    // DEPRECATED AND REMOVED METHODS
+
+    getNextState() {
+        throw new Error(
+            &#039;Model.prototype.getNextState is removed. See the 0.9 &#039; +
+            &#039;migration guide on the GitHub repo.&#039;
+        );
+    }
+};
+
+Model.fields = {
+    id: attr(),
+};
+Model.virtualFields = {};
+Model.querySetClass = QuerySet;
+
+export default Model;</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

@@ -3,9 +3,14 @@ import { Paper, Tabs, Tab } from 'material-ui';
 import { Row, Column } from 'react-foundation';
 import  ButtonLoader from 'components/ButtonLoader';
 import { Field, reduxForm } from 'redux-form';
-import { RenderSelectField, RenderTextField, RenderSliderField } from 'components/Field';
-import { Link } from 'react-router';
-import {browserHistory} from 'react-router';
+import { Link, browserHistory } from 'react-router';
+import { MdSave as SaveIcon } from 'react-icons/lib/md';
+import muiThemeable from 'material-ui/styles/muiThemeable';
+import {
+  RenderSelectField,
+  RenderTextField,
+  RenderSliderField
+} from 'components/Field';
 import css from './ProfileView.scss';
 
 export const ProfileView = (props) => {
@@ -16,6 +21,8 @@ export const ProfileView = (props) => {
   //   this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "loading"])
   // );
   const redirectSettings = () => browserHistory.push('/settings');
+
+  const textColor = props.muiTheme.palette.textColor;
 
   return (
     <Column small={7} centerOnSmall={true}>
@@ -36,17 +43,18 @@ export const ProfileView = (props) => {
                   name="lastName"
                   component={RenderTextField}
                   label="Last Name" />
-                <Field
-                  name="points"
-                  component={RenderTextField}
-                  label="Points" />
-                <ButtonLoader
-                  type="submit"
-                  onClick={props.updateProfile}
-                  className='update-profile-submit'
-                  disabled={disabled}
-                  primary={true}>
-                </ButtonLoader>
+                <div className={css.buttons}>
+                  <ButtonLoader
+                    type="submit"
+                    label="Save"
+                    labelStyle={{ color: textColor, paddingRight: '5px' }}
+                    onClick={props.updateProfile}
+                    icon={<SaveIcon style={{ marginTop: '-10px', color: textColor }} />}
+                    className='update-profile-submit'
+                    disabled={disabled}
+                    primary={true}>
+                  </ButtonLoader>
+                </div>
               </form>
             </Tab>
             <Tab
@@ -61,5 +69,5 @@ export const ProfileView = (props) => {
     </Column>
   );
 };
-const updateProfileForm = reduxForm({ form: 'updateProfileForm' })(ProfileView);
+const updateProfileForm = reduxForm({ form: 'updateProfileForm' })(muiThemeable()(ProfileView));
 export default updateProfileForm;

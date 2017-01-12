@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/redux-orm/descriptors.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/redux-orm/descriptors.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">68.37</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">202</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">42.46</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.35</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import difference from &#039;lodash/difference&#039;;
+import {
+    normalizeEntity,
+    includes,
+} from &#039;./utils&#039;;
+
+
+function attrDescriptor(fieldName) {
+    return {
+        get() {
+            return this._fields[fieldName];
+        },
+
+        set(value) {
+            return this.set(fieldName, value);
+        },
+
+        enumerable: true,
+        configurable: true,
+    };
+}
+
+// Forwards side a Foreign Key: returns one object.
+// Also works as forwardsOneToOneDescriptor.
+function forwardManyToOneDescriptor(fieldName, declaredToModelName) {
+    return {
+        get() {
+            const currentSession = this.getClass().session;
+            const declaredToModel = currentSession[declaredToModelName];
+            const toId = this._fields[fieldName];
+            if (typeof toId !== &#039;undefined&#039; &amp;&amp; toId !== null) {
+                return declaredToModel.withId(toId);
+            }
+            return undefined;
+        },
+        set(value) {
+            const currentSession = this.getClass().session;
+            const declaredToModel = currentSession[declaredToModelName];
+
+            let toId;
+            if (value instanceof declaredToModel) {
+                toId = value.getId();
+            } else {
+                toId = value;
+            }
+
+            this.update({ [fieldName]: toId });
+        },
+    };
+}
+
+const forwardOneToOneDescriptor = forwardManyToOneDescriptor;
+
+function backwardOneToOneDescriptor(declaredFieldName, declaredFromModelName) {
+    return {
+        get() {
+            const currentSession = this.getClass().session;
+            const declaredFromModel = currentSession[declaredFromModelName];
+            const thisId = this.getId();
+            let found;
+            try {
+                found = declaredFromModel.get({ [declaredFieldName]: thisId });
+            } catch (e) {
+                return null;
+            }
+            return found;
+        },
+        set() {
+            throw new Error(&#039;Can\&#039;t mutate a reverse one-to-one relation.&#039;);
+        },
+    };
+}
+
+// Reverse side of a Foreign Key: returns many objects.
+function backwardManyToOneDescriptor(declaredFieldName, declaredFromModelName) {
+    return {
+        get() {
+            const currentSession = this.getClass().session;
+            const declaredFromModel = currentSession[declaredFromModelName];
+            const thisId = this.getId();
+            return declaredFromModel.filter({ [declaredFieldName]: thisId });
+        },
+        set() {
+            throw new Error(&#039;Can\&#039;t mutate a reverse many-to-one relation.&#039;);
+        },
+    };
+}
+
+// Both sides of Many to Many, use the reverse flag.
+function manyToManyDescriptor(
+    declaredFromModelName,
+    declaredToModelName,
+    throughModelName,
+    throughFields,
+    reverse) {
+    return {
+        get() {
+            const currentSession = this.getClass().session;
+            const declaredFromModel = currentSession[declaredFromModelName];
+            const declaredToModel = currentSession[declaredToModelName];
+            const throughModel = currentSession[throughModelName];
+            const thisId = this.getId();
+
+            const fromFieldName = throughFields.from;
+            const toFieldName = throughFields.to;
+
+            const lookupObj = {};
+            if (!reverse) {
+                lookupObj[fromFieldName] = thisId;
+            } else {
+                lookupObj[toFieldName] = thisId;
+            }
+
+            const throughQs = throughModel.filter(lookupObj);
+            const toIds = throughQs.toRefArray().map(obj =&gt; obj[reverse ? fromFieldName : toFieldName]);
+
+            const qsFromModel = reverse ? declaredFromModel : declaredToModel;
+            const qs = qsFromModel.filter(attrs =&gt;
+                includes(toIds, attrs[qsFromModel.idAttribute])
+            );
+
+            qs.add = function add(...args) {
+                const idsToAdd = args.map(normalizeEntity);
+
+                const filterWithAttr = reverse ? fromFieldName : toFieldName;
+
+                const existingQs = throughQs.filter(through =&gt; includes(idsToAdd, through[filterWithAttr]));
+
+                if (existingQs.exists()) {
+                    const existingIds = existingQs
+                        .toRefArray()
+                        .map(through =&gt; through[filterWithAttr]);
+
+                    const toAddModel = reverse
+                        ? declaredFromModel.modelName
+                        : declaredToModel.modelName;
+
+                    const addFromModel = reverse
+                        ? declaredToModel.modelName
+                        : declaredFromModel.modelName;
+                    throw new Error(`Tried to add already existing ${toAddModel} id(s) ${existingIds} to the ${addFromModel} instance with id ${thisId}`);
+                }
+
+                idsToAdd.forEach(id =&gt; {
+                    throughModel.create({
+                        [fromFieldName]: thisId,
+                        [toFieldName]: id,
+                    });
+                });
+            };
+
+            qs.clear = function clear() {
+                throughQs.delete();
+            };
+
+            qs.remove = function remove(...entities) {
+                const idsToRemove = entities.map(normalizeEntity);
+
+                const attrInIdsToRemove = reverse ? fromFieldName : toFieldName;
+                const entitiesToDelete = throughQs.filter(
+                    through =&gt; includes(idsToRemove, through[attrInIdsToRemove])
+                );
+
+                if (entitiesToDelete.count() !== idsToRemove.length) {
+                    // Tried deleting non-existing entities.
+                    const entitiesToDeleteIds = entitiesToDelete
+                        .toRefArray()
+                        .map(through =&gt; through[attrInIdsToRemove]);
+
+                    const unexistingIds = difference(idsToRemove, entitiesToDeleteIds);
+
+                    const toDeleteModel = reverse
+                        ? declaredFromModel.modelName
+                        : declaredToModel.modelName;
+
+                    const deleteFromModel = reverse
+                        ? declaredToModel.modelName
+                        : declaredFromModel.modelName;
+
+                    throw new Error(`Tried to delete non-existing ${toDeleteModel} id(s) ${unexistingIds} from the ${deleteFromModel} instance with id ${thisId}`);
+                }
+
+                entitiesToDelete.delete();
+            };
+
+            return qs;
+        },
+
+        set() {
+            throw new Error(&#039;Tried setting a M2M field. Please use the related QuerySet methods add and remove.&#039;);
+        },
+    };
+}
+
+export {
+    attrDescriptor,
+    forwardManyToOneDescriptor,
+    forwardOneToOneDescriptor,
+    backwardOneToOneDescriptor,
+    backwardManyToOneDescriptor,
+    manyToManyDescriptor,
+};</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

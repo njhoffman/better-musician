@@ -1,5 +1,5 @@
-import React, { PropTypes } from "react";
-import ActionExitToApp from "material-ui/svg-icons/action/exit-to-app";
+import React, { PropTypes } from 'react';
+import { MdExitToApp } from 'react-icons/lib/md/'
 import { Field, reduxForm } from 'redux-form';
 import { connect } from "react-redux";
 import muiThemeable from 'material-ui/styles/muiThemeable';
@@ -82,7 +82,7 @@ class EmailSignInForm extends React.Component {
         <ButtonLoader
           loading={this.props.auth.getIn(["emailSignIn", "loading"])}
           type="submit"
-          icon={ActionExitToApp}
+          icon={MdExitToApp}
           className='email-sign-in-submit'
           disabled={disabled}
           onClick={this.handleSubmit.bind(this)}

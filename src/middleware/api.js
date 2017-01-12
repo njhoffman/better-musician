@@ -8,10 +8,19 @@ export const CALL_API = Symbol('Call API')
 
 // Fetches an API response and normalizes the result JSON according to schema.
 // This makes every API response have the same shape, regardless of how nested it was.
-const apiFetch = (endpoint, schema) => {
+const apiFetch = (endpoint, options) => {
 
   endpoint = 'http://localhost:3000/api' + endpoint;
-  return fetch(endpoint)
+  if (options.body) {
+    let formData = new FormData();
+    Object.keys(options.body).forEach(key => {
+      formData.set(key, options.body[key]);
+    });
+    options.body = formData;
+    debugger;
+  }
+  console.info("Fetching: " + endpoint, options);
+  return fetch(endpoint, options)
     .then(response =>
         response.json()
         .then(json => {
@@ -29,8 +38,8 @@ export default (store) => next => action => {
 		return next(action);
 	}
 
-  let { endpoint } = callAPI;
-  const { types } = callAPI;
+  let { endpoint, method = 'GET' } = callAPI;
+  const { types, payload } = callAPI;
 
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState());
@@ -76,8 +85,11 @@ export default (store) => next => action => {
         error: error.message || 'Something bad happened'
       }))
 
-  console.info("Fetching: " + endpoint);
-  return apiFetch(endpoint)
+  const options = {
+    method,
+    body: payload
+  }
+  return apiFetch(endpoint, options)
     .then(responseSuccess, responseFailure);
 };
 

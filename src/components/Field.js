@@ -31,14 +31,14 @@ const RenderTextField = ({
   viewType,
   values,
   label,
-  children,
   meta: { touched, error },
   ...custom }) => {
     return (
       <div>
         <TextField
           floatingLabelText={label}
-          value={values}
+          defaultValue={values}
+          inputStyle={{ boxShadow: 'none' }}
           errorText={touched && error}
           {...custom}
         />
@@ -77,4 +77,37 @@ const RenderStars = ({ number, starColor }) => (
   </div>
 );
 
-export { RenderSelectField, RenderTextField, RenderSliderField, RenderStars };
+const RenderNumberField = ({
+  viewType,
+  values,
+  label,
+  meta: { touched, error },
+  ...custom }) => {
+    return (
+      <div>
+        <TextField
+          type='number'
+          floatingLabelText={label}
+          style={{ width: "125px", textAlign: 'center' }}
+          inputStyle={{ textAlign: 'center', boxShadow: 'none' }}
+          min={0}
+          defaultValue={values}
+          errorText={touched && error}
+          {...custom}
+        />
+      </div>
+    );
+  };
+
+
+const RenderCheckbox = ({
+  meta: { touched, error },
+  ...custom}) => (
+    <div>
+      <Checkbox
+        {...custom}
+      />
+    </div>
+);
+
+export { RenderSelectField, RenderTextField, RenderSliderField, RenderStars, RenderNumberField, RenderCheckbox };

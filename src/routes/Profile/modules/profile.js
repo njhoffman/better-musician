@@ -1,15 +1,27 @@
+import { CALL_API, Schemas } from 'middleware/api';
+
 // ------------------------------------
 // Constants
 // ------------------------------------
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
+export const PROFILE_SUCCESS = 'PROFILE_SUCCESS';
+export const PROFILE_FAILURE = 'PROFILE_FAILURE';
 
 // ------------------------------------
 // Actions Creators
 // ------------------------------------
 
 export const updateProfile = (values) => (dispatch, getState) => {
+  const nextPageUrl = `/users/update`;
   const fieldValues = getState().form.updateProfileForm.values;
-  return dispatch({ type: UPDATE_PROFILE, payload: { ...fieldValues } });
+  return dispatch({
+    [CALL_API]: {
+      types: [ UPDATE_PROFILE, PROFILE_SUCCESS, PROFILE_FAILURE ],
+      method: 'POST',
+      endpoint: nextPageUrl,
+      payload: { ...fieldValues }
+    }
+  });
 };
 
 export const actions = {
@@ -20,6 +32,14 @@ export const actions = {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
+  [PROFILE_SUCCESS]: (state, action) => {
+    debugger;
+    return state;
+  },
+  [PROFILE_FAILURE]: (state, action) => {
+    debugger;
+    return state;
+  }
 };
 
 // ------------------------------------

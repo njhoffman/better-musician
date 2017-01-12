@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/redux-orm/test/testSession.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/redux-orm/test/testSession.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">64.79</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">122</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">30.63</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.40</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import chai from &#039;chai&#039;;
+import sinon from &#039;sinon&#039;;
+import sinonChai from &#039;sinon-chai&#039;;
+
+import {
+    ORM,
+} from &#039;../&#039;;
+import {
+    createTestModels,
+    isSubclass,
+} from &#039;./utils&#039;;
+import { CREATE } from &#039;../constants&#039;;
+
+chai.use(sinonChai);
+const { expect } = chai;
+
+describe(&#039;Session&#039;, () =&gt; {
+    let orm;
+    let Book;
+    let Cover;
+    let Genre;
+    let Author;
+    let Publisher;
+    let emptyState;
+    beforeEach(() =&gt; {
+        ({
+            Book,
+            Cover,
+            Genre,
+            Author,
+            Publisher,
+        } = createTestModels());
+        orm = new ORM();
+        orm.register(Book, Cover, Genre, Author, Publisher);
+        emptyState = orm.getEmptyState();
+    });
+
+    it(&#039;connects models&#039;, () =&gt; {
+        expect(Book.session).to.be.undefined;
+        expect(Cover.session).to.be.undefined;
+        expect(Genre.session).to.be.undefined;
+        expect(Cover.session).to.be.undefined;
+        expect(Publisher.session).to.be.undefined;
+
+        const session = orm.session(emptyState);
+
+        expect(session.Book.session).to.equal(session);
+        expect(session.Cover.session).to.equal(session);
+        expect(session.Genre.session).to.equal(session);
+        expect(session.Cover.session).to.equal(session);
+        expect(session.Publisher.session).to.equal(session);
+    });
+
+    it(&#039;exposes models as getter properties&#039;, () =&gt; {
+        const session = orm.session(emptyState);
+        expect(isSubclass(session.Book, Book)).to.be.true;
+        expect(isSubclass(session.Author, Author)).to.be.true;
+        expect(isSubclass(session.Cover, Cover)).to.be.true;
+        expect(isSubclass(session.Genre, Genre)).to.be.true;
+        expect(isSubclass(session.Publisher, Publisher)).to.be.true;
+    });
+
+    it(&#039;marks accessed models&#039;, () =&gt; {
+        const session = orm.session(emptyState);
+        expect(session.accessedModels).to.have.length(0);
+
+        session.markAccessed(Book.modelName);
+        expect(session.accessedModels).to.have.length(1);
+        expect(session.accessedModels[0]).to.equal(&#039;Book&#039;);
+
+        session.markAccessed(Book.modelName);
+
+        expect(session.accessedModels[0]).to.equal(&#039;Book&#039;);
+    });
+
+    describe(&#039;gets the next state&#039;, () =&gt; {
+        it(&#039;without any updates, the same state is returned&#039;, () =&gt; {
+            const session = orm.session(emptyState);
+            expect(session.state).to.equal(emptyState);
+        });
+
+        it(&#039;with updates, a new state is returned&#039;, () =&gt; {
+            const session = orm.session(emptyState);
+
+            session.applyUpdate({
+                table: Author.modelName,
+                action: CREATE,
+                payload: {
+                    id: 0,
+                    name: &#039;Caesar&#039;,
+                },
+            });
+
+            const nextState = session.state;
+
+            expect(nextState).to.not.equal(emptyState);
+
+            expect(nextState[Author.modelName]).to.not.equal(emptyState[Author.modelName]);
+
+            // All other model states should stay equal.
+            expect(nextState[Book.modelName]).to.equal(emptyState[Book.modelName]);
+            expect(nextState[Cover.modelName]).to.equal(emptyState[Cover.modelName]);
+            expect(nextState[Genre.modelName]).to.equal(emptyState[Genre.modelName]);
+            expect(nextState[Publisher.modelName]).to.equal(emptyState[Publisher.modelName]);
+        });
+    });
+
+    it(&#039;two concurrent sessions&#039;, () =&gt; {
+        const otherState = orm.getEmptyState();
+
+        const firstSession = orm.session(emptyState);
+        const secondSession = orm.session(otherState);
+
+        expect(firstSession.sessionBoundModels).to.have.lengthOf(6);
+
+        expect(firstSession.Book).not.to.equal(secondSession.Book);
+        expect(firstSession.Author).not.to.equal(secondSession.Author);
+        expect(firstSession.Genre).not.to.equal(secondSession.Genre);
+        expect(firstSession.Cover).not.to.equal(secondSession.Cover);
+        expect(firstSession.Publisher).not.to.equal(secondSession.Publisher);
+    });
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Row, Column} from 'react-foundation';
 import { Paper } from 'material-ui';
+import SongsPagination from './SongsPaginationContainer';
 import SongsList from './SongsListContainer';
 import ModalBase from './Modal';
 import muiThemeable from 'material-ui/styles/muiThemeable';
@@ -15,6 +16,7 @@ export const SongsView = (props) => (
       <Paper zDepth={5}>
         <div className={css.songsContainer}>
           <SongsList />
+          <SongsPagination />
           <ModalBase />
         </div>
       </Paper>

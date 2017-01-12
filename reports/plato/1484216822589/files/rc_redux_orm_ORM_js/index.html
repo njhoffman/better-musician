@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/redux-orm/ORM.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/redux-orm/ORM.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">77.09</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">268</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">48.99</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.52</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import forOwn from &#039;lodash/forOwn&#039;;
+import find from &#039;lodash/find&#039;;
+
+import Session from &#039;./Session&#039;;
+import Model from &#039;./Model&#039;;
+import { createDatabase as defaultCreateDatabase } from &#039;./db&#039;;
+import {
+    ForeignKey,
+    ManyToMany,
+    attr,
+} from &#039;./fields&#039;;
+
+import {
+    createReducer,
+    createSelector,
+} from &#039;./redux&#039;;
+
+import {
+    m2mName,
+    attachQuerySetMethods,
+    m2mToFieldName,
+    m2mFromFieldName,
+    warnDeprecated,
+} from &#039;./utils&#039;;
+
+const ORM_DEFAULTS = {
+    createDatabase: defaultCreateDatabase,
+};
+
+/**
+ * ORM - the Object Relational Mapper.
+ *
+ * Use instances of this class to:
+ *
+ * - Register your {@link Model} classes using {@link ORM#register}
+ * - Get the empty state for the underlying database with {@link ORM#getEmptyState}
+ * - Start an immutable database session with {@link ORM#session}
+ * - Start a mutating database session with {@link ORM#mutableSession}
+ *
+ * Internally, this class handles generating a schema specification from models
+ * to the database.
+ */
+export const ORM = class ORM {
+    /**
+     * Creates a new ORM instance.
+     */
+    constructor(opts) {
+        const { createDatabase } = Object.assign({}, ORM_DEFAULTS, (opts || {}));
+        this.createDatabase = createDatabase;
+        this.registry = [];
+        this.implicitThroughModels = [];
+        this.installedFields = {};
+    }
+
+    /**
+     * Registers a {@link Model} class to the ORM.
+     *
+     * If the model has declared any ManyToMany fields, their
+     * through models will be generated and registered with
+     * this call, unless a custom through model has been specified.
+     *
+     * @param  {...Model} model - a {@link Model} class to register
+     * @return {undefined}
+     */
+    register(...models) {
+        models.forEach(model =&gt; {
+            model.invalidateClassCache();
+
+            this.registerManyToManyModelsFor(model);
+            this.registry.push(model);
+        });
+        this.db = this.createDatabase(this.generateSchemaSpec());
+    }
+
+    registerManyToManyModelsFor(model) {
+        const fields = model.fields;
+        const thisModelName = model.modelName;
+
+        forOwn(fields, (fieldInstance, fieldName) =&gt; {
+            if (fieldInstance instanceof ManyToMany &amp;&amp; !fieldInstance.through) {
+                let toModelName;
+                if (fieldInstance.toModelName === &#039;this&#039;) {
+                    toModelName = thisModelName;
+                } else {
+                    toModelName = fieldInstance.toModelName;
+                }
+
+                const fromFieldName = m2mFromFieldName(thisModelName);
+                const toFieldName = m2mToFieldName(toModelName);
+
+                const Through = class ThroughModel extends Model {};
+
+                Through.modelName = m2mName(thisModelName, fieldName);
+
+                Through.fields = {
+                    id: attr(),
+                    [fromFieldName]: new ForeignKey(thisModelName),
+                    [toFieldName]: new ForeignKey(toModelName),
+                };
+
+                Through.invalidateClassCache();
+                this.implicitThroughModels.push(Through);
+            }
+        });
+    }
+
+    /**
+     * Gets a {@link Model} class by its name from the registry.
+     * @param  {string} modelName - the name of the {@link Model} class to get
+     * @throws If {@link Model} class is not found.
+     * @return {Model} the {@link Model} class, if found
+     */
+    get(modelName) {
+        const found = find(
+            this.registry.concat(this.implicitThroughModels),
+            (model) =&gt; model.modelName === modelName
+        );
+
+        if (typeof found === &#039;undefined&#039;) {
+            throw new Error(`Did not find model ${modelName} from registry.`);
+        }
+        return found;
+    }
+
+    getModelClasses() {
+        this._setupModelPrototypes(this.registry);
+        this._setupModelPrototypes(this.implicitThroughModels);
+        return this.registry.concat(this.implicitThroughModels);
+    }
+
+    _attachQuerySetMethods(model) {
+        const { querySetClass } = model;
+        attachQuerySetMethods(model, querySetClass);
+    }
+
+    isFieldInstalled(modelName, fieldName) {
+        return this.installedFields.hasOwnProperty(modelName)
+            ? !!this.installedFields[modelName][fieldName]
+            : false;
+    }
+
+    setFieldInstalled(modelName, fieldName) {
+        if (!this.installedFields.hasOwnProperty(modelName)) {
+            this.installedFields[modelName] = {};
+        }
+        this.installedFields[modelName][fieldName] = true;
+    }
+
+    _setupModelPrototypes(models) {
+        models.forEach(model =&gt; {
+            if (!model.isSetUp) {
+                const fields = model.fields;
+                forOwn(fields, (fieldInstance, fieldName) =&gt; {
+                    if (!this.isFieldInstalled(model.modelName, fieldName)) {
+                        fieldInstance.install(model, fieldName, this);
+                        this.setFieldInstalled(model.modelName, fieldName);
+                    }
+                });
+                this._attachQuerySetMethods(model);
+                model.isSetUp = true;
+            }
+        });
+    }
+
+    generateSchemaSpec() {
+        const models = this.getModelClasses();
+        const tables = models.reduce((spec, modelClass) =&gt; {
+            const tableName = modelClass.modelName;
+            const tableSpec = modelClass._getTableOpts();
+            spec[tableName] = Object.assign({}, { fields: modelClass.fields }, tableSpec);
+            return spec;
+        }, {});
+        return { tables };
+    }
+
+    getDatabase() {
+        if (!this.db) {
+            this.db = this.createDatabase(this.generateSchemaSpec());
+        }
+        return this.db;
+    }
+
+    /**
+     * Returns the empty database state.
+     * @return {Object} the empty state
+     */
+    getEmptyState() {
+        return this.getDatabase().getEmptyState();
+    }
+
+    /**
+     * Begins an immutable database session.
+     *
+     * @param  {Object} state  - the state the database manages
+     * @return {Session} a new {@link Session} instance
+     */
+    session(state) {
+        return new Session(this, this.getDatabase(), state);
+    }
+
+    /**
+     * Begins a mutable database session.
+     *
+     * @param  {Object} state  - the state the database manages
+     * @return {Session} a new {@link Session} instance
+     */
+    mutableSession(state) {
+        return new Session(this, this.getDatabase(), state, true);
+    }
+
+    // DEPRECATED AND REMOVED METHODS
+
+    withMutations(state) {
+        warnDeprecated(
+            &#039;ORM.prototype.withMutations is deprecated. &#039; +
+            &#039;Use ORM.prototype.mutableSession instead.&#039;
+        );
+
+        return this.mutableSession(state);
+    }
+
+    from(state) {
+        warnDeprecated(
+            &#039;ORM.prototype.from function is deprecated. &#039; +
+            &#039;Use ORM.prototype.session instead.&#039;
+        );
+        return this.session(state);
+    }
+
+    reducer() {
+        warnDeprecated(
+            &#039;ORM.prototype.reducer is deprecated. Access &#039; +
+            &#039;the Session.prototype.state property instead.&#039;
+        );
+        return createReducer(this);
+    }
+
+    createSelector(...args) {
+        warnDeprecated(
+            &#039;ORM.prototype.createSelector is deprecated. &#039; +
+            &#039;Import `createSelector` from Redux-ORM instead.&#039;
+        );
+        return createSelector(this, ...args);
+    }
+
+    getDefaultState() {
+        warnDeprecated(
+            &#039;ORM.prototype.getDefaultState is deprecated. Use &#039; +
+            &#039;the ORM.prototype.getEmptyState instead.&#039;
+        );
+        return this.getEmptyState();
+    }
+
+    define() {
+        throw new Error(
+            &#039;ORM.prototype.define is removed. Please define a Model class.&#039;
+        );
+    }
+};
+
+export function DeprecatedSchema() {
+    throw new Error(
+        &#039;Schema has been renamed to ORM. Please import ORM instead of Schema &#039; +
+        &#039;from Redux-ORM.&#039;
+    );
+}
+
+export default ORM;</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

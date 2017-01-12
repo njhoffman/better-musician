@@ -22,6 +22,12 @@ class BaseModel extends Model {
 // ------------------------------------
 
 class Song extends BaseModel {
+  static getPointTotal() {
+    const songs = this.all().toModelArray();
+    return songs.reduce( (a,b) => {
+      return a + parseInt(b.progress * b.difficulty * 10)
+    }, 0);
+  }
   static reducer(action, Song, session) {
     const { payload, type } = action;
     switch (type) {
@@ -32,7 +38,9 @@ class Song extends BaseModel {
         break;
       case 'SONGS_REQUEST':
         // remove all songs when fetching
-        this.all().delete();
+        if (this.all().count() > 0) {
+          this.all().delete();
+        }
         break;
       case 'LOAD_SONGS':
         this.loadData(action.payload, Song);

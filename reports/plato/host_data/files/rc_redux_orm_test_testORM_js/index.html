@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/redux-orm/test/testORM.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/redux-orm/test/testORM.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">66.98</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">222</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">30.33</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.90</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import chai from &#039;chai&#039;;
+import sinonChai from &#039;sinon-chai&#039;;
+import sinon from &#039;sinon&#039;;
+
+import {
+    ORM,
+    Session,
+    Model,
+    oneToOne,
+    fk,
+    many,
+} from &#039;../&#039;;
+
+import { createTestModels } from &#039;./utils&#039;;
+
+chai.use(sinonChai);
+const { expect } = chai;
+
+describe(&#039;ORM&#039;, () =&gt; {
+    it(&#039;constructor works&#039;, () =&gt; {
+        new ORM(); // eslint-disable-line no-new
+    });
+
+    describe(&#039;throws on invalid model declarations&#039;, () =&gt; {
+        it(&#039;with multiple one-to-one fields to the same model without related name&#039;, () =&gt; {
+            class A extends Model {}
+            A.modelName = &#039;A&#039;;
+
+            class B extends Model {}
+            B.modelName = &#039;B&#039;;
+            B.fields = {
+                field1: oneToOne(&#039;A&#039;),
+                field2: oneToOne(&#039;A&#039;),
+            };
+            const orm = new ORM();
+            orm.register(A, B);
+            expect(() =&gt; orm.getModelClasses()).to.throw(/field/);
+        });
+
+        it(&#039;with multiple foreign keys to the same model without related name&#039;, () =&gt; {
+            class A extends Model {}
+            A.modelName = &#039;A&#039;;
+
+            class B extends Model {}
+            B.modelName = &#039;B&#039;;
+            B.fields = {
+                field1: fk(&#039;A&#039;),
+                field2: fk(&#039;A&#039;),
+            };
+            const orm = new ORM();
+            orm.register(A, B);
+            expect(() =&gt; orm.getModelClasses()).to.throw(/field/);
+        });
+
+        it(&#039;with multiple many-to-manys to the same model without related name&#039;, () =&gt; {
+            class A extends Model {}
+            A.modelName = &#039;A&#039;;
+
+            class B extends Model {}
+            B.modelName = &#039;B&#039;;
+            B.fields = {
+                field1: many(&#039;A&#039;),
+                field2: many(&#039;A&#039;),
+            };
+            const orm = new ORM();
+            orm.register(A, B);
+            expect(() =&gt; orm.getModelClasses()).to.throw(/field/);
+        });
+    });
+
+    describe(&#039;simple orm&#039;, () =&gt; {
+        let orm;
+        let Book;
+        let Author;
+        let Cover;
+        let Genre;
+        let Publisher;
+        beforeEach(() =&gt; {
+            ({
+                Book,
+                Author,
+                Cover,
+                Genre,
+                Publisher,
+            } = createTestModels());
+
+            orm = new ORM();
+        });
+
+        it(&#039;correctly registers a single model at a time&#039;, () =&gt; {
+            expect(orm.registry).to.have.length(0);
+            orm.register(Book);
+            expect(orm.registry).to.have.length(1);
+            orm.register(Author);
+            expect(orm.registry).to.have.length(2);
+        });
+
+        it(&#039;correctly registers multiple models&#039;, () =&gt; {
+            expect(orm.registry).to.have.length(0);
+            orm.register(Book, Author);
+            expect(orm.registry).to.have.length(2);
+        });
+
+        it(&#039;correctly starts session&#039;, () =&gt; {
+            const initialState = {};
+            const session = orm.session(initialState);
+            expect(session).to.be.instanceOf(Session);
+        });
+
+
+        it(&#039;correctly gets models from registry&#039;, () =&gt; {
+            orm.register(Book);
+            expect(orm.get(&#039;Book&#039;)).to.equal(Book);
+        });
+
+        it(&#039;correctly sets model prototypes&#039;, () =&gt; {
+            orm.register(Book, Author, Cover, Genre, Publisher);
+            expect(Book.isSetUp).to.not.be.ok;
+
+            let coverDescriptor = Object.getOwnPropertyDescriptor(
+                Book.prototype,
+                &#039;cover&#039;
+            );
+            expect(coverDescriptor).to.be.undefined;
+            let authorDescriptor = Object.getOwnPropertyDescriptor(
+                Book.prototype,
+                &#039;author&#039;
+            );
+            expect(authorDescriptor).to.be.undefined;
+            let genresDescriptor = Object.getOwnPropertyDescriptor(
+                Book.prototype,
+                &#039;genres&#039;
+            );
+            expect(genresDescriptor).to.be.undefined;
+
+            let publisherDescriptor = Object.getOwnPropertyDescriptor(
+                Book.prototype,
+                &#039;publisher&#039;
+            );
+            expect(publisherDescriptor).to.be.undefined;
+
+            orm._setupModelPrototypes(orm.registry);
+            orm._setupModelPrototypes(orm.implicitThroughModels);
+
+            expect(Book.isSetUp).to.be.ok;
+
+            coverDescriptor = Object.getOwnPropertyDescriptor(
+                Book.prototype,
+                &#039;cover&#039;
+            );
+            expect(coverDescriptor.get).to.be.a(&#039;function&#039;);
+            expect(coverDescriptor.set).to.be.a(&#039;function&#039;);
+
+            authorDescriptor = Object.getOwnPropertyDescriptor(
+                Book.prototype,
+                &#039;author&#039;
+            );
+            expect(authorDescriptor.get).to.be.a(&#039;function&#039;);
+            expect(authorDescriptor.set).to.be.a(&#039;function&#039;);
+
+            genresDescriptor = Object.getOwnPropertyDescriptor(
+                Book.prototype,
+                &#039;genres&#039;
+            );
+            expect(genresDescriptor.get).to.be.a(&#039;function&#039;);
+            expect(genresDescriptor.set).to.be.a(&#039;function&#039;);
+
+            publisherDescriptor = Object.getOwnPropertyDescriptor(
+                Book.prototype,
+                &#039;publisher&#039;
+            );
+            expect(publisherDescriptor.get).to.be.a(&#039;function&#039;);
+            expect(publisherDescriptor.set).to.be.a(&#039;function&#039;);
+        });
+
+        it(&#039;correctly gets the default state&#039;, () =&gt; {
+            orm.register(Book, Author, Cover, Genre, Publisher);
+            const defaultState = orm.getEmptyState();
+
+            expect(defaultState).to.deep.equal({
+                Book: {
+                    items: [],
+                    itemsById: {},
+                    meta: {},
+                },
+                BookGenres: {
+                    items: [],
+                    itemsById: {},
+                    meta: {},
+                },
+                Author: {
+                    items: [],
+                    itemsById: {},
+                    meta: {},
+                },
+                Cover: {
+                    items: [],
+                    itemsById: {},
+                    meta: {},
+                },
+                Genre: {
+                    items: [],
+                    itemsById: {},
+                    meta: {},
+                },
+                Publisher: {
+                    items: [],
+                    itemsById: {},
+                    meta: {},
+                },
+            });
+        });
+
+        it(&#039;correctly starts a mutating session&#039;, () =&gt; {
+            orm.register(Book, Author, Cover, Genre, Publisher);
+            const initialState = orm.getEmptyState();
+            const session = orm.mutableSession(initialState);
+            expect(session).to.be.an.instanceOf(Session);
+            expect(session.withMutations).to.be.true;
+        });
+    });
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

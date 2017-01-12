@@ -17,6 +17,7 @@ const SongsList = ({ songsCollection, onSongClick, onSortClick, currentSong, vie
   <Table
     selectable={true}
     onCellClick={onSongClick}
+    className={css.songsList}
   >
     <TableHeader
       displaySelectAll={false}

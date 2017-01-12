@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/redux-orm/test/testIntegrations.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/redux-orm/test/testIntegrations.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">67.27</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">395</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">56.08</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">5.16</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import { expect } from &#039;chai&#039;;
+import {
+    Model,
+    QuerySet,
+    ORM,
+    attr,
+} from &#039;../&#039;;
+import {
+    createTestSessionWithData,
+} from &#039;./utils&#039;;
+import deepFreeze from &#039;deep-freeze&#039;;
+
+describe(&#039;Integration&#039;, () =&gt; {
+    let session;
+    let orm;
+    let state;
+
+    describe(&#039;Immutable session&#039;, () =&gt; {
+        beforeEach(() =&gt; {
+            // Deep freeze state. This will raise an error if we
+            // mutate the state.
+
+            ({
+                session,
+                orm,
+                state,
+            } = createTestSessionWithData());
+
+            deepFreeze(state);
+        });
+
+        it(&#039;Initial data bootstrapping results in a correct state&#039;, () =&gt; {
+            expect(state).to.have.all.keys(
+                &#039;Book&#039;, &#039;Cover&#039;, &#039;Genre&#039;, &#039;Author&#039;, &#039;BookGenres&#039;, &#039;Publisher&#039;);
+
+            expect(state.Book.items).to.have.length(3);
+            expect(Object.keys(state.Book.itemsById)).to.have.length(3);
+
+            expect(state.Cover.items).to.have.length(3);
+            expect(Object.keys(state.Cover.itemsById)).to.have.length(3);
+
+            expect(state.Genre.items).to.have.length(4);
+            expect(Object.keys(state.Genre.itemsById)).to.have.length(4);
+
+            expect(state.BookGenres.items).to.have.length(5);
+            expect(Object.keys(state.BookGenres.itemsById)).to.have.length(5);
+
+            expect(state.Author.items).to.have.length(3);
+            expect(Object.keys(state.Author.itemsById)).to.have.length(3);
+
+            expect(state.Publisher.items).to.have.length(2);
+            expect(Object.keys(state.Publisher.itemsById)).to.have.length(2);
+        });
+
+        it(&#039;Models correctly indicate if id exists&#039;, () =&gt; {
+            const { Book } = session;
+            expect(Book.hasId(0)).to.be.true;
+            expect(Book.hasId(92384)).to.be.false;
+            expect(Book.hasId()).to.be.false;
+        });
+
+        it(&#039;Models correctly create new instances&#039;, () =&gt; {
+            const { Book } = session;
+            const book = Book.create({
+                name: &#039;New Book&#039;,
+                author: 0,
+                releaseYear: 2015,
+                publisher: 0,
+            });
+            expect(session.Book.count()).to.equal(4);
+            expect(session.Book.last().ref).to.equal(book.ref);
+        });
+
+        it(&#039;Model.getId works&#039;, () =&gt; {
+            const { Book } = session;
+            expect(Book.withId(0).getId()).to.equal(0);
+            expect(Book.withId(1).getId()).to.equal(1);
+        });
+
+        it(&#039;Model.create throws if passing duplicate ids to many-to-many field&#039;, () =&gt; {
+            const { Book } = session;
+
+            const newProps = {
+                name: &#039;New Book&#039;,
+                author: 0,
+                releaseYear: 2015,
+                genres: [0, 0],
+                publisher: 0,
+            };
+
+            expect(() =&gt; Book.create(newProps)).to.throw(&#039;Book.genres&#039;);
+        });
+
+        it(&#039;Models are correctly deleted&#039;, () =&gt; {
+            const { Book } = session;
+            expect(Book.count()).to.equal(3);
+            Book.withId(0).delete();
+            expect(session.Book.count()).to.equal(2);
+            expect(session.Book.hasId(0)).to.be.false;
+        });
+
+        it(&#039;Models correctly update when setting properties&#039;, () =&gt; {
+            const { Book } = session;
+            const book = Book.first();
+            const newName = &#039;New Name&#039;;
+            book.name = newName;
+            expect(session.Book.first().name).to.equal(newName);
+        });
+
+        it(&#039;Model.toString works&#039;, () =&gt; {
+            const { Book } = session;
+            const book = Book.first();
+            expect(book.toString())
+                .to.equal(
+                    &#039;Book: {id: 0, name: Tommi Kaikkonen - an Autobiography, &#039; +
+                    &#039;releaseYear: 2050, author: 0, cover: 0, genres: [0, 1], publisher: 1}&#039;
+                );
+        });
+
+        it(&#039;withId throws if model instance not found&#039;, () =&gt; {
+            const { Book } = session;
+            expect(() =&gt; Book.withId(10)).to.throw(Error);
+        });
+
+        it(&#039;many-to-many relationship descriptors work&#039;, () =&gt; {
+            const {
+                Book,
+                Genre,
+            } = session;
+
+            // Forward (from many-to-many field declaration)
+            const book = Book.first();
+            const relatedGenres = book.genres;
+            expect(relatedGenres).to.be.an.instanceOf(QuerySet);
+            expect(relatedGenres.modelClass).to.equal(Genre);
+            expect(relatedGenres.count()).to.equal(2);
+
+            // Backward
+            const genre = Genre.first();
+            const relatedBooks = genre.books;
+            expect(relatedBooks).to.be.an.instanceOf(QuerySet);
+            expect(relatedBooks.modelClass).to.equal(Book);
+        });
+
+        it(&#039;many-to-many relationship descriptors work with a custom through model&#039;, () =&gt; {
+            const {
+                Author,
+                Publisher,
+            } = session;
+
+            // Forward (from many-to-many field declaration)
+            const author = Author.get({ name: &#039;Tommi Kaikkonen&#039; });
+            const relatedPublishers = author.publishers;
+            expect(relatedPublishers).to.be.an.instanceOf(QuerySet);
+            expect(relatedPublishers.modelClass).to.equal(Publisher);
+            expect(relatedPublishers.count()).to.equal(1);
+
+            // Backward
+            const publisher = Publisher.get({ name: &#039;Technical Publishing&#039; });
+            const relatedAuthors = publisher.authors;
+            expect(relatedAuthors).to.be.an.instanceOf(QuerySet);
+            expect(relatedAuthors.modelClass).to.equal(Author);
+            expect(relatedAuthors.count()).to.equal(2);
+        });
+
+        it(&#039;adding related many-to-many entities works&#039;, () =&gt; {
+            const { Book, Genre } = session;
+            const book = Book.withId(0);
+            expect(book.genres.count()).to.equal(2);
+            book.genres.add(Genre.withId(2));
+
+            expect(session.Book.withId(0).genres.count()).to.equal(3);
+        });
+
+        it(&#039;trying to add existing related many-to-many entities throws&#039;, () =&gt; {
+            const { Book } = session;
+            const book = Book.withId(0);
+
+            const existingId = 1;
+            expect(() =&gt; book.genres.add(existingId)).to.throw(existingId.toString());
+        });
+
+        it(&#039;updating related many-to-many entities works&#039;, () =&gt; {
+            const { Book, Genre, Author } = session;
+            const tommi = Author.get({ name: &#039;Tommi Kaikkonen&#039; });
+            const book = tommi.books.first();
+            expect(book.genres.toRefArray().map(row =&gt; row.id))
+                .to.deep.equal([0, 1]);
+
+            const deleteGenre = Genre.withId(0);
+            const keepGenre = Genre.withId(1);
+            const addGenre = Genre.withId(2);
+
+            book.update({ genres: [addGenre, keepGenre] });
+            expect(book.genres.toRefArray().map(row =&gt; row.id))
+                .to.deep.equal([1, 2]);
+
+            expect(deleteGenre.books.filter({ id: book.id }).exists()).to.be.false;
+        });
+
+        it(&#039;removing related many-to-many entities works&#039;, () =&gt; {
+            const { Book, Genre } = session;
+            const book = Book.withId(0);
+            expect(book.genres.count()).to.equal(2);
+            book.genres.remove(Genre.withId(0));
+
+            expect(session.Book.withId(0).genres.count()).to.equal(1);
+        });
+
+        it(&#039;trying to remove unexisting related many-to-many entities throws&#039;, () =&gt; {
+            const { Book } = session;
+            const book = Book.withId(0);
+
+            const unexistingId = 2012384;
+            expect(() =&gt; book.genres.remove(0, unexistingId)).to.throw(unexistingId.toString());
+        });
+
+        it(&#039;clearing related many-to-many entities works&#039;, () =&gt; {
+            const { Book } = session;
+            const book = Book.withId(0);
+            expect(book.genres.count()).to.equal(2);
+            book.genres.clear();
+
+            expect(session.Book.withId(0).genres.count()).to.equal(0);
+        });
+
+        it(&#039;foreign key relationship descriptors work&#039;, () =&gt; {
+            const {
+                Book,
+                Author,
+            } = session;
+
+            // Forward
+            const book = Book.first();
+            const author = book.author;
+            const rawFk = book.ref.author;
+            expect(author).to.be.an.instanceOf(Author);
+            expect(author.getId()).to.equal(rawFk);
+
+            // Backward
+            const relatedBooks = author.books;
+            expect(relatedBooks).to.be.an.instanceOf(QuerySet);
+            relatedBooks._evaluate();
+            expect(relatedBooks.rows).to.include(book.ref);
+            expect(relatedBooks.modelClass).to.equal(Book);
+        });
+
+        it(&#039;one-to-one relationship descriptors work&#039;, () =&gt; {
+            const {
+                Book,
+                Cover,
+            } = session;
+
+            // Forward
+            const book = Book.first();
+            const cover = book.cover;
+            const rawFk = book.ref.cover;
+            expect(cover).to.be.an.instanceOf(Cover);
+            expect(cover.getId()).to.equal(rawFk);
+
+            // Backward
+            const relatedBook = cover.book;
+            expect(relatedBook).to.be.an.instanceOf(Book);
+            expect(relatedBook.getId()).to.equal(book.getId());
+        });
+
+        it(&#039;applying no updates returns the same state reference&#039;, () =&gt; {
+            const book = session.Book.first();
+            book.name = book.name;
+
+            expect(session.state).to.equal(state);
+        });
+
+        it(&#039;Model works with default value&#039;, () =&gt; {
+            let returnId = 1;
+
+            class DefaultFieldModel extends Model {}
+            DefaultFieldModel.fields = {
+                id: attr({ getDefault: () =&gt; returnId }),
+            };
+            DefaultFieldModel.modelName = &#039;DefaultFieldModel&#039;;
+
+            const _orm = new ORM();
+            _orm.register(DefaultFieldModel);
+
+            const sess = _orm.session(_orm.getEmptyState());
+            sess.DefaultFieldModel.create({});
+
+            expect(sess.DefaultFieldModel.hasId(1)).to.be.true;
+
+            returnId = 999;
+            sess.DefaultFieldModel.create({});
+            expect(sess.DefaultFieldModel.hasId(999)).to.be.true;
+        });
+    });
+
+    describe(&#039;Mutating session&#039;, () =&gt; {
+        beforeEach(() =&gt; {
+            ({
+                session,
+                orm,
+                state,
+            } = createTestSessionWithData());
+        });
+
+        it(&#039;works&#039;, () =&gt; {
+            const mutating = orm.mutableSession(state);
+            const {
+                Book,
+                Cover,
+            } = mutating;
+
+            const cover = Cover.create({ src: &#039;somecover.png&#039; });
+            const coverId = cover.getId();
+
+            const book = Book.first();
+            const bookRef = book.ref;
+            const bookId = book.getId();
+            expect(state.Book.itemsById[bookId]).to.equal(bookRef);
+            const newName = &#039;New Name&#039;;
+
+            book.name = newName;
+
+            expect(book.name).to.equal(newName);
+
+            const nextState = mutating.state;
+            expect(nextState).to.equal(state);
+            expect(state.Book.itemsById[bookId]).to.equal(bookRef);
+            expect(bookRef.name).to.equal(newName);
+            expect(state.Cover.itemsById[coverId].src).to.equal(&#039;somecover.png&#039;);
+        });
+    });
+
+    describe(&#039;Multiple concurrent sessions&#039;, () =&gt; {
+        beforeEach(() =&gt; {
+            ({
+                session,
+                orm,
+                state,
+            } = createTestSessionWithData());
+        });
+
+        it(&#039;works&#039;, () =&gt; {
+            const firstSession = session;
+            const secondSession = orm.session(state);
+
+            expect(firstSession.Book.count()).to.equal(3);
+            expect(secondSession.Book.count()).to.equal(3);
+
+            const newBookProps = {
+                name: &#039;New Book&#039;,
+                author: 0,
+                releaseYear: 2015,
+                genres: [0, 1],
+            };
+
+            firstSession.Book.create(newBookProps);
+
+            expect(firstSession.Book.count()).to.equal(4);
+            expect(secondSession.Book.count()).to.equal(3);
+        });
+    });
+});
+
+describe(&#039;Big Data Test&#039;, () =&gt; {
+    let Item;
+    let orm;
+
+    beforeEach(() =&gt; {
+        Item = class extends Model {};
+        Item.modelName = &#039;Item&#039;;
+        Item.fields = {
+            id: attr(),
+            name: attr(),
+        };
+        orm = new ORM();
+        orm.register(Item);
+    });
+
+    it(&#039;adds a big amount of items in acceptable time&#039;, function bigDataTest() {
+        this.timeout(30000);
+
+        const session = orm.session(orm.getEmptyState());
+        const start = new Date().getTime();
+
+        const amount = 10000;
+        for (let i = 0; i &lt; amount; i++) {
+            session.Item.create({ id: i, name: &#039;TestItem&#039; });
+        }
+        const end = new Date().getTime();
+        const tookSeconds = (end - start) / 1000;
+        console.log(`Creating ${amount} objects took ${tookSeconds}s`);
+        expect(tookSeconds).to.be.at.most(3);
+    });
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

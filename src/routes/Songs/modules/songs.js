@@ -119,17 +119,18 @@ export const getVisibleSongs = (state) => {
 // ------------------------------------
 
 const ACTION_HANDLERS = {
-  [INIT_SONG_VIEW]: (state, action) => {
-    return ({ ...state, initialized: true });
-  },
   [SET_CURRENT_SONG]: (state, action) =>
     ({ ...state, currentSong: action.payload }),
+  ['SET_PAGINATION_PER_PAGE']: (state, action) =>
+    ({ ...state, paginationPerPage: action.payload }),
+  ['SET_PAGINATION_CURRENT']: (state, action) =>
+    ({ ...state, paginationCurrent: action.payload }),
   [SONGS_REQUEST]: (state, action) =>
     ({ ...state, fetching: true }),
   [SONGS_SUCCESS]: (state, action) =>
     ({ ...state, fetching: false}),
   [SET_SORT]: (state, action) =>
-    ({ ...state, sortField: action.payload })
+    ({ ...state, sortField: action.payload, sortInverse:  !state.sortInverse } )
 
 };
 
@@ -145,7 +146,10 @@ const initialState = {
   currentInstruments: [],
   initialized:        false,
   currentFilters:     [],
-  sortField:          ''
+  sortField:          '',
+  sortInverse:        false,
+  paginationCurrent:  1,
+  paginationPerPage:  10
 };
 
 export default function songsReducer (state = initialState, action) {
