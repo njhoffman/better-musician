@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import FiltersModal from '../../components/Modal/Filters';
+import FiltersModal from './Filters';
 
 export const hideModal = () => {
   return (dispatch, getState) => {

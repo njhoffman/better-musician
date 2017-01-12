@@ -1,13 +1,13 @@
 import { connect } from 'react-redux';
-import { increment } from '../modules/settings';
-import SettingsView from '../components/SettingsView';
+import SettingsView from './SettingsView';
+import { updateSettings } from '../modules/settings';
 
 const mapActionCreators = {
-  increment
+  updateSettings
 };
 
 const mapStateToProps = (state) => ({
-  settings: state.settings
+  settings: state.user
 });
 
 export default connect(mapStateToProps, mapActionCreators)(SettingsView);

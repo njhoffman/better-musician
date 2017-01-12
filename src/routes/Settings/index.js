@@ -1,4 +1,4 @@
-import { injectReducer } from '../../store/reducers';
+import { injectReducer, initView } from 'store/reducers';
 
 export default (store, auth) => ({
   path : 'settings',
@@ -8,12 +8,21 @@ export default (store, auth) => ({
         console.info('authentication failed');
         return;
       }
-      const SettingsViewContainer = require('./containers/SettingsViewContainer').default;
-      const reducer = require('./modules/settings').default;
 
-      injectReducer(store, { key: 'settingsView', reducer });
+      const importModules = Promise.all([
+        require('./components/SettingsViewContainer').default,
+        require('./modules/settings').default
+      ]);
 
-      cb(null, SettingsViewContainer);
+      importModules.then( ([container, reducer]) => {
+        injectReducer(store, { key: 'settingsView', reducer: reducer });
+        initView(store, 'settingsView');
+        cb(null, container);
+      });
+
+      importModules.catch(error => {
+        console.error("Error importing dynamic modules", error);
+      });
 
     }, 'settingsView');
   }

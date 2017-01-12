@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import ProfileView from '../components/ProfileView';
+import ProfileView from './ProfileView';
 import { updateProfile } from '../modules/profile';
 
 const mapActionCreators = {

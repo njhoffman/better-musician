@@ -50,7 +50,7 @@ class Footer extends Component  {
                   { song.artist.fullName }
                 </div>
                 <div className={css.genreName}>
-                  { song.genre.displayName }
+                  { song.genre && song.genre.displayName }
                 </div>
 
               </Column>

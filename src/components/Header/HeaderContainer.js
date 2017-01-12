@@ -1,12 +1,14 @@
 import { connect } from 'react-redux';
 // import { showModal } from '../store/modal';
 
-import Header from '../components/Header';
+import Header from './Header';
 
 const localState = {
   searchIsOpen: false,
 };
 
+// TODO: these are Songs route specific actionCreators but are in global headerContainer
+// extract Songs route specific header elements, dynamically based on route
 export const showFiltersModal = () => {
   return (dispatch, getState) => {
     return dispatch({ type: "SHOW_MODAL", modalType: "FILTER_SONGS", modalProps: {} });
@@ -23,10 +25,15 @@ export const searchClose = () => {
   debugger;
 };
 
-export const showAddSongModal = () => {
-  return (dispatch, getState) => {
-    return dispatch({ type: "SHOW_MODAL", modalType: "ADD_SONG", modalProps: {} });
-  };
+export const showAddSongModal = (modalView) => (dispatch, getState) => {
+  return dispatch({
+    type: "SHOW_MODAL",
+    meta: {
+      modalType: "MODAL_ADD_SONG",
+      modalView,
+      modalProps: {}
+    }
+  });
 };
 
 export const toggleSearchPopover = () => {
@@ -45,7 +52,7 @@ const mapStateToProps = (state) => ({
   searchIsOpen: localState.searchIsOpen,
   currentSong: state.songsView ? state.songsView.currentSong : null,
   user: state.auth.get("user"),
-  location: state.location ? state.location.pathname : null
+  currentView: state.location ? state.location.currentView : null,
 });
 
 export default connect(mapStateToProps, mapActionCreators)(Header);

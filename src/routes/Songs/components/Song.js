@@ -1,13 +1,14 @@
 import React, { PropTypes } from 'react';
 import { TableRow, TableRowColumn } from 'material-ui/Table';
-import StarIcon from 'react-icons/lib/md/star';
 import css from './Song.scss';
 import muiThemeable from 'material-ui/styles/muiThemeable';
+import { RenderStars } from 'components/Field';
 
-const Song = ({ songValues, columnWidths, muiTheme, ...custom }) => {
+const Song = ({ songValues, viewSong, columnWidths, muiTheme, ...custom }) => {
   return (
     <TableRow
       hoverable={true}
+      onDoubleClick={viewSong.bind(undefined, songValues)}
       displayBorder={true}
       {...custom}
     >
@@ -27,9 +28,7 @@ const Song = ({ songValues, columnWidths, muiTheme, ...custom }) => {
         data-rowId={songValues.id}
         style={columnWidths[2]}
         className={css.progress}>
-        { [...Array(songValues.progress)].map((x,i) =>
-          <StarIcon key={i} style={{color: muiTheme.starColor}} />
-        ) }
+        <RenderStars number={songValues.progress} starColor={muiTheme.starColor} />
       </TableRowColumn>
       <TableRowColumn
         data-rowId={songValues.id}

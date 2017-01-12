@@ -6,9 +6,9 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import 'coreStyles';
 import css from './CoreLayout.scss';
 import AuthGlobals from 'components/AuthGlobals';
-import Header from 'containers/HeaderContainer';
-import Footer from 'containers/FooterContainer';
-import DrawerMenu from 'containers/DrawerMenuContainer';
+import Header from 'components/Header/HeaderContainer';
+import Footer from 'components/Footer/FooterContainer';
+import DrawerMenu from 'components/DrawerMenu/DrawerMenuContainer';
 import instrumentalDarkTheme from 'themes/instrumentalDark';
 import { Row } from 'react-foundation';
 

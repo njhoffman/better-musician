@@ -1,4 +1,4 @@
-import { injectReducer } from '../../store/reducers';
+import { injectReducer, initView } from 'store/reducers';
 
 export default (store, auth) => ({
   path : 'register',
@@ -8,12 +8,20 @@ export default (store, auth) => ({
         console.info('authentication failed');
         return;
       }
-      const RegisterViewContainer = require('./containers/RegisterViewContainer').default;
-      const reducer = require('./modules/register').default;
+      const importModules = Promise.all([
+        require('./components/RegisterViewContainer').default,
+        require('./modules/register').default
+      ]);
 
-      injectReducer(store, { key: 'registerView', reducer });
+      importModules.then( ([container, reducer]) => {
+        injectReducer(store, { key: 'registerView', reducer: reducer });
+        initView(store, 'registerView');
+        cb(null, container);
+      });
 
-      cb(null, RegisterViewContainer);
+      importModules.catch(error => {
+        console.error("Error importing dynamic modules", error);
+      });
 
     }, 'registerView');
   }

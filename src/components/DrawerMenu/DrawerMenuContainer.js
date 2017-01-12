@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import DrawerMenu from 'components/DrawerMenu';
+import DrawerMenu from './DrawerMenu';
 
 export const hideDrawerMenu = () => {
   return (dispatch) => {

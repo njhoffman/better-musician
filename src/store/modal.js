@@ -9,7 +9,13 @@ export const HIDE_MODAL = 'HIDE_MODAL';
 // ------------------------------------
 const ACTION_HANDLERS = {
   [SHOW_MODAL] : (state, action) => {
-    return ({ modalType: action.modalType, modalProps: action.modalProps }); },
+    return ({
+      modalType: action.meta.modalType,
+      modalProps: action.meta.modalProps,
+      modalView: action.meta.modalView,
+      payload: action.payload
+    });
+  },
   [HIDE_MODAL] : (state, action) => initialState
 };
 
@@ -19,10 +25,13 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
   modalType: null,
-  modalProps: {}
+  modalView: null,
+  modalProps: {},
+  payload: {}
+
 };
 
-export default function counterReducer (state = initialState, action) {
+export default function modalReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
 
   return handler ? handler(state, action) : state;

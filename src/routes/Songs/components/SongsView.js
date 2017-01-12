@@ -1,8 +1,8 @@
 import React from 'react';
 import { Row, Column} from 'react-foundation';
 import { Paper } from 'material-ui';
-import SongsList from '../containers/SongsListContainer';
-import ModalBase from '../containers/Modal';
+import SongsList from './SongsListContainer';
+import ModalBase from './Modal';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { RaisedButton } from 'material-ui';
 import { UserAuthWrapper }  from 'redux-auth-wrapper';

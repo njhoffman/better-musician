@@ -1,4 +1,4 @@
-import { injectReducer } from 'store/reducers';
+import { injectReducer, initView } from 'store/reducers';
 
 export default (store, auth) => ({
   path : 'profile',
@@ -8,12 +8,21 @@ export default (store, auth) => ({
         console.info('authentication failed');
         return;
       }
-      const ProfileViewContainer = require('./containers/ProfileViewContainer').default;
-      const reducer = require('./modules/profile').default;
 
-      injectReducer(store, { key: 'profileView', reducer });
+      const importModules = Promise.all([
+        require('./components/ProfileViewContainer').default,
+        require('./modules/profile').default
+      ]);
 
-      cb(null, ProfileViewContainer);
+      importModules.then( ([container, reducer]) => {
+        injectReducer(store, { key: 'profileView', reducer: reducer });
+        initView(store, 'profileView');
+        cb(null, container);
+      });
+
+      importModules.catch(error => {
+        console.error("Error importing dynamic modules", error);
+      });
 
     }, 'profileView');
   }

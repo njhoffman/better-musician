@@ -5,16 +5,19 @@ import { Drawer, MenuItem, Popover, RaisedButton, Avatar } from 'material-ui';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import _ from 'lodash';
 
-import MenuIcon from 'react-icons/lib/md/menu';
-import FilterIcon from 'react-icons/lib/md/filter-list';
-import SortIcon from 'react-icons/lib/md/import-export';
-import SearchIcon from 'react-icons/lib/md/search';
-import AddIcon from 'react-icons/lib/md/library-add';
-import EditIcon from 'react-icons/lib/md/mode-edit';
-import DeleteIcon from 'react-icons/lib/md/delete';
-import ArrowDropDownIcon from 'react-icons/lib/md/arrow-drop-down';
-import AvatarIcon from 'react-icons/lib/md/account-circle';
+import {
+  MdFilterList    as FilterIcon,
+  MdImportExport  as SortIcon,
+  MdSearch        as SearchIcon,
+  MdLibraryAdd    as AddIcon,
+  MdModeEdit      as EditIcon,
+  MdDelete        as DeleteIcon,
+  MdDashboard     as ViewIcon,
+  MdArrowDropDown as ArrowDropDownIcon
+} from 'react-icons/lib/md';
 
+import HeaderLeft from './HeaderLeft';
+import HeaderRight from './HeaderRight';
 import SearchPopover from './SearchPopover';
 import css from './Header.scss';
 
@@ -24,19 +27,25 @@ class Header extends Component  {
     super(props);
     this.state = {
       searchPopoverOpen: false,
-      songPopoverOpen: false
+      searchPopoverAnchor: {},
+      songPopoverOpen: false,
+      songPopoverAnchor: {}
     };
   };
 
-  toggleSearchPopover() {
+  toggleSearchPopover(e) {
+    e.preventDefault();
     this.setState({
-      searchPopoverOpen: !this.state.searchPopoverOpen
+      searchPopoverOpen: !this.state.searchPopoverOpen,
+      searchPopoverAnchor: e.currentTarget.parentElement
     });
   }
 
-  toggleSongPopover() {
+  toggleSongPopover(e) {
+    e.preventDefault();
     this.setState({
-      songPopoverOpen: true
+      songPopoverOpen: true,
+      songPopoverAnchor: e.currentTarget.parentElement
     });
   }
 
@@ -47,46 +56,72 @@ class Header extends Component  {
     });
   }
 
-  showAddSongModal() {
+  showEditSongModal() {
     this.onRequestClose();
-    this.props.showAddSongModal();
+    this.props.showAddSongModal('edit');
   };
 
-  renderSongActionButton() {
-    if (this.props.location !== '/songs') {
+  showAddSongModal() {
+    this.onRequestClose();
+    this.props.showAddSongModal('add');
+  };
+
+  renderSongButtonOther() {
       return (
         <Link className={css.headerLink} to='/songs'>
-          <span>
-            View Songs
+          <span className={css.iconWrapper}>
+            <ViewIcon className={css.icon} />
+            <span className={css.iconText}>View Songs</span>
           </span>
         </Link>
       )
-    } else if ( _.isEmpty(this.props.currentSong) ) {
+  }
+
+  renderSongButtonAdd() {
       return (
-        <a className={css.headerLink} onClick={ this.props.showAddSongModal }>
-          <span>
-            <AddIcon />Add Song
+        <a className={css.headerLink} onClick={ this.showAddSongModal.bind(this) }>
+          <span className={css.iconWrapper}>
+            <AddIcon className={css.icon} />
+            <span className={css.iconText}>Add Song</span>
           </span>
         </a>
       );
-    }
+  }
+
+  renderSongButtonEdit() {
     return (
       <a className={css.headerLink}>
-        <span>
-          <EditIcon />Edit Song
-          <ArrowDropDownIcon onTouchTap={this.toggleSongPopover.bind(this)} />
+        <span className={css.iconWrapper}>
+          <EditIcon className={css.icon} />
+          <span className={css.iconText}>Edit Song</span>
+          <ArrowDropDownIcon
+            className={css.downArrow}
+            onTouchTap={this.toggleSongPopover.bind(this)} />
           <Popover
             open={this.state.songPopoverOpen}
+            anchorEl={this.state.songPopoverAnchor}
+            anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+            style={{ width: '15%' }}
             onRequestClose={this.onRequestClose.bind(this)} >
             <Row>
-              <Column>
-                <a onClick={ this.showAddSongModal.bind(this) } >
-                  <AddIcon />Add Song</a>
+              <Column style={{ padding: '0px', textAlign: 'center' }}>
+                <a style={{ padding: "5px 0px" }} className={css.headerLink} onClick={ this.showEditSongModal.bind(this) } >
+                  <span className={css.iconWrapper}>
+                    <AddIcon style={{ margin: "0px 12px 0px -12px" }} className={css.icon} />
+                    <span className={css.iconText}>Add Song</span>
+                  </span>
+                </a>
               </Column>
             </Row>
-            <Row>
-              <Column>
-                <a><DeleteIcon />Delete Song</a>
+            <Row style={{ padding: "5px 0px" }}>
+              <Column style={{ padding: '0px', textAlign: 'center' }}>
+                <a style={{ padding: "5px 0px" }} className={css.headerLink}>
+                  <span className={css.iconWrapper}>
+                    <DeleteIcon className={css.icon} />
+                    <span className={css.iconText}>Delete Song</span>
+                  </span>
+                </a>
               </Column>
             </Row>
           </Popover>
@@ -95,99 +130,59 @@ class Header extends Component  {
     );
   }
 
-  renderLeftColumn() {
-    return (
-      <span className={css.headerLink + ' ' +  css.leftColumn}>
-        <span>
-          <a className={css.menuIcon} onClick={this.props.toggleDrawerMenu}>
-            <MenuIcon />
-          </a>
-          <IndexLink className={css.homeLink} to ='/'>
-            instrumental.com
-          </IndexLink>
-        </span>
-      </span>
-    );
-  }
-
-  renderRightColumn() {
-    if (this.props.user && this.props.user.get("isSignedIn")) {
-      return (
-        <div className={css.headerLink}>
-          <div className={css.profileDisplay}>
-            <Link to='/profile' style={{ display: 'table-cell', verticalAlign: 'middle', paddingRight: '5px' }}>
-              <div className={css.profilePoints}>{ this.props.user.get("attributes").get("points") }</div>
-              <div className={css.profileName}>{ this.props.user.get("attributes").get("email") }</div>
-            </Link>
-          </div>
-          <div className={css.profileAvatar}>
-            <Link to='/profile' style={{ display: 'table-cell', verticalAlign: 'middle', paddingRight: '5px' }}>
-              <Avatar
-                icon={<AvatarIcon />}
-                backgroundColor={this.props.muiTheme.palette.primary1Color}
-                size={35}
-              />
-            </Link>
-          </div>
-        </div>
-      );
+  renderSongButton() {
+    if (this.props.currentView === 'songsView') {
+      if (this.props.currentSong) {
+        return this.renderSongButtonEdit();
+      }
+      return this.renderSongButtonAdd()
     }
+    return this.renderSongButtonOther()
+  }
+
+
+  renderFiltersButton() {
     return (
-      <div style={{ float: 'right', height: '100%', fontSize: '0.9em', paddingRight: '10px' }}>
-        <div style={{ display: 'table', height: '100%' }}>
-          <Link to='/login' style={{ display: 'table-cell', verticalAlign: 'middle', paddingRight: '5px' }}>
-            <RaisedButton
-              style={{ height: '25px', display: 'table-cell', minWidth: '0px' }}
-              labelStyle={{ padding: '5px 10px', paddingLeft: '10px', display: 'table-cell' }}
-              className={css.loginButton}
-              label="LOGIN"
-              primary={true} />
-          </Link>
-          <Link to='/register' style={{ display: 'table-cell', verticalAlign: 'middle' }}>
-            <RaisedButton
-              style={{ height: '25px', display: 'table-cell', minWidth: '0px' }}
-              labelStyle={{ padding:'5px 10px', paddingLeft: '10px', display: 'table-cell' }}
-              className={css.registerButton}
-              label="REGISTER" />
-          </Link>
-        </div>
-      </div>
+      <a className={css.headerLink} onClick={this.props.showFiltersModal} >
+        <span className={css.iconWrapper}>
+          <FilterIcon className={css.icon} />
+          <span className={css.iconText}>Filters</span>
+        </span>
+      </a>
     );
   }
 
-  renderSongButton(Breakpoint) {
+  renderSearchButton() {
     return (
-      <Column showFor={Breakpoint} style={{ padding: '0px' }}>
-        { this.renderSongActionButton(this.props) }
-      </Column>
+      <a className={css.headerLink}
+        onTouchTap={ this.toggleSearchPopover.bind(this) }>
+        <span className={css.iconWrapper}>
+          <SearchIcon className={css.icon} />
+          <span className={css.iconText}>Search</span>
+          <SearchPopover
+            open={ this.state.searchPopoverOpen }
+            anchorEl={this.state.searchPopoverAnchor}
+            anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+            onRequestClose={ this.onRequestClose.bind(this) } />
+        </span>
+      </a>
     );
   }
 
-  renderFiltersButton(Breakpoint) {
+  renderMiddleColumn() {
     return (
-      <Column showFor={Breakpoint} style={{ padding: '0px' }}>
-        <a className={css.headerLink} onClick={this.props.showFiltersModal} >
-          <span>
-            <FilterIcon />Filters
-          </span>
-        </a>
-      </Column>
-    );
-  }
-
-  renderSearchButton(Breakpoint) {
-    return (
-      <Column showFor={Breakpoint} style={{ padding: '0px' }}>
-        <a className={css.headerLink}
-          onClick={ this.toggleSearchPopover.bind(this) }>
-          <span>
-            <SearchIcon />Search
-            <SearchPopover
-              open={ this.state.searchPopoverOpen }
-              onRequestClose={ this.onRequestClose.bind(this) } />
-          </span>
-        </a>
-      </Column>
+      <Row className={css.wrapper}>
+        <Column style={{ padding: '0px' }}>
+          { this.renderSongButton() }
+        </Column>
+        <Column style={{ padding: '0px' }}>
+          { this.renderFiltersButton() }
+        </Column>
+        <Column style={{ padding: '0px' }}>
+          { this.renderSearchButton() }
+        </Column>
+      </Row>
     );
   }
 
@@ -198,20 +193,27 @@ class Header extends Component  {
       return (
         <div className={css.header + ' ' + css.loggedIn }>
           <Row className={css.wrapper}>
-            <Column small={6} medium={3} style={{ padding: '0px 0px 0px 15px', textAlign: 'left' }}>
-              { this.renderLeftColumn() }
+            <Column
+              small={6}
+              medium={3}
+              style={{ padding: '0px 0px 0px 15px', textAlign: 'left' }}>
+              <HeaderLeft {...props} />
             </Column>
-            { this.renderSongButton(Breakpoints.MEDIUM) }
-            { this.renderFiltersButton(Breakpoints.MEDIUM) }
-            { this.renderSearchButton(Breakpoints.MEDIUM) }
-            <Column small={6} medium={3} style={{ textAlign: 'right', padding: '0px' }}>
-              { this.renderRightColumn() }
+            <Column
+              showFor={Breakpoints.MEDIUM} >
+              { this.renderMiddleColumn() }
+            </Column>
+            <Column
+              small={6}
+              medium={3}
+              style={{ textAlign: 'right', padding: '0px' }}>
+              <HeaderRight {...props} />
             </Column>
           </Row>
           <Row className={css.wrapper} showOnlyFor={Breakpoints.SMALL}>
-            { this.renderSongButton() }
-            { this.renderFiltersButton() }
-            { this.renderSearchButton() }
+            <Column>
+              { this.renderMiddleColumn() }
+            </Column>
           </Row>
         </div>
       );
@@ -219,11 +221,15 @@ class Header extends Component  {
       return (
         <div className={css.header + ' ' + css.loggedOut}>
           <Row className={css.wrapper}>
-            <Column small={6} style={{ padding: '0px 0px 0px 15px', textAlign: 'left' }}>
-              { this.renderLeftColumn() }
+            <Column
+              small={6}
+              style={{ padding: '0px 0px 0px 15px', textAlign: 'left' }}>
+              <HeaderLeft {...props} />
             </Column>
-            <Column small={6} style={{ textAlign: 'right', padding: '0px' }}>
-              { this.renderRightColumn() }
+            <Column
+              small={6}
+              style={{ textAlign: 'right', padding: '0px' }}>
+              <HeaderRight {...props} />
             </Column>
           </Row>
         </div>

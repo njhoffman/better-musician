@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react';
+import muiThemeable from 'material-ui/styles/muiThemeable';
+import StarIcon from 'react-icons/lib/md/star';
 import {
   Checkbox,
   RadioButtonGroup,
@@ -26,20 +28,23 @@ const RenderSelectField = ({
 );
 
 const RenderTextField = ({
-  ...input,
+  viewType,
+  values,
   label,
   children,
   meta: { touched, error },
-  ...custom }) => (
-  <div>
-    <TextField
-      floatingLabelText={label}
-      errorText={touched && error}
-      {...input}
-      {...custom}
-    />
-  </div>
-);
+  ...custom }) => {
+    return (
+      <div>
+        <TextField
+          floatingLabelText={label}
+          value={values}
+          errorText={touched && error}
+          {...custom}
+        />
+      </div>
+    );
+  };
 
 class RenderSliderField extends Component {
 
@@ -64,4 +69,12 @@ class RenderSliderField extends Component {
   }
 };
 
-export { RenderSelectField, RenderTextField, RenderSliderField };
+const RenderStars = ({ number, starColor }) => (
+  <div>
+    { [...Array(number)].map((x,i) =>
+      <StarIcon key={i} style={{color: starColor}} />
+    ) }
+  </div>
+);
+
+export { RenderSelectField, RenderTextField, RenderSliderField, RenderStars };

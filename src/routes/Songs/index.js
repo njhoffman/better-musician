@@ -1,5 +1,6 @@
-import { injectReducer } from 'store/reducers';
+import { injectReducer, initView } from 'store/reducers';
 import { fetchSongs } from './modules/songs';
+
 
 export default (store, auth) => ({
   path : 'songs',
@@ -11,22 +12,21 @@ export default (store, auth) => ({
         return;
       }
 
-      // const renderRoute = loadModule(cb, UserIsAuthenticated);
       const importModules = Promise.all([
-        require('./containers/SongsViewContainer').default,
+        require('./components/SongsViewContainer').default,
         require('./modules/songs').default,
         require('./modules/model').default
       ]);
 
       importModules.then( ([container, reducer, models]) => {
         injectReducer(store, { key: 'songsView', reducer: reducer, models: models });
-        store.dispatch({ type: "INIT_SONG_VIEW" });
+        initView(store, 'songsView');
         store.dispatch(fetchSongs());
         cb(null, container);
       });
 
       importModules.catch(error => {
-        debugger;
+        console.error("Error importing dynamic modules", error);
       });
 
     }, 'songsView');

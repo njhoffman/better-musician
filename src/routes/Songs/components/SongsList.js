@@ -13,7 +13,7 @@ const columnWidths = [
   { width: '15%', textAlign: 'center' },
 ];
 
-const SongsList = ({ songsCollection, onSongClick, onSortClick, currentSong }) => (
+const SongsList = ({ songsCollection, onSongClick, onSortClick, currentSong, viewSong }) => (
   <Table
     selectable={true}
     onCellClick={onSongClick}
@@ -59,6 +59,7 @@ const SongsList = ({ songsCollection, onSongClick, onSortClick, currentSong }) =
           key={song.id}
           songValues={song}
           columnWidths={columnWidths}
+          viewSong={viewSong}
           selected={song.id === currentSong}
         />
       )}

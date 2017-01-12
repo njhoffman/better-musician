@@ -197,14 +197,14 @@ const morganOutput = function(debug) {
   };
 };
 
-const webpackLog = function(message) {
-  if (typeof webpackDebug === 'undefined') {
-    webpackDebug = require("debug")("app:server:webpack");
+const webpackLog = (debug) => (message) => {
+  if (typeof debug === 'undefined') {
+    const debug = require("debug")("app:server:webpack");
   }
   if (message.indexOf('\n') !== -1) {
     return console.log("\n\n", message, "\n\n");
   }
-  return webpackDebug(message);
+  return debug(message);
 };
 
 module.exports.responseOutput = responseOutput;

@@ -9,12 +9,8 @@ import LoginRoute from './Login';
 import RegisterRoute from './Register';
 import {browserHistory} from 'react-router';
 
-/*  Note: Instead of using JSX, we recommend using react-router
-    PlainRoute objects to build route definitions.   */
-
 
 export const createRoutes = (store) => {
-
 
   const auth = (level) => () => {
     const user = store.getState().auth ? store.getState().auth.get('user') : null;

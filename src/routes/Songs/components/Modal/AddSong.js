@@ -25,91 +25,129 @@ const validate = (values) => {
 
 export const AddSongModal = (props) => {
 
-  const { dispatch, addSong } = props;
+  const { dispatch, addSong, modal } = props;
+  const modalView = modal.modalView;
 
-  const actions = [
+  const buttonLabel = modalView === 'view'
+    ? 'Edit'
+    : modalView === 'edit'
+    ? 'Save'
+    : 'Add';
+
+  const actionButtons = [
     <FlatButton
       label="Cancel"
       primary={true}
       onTouchTap={ props.hideModal }
     />,
     <FlatButton
-      label="Add"
+      label={buttonLabel}
       primary={true}
       keyboardFocused={true}
       onTouchTap={ addSong }
     />
   ];
+
+  if (modalView !== 'add') {
+    actionButtons.unshift(
+      <FlatButton
+        label='Delete'
+        style={{float: 'left' }}
+        onTouchTap={ addSong }
+      />
+    );
+  }
+
   const textColor = props.muiTheme.palette.textColor;
+  const title = modalView === 'view'
+    ? 'View Song'
+    : modalView === 'edit'
+    ? 'Edit Song'
+    : 'Add Song';
+  const className = css.addSongModal + ' ' + css[props.modal.modalView];
+  const existingValues = props.modal.payload || {};
 
   return (
     <Dialog
-      title="Add Song"
+      title={title}
       modal={false}
-      actions={ actions }
+      actions={ actionButtons }
       open={ props.isOpen }
       onRequestClose={ props.hideModal }
-      className={css.addSongModal}
+      className={className}
       contentStyle={dialogStyle}>
       <form onSubmit={props.addSong}>
-        <div className={css.flexLeft}>
-          <div className={css.songTitle}>
-            <Field
-              name="title"
-              component={RenderTextField}
-              label="Song Title" />
+        <div className={css.bottom}>
+          <div className={css.flexLeft}>
+            <div className={css.songTitle}>
+              <Field
+                name="title"
+                component={RenderTextField}
+                viewType={props.modal.modalView}
+                values={existingValues.title}
+                label="Song Title" />
+            </div>
+            <div className={css.artistName}>
+              <Field
+                name="artist"
+                viewType={props.modal.modalView}
+                component={RenderTextField}
+                values={existingValues.artist && existingValues.artist.fullName}
+                label="Song Artist" />
+            </div>
           </div>
-          <div className={css.artistName}>
+          <div className={css.flexRight}>
+            <Field name="genre"
+              component={RenderSelectField}
+              label="Song Genre">
+              {props.genres && props.genres.map(genre =>
+                <MenuItem
+                  key={genre.id}
+                  value={genre.id}
+                  primaryText={genre.name}
+                />
+              )}
+            </Field>
             <Field
-              name="artist"
-              component={RenderTextField}
-              label="Song Artist" />
+              name="instrument"
+              component={RenderSelectField}
+              viewType={props.modal.modalView}
+              label="Instrument">
+              {props.instruments && props.instruments.map(instrument =>
+                <MenuItem
+                  key={instrument.id}
+                  value={instrument.id}
+                  primaryText={instrument.name}
+                />
+              )}
+            </Field>
           </div>
-        </div>
-        <div className={css.flexRight}>
-          <Field name="genre"
-            component={RenderSelectField}
-            label="Song Genre">
-            {props.genres && props.genres.map(genre =>
-              <MenuItem
-                key={genre.id}
-                value={genre.id}
-                primaryText={genre.name}
-              />
-            )}
-          </Field>
-          <Field
-            name="instrument"
-            component={RenderSelectField}
-            label="Instrument">
-            {props.instruments && props.instruments.map(instrument =>
-              <MenuItem
-                key={instrument.id}
-                value={instrument.id}
-                primaryText={instrument.name}
-              />
-            )}
-          </Field>
         </div>
         <div className={css.bottom}>
-          <Field
-            name="difficulty"
-            className={css.difficulty}
-            min={1}
-            max={20}
-            step={1}
-            textColor={textColor}
-            component={RenderSliderField}
-            label="Difficulty" />
-          <Field
-            name="progress"
-            className={css.progress}
-            min={0}
-            max={4}
-            step={1}
-            textColor={textColor}
-            component={RenderSliderField}
-            label="Progress" />
+          <div className={css.flexLeft}>
+            <Field
+              component={RenderSliderField}
+              viewType={props.modal.modalView}
+              name="difficulty"
+              className={css.difficulty}
+              min={1}
+              max={20}
+              step={1}
+              textColor={textColor}
+              label="Difficulty" />
+          </div>
+          <div className={css.flexRight}>
+            <Field
+              name="progress"
+              component={RenderSliderField}
+              viewType={props.modal.modalView}
+              className={css.progress}
+              min={0}
+              max={4}
+              step={1}
+              textColor={textColor}
+              label="Progress" />
+          </div>
         </div>
       </form>
     </Dialog>

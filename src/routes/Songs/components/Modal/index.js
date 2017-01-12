@@ -1,20 +1,11 @@
-import React from 'react';
-import AddSongModal from '../../containers/Modal/AddSongContainer';
-import FiltersModal from '../../containers/Modal/FiltersContainer';
+import { connect } from 'react-redux';
+import ModalBase from './ModalBase';
 
-
-export const ModalBase = (props) => {
-
-  return (
-    <div>
-      <AddSongModal {...props.modal.modalProps} />
-      <FiltersModal {...props.modal.modalProps} />
-    </div>
-  )
+const mapDispatchToProps = {
 };
 
-ModalBase.propTypes = {
-  modalProps: React.PropTypes.object
-};
+const mapStateToProps = (state) => ({
+  modal: state.modal
+});
 
-export default ModalBase;
+export default connect(mapStateToProps, mapDispatchToProps)(ModalBase);

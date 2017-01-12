@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { increment } from '../modules/login';
-import LoginView from '../components/LoginView';
+import LoginView from './LoginView';
 
 const mapActionCreators = {
   increment

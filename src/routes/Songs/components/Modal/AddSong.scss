@@ -1,13 +1,10 @@
 
 .addSongModal {
+  &.view { }
+  &.add { }
+  &.edit { }
+
   form {
-    width: 100%;
-    max-width: none;
-    display: flex;
-    flex-wrap: wrap;
-    box-align: stretch;
-    align-items: stretch;
-    justify-content: space-around;
 
     input {
       margin: 0;
@@ -31,9 +28,17 @@
       height: 72px !important;
     }
 
+    .top,
     .bottom {
-      width: 80%;
+      width: 100%;
+      max-width: none;
+      display: flex;
+      flex-wrap: wrap;
+      box-align: stretch;
+      align-items: stretch;
+      justify-content: space-around;
     }
+
   }
 }
 

@@ -10,18 +10,26 @@ import { CALL_API, Schemas } from 'middleware/api';
 export const INIT_SONG_VIEW   = 'INIT_SONG_VIEW';
 export const SET_CURRENT_SONG = 'SET_CURRENT_SONG';
 export const HIDE_MODAL       = 'HIDE_MODAL';
-export const SET_SORT = 'SET_SORT';
-export const FETCH_SONGS = 'FETCH_SONGS';
+export const SET_SORT         = 'SET_SORT';
+export const FETCH_SONGS      = 'FETCH_SONGS';
+export const SONGS_REQUEST    = 'SONGS_REQUEST';
+export const SONGS_SUCCESS    = 'SONGS_SUCCESS';
+export const SONGS_FAILURE    = 'SONGS_FAILURE';
+export const LOAD_ARTISTS     = 'LOAD_ARTISTS';
+export const LOAD_INSTRUMENTS = 'LOAD_INSTRUMENTS';
+export const LOAD_GENRES      = 'LOAD_GENRES';
+export const LOAD_SONGS       = 'LOAD_SONGS';
+export const ADD_SONG         = 'ADD_SONG';
+
+export const MODAL_ADD_SONG = 'MODAL_ADD_SONG';
 
 
 // ------------------------------------
 // Action Creators
 // ------------------------------------
 
-export const hideModal = () => {
-  return (dispatch, getState) => {
-    return dispatch({ type: HIDE_MODAL });
-  };
+export const hideModal = () => (dispatch, getState) => {
+  return dispatch({ type: HIDE_MODAL });
 }
 
 export const setCurrentSong = (rowNumber, columnNumber, e) => (dispatch, getState) => {
@@ -44,23 +52,32 @@ const nextAvailableId = (songCollection) =>
 export const addSong = (values) => (dispatch, getState) => {
   const fieldValues = getState().form.addSongForm.values;
   const availableId = nextAvailableId(getState().songs.collection);
-  return dispatch({ type: 'ADD_SONG', payload: { ...fieldValues, ...{ id: availableId }} });
+  return dispatch({ type: ADD_SONG, payload: { ...fieldValues, ...{ id: availableId }} });
+};
+
+export const viewSong = (songValues) => (dispatch, getState) => {
+  return dispatch({
+    type: 'SHOW_MODAL',
+    meta: {
+      modalType: MODAL_ADD_SONG,
+      modalView: 'view',
+      modalProps: {}
+    },
+    payload: songValues
+  });
 };
 
 export const songsSuccess = (response) => {
   return dispatch => {
     const tables = response.tables;
+
     dispatch({ type: SONGS_SUCCESS,      payload: response });
-    dispatch({ type: 'LOAD_ARTISTS',     payload: tables.artists });
-    dispatch({ type: 'LOAD_INSTRUMENTS', payload: tables.instruments });
-    dispatch({ type: 'LOAD_GENRES',      payload: tables.genres });
-    dispatch({ type: 'LOAD_SONGS',       payload: tables.songs });
+    dispatch({ type: LOAD_ARTISTS,     payload: tables.artists });
+    dispatch({ type: LOAD_INSTRUMENTS, payload: tables.instruments });
+    dispatch({ type: LOAD_GENRES,      payload: tables.genres });
+    dispatch({ type: LOAD_SONGS,       payload: tables.songs });
   }
 };
-
-export const SONGS_REQUEST = 'SONGS_REQUEST';
-export const SONGS_SUCCESS = 'SONGS_SUCCESS';
-export const SONGS_FAILURE = 'SONGS_FAILURE';
 
 // Fetches a page of starred repos by a particular user.
 export const fetchSongs = () =>  {
@@ -77,7 +94,7 @@ export const fetchSongs = () =>  {
 
 
 export const actions = {
-  addSong, hideModal, setCurrentSong, fetchSongs
+  addSong, hideModal, setCurrentSong, fetchSongs, viewSong
 };
 
 
@@ -86,7 +103,7 @@ export const actions = {
 // ------------------------------------
 
 export const isOpen = (modal) => {
-  return (modal.modalType === 'ADD_SONG');
+  return (modal.modalType === MODAL_ADD_SONG);
 };
 
 export const getCurrentSong = (state) => {
@@ -100,29 +117,6 @@ export const getVisibleSongs = (state) => {
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
-
-import { Song, Artist, Instrument, Genre } from './model';
-const songsSuccess2 = (state, action) => {
-
-  // load dependent tables first
-  const sng = Song;
-  const art = Artist;
-  const tables = action.response.tables;
-  tables.artists.forEach(artist => {
-    Artist.create(artist);
-  });
-  tables.genres.forEach(genre => {
-    Genre.create(genre);
-  });
-  tables.instruments.forEach(instrument => {
-    Instrument.create(instrument);
-  });
-  tables.songs.forEach(song => {
-    Song.create(song);
-  });
-  debugger;
-  return state;
-};
 
 const ACTION_HANDLERS = {
   [INIT_SONG_VIEW]: (state, action) => {

@@ -1,4 +1,4 @@
-import { injectReducer } from '../../store/reducers';
+import { injectReducer, initView } from 'store/reducers';
 
 export default (store, auth) => ({
   path : 'login',
@@ -8,12 +8,21 @@ export default (store, auth) => ({
         console.info('authentication failed');
         return;
       }
-      const LoginViewContainer = require('./containers/LoginViewContainer').default;
-      const reducer = require('./modules/login').default;
+      const importModules = Promise.all([
+        require('./components/LoginViewContainer').default,
+        require('./modules/login').default
+      ]);
 
-      injectReducer(store, { key: 'loginView', reducer });
+      importModules.then( ([container, reducer]) => {
+        injectReducer(store, { key: 'loginView', reducer: reducer });
+        initView(store, 'loginView');
+        cb(null, container);
+      });
 
-      cb(null, LoginViewContainer);
+      importModules.catch(error => {
+        console.error("Error importing dynamic modules", error);
+      });
+
 
     }, 'loginView');
   }

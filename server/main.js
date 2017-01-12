@@ -1,24 +1,22 @@
-const express = require('express');
-const webpack = require('webpack');
-const webpackConfig = require('../config/webpack.config');
-const project = require('../config/project.config');
-const compress = require('compression');
-const morgan = require('morgan');
-const cookieParser = require("cookie-parser");
-const setupProxy = require('./proxy');
+import express from 'express';
+import webpack from 'webpack';
+import compress from 'compression';
+import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 
-const morganOutput = require('./server.utils').morganOutput;
-const requestOutput = require('./server.utils').requestOutput;
-const webpackLog = require('./server.utils').webpackLog;
+import { morganOutput, requestOutput, webpackLog } from './server.utils';
+import setupProxy from './proxy';
+import webpackConfig from '../config/webpack.config';
+import project from '../config/project.config';
 
+// TODO: make logger for happypack
 const debug              = require('debug')('app:server');
 const requestDebug       = require('debug')('app:request');
 const responseDebug      = require('debug')('app:response');
-const webpackDebug       = require('debug')('app:server:webpack');
+const webpackDebug       = require('debug')('app:webpack');
 
 const app = express();
 setupProxy(app);
-
 
 // Rewrites all routes requests to the root /index.html file (ignoring file requests).
 // Remove this middleware if universal rendering is desired
@@ -45,7 +43,7 @@ if (true || project.env === 'development') {
     quiet       : project.compiler_quiet,
     noInfo      : project.compiler_quiet,
     lazy        : false,
-    log         : webpackLog,
+    log         : webpackLog(webpackDebug),
     stats       : project.compiler_stats,
     watchOptions : {
       aggregateTimeout: 300,

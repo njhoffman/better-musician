@@ -43,4 +43,8 @@ export const injectReducer = (store, { key, reducer, models}) => {
   store.replaceReducer(makeRootReducer(store.asyncReducers, models));
 };
 
+export const initView = ({ dispatch }, viewName) =>
+    dispatch({ type: "INIT_VIEW", payload: { currentView: viewName } });
+
+
 export default makeRootReducer;

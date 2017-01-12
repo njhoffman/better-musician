@@ -1,4 +1,4 @@
-import { injectReducer } from 'store/reducers';
+import { injectReducer, initView } from 'store/reducers';
 
 export default (store, auth) => ({
   path : 'reset',
@@ -8,12 +8,21 @@ export default (store, auth) => ({
         console.info('authentication failed');
         return;
       }
-      const ResetContainer = require('./containers/ResetViewContainer').default;
-      const reducer = require('./modules/reset').default;
 
-      injectReducer(store, { key: 'resetView', reducer });
+      const importModules = Promise.all([
+        require('./components/ResetViewContainer').default,
+        require('./modules/reset').default
+      ]);
 
-      cb(null, ResetContainer);
+      importModules.then( ([container, reducer]) => {
+        injectReducer(store, { key: 'resetView', reducer: reducer });
+        initView(store, 'resetView');
+        cb(null, container);
+      });
+
+      importModules.catch(error => {
+        console.error("Error importing dynamic modules", error);
+      });
 
     }, 'resetView');
   }

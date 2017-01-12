@@ -7,6 +7,8 @@ import SignOutButton from 'components/SignOutButton';
 import ButtonLoader from 'components/ButtonLoader';
 import facebookIcon from 'assets/fb-icon.png';
 import googleIcon from 'assets/google-icon.png';
+import css from './DrawerMenu.scss';
+
 
 const googleIconComponent =
   <img
@@ -24,7 +26,7 @@ const linkStyle = {
 }
 
 const renderSignedIn = (props) => (
-  <div>
+  <div className={css.drawerMenuContainer}>
     <Drawer
       open={props.isOpen}
       docked={false}

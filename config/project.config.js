@@ -28,17 +28,9 @@ const config = {
   server_host : ip.address(), // use string 'localhost' to prevent exposure on local network
   server_port : process.env.PORT || 3000,
 
-  // ----------------------------------
-  // Database Configuration
-  // ----------------------------------
-  db_host : process.env.DB_HOST || 'localhost' ,
-  db_port : process.env.DB_PORT || 28015,
-  db_name : process.env.DB_NAME || 'instrumental',
-
   // API Configuration
   api_host   : process.env.API_HOST || 'localhost',
   api_port   : process.env.API_PORT || 3001,
-  api_secret : 'asjdkfjsdkgh',
 
   // ----------------------------------
   // Compiler Configuration

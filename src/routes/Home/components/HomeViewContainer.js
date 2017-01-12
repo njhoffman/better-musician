@@ -1,11 +1,12 @@
 import { connect } from 'react-redux';
 // import { increment, doubleAsync } from '../modules/counter';
 
-import ResetView from '../components/ResetView';
+import HomeView from './HomeView';
 
 // const mapActionCreators = ({});
 //
 const mapStateToProps = (state) => ({
+  songs: state.home && state.home.songs ? state.home.songs : []
 });
 
-export default connect(mapStateToProps)(ResetView);
+export default connect(mapStateToProps)(HomeView);

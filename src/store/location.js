@@ -2,9 +2,10 @@
 // Constants
 // ------------------------------------
 export const LOCATION_CHANGE = 'LOCATION_CHANGE';
+export const INIT_VIEW = 'INIT_VIEW';
 
 // ------------------------------------
-// Actions
+// Actions Creators
 // ------------------------------------
 export function locationChange (location = '/') {
   return {
@@ -16,16 +17,27 @@ export function locationChange (location = '/') {
 // ------------------------------------
 // Specialized Action Creator
 // ------------------------------------
-export const updateLocation = ({ dispatch }) => (nextLocation) =>
-  dispatch(locationChange(nextLocation));
+export const updateLocation = ({ dispatch }) => (nextLocation) => {
+  return dispatch(locationChange(nextLocation));
+}
 
+
+// ------------------------------------
+// Action Handlers
+// ------------------------------------
+
+const ACTION_HANDLERS = {
+  [LOCATION_CHANGE] : (state, action) => ({...state, ...action.payload }),
+  [INIT_VIEW] : (state, action) => ({...state, ...action.payload })
+};
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 const initialState = null;
+
 export default function locationReducer (state = initialState, action) {
-  return action.type === LOCATION_CHANGE
-    ? action.payload
-    : state;
+  const handler = ACTION_HANDLERS[action.type];
+
+  return handler ? handler(state, action) : state;
 }

@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 
-import SongsView from '../components/SongsView';
-
+import SongsView from './SongsView';
 
 
 const mapActionCreators = { };
