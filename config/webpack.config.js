@@ -23,7 +23,8 @@ const _RESOLVE_PATHS = {
   containers: "src/containers",
   interfaces: "src/interfaces",
   middleware: "src/middleware",
-  "redux-orm": "src/redux-orm"
+  selectors:  "src/selectors",
+  "redux-orm": "src/redux-orm",
   // "redux-auth": "src/redux-auth"
 };
 

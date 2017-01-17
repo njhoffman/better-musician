@@ -1,4 +1,5 @@
 import React from 'react';
+import muiThemeable from 'material-ui/styles/muiThemeable';
 import { Row, Column } from 'react-foundation';
 import { RaisedButton, TextField } from 'material-ui';
 import {
@@ -20,13 +21,14 @@ const SongsPagination = ({
   setPaginationIncrement,
   setPaginationDecrement,
   setPaginationStart,
-  setPaginationEnd
+  setPaginationEnd,
+  muiTheme
 }) => (
   <Row className={css.paginationRow}>
     <Column small={3} >
       <div className={css.paginationText}>
-        <span>Showing <strong>{paginationStart}</strong> - <strong>{paginationEnd}</strong> of
-          <strong> {paginationTotal}</strong> Songs</span>
+        <span>Showing &nbsp;<strong>{paginationStart}</strong> - <strong>{paginationEnd}  </strong>of
+          <strong>  {paginationTotal}</strong> Songs</span>
       </div>
     </Column>
     <Column small={6} >
@@ -34,7 +36,7 @@ const SongsPagination = ({
         <RaisedButton
           style={{ minWidth: "50px", margin: "0px 5px" }}
           onTouchTap={setPaginationStart}
-          icon={<span><BeforeIcon /><BeforeIcon style={{ marginLeft: '-10px' }} /></span>}
+          icon={<span style={{ color: muiTheme.palette.textColor }}><BeforeIcon /><BeforeIcon style={{ marginLeft: '-10px' }} /></span>}
         />
         <RaisedButton
           style={{ minWidth: "50px", margin: "0px 5px" }}
@@ -58,7 +60,7 @@ const SongsPagination = ({
         <RaisedButton
           style={{ minWidth: "50px", margin: "0px 5px" }}
           onTouchTap={setPaginationEnd}
-          icon={<span><NextIcon /><NextIcon style={{ marginLeft: '-10px' }} /></span>}
+          icon={<span style={{ color: muiTheme.palette.textColor }}><NextIcon /><NextIcon style={{ marginLeft: '-10px' }} /></span>}
         />
       </div>
     </Column>
@@ -80,4 +82,4 @@ const SongsPagination = ({
 
 SongsPagination.propTypes = {};
 
-export default (SongsPagination);
+export default muiThemeable()(SongsPagination);

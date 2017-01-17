@@ -2,9 +2,11 @@ import React, { PropTypes } from 'react';
 import { TableRow, TableRowColumn } from 'material-ui/Table';
 import css from './Song.scss';
 import muiThemeable from 'material-ui/styles/muiThemeable';
-import { RenderStars } from 'components/Field';
+import { RenderStars, RenderDifficulty } from 'components/Field';
 
-const Song = ({ songValues, viewSong, columnWidths, muiTheme, ...custom }) => {
+
+
+const Song = ({ songValues, viewSong, maxDifficulty, columnWidths, muiTheme, ...custom }) => {
   return (
     <TableRow
       hoverable={true}
@@ -34,7 +36,9 @@ const Song = ({ songValues, viewSong, columnWidths, muiTheme, ...custom }) => {
         data-rowId={songValues.id}
         style={columnWidths[3]}
         className={css.difficulty}>
-        { songValues.difficulty }
+        <RenderDifficulty
+          difficulty={songValues.difficulty}
+          maxDifficulty={maxDifficulty} />
       </TableRowColumn>
   </TableRow>
   );

@@ -69,21 +69,21 @@ class EmailSignUpForm extends React.Component {
 
         <Field
           component={RenderTextField}
-          floatingLabelText="Email"
+          label="Email"
           name="email-sign-up-email"
           disabled={disabled}
-          {...this.props.inputProps.email} />
+        />
 
         <Field type="password"
           component={RenderTextField}
-          floatingLabelText="Password"
+          label="Password"
           name="email-sign-up-password"
           disabled={disabled}
           {...this.props.inputProps.password} />
 
         <Field type="password"
           component={RenderTextField}
-          floatingLabelText="Password Confirmation"
+          label="Password Confirmation"
           name="email-sign-up-password-confirmation"
           disabled={disabled}
           {...this.props.inputProps.passwordConfirmation} />

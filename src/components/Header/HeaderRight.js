@@ -1,6 +1,6 @@
 import React, { Component }  from 'react';
 import { MdAccountCircle as AvatarIcon } from 'react-icons/lib/md';
-import { Avatar } from 'material-ui';
+import { Avatar, RaisedButton } from 'material-ui';
 import { Link } from 'react-router';
 import css from './Header.scss';
 
@@ -42,7 +42,7 @@ class HeaderRight extends Component {
     return (
       <div style={{ float: 'right', height: '100%', fontSize: '0.9em', paddingRight: '10px' }}>
         <div style={{ display: 'table', height: '100%' }}>
-          <Link to='/login' s
+          <Link to='/login'
             style={linkStyle}>
             <RaisedButton
               style={buttonStyle}

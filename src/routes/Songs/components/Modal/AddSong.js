@@ -65,7 +65,6 @@ export const AddSongModal = (props) => {
     ? 'Edit Song'
     : 'Add Song';
   const className = css.addSongModal + ' ' + css[props.modal.modalView];
-  const existingValues = props.modal.payload || {};
 
   return (
     <Dialog
@@ -84,7 +83,6 @@ export const AddSongModal = (props) => {
                 name="title"
                 component={RenderTextField}
                 viewType={props.modal.modalView}
-                values={existingValues.title}
                 label="Song Title" />
             </div>
             <div className={css.artistName}>
@@ -92,7 +90,6 @@ export const AddSongModal = (props) => {
                 name="artist"
                 viewType={props.modal.modalView}
                 component={RenderTextField}
-                values={existingValues.artist && existingValues.artist.fullName}
                 label="Song Artist" />
             </div>
           </div>
@@ -162,4 +159,4 @@ AddSongModal.propTypes = {
   isOpen:      React.PropTypes.bool
 };
 
-export default muiThemeable()(reduxForm({ form: 'addSongForm', validate })(AddSongModal));
+export default muiThemeable()(reduxForm({ form: 'addSongForm', enableReinitialize: true, validate })(AddSongModal));

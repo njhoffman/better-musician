@@ -3,7 +3,6 @@ import { IndexLink, Link } from 'react-router';
 import { Row, Column, Breakpoints } from 'react-foundation';
 import { Drawer, MenuItem, Popover, RaisedButton, Avatar } from 'material-ui';
 import muiThemeable from 'material-ui/styles/muiThemeable';
-import _ from 'lodash';
 
 import {
   MdFilterList    as FilterIcon,

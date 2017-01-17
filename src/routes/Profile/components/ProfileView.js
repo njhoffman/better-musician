@@ -14,13 +14,14 @@ import {
 import css from './ProfileView.scss';
 
 export const ProfileView = (props) => {
-  const user = props.user.get('attributes');
+  const user = props.user && props.user.get('attributes') ? props.user.get('attributes') : null;
   let disabled =  false;
   // (
   //   this.props.auth.getIn(["user", "isSignedIn"]) ||
   //   this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "loading"])
   // );
   const redirectSettings = () => browserHistory.push('/settings');
+  const redirectFields = () => browserHistory.push('/fields');
 
   const textColor = props.muiTheme.palette.textColor;
 
@@ -62,6 +63,12 @@ export const ProfileView = (props) => {
               onActive={redirectSettings}
               label="Settings">
               <Link to='/settings' />
+            </Tab>
+            <Tab
+              data-route="/fields"
+              onActive={redirectFields}
+              label="Fields">
+              <Link to='/fields' />
             </Tab>
           </Tabs>
         </div>

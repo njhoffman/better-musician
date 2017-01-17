@@ -121,33 +121,34 @@ const renderSignedOut = (props) => (
         </Link>
       </MenuItem>
       <Divider />
-      <OAuthSignInButton
-        style={{ width: '245px', margin: '5px 0px 5px 5px' }}
-        backgroundColor={'#4c69ba'}
-        labelColor={'#ffffff'}
-        icon={facebookIconComponent}
-        provider="facebook">
-        Sign In With Facebook
-      </OAuthSignInButton>
-      <OAuthSignInButton
-        style={{ width: '245px', margin: '0px 0px 5px 5px' }}
-        backgroundColor={'#4285f4'}
-        labelColor={'#ffffff'}
-        icon={googleIconComponent}
-        provider="google">
-        Sign In With Google
-      </OAuthSignInButton>
+      {/* <OAuthSignInButton */}
+      {/*   style={{ width: '245px', margin: '5px 0px 5px 5px' }} */}
+      {/*   backgroundColor={'#4c69ba'} */}
+      {/*   labelColor={'#ffffff'} */}
+      {/*   icon={facebookIconComponent} */}
+      {/*   provider="facebook"> */}
+      {/*   Sign In With Facebook */}
+      {/* </OAuthSignInButton> */}
+      {/* <OAuthSignInButton */}
+      {/*   style={{ width: '245px', margin: '0px 0px 5px 5px' }} */}
+      {/*   backgroundColor={'#4285f4'} */}
+      {/*   labelColor={'#ffffff'} */}
+      {/*   icon={googleIconComponent} */}
+      {/*   provider="google"> */}
+      {/*   Sign In With Google */}
+      {/* </OAuthSignInButton> */}
       <Link
         to='/profile'
         onClick={props.hideDrawerMenu}
         activeClassName='active'>
-        <ButtonLoader
-          icon={googleIconComponent}
-          backgroundColor={'#ffffff'}
-          labelColor={'#000000'}
-          style={{ width: '245px', margin: '0px 0px 5px 5px' }}>
-          Sign In With Email
-        </ButtonLoader>
+        {/* <ButtonLoader */}
+        {/*   icon={googleIconComponent} */}
+        {/*   onClick */}
+        {/*   backgroundColor={'#ffffff'} */}
+        {/*   labelColor={'#000000'} */}
+        {/*   style={{ width: '245px', margin: '0px 0px 5px 5px' }}> */}
+        {/*   Sign In With Email */}
+        {/* </ButtonLoader> */}
       </Link>
     </Drawer>
   </div>

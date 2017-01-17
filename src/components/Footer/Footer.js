@@ -1,6 +1,7 @@
 import React, { Component }  from 'react';
 import StarIcon from 'react-icons/lib/md/star';
 import { Row, Column, Breakpoints } from 'react-foundation';
+import { RenderStars, RenderDifficulty } from 'components/Field';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import css from './Footer.scss';
@@ -20,10 +21,54 @@ class Footer extends Component  {
     )
   }
 
-  renderSong (song) {
+  renderSongStatsFooter (stats) {
     return (
       <div className={css.footerWrapper}>
-        <Row className={css.footer}>
+        <Row className={css.footerStats}>
+          <Column
+            small={3}
+            centerOnSmall
+            className={css.leftColumn}>
+            <div className={css.fieldWrapper}>
+              <div className={css.field}>
+                <span>No Filters</span>
+              </div>
+            </div>
+          </Column>
+          <Column
+            small={6}
+            centerOnSmall
+            className={css.middleColumn}>
+            <div className={css.fieldWrapper}>
+              <div className={css.field}>
+                <span>Total {stats.songCount} songs</span>
+                <span>from {stats.artistCount} artists</span>
+                <span> in {stats.genreCount} genres </span>
+              </div>
+            </div>
+          </Column>
+          <Column
+            small={3}
+            centerOnSmall
+            className={css.rightColumn}>
+            <div className={css.fieldWrapper}>
+              <div className={css.field}>
+                <span>Average Difficulty</span>
+                <span>Average Progress</span>
+                <span>Progress Rate</span>
+              </div>
+            </div>
+          </Column>
+        </Row>
+      </div>
+    )
+  }
+
+  renderSongFoote (song) {
+    const artistPicture = song.artist.picture ? "artists/" + song.artist.picture : "artists/unknown_artist.png";
+    return (
+      <div className={css.footerWrapper}>
+        <Row className={css.footerSong}>
           <Column
             small={3}
             className={css.leftColumn}>
@@ -32,7 +77,7 @@ class Footer extends Component  {
               src={"instruments/" + song.instrument.picture} />
             <img
               className={css.artistPicture}
-              src={"artists/" + song.artist.picture} />
+              src={artistPicture} />
           </Column>
           <Column
             small={7}
@@ -50,9 +95,8 @@ class Footer extends Component  {
                   { song.artist.fullName }
                 </div>
                 <div className={css.genreName}>
-                  { song.genre && song.genre.displayName }
+                  { song.genre.name }
                 </div>
-
               </Column>
             </Row>
           </Column>
@@ -61,14 +105,15 @@ class Footer extends Component  {
             className={css.rightColumn}>
             <Row>
               <Column>
-                { song.difficulty }
+                <RenderDifficulty
+                  difficulty={song.difficulty}
+                  maxDifficulty={this.props.maxDifficulty}/>
+
               </Column>
             </Row>
             <Row>
               <Column>
-                { [...Array(song.progress)].map((x,i) =>
-                  <StarIcon key={i} style={{color: this.props.muiTheme.starColor}} />
-                ) }
+                <RenderStars number={song.progress} starColor={this.props.muiTheme.starColor} />
               </Column>
             </Row>
           </Column>
@@ -78,12 +123,12 @@ class Footer extends Component  {
   };
 
   render () {
-    const { song } = this.props;
+    const { song, stats } = this.props;
     // TODO: figure out why this is double firing
     if (song && song.artist) {
-      return this.renderSong(song);
+      return this.renderSongFooter(song);
     } else {
-      return this.renderBlank();
+      return this.renderSongStatsFooter(stats);
     }
   }
 };

@@ -4,19 +4,28 @@ import muiThemeable from 'material-ui/styles/muiThemeable';
 import { Paper } from 'material-ui';
 import EmailSignUpForm from './EmailSignUpForm';
 import OAuthSignInButton from 'components/OAuthSignInButton'
+import { browserHistory } from 'react-router';
+
 import css from './RegisterView.scss';
 import facebookIcon from 'assets/fb-icon.png';
 import googleIcon from 'assets/google-icon.png';
 
 
-const googleIconComponent =
-  <img
-    src={googleIcon}
-    style={{marginTop: '-10px', maxWidth: '30px', width: '30px', height: '30px' }} />;
-const facebookIconComponent =
-  <img
-    src={facebookIcon}
-    style={{marginTop: '-10px', width: '20px', maxWidth: '20px' }} />;
+const googleIconComponent = () => {
+  return (
+    <img
+      src={googleIcon}
+      style={{marginTop: '-10px', maxWidth: '30px', width: '30px', height: '30px' }} />
+  );
+}
+
+const facebookIconComponent = () => {
+  return (
+    <img
+      src={facebookIcon}
+      style={{marginTop: '-10px', width: '20px', maxWidth: '20px' }} />
+  );
+}
 
 export const RegisterView = (props) => (
   <Column small={8} centerOnSmall={true}>
@@ -43,7 +52,9 @@ export const RegisterView = (props) => (
         <div className={css.divider}>
           <span>or, sign up with email</span>
         </div>
-        <EmailSignUpForm next={() => { browserHistory.push('/songs') }}  />
+        <EmailSignUpForm
+          next={() => { browserHistory.push('/songs') }}
+        />
       </div>
     </Paper>
   </Column>

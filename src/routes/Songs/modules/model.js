@@ -1,4 +1,5 @@
 import {fk, many, Model, ORM as Schema} from 'redux-orm';
+import { uniq } from 'lodash';
 import {
   ADD_SONG,
   SET_CURRENT_SONG,
@@ -27,6 +28,31 @@ class Song extends BaseModel {
     return songs.reduce( (a,b) => {
       return a + parseInt(b.progress * b.difficulty * 10)
     }, 0);
+  }
+  static getMaxDifficulty() {
+    let max = 0;
+    const songs = this.all().toModelArray();
+    songs.forEach(song => {
+      max = song.difficulty > max ? song.difficulty : max;
+    });
+    return max;
+
+  }
+  static getStats() {
+    const songs = this.all().toModelArray();
+    const artists = uniq(songs.map(song => {
+      return song.artist.fullName;
+    }));
+    const genres = uniq(songs.map(song => {
+      return song.genre.name;
+    }));
+
+    return {
+      songCount: this.count(),
+      artistCount: artists.length,
+      genresCount: genres.length
+
+    }
   }
   static reducer(action, Song, session) {
     const { payload, type } = action;
@@ -62,7 +88,7 @@ Song.modelName = 'Song';
 Song.fields = {
   artist:     fk("Artist"),
   instrument: fk("Instrument"),
-  genres:     many("Genre")
+  genre:      fk("Genre")
 };
 
 Song.shallowFields = {

@@ -13,6 +13,7 @@ import {
 const RenderSelectField = ({
   ...input,
   label,
+  viewType,
   children,
   meta: { touched, error },
   ...custom }) => (
@@ -28,16 +29,14 @@ const RenderSelectField = ({
 );
 
 const RenderTextField = ({
-  viewType,
-  values,
   label,
+  viewType,
   meta: { touched, error },
   ...custom }) => {
     return (
       <div>
         <TextField
           floatingLabelText={label}
-          defaultValue={values}
           inputStyle={{ boxShadow: 'none' }}
           errorText={touched && error}
           {...custom}
@@ -49,24 +48,40 @@ const RenderTextField = ({
 class RenderSliderField extends Component {
 
   state = {
-    value: 1
+    value: this.props.input.value ? parseInt(this.props.input.value) : 1
   };
 
   render () {
-    const { input, label, textColor, children, meta: { touched, error }, ...custom } = this.props;
+    const {
+      input,
+      viewType,
+      label,
+      textColor,
+      children,
+      meta: { touched, error },
+      ...custom } = this.props;
     return (
       <div>
         <label style={{color: textColor}}> {label} {this.state.value}</label>
           <Slider
             onChange={(value) => this.setState({ value: value }) }
-            value={this.state.value}
-            defaultValue={this.state.value}
             input={input}
+            value={parseInt(this.state.value)}
             {...custom}
           />
       </div>
     )
   }
+};
+
+const RenderDifficulty = ({ difficulty, maxDifficulty }) => {
+  const ratio = parseFloat(1 / (difficulty / maxDifficulty));
+  const red   = 255;
+  const green = parseInt( (( ratio * 120) / 1.5) + 20 );
+  const blue  = parseInt( (( ratio * 120) / 1.8) + 20 );
+  // console.info(difficulty, ratio, red, green, blue);
+  const color = 'rgba(' + red + ', ' + green + ', ' + blue + ', 1)';
+  return <span style={{ color: color }}>{ difficulty }</span>
 };
 
 const RenderStars = ({ number, starColor }) => (
@@ -79,7 +94,6 @@ const RenderStars = ({ number, starColor }) => (
 
 const RenderNumberField = ({
   viewType,
-  values,
   label,
   meta: { touched, error },
   ...custom }) => {
@@ -91,7 +105,6 @@ const RenderNumberField = ({
           style={{ width: "125px", textAlign: 'center' }}
           inputStyle={{ textAlign: 'center', boxShadow: 'none' }}
           min={0}
-          defaultValue={values}
           errorText={touched && error}
           {...custom}
         />
@@ -101,6 +114,7 @@ const RenderNumberField = ({
 
 
 const RenderCheckbox = ({
+  viewType,
   meta: { touched, error },
   ...custom}) => (
     <div>
@@ -110,4 +124,4 @@ const RenderCheckbox = ({
     </div>
 );
 
-export { RenderSelectField, RenderTextField, RenderSliderField, RenderStars, RenderNumberField, RenderCheckbox };
+export { RenderSelectField, RenderTextField, RenderSliderField, RenderStars, RenderNumberField, RenderCheckbox, RenderDifficulty };

@@ -2,8 +2,7 @@ import { connect } from 'react-redux';
 import {
   userDisplay as userDisplaySelector,
   userPoints as userPointsSelector
-} from 'routes/Songs/modules/selectors';
-// import { showModal } from '../store/modal';
+} from 'selectors/users';
 
 import Header from './Header';
 

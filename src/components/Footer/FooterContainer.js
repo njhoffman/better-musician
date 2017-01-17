@@ -1,10 +1,15 @@
 import { connect } from 'react-redux';
-import { getCurrentSong } from 'routes/Songs/modules/songs';
+import { maxDifficulty as maxDifficultySelector} from 'selectors/users';
+import {
+  currentSong as currentSongSelector,
+  songStats as songStatsSelector } from 'routes/Songs/modules/selectors';
 
 import Footer from './Footer';
 
 const mapStateToProps = (state) => ({
-  song: getCurrentSong(state),
+  song:          currentSongSelector(state),
+  stats:         songStatsSelector(state),
+  maxDifficulty: maxDifficultySelector(state)
 });
 
 const mapActionCreators  = {};

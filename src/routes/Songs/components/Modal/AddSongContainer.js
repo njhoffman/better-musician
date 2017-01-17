@@ -9,6 +9,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => ({
   genres:      state.songs && state.songs.genres,
+  initialValues : state.modal.payload,
   instruments: state.songs && state.songs.instruments,
   modal:       state.modal,
   isOpen:      isOpen(state.modal)

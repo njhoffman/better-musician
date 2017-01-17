@@ -64,10 +64,6 @@ export const artists = createSelector(
   artistSelector
 );
 
-
-
-
-
 const paginationTotalSelector = ormCreateSelector(orm, session => {
   return session.Song.count();
 });
@@ -112,34 +108,12 @@ export const paginationPages = createSelector(
   paginationPagesSelector
 );
 
-
-
-const userPointsSelector = ormCreateSelector(orm, (session, user) => {
-  const points = session.Song && session.Song.getPointTotal();
-  return isNaN(points) ? 0 : points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+const songStatsSelector = ormCreateSelector(orm, (session, state) => {
+  return session.Song.getStats();
 });
 
-export const userPoints = createSelector(
+export const songStats = createSelector(
   ormSelector,
-  state => state.user,
-  userPointsSelector
+  state => state.orm,
+  songStatsSelector
 );
-
-
-const userDisplaySelector = ormCreateSelector(orm, (session, user) => {
-  if (user.get('attributes').get('lastName')
-    || user.get('attributes').get('firstName')) {
-      return user.get('attributes').get('firstName')
-        + ' ' + user.get('attributes').get('lastName');
-  }
-  return user.get('attributes').get('email');
-});
-
-export const userDisplay = createSelector(
-  ormSelector,
-  state => state.auth.get('user'),
-  userDisplaySelector
-);
-
-
-
