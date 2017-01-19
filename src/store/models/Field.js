@@ -8,6 +8,17 @@ class Field extends BaseModel {
       case 'LOAD_FIELDS':
         this.loadData(action.payload, Field);
         break;
+      case 'ADD_FIELD':
+        if (action.payload) {
+          this.create(action.payload);
+        }
+        break;
+      case 'DELETE_FIELD':
+        if (action.payload) {
+          const field = Field.withId(action.payload);
+          field.delete();
+        }
+        break;
       default:
         break;
     }

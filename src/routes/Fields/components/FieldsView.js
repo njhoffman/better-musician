@@ -3,12 +3,15 @@ import { RaisedButton, Paper, Tabs, Tab } from 'material-ui';
 import { Row, Column } from 'react-foundation';
 import { Field, FieldArray, reduxForm } from 'redux-form';
 import { Link, browserHistory } from 'react-router';
-import { MdAdd as AddIcon } from 'react-icons/lib/md';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import ButtonLoader from 'components/ButtonLoader';
 import FieldList from './FieldList';
 import FieldOptions from './FieldOptions';
+import {
+  MdSave as SaveIcon,
+  MdAdd as AddIcon
+} from 'react-icons/lib/md';
 import {
   RenderSelectField,
   RenderTextField
@@ -52,7 +55,40 @@ export const FieldsView = (props) => {
     }
   };
 
+  const renderEditButtons = (props) => (
+    <div>
+      <ButtonLoader
+        type="submit"
+        label="Update"
+        labelStyle={{ color: textColor, paddingRight: '5px' }}
+        style={{ width: '100px', marginRight: '15px' }}
+        onClick={props.updateField}
+        primary={true}
+        icon={<SaveIcon style={{ marginTop: '-10px', color: textColor }} />}
+        className='update-fields-submit'
+        disabled={disabled} >
+      </ButtonLoader>
+      <RaisedButton
+        label='Cancel'
+      />
+    </div>
+  );
 
+  const renderAddButtons = (props) => (
+      <ButtonLoader
+        type="submit"
+        label="Add Field"
+        labelStyle={{ color: textColor, paddingRight: '5px' }}
+        style={{ width: '160px', marginRight: '15px' }}
+        onClick={props.addField}
+        primary={true}
+        icon={<AddIcon style={{ marginTop: '-10px', color: textColor }} />}
+        className='update-fields-submit'
+        disabled={disabled} >
+      </ButtonLoader>
+  );
+
+  const { editingField } = props;
   return (
     <Column small={8} centerOnSmall={true}>
       <Paper zDepth={5}>
@@ -104,19 +140,10 @@ export const FieldsView = (props) => {
                   {props.formValues && renderExtraFields(props.formValues)}
                 </div>
                 <div className={css.buttons}>
-                  <ButtonLoader
-                    type="submit"
-                    label="Add Field"
-                    labelStyle={{ color: textColor, paddingRight: '5px' }}
-                    style={{ width: '160px', marginRight: '15px' }}
-                    onClick={props.updateFields}
-                    primary={true}
-                    icon={<AddIcon style={{ marginTop: '-10px', color: textColor }} />}
-                    className='update-fields-submit'
-                    disabled={disabled} >
-                  </ButtonLoader>
+                  {editingField && renderEditButtons(props)}
+                  {!editingField && renderAddButtons(props)}
                 </div>
-                <FieldList tabs={props.savedTabs} />
+                <FieldList {...props} />
               </form>
             </Tab>
           </Tabs>
@@ -125,5 +152,5 @@ export const FieldsView = (props) => {
     </Column>
   );
 };
-const updateFieldsForm = reduxForm({ form: 'updateFieldsForm' })(muiThemeable()(FieldsView));
+const updateFieldsForm = reduxForm({ form: 'updateFieldsForm', enableReinitialize: true })(muiThemeable()(FieldsView));
 export default updateFieldsForm;

@@ -45,5 +45,5 @@ fileList = fileList.filter(file => {
 });
 
 console.log(fileList.length);
-// mkdirSync(outputDir);
-// plato.inspect(fileList, outputDir, platoOptions, platoFinished);
+mkdirSync(outputDir);
+plato.inspect(fileList, outputDir, platoOptions, platoFinished);

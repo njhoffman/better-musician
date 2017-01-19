@@ -1,56 +1,52 @@
 import React, { Component } from 'react';
 import {
+  RenderChip,
   RenderTextField,
 } from 'components/Field';
+import { Field, FieldArray } from 'redux-form';
 import { Chip, RaisedButton } from 'material-ui';
 import css from './FieldsView.scss';
 
 class FieldOptions extends Component {
   state = {
-    optionText : '',
-    optionValues : []
+    optionText : ''
   };
-  addOption() {
-    const optionValues = this.state.optionText.trim().length > 0
-      && this.state.optionValues.indexOf(this.state.optionText) === -1
-      ? this.state.optionValues.concat([this.state.optionText])
-      : this.state.optionValues;
+  constructor(props) {
+    super(props);
+  }
+
+  addOption(fields) {
+    fields.push(this.state.optionText.trim());
     this.setState({
-      optionValues,
       optionText: ''
     })
-  }
-  removeOption(optionValue) {
-    let optionValues = this.state.optionValues.slice(0);
-    optionValues.splice(optionValues.indexOf(optionValue), 1);
-    this.setState({
-      optionValues
-    });
   }
   render() {
     return (
       <div>
-        <div className={css.flexCenter}>
+        <div className={css.flexThree}>
           <RenderTextField
             label='Option Text'
             onChange={(e) => this.setState({ optionText: e.target.value }) }
+            autoComplete='off'
             style={{ width: '60%', display: 'inline-block' }}
             value={this.state.optionText}
             name='optionText'
           />
           <RaisedButton
-            onTouchTap={this.addOption.bind(this)}
+            onTouchTap={this.addOption.bind(this, this.props.fields)}
             style={{ display: 'inline-block', minWidth: '30%', marginLeft: '10px' }}
             label='Add' />
         </div>
         <div className={css.selectOptions}>
-          {this.state.optionValues.map((option, index) =>
-            <Chip
-              onRequestDelete={this.removeOption.bind(this, option)}
-              style={{ marginLeft: '5px', marginBottom: '5px' }}
-              key={index}>
-              {option}
-            </Chip>
+          {this.props.fields.map((option, index, fields) =>
+            <Field
+              key={index}
+              name={`${option}`}
+              component={RenderChip}
+              onRequestDelete={() => fields.remove(index)}
+              style={{ margin: '5px 2px' }}
+            />
           )}
         </div>
       </div>

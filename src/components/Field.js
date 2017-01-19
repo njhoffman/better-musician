@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import StarIcon from 'react-icons/lib/md/star';
-import { MenuItem } from 'material-ui';
+import { MenuItem, Chip } from 'material-ui';
 import {
   AutoComplete,
   Checkbox,
@@ -39,6 +39,24 @@ const RenderSelectField = ({
       { generateMenu(dataSource) }
     </SelectField>
 );
+
+const RenderChip = ({
+  label,
+  viewType,
+  meta,
+  style,
+  input,
+  ...custom }) => {
+    return (
+      <Chip
+        label={label}
+        style={{ ...style }}
+        {...custom}
+      >
+        {input.value}
+      </Chip>
+    );
+  };
 
 const RenderTextField = ({
   label,
@@ -162,4 +180,4 @@ const RenderCheckbox = ({
     />
 );
 
-export { RenderSelectField, RenderTextField, RenderSliderField, RenderStars, RenderNumberField, RenderCheckbox, RenderDifficulty, RenderAutoCompleteField };
+export { RenderSelectField, RenderTextField, RenderSliderField, RenderStars, RenderNumberField, RenderCheckbox, RenderDifficulty, RenderAutoCompleteField, RenderChip };

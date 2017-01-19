@@ -34,6 +34,7 @@
       width: 175px;
       flex: 0 0 175px;
     }
+
     .flexTwo {
       width: 285px;
       flex: 0 0 285px;
@@ -46,9 +47,9 @@
         max-width: 500px;
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-around;
+        justify-content: center;
       }
-      .flexCenter {
+      .flexThree {
         margin-left: auto;
         margin-right: auto;
       }
@@ -60,6 +61,10 @@
         border-radius: 10px;
         border: solid 1px #456;
         margin-bottom: 10px;
+        &.active {
+          border: solid 1px rgb(170,180,204);
+          background-color: rgba(170, 180, 204, 0.1);
+        }
         .fieldValue,
         .fieldButtons,
         .fieldLabel {

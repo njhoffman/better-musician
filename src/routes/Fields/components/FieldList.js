@@ -8,6 +8,7 @@ import {
 } from 'components/Field';
 import {
   MdModeEdit      as EditIcon,
+  MdClose         as CancelIcon,
   MdDelete        as DeleteIcon
 } from 'react-icons/lib/md';
 import css from './FieldsView.scss';
@@ -39,19 +40,20 @@ const renderPreviewField = ({ id, type, label, optionValues }) => {
 };
 
 class FieldList extends Component {
-  constructor({ tabs }) {
-    super();
-    this.tabs = tabs;
+  constructor(props) {
+    super(props);
   }
   render() {
+    const props = this.props;
+    const editingId = props.editingField ? props.editingField.id : null;
     return (
       <div className={css.fieldList}>
-        {this.tabs.map((tab, i) =>
+        {props.savedTabs.map((tab, i) =>
           <div key={i}>
             <p style={{ textAlign: 'left' }}><strong>{tab.name}</strong></p>
             <hr />
             {tab.fields.map(field =>
-              <div key={field.id} className={css.tabbedField}>
+              <div key={field.id} className={css.tabbedField + ' ' + (field.id === editingId ? css.active  : '')}>
                 <div className={css.flexTwo}>
                   <div>
                     <span className={css.fieldLabel}>Label:</span>
@@ -66,11 +68,17 @@ class FieldList extends Component {
                   {renderPreviewField(field)}
                   <div className={css.fieldButtons}>
                     <FlatButton
+                      onTouchTap={field.id === editingId ? props.cancelEdit : props.editField.bind(undefined, field)}
                       style={{ minWidth: '35px', width: '35px', float: 'right', color: '#BBBBFF' }}
-                      icon={<EditIcon />} />
-                    <FlatButton
-                      style={{ minWidth: '35px', width: '35px', float: 'right', color: '#FFBBBB' }}
-                      icon={<DeleteIcon />} />
+                      icon={field.id === editingId ? <CancelIcon onTouchTap={props.cancelEdit} /> : <EditIcon />}
+                    />
+                    {!(field.id === editingId) &&
+                      <FlatButton
+                        onClick={props.deleteField.bind(undefined, field.id)}
+                        style={{ minWidth: '35px', width: '35px', float: 'right', color: '#FFBBBB' }}
+                        icon={<DeleteIcon />}
+                      />
+                    }
                   </div>
                 </div>
               </div>

@@ -14,10 +14,15 @@ const apiFetch = (endpoint, options) => {
   if (options.body) {
     let formData = new FormData();
     Object.keys(options.body).forEach(key => {
-      formData.set(key, options.body[key]);
+      if (Array.isArray(options.body[key])) {
+        options.body[key].forEach(item => {
+          formData.append(key, item);
+        });
+      } else {
+        formData.set(key, options.body[key]);
+      }
     });
     options.body = formData;
-    debugger;
   }
   console.info("Fetching: " + endpoint, options);
   return fetch(endpoint, options)
@@ -65,6 +70,7 @@ export default (store) => next => action => {
   next(actionWith({ type: requestType }));
 
   const responseSuccess = (response) => {
+    console.info('fetch success', response);
     if (typeof successType === 'function') {
       return next(
         successType(response)

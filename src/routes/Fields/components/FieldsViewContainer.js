@@ -1,19 +1,32 @@
 import { connect } from 'react-redux';
 import FieldsView from './FieldsView';
-import { updateFields } from '../modules/fields';
+
+import {
+  updateField,
+  addField,
+  editField,
+  deleteField,
+  cancelEdit
+} from '../modules/fields';
+
 import {
   savedFields as savedFieldsSelector,
   savedTabs as savedTabsSelector
 } from '../modules/selectors';
 
 const mapActionCreators = {
-  updateFields
+  addField,
+  updateField,
+  editField,
+  deleteField,
+  cancelEdit
 };
 
 const mapStateToProps = (state) => ({
-  settings:   state.user,
-  savedTabs:  savedTabsSelector(state),
-  formValues: state.form.updateFieldsForm ? state.form.updateFieldsForm.values : null,
+  initialValues: state.fieldsView.editingField,
+  editingField:  state.fieldsView.editingField,
+  savedTabs:     savedTabsSelector(state),
+  formValues:    state.form.updateFieldsForm ? state.form.updateFieldsForm.values : null
 });
 
 export default connect(mapStateToProps, mapActionCreators)(FieldsView);
