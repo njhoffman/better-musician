@@ -1,4 +1,5 @@
-import { injectReducer, initView } from 'store/reducers';
+import { injectReducer } from 'store/reducers';
+import { initView } from 'store/view';
 
 export default (store, auth) => ({
   /*  Async getComponent is only invoked when route matches   */

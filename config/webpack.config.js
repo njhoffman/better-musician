@@ -24,7 +24,8 @@ const _RESOLVE_PATHS = {
   interfaces: "src/interfaces",
   middleware: "src/middleware",
   selectors:  "src/selectors",
-  "redux-orm": "src/redux-orm",
+  store:      "src/store",
+  // "redux-orm": "src/redux-orm",
   // "redux-auth": "src/redux-auth"
 };
 
@@ -119,9 +120,9 @@ if (__TEST__ && !argv.watch) {
 if (__DEV__) {
   debug('Enabling plugins for live development (HappyPack, HMR, NoErrors).');
   webpackConfig.plugins.push(
-    new HappyPack({
-      loaders: [ 'babel?presets[]=' + project.compiler_babel.presets.join(',presets[]=') ]
-    }),
+    // new HappyPack({
+    //   loaders: [ 'babel?presets[]=' + project.compiler_babel.presets.join(',presets[]=') ]
+    // }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin()
   );
@@ -156,27 +157,27 @@ webpackConfig.module.loaders = [];
 
 
 // happypack loader
-webpackConfig.module.loaders.push({
-  test    : /\.(js|jsx)$/,
-  include : [/src/],
-  exclude : [/node_modules/],
-  loader  : 'happypack/loader',
-  query   : project.compiler_babel
-}, {
-  test   : /\.json$/,
-  loader : 'json'
-});
-
-// JavaScript / JSON
 // webpackConfig.module.loaders.push({
 //   test    : /\.(js|jsx)$/,
-//   exclude : /node_modules/,
-//   loader  : 'babel',
+//   include : [/src/],
+//   exclude : [/node_modules/],
+//   loader  : 'happypack/loader',
 //   query   : project.compiler_babel
 // }, {
 //   test   : /\.json$/,
 //   loader : 'json'
 // });
+
+// JavaScript / JSON
+webpackConfig.module.loaders.push({
+  test    : /\.(js|jsx)$/,
+  exclude : /node_modules/,
+  loader  : 'babel',
+  query   : project.compiler_babel
+}, {
+  test   : /\.json$/,
+  loader : 'json'
+});
 
 // ------------------------------------
 // Style Loaders

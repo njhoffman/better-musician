@@ -1,19 +1,19 @@
 // import { combineReducers } from 'redux-immutablejs';
 import { combineReducers } from 'redux';
-import locationReducer from './location';
-import modalReducer from './modal';
-import drawerMenuReducer from './drawerMenu';
 import { reducer as formReducer } from 'redux-form';
 import { authStateReducer } from './auth';
 import Immutable from 'immutable'
+import locationReducer from './location';
+import modalReducer from './modal';
+import drawerMenuReducer from './drawerMenu';
+import songsReducer from './songs';
 
-import { ORM, createReducer } from 'redux-orm';
-
-import baseModels from './baseModels';
 // selectors need access to ORM
 // TODO: put orm in own module
+import { ORM, createReducer } from 'redux-orm';
+import models from './models';
 export const orm = new ORM();
-orm.register(...baseModels);
+orm.register(...models);
 const ormReducer = createReducer(orm);
 
 export const makeRootReducer = (asyncReducers, injectedModels = []) => {
@@ -28,6 +28,7 @@ export const makeRootReducer = (asyncReducers, injectedModels = []) => {
     form:           formReducer,
     modal:          modalReducer,
     drawerMenu:     drawerMenuReducer,
+    songs:          songsReducer,
     // auth reducer is immutable js so must be mapped in containers correctly
     auth:           authStateReducer,
     ...asyncReducers
@@ -42,9 +43,6 @@ export const injectReducer = (store, { key, reducer, models}) => {
   store.asyncReducers[key] = reducer;
   store.replaceReducer(makeRootReducer(store.asyncReducers, models));
 };
-
-export const initView = ({ dispatch }, viewName) =>
-    dispatch({ type: "INIT_VIEW", payload: { currentView: viewName } });
 
 
 export default makeRootReducer;

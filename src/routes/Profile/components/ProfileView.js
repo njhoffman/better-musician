@@ -26,7 +26,7 @@ export const ProfileView = (props) => {
   const textColor = props.muiTheme.palette.textColor;
 
   return (
-    <Column small={7} centerOnSmall={true}>
+    <Column small={8} centerOnSmall={true}>
       <Paper zDepth={5}>
         <div className={css.profileContainer}>
           <Tabs>
@@ -37,6 +37,10 @@ export const ProfileView = (props) => {
                 className={css.profileForm}>
                 <h3>Update Your Profile</h3>
                 <Field
+                  name="userName"
+                  component={RenderTextField}
+                  label="User Name" />
+                <Field
                   name="firstName"
                   component={RenderTextField}
                   label="First Name" />
@@ -44,6 +48,10 @@ export const ProfileView = (props) => {
                   name="lastName"
                   component={RenderTextField}
                   label="Last Name" />
+                <Field
+                  name="notificationsEmail"
+                  component={RenderTextField}
+                  label="Notifications Email" />
                 <div className={css.buttons}>
                   <ButtonLoader
                     type="submit"

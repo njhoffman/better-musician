@@ -1,0 +1,86 @@
+// @import "core.scss";
+
+.fieldsContainer {
+  text-align: center;
+  position: relative;
+  margin: 20px 0px !important;
+  padding: 0px !important;
+
+  .fieldsForm {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 25px;
+    text-align: center;
+
+    .fieldAdd,
+    .buttons,
+    .extraFields,
+    .tabbedField {
+      display: flex;
+      max-width: none;
+      width: 100%;
+      flex-wrap: wrap;
+      box-align: stretch;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    .buttons {
+      padding-top: 25px;
+      padding-bottom: 25px;
+    }
+
+    .flexThree {
+      width: 175px;
+      flex: 0 0 175px;
+    }
+    .flexTwo {
+      width: 285px;
+      flex: 0 0 285px;
+    }
+    .extraFields {
+      margin-left: auto;
+      margin-right: auto;
+      .selectOptions {
+        margin-top: 10px;
+        max-width: 500px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+      }
+      .flexCenter {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+    .fieldList {
+      margin: 10px;
+      padding-bottom: 10px;
+      .tabbedField {
+        border-radius: 10px;
+        border: solid 1px #456;
+        margin-bottom: 10px;
+        .fieldValue,
+        .fieldButtons,
+        .fieldLabel {
+          display: inline-block;
+          font-size: 0.8em;
+          text-align: right;
+        }
+        .fieldLabel {
+          color: rgb(0, 151, 167);
+          font-variant: small-caps;
+          width: 25%;
+        }
+        .fieldValue {
+          width: 75%;
+        }
+        .fieldButtons {
+          width: 60px;
+          float: right;
+          font-size: 1.0em;
+        }
+      }
+    }
+  }
+}

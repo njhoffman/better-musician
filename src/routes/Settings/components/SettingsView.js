@@ -24,10 +24,11 @@ export const SettingsView = (props) => {
   //   this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "loading"])
   // );
   const redirectProfile = () => browserHistory.push('/profile');
+  const redirectFields = () => browserHistory.push('/fields');
   const textColor = props.muiTheme.palette.textColor;
 
   return (
-    <Column small={7} centerOnSmall={true}>
+    <Column small={8} centerOnSmall={true}>
       <Paper zDepth={5}>
         <div className={css.settingsContainer}>
           <Tabs value="settings">
@@ -36,7 +37,6 @@ export const SettingsView = (props) => {
               value="profile"
               onActive={redirectProfile}
               label="Profile">
-              <Link to='/profile' />
             </Tab>
             <Tab
               data-route="/settings"
@@ -114,6 +114,13 @@ export const SettingsView = (props) => {
                   </div>
                 </div>
               </form>
+            </Tab>
+            <Tab
+              data-route="/fields"
+              value="fields"
+              onActive={redirectFields}
+              label="Fields">
+              <Link to='/fields' />
             </Tab>
           </Tabs>
         </div>

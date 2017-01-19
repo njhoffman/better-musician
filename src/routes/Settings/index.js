@@ -1,4 +1,6 @@
-import { injectReducer, initView } from 'store/reducers';
+import { injectReducer } from 'store/reducers';
+import { initView } from 'store/view';
+import { fetchSongs } from 'store/songs';
 
 export default (store, auth) => ({
   path : 'settings',
@@ -17,6 +19,7 @@ export default (store, auth) => ({
       importModules.then( ([container, reducer]) => {
         injectReducer(store, { key: 'settingsView', reducer: reducer });
         initView(store, 'settingsView');
+        fetchSongs(store);
         cb(null, container);
       });
 

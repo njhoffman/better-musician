@@ -1,8 +1,7 @@
 // global orm models
+import BaseModel from './BaseModel';
 
-import {fk, many, Model} from 'redux-orm';
-
-class User extends Model {
+class User extends BaseModel {
   static reducer(state, action, User, session) {
     const { payload, type } = action;
     switch (type) {
@@ -22,8 +21,5 @@ User.fields = {
 User.shallowFields = {
 };
 
-export const models = [
-  User
-];
-export default models;
+export default User;
 

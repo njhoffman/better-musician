@@ -1,7 +1,8 @@
 const chalk = require("chalk");
-const verbose = true;
 const util = require("util");
 const pjson = require('prettyjson-256');
+const verbosity = !isNaN(process.env.DEBUG_VERBOSITY) ? process.env.DEBUG_VERBOSITY : 2;
+
 
 const pjsonOptions = {
   colors:     {
@@ -92,7 +93,7 @@ const requestOutput = function(debug) {
 
     debug(padRight(chalk[methodColor](method) + ' ' + url, 50));
 
-    if (verbose) {
+    if (verbosity > 1) {
       debug(outputHeaders(req.headers));
       if (req.session) {
         debug(outputSession(req.sesion));
@@ -152,7 +153,7 @@ const responseOutput = function(debug) {
         + ' ' + chalk.reset('-')
       + ' ' + chalk.reset(contentLength));
 
-    if (verbose) {
+    if (verbosity > 1) {
       debug(outputHeaders(res.headers ? res.headers : req.headers));
       debug(outputSession(req.session));
       if (req.cookies && Object.keys(req.cookies).length > 0) {
@@ -187,7 +188,7 @@ const morganOutput = function(debug) {
         + ' ' + chalk.reset(padLeft(responseTime + ' ms', 8))
         + ' ' + chalk.reset('-')
       + ' ' + chalk.reset(contentLength));
-    if (verbose) {
+    if (verbosity > 1) {
       debug(outputHeaders(res.headers ? res.headers : req.headers));
       debug(outputSession(req.session));
       if (res.locals && Object.keys(res.locals).length > 0) {

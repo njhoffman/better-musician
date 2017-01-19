@@ -10,26 +10,15 @@
       margin: 0;
     }
 
-    .flexLeft {
-      flex: 0 0 250px;
-      width: 250px;
-    }
 
-    .flexRight {
-      width: 250px;
-      flex: 0px 0px 250px;
+    .imageFrame {
+      text-align: center;
+      img {
+        height: 200px;
+        margin-bottom: 5px;
+      }
     }
-
-    .songTitle {
-      height: 72px !important;
-    }
-
-    .songArtist {
-      height: 72px !important;
-    }
-
-    .top,
-    .bottom {
+    .fieldGroup {
       width: 100%;
       max-width: none;
       display: flex;
@@ -37,6 +26,16 @@
       box-align: stretch;
       align-items: stretch;
       justify-content: space-around;
+    }
+
+    .flexLeft {
+      flex: 0 0 250px;
+      width: 250px;
+    }
+
+    .flexRight {
+      width: 250px;
+      flex: 0 0 250px;
     }
 
   }

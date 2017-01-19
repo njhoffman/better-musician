@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import createStore from './store/createStore';
 import AppContainer from 'components/AppContainer';
-import { configure } from './store/auth/actions/configure';
+import { configure as authConfigure } from './store/auth/actions/configure';
 
 // import 'material-design-lite/src/typography/_typography.scss';
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -25,8 +25,8 @@ const MOUNT_NODE = document.getElementById('root');
 
 let render = () => {
   const routes = require('./routes/index').default(store);
-  // trigger auth base config
-  store.dispatch(configure({
+
+  store.dispatch(authConfigure({
     apiUrl:                'http://localhost:3000/api',
     signOutPath:           '/users/logout',
     emailSignInPath:       '/users/login',
@@ -47,8 +47,6 @@ let render = () => {
     // cleanSession:        true
     }
   )).then(() => {
-      // your store should now have the current user. now render your
-      // app to the DOM. see the demo app for a more complete example.
 
       ReactDOM.render(
         <AppContainer store={store} routes={routes} />,

@@ -1,6 +1,6 @@
-import { injectReducer, initView } from 'store/reducers';
-import { fetchSongs } from './modules/songs';
-
+import { injectReducer } from 'store/reducers';
+import { initView } from 'store/view';
+import { fetchSongs } from 'store/songs';
 
 export default (store, auth) => ({
   path : 'songs',
@@ -14,14 +14,13 @@ export default (store, auth) => ({
 
       const importModules = Promise.all([
         require('./components/SongsViewContainer').default,
-        require('./modules/songs').default,
-        require('./modules/model').default
+        require('./modules/songs').default
       ]);
 
       importModules.then( ([container, reducer, models]) => {
         injectReducer(store, { key: 'songsView', reducer: reducer, models: models });
         initView(store, 'songsView');
-        store.dispatch(fetchSongs());
+        fetchSongs(store);
         cb(null, container);
       });
 

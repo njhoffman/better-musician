@@ -1,15 +1,29 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { RenderSelectField, RenderTextField, RenderSliderField } from 'components/Field';
-import FlatButton from 'material-ui/FlatButton';
-import Dialog from 'material-ui/Dialog';
-import MenuItem from 'material-ui/MenuItem';
+import { Dialog, FlatButton, RaisedButton, MenuItem, Tabs, Tab } from 'material-ui';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import css from './AddSong.scss';
+
+import {
+  RenderSelectField,
+  RenderAutoCompleteField,
+  RenderStars,
+  RenderDifficulty,
+  RenderTextField,
+  RenderSliderField
+} from 'components/Field';
 
 const dialogStyle = {
   maxWidth: "650px"
 };
+
+const dialogBodyStyle = {
+  padding: "5px"
+};
+
+const tabContainerStyle = {
+  paddingTop: "20px"
+}
 
 const validate = (values) => {
   const errors = {};
@@ -22,6 +36,7 @@ const validate = (values) => {
   return errors;
 };
 
+let lastActiveField = 'artist';
 
 export const AddSongModal = (props) => {
 
@@ -59,93 +74,140 @@ export const AddSongModal = (props) => {
   }
 
   const textColor = props.muiTheme.palette.textColor;
-  const title = modalView === 'view'
-    ? 'View Song'
-    : modalView === 'edit'
-    ? 'Edit Song'
-    : 'Add Song';
   const className = css.addSongModal + ' ' + css[props.modal.modalView];
+
+  lastActiveField = ['artist', 'instrument'].indexOf(props.activeField) !== -1 ? props.activeField : lastActiveField;
+  const renderImage = (props) => {
+    if (props.activeField === 'artist' || lastActiveField === 'artist') {
+      if (props.matchedArtist) {
+        return (
+          <div className={css.imageFrame}>
+            <img src={"/artists/" + props.matchedArtist.picture} />
+            <div>{props.matchedArtist.fullName}</div>
+            <RaisedButton label="Change Picture" />
+          </div>
+        );
+      } else {
+        return (
+          <div className={css.imageFrame}>
+            <img src="/artists/unknown_artist.png" />
+            <div>Unknown Artist</div>
+            <RaisedButton label="Add Picture" />
+          </div>
+        );
+      }
+    } else if (props.activeField === 'instrument' || lastActiveField === 'instrument') {
+        return (
+          <div className={css.imageFrame}>
+            <img src="/instruments/unknown_instrument.png" />
+            <div>Unknown Instrument</div>
+            <RaisedButton label="Add Picture" />
+          </div>
+        );
+    }
+  }
+
+  const renderStars = (number) => {
+    return (
+      <RenderStars
+        number={number}
+      style={{ display: "inline", float: "right" }} />
+    );
+  };
+
+  const renderDifficulty = (difficulty, maxDifficulty) => {
+    return (
+      <RenderDifficulty
+        difficulty={difficulty}
+        maxDifficulty={maxDifficulty}
+        style={{ display: "inline", float: "right" }} />
+    );
+  };
 
   return (
     <Dialog
-      title={title}
       modal={false}
-      actions={ actionButtons }
-      open={ props.isOpen }
-      onRequestClose={ props.hideModal }
+      actions={actionButtons}
+      open={props.isOpen}
+      onRequestClose={props.hideModal}
+      bodyStyle={dialogBodyStyle}
       className={className}
       contentStyle={dialogStyle}>
       <form onSubmit={props.addSong}>
-        <div className={css.bottom}>
-          <div className={css.flexLeft}>
-            <div className={css.songTitle}>
-              <Field
-                name="title"
-                component={RenderTextField}
-                viewType={props.modal.modalView}
-                label="Song Title" />
+        <Tabs contentContainerStyle={tabContainerStyle}>
+          <Tab
+              value="main"
+              label="Main Fields">
+            <div className={css.fieldGroup}>
+              { renderImage(props) }
             </div>
-            <div className={css.artistName}>
-              <Field
-                name="artist"
-                viewType={props.modal.modalView}
-                component={RenderTextField}
-                label="Song Artist" />
+            <div className={css.fieldGroup}>
+              <div className={css.flexLeft}>
+                <Field
+                  name="title"
+                  component={RenderTextField}
+                  viewType={props.modal.modalView}
+                  label="Song Title" />
+              </div>
+              <div className={css.flexRight}>
+                <Field
+                  name="artist"
+                  viewType={props.modal.modalView}
+                  dataSource={props.artists}
+                  component={RenderAutoCompleteField}
+                  label="Song Artist" />
+              </div>
             </div>
-          </div>
-          <div className={css.flexRight}>
-            <Field name="genre"
-              component={RenderSelectField}
-              label="Song Genre">
-              {props.genres && props.genres.map(genre =>
-                <MenuItem
-                  key={genre.id}
-                  value={genre.id}
-                  primaryText={genre.name}
-                />
-              )}
-            </Field>
-            <Field
-              name="instrument"
-              component={RenderSelectField}
-              viewType={props.modal.modalView}
-              label="Instrument">
-              {props.instruments && props.instruments.map(instrument =>
-                <MenuItem
-                  key={instrument.id}
-                  value={instrument.id}
-                  primaryText={instrument.name}
-                />
-              )}
-            </Field>
-          </div>
-        </div>
-        <div className={css.bottom}>
-          <div className={css.flexLeft}>
-            <Field
-              component={RenderSliderField}
-              viewType={props.modal.modalView}
-              name="difficulty"
-              className={css.difficulty}
-              min={1}
-              max={20}
-              step={1}
-              textColor={textColor}
-              label="Difficulty" />
-          </div>
-          <div className={css.flexRight}>
-            <Field
-              name="progress"
-              component={RenderSliderField}
-              viewType={props.modal.modalView}
-              className={css.progress}
-              min={0}
-              max={4}
-              step={1}
-              textColor={textColor}
-              label="Progress" />
-          </div>
-        </div>
+            <div className={css.fieldGroup}>
+              <div className={css.flexLeft}>
+                <Field name="genre"
+                  component={RenderAutoCompleteField}
+                  label="Song Genre"
+                  dataSource={props.genres} />
+              </div>
+              <div className={css.flexLeft}>
+                <Field
+                  name="instrument"
+                  component={RenderAutoCompleteField}
+                  dataSource={props.instruments}
+                  viewType={props.modal.modalView}
+                  label="Instrument" />
+              </div>
+            </div>
+            <div className={css.fieldGroup}>
+              <div className={css.flexLeft}>
+                <Field
+                  component={RenderSliderField}
+                  viewType={props.modal.modalView}
+                  name="difficulty"
+                  className={css.difficulty}
+                  valueDisplay={(value) => renderDifficulty(value, props.maxDifficulty)}
+                  min={1}
+                  max={props.maxDifficulty}
+                  step={1}
+                  textColor={textColor}
+                  label="Difficulty" />
+              </div>
+              <div className={css.flexRight}>
+                <Field
+                  name="progress"
+                  component={RenderSliderField}
+                  viewType={props.modal.modalView}
+                  className={css.progress}
+                  valueDisplay={(value) => renderStars(value)}
+                  min={0}
+                  max={4}
+                  step={1}
+                  textColor={textColor}
+                  label="Progress" />
+              </div>
+            </div>
+          </Tab>
+          <Tab
+              value="extrafields"
+              label="Extra Fields">
+          </Tab>
+        </Tabs>
       </form>
     </Dialog>
   )

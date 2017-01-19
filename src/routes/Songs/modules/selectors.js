@@ -40,28 +40,70 @@ export const songs = createSelector(
   songSelector
 );
 
-const currentSongSelector = ormCreateSelector(orm, (session, state) => {
-  return state.songsView && typeof state.songsView.currentSong !== 'undefined' && session.Song.count() > 0
-    ? session.Song.withId(state.songsView.currentSong)
+const currentSongSelector = ormCreateSelector(orm, (session, songsView) => {
+  // TODO: clean this up when you get footer component loaded dynamically
+  return songsView && typeof songsView.currentSong !== 'undefined' && session.Song.count() > 0
+    ? session.Song.withId(songsView.currentSong)
     : null;
 });
 
 export const currentSong = createSelector(
   ormSelector,
-  state => state,
+  state => state.songsView,
   currentSongSelector
 );
 
 
 const artistSelector = ormCreateSelector(orm, session => {
-  const modelObj = session.Artist ? session.Artist.all().toModelArray() : [];
-  return modelObj;
+  const artists = session.Artist ? session.Artist.all().toModelArray() : [];
+  return artists.map(artist => {
+    return artist.fullName;
+  });
 });
 
 export const artists = createSelector(
   ormSelector,
   state => state,
   artistSelector
+);
+
+const artistMatchSelector = ormCreateSelector(orm, (session, addSongForm)  => {
+  if (addSongForm && addSongForm.values && addSongForm.values.artist) {
+    return session.Artist.findByFullName(addSongForm.values.artist);
+  }
+  return null;
+});
+
+export const artistsMatched = createSelector(
+  ormSelector,
+  state => state.form.addSongForm,
+  artistMatchSelector
+);
+
+const genreSelector = ormCreateSelector(orm, session => {
+  const genres = session.Genre ? session.Genre.all().toModelArray() : [];
+  return genres.map(genre => {
+    return { text: genre.name, value: genre.id };
+  });
+});
+
+export const genres = createSelector(
+  ormSelector,
+  state => state,
+  genreSelector
+);
+
+const instrumentSelector = ormCreateSelector(orm, session => {
+  const instruments = session.Instrument ? session.Instrument.all().toModelArray() : [];
+  return instruments.map(instrument => {
+    return { text: instrument.name, value: instrument.id };
+  });
+});
+
+export const instruments = createSelector(
+  ormSelector,
+  state => state,
+  instrumentSelector
 );
 
 const paginationTotalSelector = ormCreateSelector(orm, session => {
@@ -109,7 +151,7 @@ export const paginationPages = createSelector(
 );
 
 const songStatsSelector = ormCreateSelector(orm, (session, state) => {
-  return session.Song.getStats();
+  return session.Song ? session.Song.getStats() : {};
 });
 
 export const songStats = createSelector(

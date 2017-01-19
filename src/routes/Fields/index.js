@@ -3,7 +3,7 @@ import { initView } from 'store/view';
 import { fetchSongs } from 'store/songs';
 
 export default (store, auth) => ({
-  path : 'profile',
+  path : 'fields',
   getComponent (nextState, cb) {
     require.ensure([], (require) => {
       if (auth && (auth() === false)) {
@@ -12,13 +12,13 @@ export default (store, auth) => ({
       }
 
       const importModules = Promise.all([
-        require('./components/ProfileViewContainer').default,
-        require('./modules/profile').default
+        require('./components/FieldsViewContainer').default,
+        require('./modules/fields').default
       ]);
 
       importModules.then( ([container, reducer]) => {
-        injectReducer(store, { key: 'profileView', reducer: reducer });
-        initView(store, 'profileView');
+        injectReducer(store, { key: 'fieldsView', reducer: reducer });
+        initView(store, 'fieldsView');
         fetchSongs(store);
         cb(null, container);
       });
@@ -27,6 +27,6 @@ export default (store, auth) => ({
         console.error("Error importing dynamic modules", error);
       });
 
-    }, 'profileView');
+    }, 'fieldsView');
   }
 });

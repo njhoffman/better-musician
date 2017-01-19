@@ -5,20 +5,10 @@ import {
 } from 'routes/Songs/modules/selectors';
 
 
-import { CALL_API, Schemas } from 'middleware/api';
-
 export const INIT_SONG_VIEW   = 'INIT_SONG_VIEW';
 export const SET_CURRENT_SONG = 'SET_CURRENT_SONG';
 export const HIDE_MODAL       = 'HIDE_MODAL';
 export const SET_SORT         = 'SET_SORT';
-export const FETCH_SONGS      = 'FETCH_SONGS';
-export const SONGS_REQUEST    = 'SONGS_REQUEST';
-export const SONGS_SUCCESS    = 'SONGS_SUCCESS';
-export const SONGS_FAILURE    = 'SONGS_FAILURE';
-export const LOAD_ARTISTS     = 'LOAD_ARTISTS';
-export const LOAD_INSTRUMENTS = 'LOAD_INSTRUMENTS';
-export const LOAD_GENRES      = 'LOAD_GENRES';
-export const LOAD_SONGS       = 'LOAD_SONGS';
 export const ADD_SONG         = 'ADD_SONG';
 
 export const MODAL_ADD_SONG = 'MODAL_ADD_SONG';
@@ -67,34 +57,9 @@ export const viewSong = (songValues) => (dispatch, getState) => {
   });
 };
 
-export const songsSuccess = (response) => {
-  return dispatch => {
-    const tables = response.tables;
-
-    dispatch({ type: SONGS_SUCCESS,      payload: response });
-    dispatch({ type: LOAD_ARTISTS,     payload: tables.artists });
-    dispatch({ type: LOAD_INSTRUMENTS, payload: tables.instruments });
-    dispatch({ type: LOAD_GENRES,      payload: tables.genres });
-    dispatch({ type: LOAD_SONGS,       payload: tables.songs });
-  }
-};
-
-// Fetches a page of starred repos by a particular user.
-export const fetchSongs = () =>  {
-  const nextPageUrl = `/songs`;
-  return dispatch => {
-    return dispatch({
-      [CALL_API]: {
-        types: [ SONGS_REQUEST, songsSuccess, SONGS_FAILURE ],
-        endpoint: nextPageUrl
-      }
-    });
-  }
-}
-
 
 export const actions = {
-  addSong, hideModal, setCurrentSong, fetchSongs, viewSong
+  addSong, hideModal, setCurrentSong, viewSong
 };
 
 
@@ -125,10 +90,6 @@ const ACTION_HANDLERS = {
     ({ ...state, paginationPerPage: action.payload }),
   ['SET_PAGINATION_CURRENT']: (state, action) =>
     ({ ...state, paginationCurrent: action.payload }),
-  [SONGS_REQUEST]: (state, action) =>
-    ({ ...state, fetching: true }),
-  [SONGS_SUCCESS]: (state, action) =>
-    ({ ...state, fetching: false}),
   [SET_SORT]: (state, action) =>
     ({ ...state, sortField: action.payload, sortInverse:  !state.sortInverse } )
 
@@ -141,7 +102,6 @@ const ACTION_HANDLERS = {
 
 
 const initialState = {
-  fetching:           false,
   currentGenres:      [],
   currentInstruments: [],
   initialized:        false,

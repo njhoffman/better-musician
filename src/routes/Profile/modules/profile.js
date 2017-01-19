@@ -11,14 +11,13 @@ export const PROFILE_FAILURE = 'PROFILE_FAILURE';
 // Actions Creators
 // ------------------------------------
 
-export const updateProfile = (values) => (dispatch, getState) => {
-  const nextPageUrl = `/users/update`;
+export const updateProfile = () => (dispatch, getState) => {
   const fieldValues = getState().form.updateProfileForm.values;
   return dispatch({
     [CALL_API]: {
       types: [ UPDATE_PROFILE, PROFILE_SUCCESS, PROFILE_FAILURE ],
       method: 'POST',
-      endpoint: nextPageUrl,
+      endpoint: '/users/update',
       payload: { ...fieldValues }
     }
   });

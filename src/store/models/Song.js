@@ -1,0 +1,88 @@
+import { uniq } from 'lodash';
+import {fk, many } from 'redux-orm';
+import BaseModel from './BaseModel';
+import {
+  ADD_SONG,
+  SHOW_SONGS,
+  DELETE_SONG,
+  UPDATE_SONG
+} from './actionTypes';
+
+class Song extends BaseModel {
+  static getPointTotal() {
+    const songs = this.all().toModelArray();
+    return songs.reduce( (a,b) => {
+      return a + parseInt(b.progress * b.difficulty * 10)
+    }, 0);
+  }
+  static getMaxDifficulty() {
+    let max = 0;
+    const songs = this.all().toModelArray();
+    songs.forEach(song => {
+      max = song.difficulty > max ? song.difficulty : max;
+    });
+    return max;
+
+  }
+  static getStats() {
+    const songs = this.all().toModelArray();
+    const artists = uniq(songs.map(song => {
+      return song.artist.fullName;
+    }));
+    const genres = uniq(songs.map(song => {
+      return song.genre.name;
+    }));
+
+    return {
+      songCount: this.count(),
+      artistCount: artists.length,
+      genresCount: genres.length
+
+    }
+  }
+  static reducer(action, Song, session) {
+    const { payload, type } = action;
+    switch (type) {
+      case ADD_SONG:
+        const newSong = action.payload.song;
+        const props = Object.assign({}, payload, { newSong });
+        Song.create(props);
+        break;
+      case 'SONGS_REQUEST':
+        // remove all songs when fetching
+        if (this.all().count() > 0) {
+          this.all().delete();
+        }
+        break;
+      case 'LOAD_SONGS':
+        this.loadData(action.payload, Song);
+        break;
+      case DELETE_SONG:
+        Song.withId(payload).delete();
+        break;
+      case UPDATE_SONG:
+        break;
+    }
+  }
+  toString() {
+    return `Song: ${this.title}`;
+  }
+}
+
+Song.modelName = 'Song';
+
+Song.fields = {
+  artist:       fk("Artist"),
+  instrument:   fk("Instrument"),
+  genre:        fk("Genre"),
+  customFields: many('Field'),
+};
+
+Song.shallowFields = {
+  id:         'number',
+  title:      'string',
+  difficulty: 'number',
+  progress:   'number'
+};
+
+export default Song;
