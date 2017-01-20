@@ -45,53 +45,68 @@ export const SettingsView = (props) => {
               <form
                 className={css.settingsForm}>
                 <h3>Update Your Settings</h3>
-                <div className={css.top}>
-                  <div className={css.flexLeft}>
+                <div className={css.flexRow}>
+                  <div className={css.flexTwo}>
+                    <Field
+                      name="theme"
+                      dataSource={['Light', 'Dark']}
+                      component={RenderSelectField}
+                      label="Visual Theme" />
+                  </div>
+                  <div className={css.flexTwo}>
+                    <Field
+                      name="normalizePoints"
+                      component={RenderCheckbox}
+                      label="Normalize Points" />
+                  </div>
+                </div>
+                <div className={css.flexRow}>
+                  <div className={css.flexTwo}>
                     <Field
                       name="maximumDifficulty"
                       component={RenderNumberField}
                       label="Max Difficulty" />
                   </div>
-                  <div className={css.flexRight}>
+                  <div className={css.flexTwo}>
                     <Field
                       name="maximumProgress"
                       component={RenderNumberField}
                       label="Max Progress" />
                   </div>
                 </div>
-                <div className={css.middle}>
-                  <div className={css.flexLeft}>
+                <div className={css.flexRow}>
+                  <div className={css.flexTwo}>
                     <Field
                       name="songBrushupInterval"
                       component={RenderNumberField}
                       label="Brush Up Interval" />
                   </div>
-                  <div className={css.flexRight}>
+                  <div className={css.flexTwo}>
                     <Field
                       name="songBrushupDuration"
                       component={RenderNumberField}
                       label="Brush Up Duration" />
                   </div>
                 </div>
-                <div className={css.bottom}>
-                  <div className={css.flexLeft}>
+                <div className={css.flexRow}>
+                  <div className={css.flexTwo}>
                     <Field
-                      name="normalizePoints"
+                      name="songGoalEmail"
                       component={RenderCheckbox}
-                      label="Noramlize Points" />
+                      label="Receive Future Goal Email Notifications" />
                   </div>
-                  <div className={css.flexRight}>
+                  <div className={css.flexTwo}>
                     <Field
                       name="songBrushupEmail"
                       component={RenderCheckbox}
-                      label="Send Brush Up Email" />
+                      label="Receive Brush Up Email Notifications" />
                   </div>
                 </div>
-                <div className={css.buttons}>
-                  <div className={css.flexLeft}>
+                <div className={css.flexRow}>
+                  <div className={css.flexOne}>
                     <ButtonLoader
                       type="submit"
-                      label="Reset Defaults"
+                      label="Reset"
                       labelStyle={{ color: textColor, paddingRight: '5px' }}
                       style={{ width: '160px', marginRight: '15px' }}
                       onClick={props.updateSettings}
@@ -99,12 +114,11 @@ export const SettingsView = (props) => {
                       className='update-profile-submit'
                       disabled={disabled} >
                     </ButtonLoader>
-                  </div>
-                  <div className={css.flexRight}>
                     <ButtonLoader
                       type="submit"
                       label="Save"
                       labelStyle={{ color: textColor, paddingRight: '5px' }}
+                      style={{ width: '160px', marginRight: '15px' }}
                       onClick={props.updateSettings}
                       icon={<SaveIcon style={{ marginTop: '-10px', color: textColor }} />}
                       className='update-profile-submit'

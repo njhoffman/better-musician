@@ -45,7 +45,7 @@ class FieldOptions extends Component {
               name={`${option}`}
               component={RenderChip}
               onRequestDelete={() => fields.remove(index)}
-              style={{ margin: '5px 2px' }}
+              style={{ margin: '5px 2px', fontSize: "0.8em" }}
             />
           )}
         </div>

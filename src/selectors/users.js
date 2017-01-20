@@ -36,7 +36,8 @@ export const userDisplay = createSelector(
 );
 
 const maxDifficultySelector = ormCreateSelector(orm, (session, user) => {
-  return session.Song ? session.Song.getMaxDifficulty() : 0;
+  // set default as 20 if it isn't set
+  return session.Song ? session.Song.getMaxDifficulty() : 20;
 });
 export const maxDifficulty = createSelector(
   ormSelector,

@@ -21,6 +21,9 @@ class Song extends BaseModel {
     songs.forEach(song => {
       max = song.difficulty > max ? song.difficulty : max;
     });
+    if (max === 0) {
+      max = 20;
+    }
     return max;
 
   }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { chunk } from 'lodash';
 import { Field, reduxForm } from 'redux-form';
 import { Dialog, FlatButton, RaisedButton, MenuItem, Tabs, Tab } from 'material-ui';
 import muiThemeable from 'material-ui/styles/muiThemeable';
@@ -124,6 +125,32 @@ export const AddSongModal = (props) => {
     );
   };
 
+  const renderField = ({ id, type, label, optionValues }) => {
+    switch(parseInt(type)) {
+      case 0:
+        return <Field style={{ width: '200px' }} name={id} component={RenderTextField} label={label} />
+          break;
+      case 1:
+        break;
+      case 2:
+        return <Field style={{ width: '200px' }} name={id} component={RenderSelectField} label={label} dataSource={optionValues} />
+          break;
+      case 3:
+        return <Field style={{ width: '200px' }} name={id} component={RenderSelectField} label={label} dataSource={optionValues} />
+          break;
+      case 4:
+        break;
+      case 5:
+        break;
+      case 6:
+        break;
+      case 7:
+        break;
+      case 8:
+        break;
+    }
+  };
+
   return (
     <Dialog
       modal={false}
@@ -131,6 +158,7 @@ export const AddSongModal = (props) => {
       open={props.isOpen}
       onRequestClose={props.hideModal}
       bodyStyle={dialogBodyStyle}
+      repositionOnUpdate={false}
       className={className}
       contentStyle={dialogStyle}>
       <form onSubmit={props.addSong}>
@@ -142,14 +170,14 @@ export const AddSongModal = (props) => {
               { renderImage(props) }
             </div>
             <div className={css.fieldGroup}>
-              <div className={css.flexLeft}>
+              <div className={css.flexTwo}>
                 <Field
                   name="title"
                   component={RenderTextField}
                   viewType={props.modal.modalView}
                   label="Song Title" />
               </div>
-              <div className={css.flexRight}>
+              <div className={css.flexTwo}>
                 <Field
                   name="artist"
                   viewType={props.modal.modalView}
@@ -159,13 +187,13 @@ export const AddSongModal = (props) => {
               </div>
             </div>
             <div className={css.fieldGroup}>
-              <div className={css.flexLeft}>
+              <div className={css.flexTwo}>
                 <Field name="genre"
                   component={RenderAutoCompleteField}
                   label="Song Genre"
                   dataSource={props.genres} />
               </div>
-              <div className={css.flexLeft}>
+              <div className={css.flexTwo}>
                 <Field
                   name="instrument"
                   component={RenderAutoCompleteField}
@@ -175,7 +203,7 @@ export const AddSongModal = (props) => {
               </div>
             </div>
             <div className={css.fieldGroup}>
-              <div className={css.flexLeft}>
+              <div className={css.flexTwo}>
                 <Field
                   component={RenderSliderField}
                   viewType={props.modal.modalView}
@@ -188,7 +216,7 @@ export const AddSongModal = (props) => {
                   textColor={textColor}
                   label="Difficulty" />
               </div>
-              <div className={css.flexRight}>
+              <div className={css.flexTwo}>
                 <Field
                   name="progress"
                   component={RenderSliderField}
@@ -203,10 +231,21 @@ export const AddSongModal = (props) => {
               </div>
             </div>
           </Tab>
-          <Tab
-              value="extrafields"
-              label="Extra Fields">
-          </Tab>
+          {props.savedTabs.map((tab, i) =>
+            <Tab
+              key={i}
+              label={tab.name}>
+              {chunk(tab.fields, 2).map((fields, i) =>
+                <div key={i} className={css.fieldGroup}>
+                  {fields.map((field, i) =>
+                    <div key={i} className={fields.length === 1 ? css.flexOne : css.flexTwo}>
+                      {renderField(field)}
+                    </div>
+                  )}
+                </div>
+              )}
+            </Tab>
+          )}
         </Tabs>
       </form>
     </Dialog>

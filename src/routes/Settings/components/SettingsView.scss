@@ -16,10 +16,7 @@
       }
     }
 
-    .top,
-    .middle,
-    .bottom,
-    .buttons {
+    .flexRow {
       display: flex;
       max-width: none;
       width: 100%;
@@ -37,8 +34,8 @@
       padding-top: 25px;
       padding-bottom: 25px;
     }
-    .flexRight,
-    .flexLeft {
+    .flexTwo,
+    .flexTwo {
       width: 200px;
       flex: 0px 0px 200px;
     }

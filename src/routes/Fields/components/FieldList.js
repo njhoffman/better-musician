@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Field } from 'redux-form';
-import { FlatButton } from 'material-ui';
+import { FlatButton, List, ListItem } from 'material-ui';
 import {
   RenderTextField,
   RenderNumberField,
@@ -39,53 +39,72 @@ const renderPreviewField = ({ id, type, label, optionValues }) => {
   }
 };
 
+const renderFieldItem = (props, field) => {
+  const editingId = props.editingField ? props.editingField.id : null;
+  console.info('props', props);
+  return (
+    <div
+      key={field.id}
+      className={css.tabbedField + ' ' + (field.id === editingId ? css.active  : '')}>
+
+      <div className={css.flexTwo}>
+        <div>
+          <span className={css.fieldLabel}>Label:</span>
+          <span className={css.fieldValue}>{field.label}</span>
+        </div>
+        <div>
+          <span className={css.fieldLabel}>Type:</span>
+          <span className={css.fieldValue}>{field.typeName}</span>
+        </div>
+      </div>
+      <div className={css.flexTwo}>
+        {renderPreviewField(field)}
+        <div className={css.fieldButtons}>
+          <FlatButton
+            onTouchTap={field.id === editingId ? props.cancelEdit : props.editField.bind(undefined, field)}
+            style={{ minWidth: '35px', width: '35px', float: 'right', color: '#BBBBFF' }}
+            icon={field.id === editingId ? <CancelIcon onTouchTap={props.cancelEdit} /> : <EditIcon />}
+          />
+          {!(field.id === editingId) &&
+            <FlatButton
+              onClick={props.deleteField.bind(undefined, field.id)}
+              style={{ minWidth: '35px', width: '35px', float: 'right', color: '#FFBBBB' }}
+              icon={<DeleteIcon />}
+            />
+          }
+        </div>
+      </div>
+    </div>
+  )
+};
+
 class FieldList extends Component {
   constructor(props) {
     super(props);
   }
   render() {
-    const props = this.props;
-    const editingId = props.editingField ? props.editingField.id : null;
+  const props = this.props;
     return (
-      <div className={css.fieldList}>
+      <List className={css.fieldList}>
         {props.savedTabs.map((tab, i) =>
-          <div key={i}>
-            <p style={{ textAlign: 'left' }}><strong>{tab.name}</strong></p>
-            <hr />
-            {tab.fields.map(field =>
-              <div key={field.id} className={css.tabbedField + ' ' + (field.id === editingId ? css.active  : '')}>
-                <div className={css.flexTwo}>
-                  <div>
-                    <span className={css.fieldLabel}>Label:</span>
-                    <span className={css.fieldValue}>{field.label}</span>
-                  </div>
-                  <div>
-                    <span className={css.fieldLabel}>Type:</span>
-                    <span className={css.fieldValue}>{field.typeName}</span>
-                  </div>
-                </div>
-                <div className={css.flexTwo}>
-                  {renderPreviewField(field)}
-                  <div className={css.fieldButtons}>
-                    <FlatButton
-                      onTouchTap={field.id === editingId ? props.cancelEdit : props.editField.bind(undefined, field)}
-                      style={{ minWidth: '35px', width: '35px', float: 'right', color: '#BBBBFF' }}
-                      icon={field.id === editingId ? <CancelIcon onTouchTap={props.cancelEdit} /> : <EditIcon />}
-                    />
-                    {!(field.id === editingId) &&
-                      <FlatButton
-                        onClick={props.deleteField.bind(undefined, field.id)}
-                        style={{ minWidth: '35px', width: '35px', float: 'right', color: '#FFBBBB' }}
-                        icon={<DeleteIcon />}
-                      />
-                    }
-                  </div>
-                </div>
+          <ListItem
+            key={i}
+            primaryText={
+              <div>
+                <span className={css.tabNumber}>{i + 1}</span>
+                <span className={css.tabName}>{tab.name}</span>
+                <span className={css.tabCount}>{tab.fields.length + ' Fields'}</span>
               </div>
-            )}
-          </div>
+            }
+            hoverColor="rgba(0, 151, 167, 0.4"
+            innerDivStyle={{ backgroundColor: "rgba(0, 151, 167, 0.15" }}
+            style={{ marginTop: "5px" }}
+            initiallyOpen={i === 0 ? true : false }
+            primaryTogglesNestedList={true}
+            nestedItems={tab.fields.map(renderFieldItem.bind(this, props))}
+          />
         )}
-      </div>
+      </List>
     )
   }
 }
