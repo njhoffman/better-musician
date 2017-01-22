@@ -1,6 +1,7 @@
 import BaseModel from './BaseModel';
+import { fk, many } from 'redux-orm';
 
-class Field extends BaseModel {
+class CustomField extends BaseModel {
 
   static reducer(action, Field, session) {
     const { payload, type } = action;
@@ -43,14 +44,14 @@ class Field extends BaseModel {
     return this.typeOptions[this.type];
   }
   toString() {
-    return `Field: ${this.type} ${this.label}`;
+    return `CustomField: ${this.type} ${this.label}`;
   }
 }
-Field.modelName = 'Field';
+CustomField.modelName = 'CustomField';
 
-Field.fields = {};
+CustomField.fields = { };
 
-Field.shallowFields = {
+CustomField.shallowFields = {
   id: 'number',
   name: 'string',
   label: 'string',
@@ -60,4 +61,5 @@ Field.shallowFields = {
   optionValues: 'array',
 };
 
-export default Field;
+
+export default CustomField;

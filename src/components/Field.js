@@ -15,8 +15,13 @@ import {
 
 const generateMenu = (dataSource) => {
   let items = [];
+  const isArray = Array.isArray(dataSource);
+  // assign value to key if dataSource is an object, otherwise assign scalar value
   Object.keys(dataSource).forEach(key => {
-    items.push(<MenuItem value={key} key={key} primaryText={dataSource[key]} />);
+    items.push(<MenuItem
+      value={isArray ? dataSource[key] : key }
+      key={key}
+      primaryText={dataSource[key]} />);
   });
   return items;
 }

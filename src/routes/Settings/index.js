@@ -1,6 +1,6 @@
 import { injectReducer } from 'store/reducers';
 import { initView } from 'store/view';
-import { fetchSongs } from 'store/songs';
+import { fetchSongs } from 'store/api';
 
 export default (store, auth) => ({
   path : 'settings',

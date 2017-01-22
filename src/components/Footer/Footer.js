@@ -12,7 +12,7 @@ class Footer extends Component  {
     super(props);
   };
 
-  renderBlank() {
+  renderBlankFooter() {
     return (
       <div className={css.footerWrapper}>
         <Row className={css.footer}>
@@ -64,7 +64,7 @@ class Footer extends Component  {
     )
   }
 
-  renderSongFoote (song) {
+  renderSongFooter (song) {
     const artistPicture = song.artist.picture ? "artists/" + song.artist.picture : "artists/unknown_artist.png";
     return (
       <div className={css.footerWrapper}>
@@ -123,12 +123,14 @@ class Footer extends Component  {
   };
 
   render () {
-    const { song, stats } = this.props;
+    const { song, stats, isSignedIn } = this.props;
     // TODO: figure out why this is double firing
     if (song && song.artist) {
       return this.renderSongFooter(song);
-    } else {
+    } else if (isSignedIn) {
       return this.renderSongStatsFooter(stats);
+    } else {
+      return this.renderBlankFooter();
     }
   }
 };

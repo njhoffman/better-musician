@@ -11,11 +11,9 @@ class EmailSignUpSuccessModal extends React.Component {
         containerClass="email-sign-up-success-modal"
         closeAction={hideEmailSignUpSuccessModal}
         title="Sign Up Success">
-        <p>
-          A confirmation email was sent to your account
-          at {this.props.auth.getIn(["ui", "emailSignUpAddress"])}. Follow the
-          instructions in the email to complete registration.
-        </p>
+        <p>Thank you for signing up for instrumental.io!</p>
+        <p>We generated a couple of sample songs to help familiarize you with the interface.</p>
+        <p>Double click a song to view/edit it, or add your own song by using the menu at the top.</p>
       </Modal>
     );
   }

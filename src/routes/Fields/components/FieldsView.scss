@@ -36,8 +36,8 @@
     }
 
     .flexTwo {
-      width: 285px;
-      flex: 0 0 285px;
+      width: 265px;
+      flex: 0 0 265px;
     }
     .extraFields {
       margin-left: auto;
@@ -81,7 +81,8 @@
       .tabbedField {
         border-radius: 10px;
         border: solid 1px #456;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
+        min-height: 75px;
         &.active {
           border: solid 1px rgb(170,180,204);
           background-color: rgba(170, 180, 204, 0.1);

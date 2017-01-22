@@ -52,8 +52,7 @@ export const viewSong = (songValues) => (dispatch, getState) => {
       modalType: MODAL_ADD_SONG,
       modalView: 'view',
       modalProps: {}
-    },
-    payload: songValues
+    }
   });
 };
 
@@ -86,6 +85,8 @@ export const getVisibleSongs = (state) => {
 const ACTION_HANDLERS = {
   [SET_CURRENT_SONG]: (state, action) =>
     ({ ...state, currentSong: action.payload }),
+  ['LOCATION_CHANGE']: (state, action) =>
+    ({ ...state, currentSong: null }),
   ['SET_PAGINATION_PER_PAGE']: (state, action) =>
     ({ ...state, paginationPerPage: action.payload }),
   ['SET_PAGINATION_CURRENT']: (state, action) =>

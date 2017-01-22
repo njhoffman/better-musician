@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
 import ProfileView from './ProfileView';
-import { updateProfile } from '../modules/profile';
+import { updateUser } from 'store/api';
 
 const mapActionCreators = {
-  updateProfile
+  updateProfile : updateUser
 };
 
 const mapStateToProps = (state) => {
@@ -11,10 +11,12 @@ const mapStateToProps = (state) => {
   const initialValues = {
     firstName: user.get('firstName'),
     lastName: user.get('lastName'),
-    points: user.get('points')
+    email: user.get('email'),
+    notificationsEmail: user.get('notificationsEmail')
   };
 
   return ({
+    api: state.api,
     user: state.auth.get('user'),
     initialValues: initialValues
   });

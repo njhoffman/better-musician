@@ -10,8 +10,13 @@ export const updateSettings = () => (dispatch) => {
   debugger;
 };
 
+export const resetSettings = () => (dispatch) => {
+  debugger;
+};
+
 export const actions = {
-  updateSettings
+  updateSettings,
+  resetSettings
 };
 
 // ------------------------------------

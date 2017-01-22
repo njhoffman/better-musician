@@ -5,8 +5,8 @@ import { authStateReducer } from './auth';
 import Immutable from 'immutable'
 import locationReducer from './location';
 import modalReducer from './modal';
-import drawerMenuReducer from './drawerMenu';
-import songsReducer from './songs';
+import drawerReducer from './drawer';
+import apiReducer from './api';
 
 // selectors need access to ORM
 // TODO: put orm in own module
@@ -27,8 +27,8 @@ export const makeRootReducer = (asyncReducers, injectedModels = []) => {
     location:       locationReducer,
     form:           formReducer,
     modal:          modalReducer,
-    drawerMenu:     drawerMenuReducer,
-    songs:          songsReducer,
+    drawer:         drawerReducer,
+    api:            apiReducer,
     // auth reducer is immutable js so must be mapped in containers correctly
     auth:           authStateReducer,
     ...asyncReducers

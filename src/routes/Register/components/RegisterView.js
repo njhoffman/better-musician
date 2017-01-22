@@ -33,27 +33,31 @@ export const RegisterView = (props) => (
       <div className={css.registerContainer}>
         <h3>Sign Up for Instrumental.com</h3>
         <p>It's free. It's easy. It takes 5 seconds.</p>
-        <OAuthSignInButton
-          style={{ width: '225px', marginBottom: '10px' }}
-          backgroundColor={'#4c69ba'}
-          labelColor={'#ffffff'}
-          icon={facebookIconComponent}
-          provider="facebook">
-          Sign Up with Facebook
-        </OAuthSignInButton>
-        <OAuthSignInButton
-          style={{ width: '225px' }}
-          backgroundColor={'#4285f4'}
-          labelColor={'#ffffff'}
-          icon={googleIconComponent}
-          provider="google">
-          Sign Up With Google
-        </OAuthSignInButton>
+        <div className={css.fieldWrapper}>
+          <OAuthSignInButton
+            style={{ width: '225px', marginBottom: '10px' }}
+            backgroundColor={'#4c69ba'}
+            labelColor={'#ffffff'}
+            icon={facebookIconComponent}
+            provider="facebook">
+            Sign Up with Facebook
+          </OAuthSignInButton>
+        </div>
+        <div className={css.fieldWrapper}>
+          <OAuthSignInButton
+            style={{ width: '225px' }}
+            backgroundColor={'#4285f4'}
+            labelColor={'#ffffff'}
+            icon={googleIconComponent}
+            provider="google">
+            Sign Up With Google
+          </OAuthSignInButton>
+        </div>
         <div className={css.divider}>
           <span>or, sign up with email</span>
         </div>
         <EmailSignUpForm
-          next={() => { browserHistory.push('/songs') }}
+          next={props.handleRegisterSuccess}
         />
       </div>
     </Paper>

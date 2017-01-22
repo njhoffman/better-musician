@@ -67,6 +67,9 @@ class Song extends BaseModel {
         break;
     }
   }
+  constructor(song) {
+    super(song);
+  }
   toString() {
     return `Song: ${this.title}`;
   }
@@ -78,7 +81,7 @@ Song.fields = {
   artist:       fk("Artist"),
   instrument:   fk("Instrument"),
   genre:        fk("Genre"),
-  customFields: many('Field'),
+  customFieldIds: many('CustomField')
 };
 
 Song.shallowFields = {

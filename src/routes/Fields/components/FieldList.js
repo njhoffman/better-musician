@@ -41,40 +41,41 @@ const renderPreviewField = ({ id, type, label, optionValues }) => {
 
 const renderFieldItem = (props, field) => {
   const editingId = props.editingField ? props.editingField.id : null;
-  console.info('props', props);
   return (
-    <div
+    <ListItem
       key={field.id}
-      className={css.tabbedField + ' ' + (field.id === editingId ? css.active  : '')}>
-
-      <div className={css.flexTwo}>
-        <div>
-          <span className={css.fieldLabel}>Label:</span>
-          <span className={css.fieldValue}>{field.label}</span>
+      style={{ borderRadius: '10px' }}
+      innerDivStyle={{ margin: 0, padding: 0 }}>
+      <div className={css.tabbedField + ' ' + (field.id === editingId ? css.active  : '')}>
+        <div className={css.flexTwo}>
+          <div>
+            <span className={css.fieldLabel}>Label:</span>
+            <span className={css.fieldValue}>{field.label}</span>
+          </div>
+          <div>
+            <span className={css.fieldLabel}>Type:</span>
+            <span className={css.fieldValue}>{field.typeName}</span>
+          </div>
         </div>
-        <div>
-          <span className={css.fieldLabel}>Type:</span>
-          <span className={css.fieldValue}>{field.typeName}</span>
-        </div>
-      </div>
-      <div className={css.flexTwo}>
-        {renderPreviewField(field)}
-        <div className={css.fieldButtons}>
-          <FlatButton
-            onTouchTap={field.id === editingId ? props.cancelEdit : props.editField.bind(undefined, field)}
-            style={{ minWidth: '35px', width: '35px', float: 'right', color: '#BBBBFF' }}
-            icon={field.id === editingId ? <CancelIcon onTouchTap={props.cancelEdit} /> : <EditIcon />}
-          />
-          {!(field.id === editingId) &&
+        <div className={css.flexTwo}>
+          {renderPreviewField(field)}
+          <div className={css.fieldButtons}>
             <FlatButton
-              onClick={props.deleteField.bind(undefined, field.id)}
-              style={{ minWidth: '35px', width: '35px', float: 'right', color: '#FFBBBB' }}
-              icon={<DeleteIcon />}
+              onTouchTap={field.id === editingId ? props.cancelEdit : props.editField.bind(undefined, field)}
+              style={{ minWidth: '35px', width: '35px', float: 'right', color: '#BBBBFF' }}
+              icon={field.id === editingId ? <CancelIcon onTouchTap={props.cancelEdit} /> : <EditIcon />}
             />
-          }
+            {!(field.id === editingId) &&
+              <FlatButton
+                onClick={props.deleteField.bind(undefined, field.id)}
+                style={{ minWidth: '35px', width: '35px', float: 'right', color: '#FFBBBB' }}
+                icon={<DeleteIcon />}
+              />
+            }
+          </div>
         </div>
       </div>
-    </div>
+    </ListItem>
   )
 };
 
@@ -83,7 +84,7 @@ class FieldList extends Component {
     super(props);
   }
   render() {
-  const props = this.props;
+    const props = this.props;
     return (
       <List className={css.fieldList}>
         {props.savedTabs.map((tab, i) =>
@@ -101,7 +102,7 @@ class FieldList extends Component {
             style={{ marginTop: "5px" }}
             initiallyOpen={i === 0 ? true : false }
             primaryTogglesNestedList={true}
-            nestedItems={tab.fields.map(renderFieldItem.bind(this, props))}
+            nestedItems={tab.fields.map(renderFieldItem.bind(undefined, props))}
           />
         )}
       </List>

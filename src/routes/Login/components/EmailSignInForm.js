@@ -8,6 +8,8 @@ import ButtonLoader from './ButtonLoader';
 import { RenderTextField } from 'components/Field';
 import { emailSignIn } from 'store/auth/actions/email-sign-in';
 
+import css from './EmailSignInForm.scss';
+
 class EmailSignInForm extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
@@ -62,34 +64,40 @@ class EmailSignInForm extends React.Component {
             <p>{error}</p>
           )}
         </div>
-        <Field
-          component={RenderTextField}
-          floatingLabelText="Email"
-          name="email-sign-in-email"
-          className="email-sign-in-email"
-          ref="emailSignInEmail"
-          disabled={disabled}
-          {...this.props.inputProps.email} />
+        <div className={css.fieldWrapper}>
+          <Field
+            component={RenderTextField}
+            floatingLabelText="Email"
+            name="email-sign-in-email"
+            className="email-sign-in-email"
+            ref="emailSignInEmail"
+            disabled={disabled}
+            {...this.props.inputProps.email} />
+        </div>
+        <div className={css.fieldWrapper}>
+          <Field
+            type="password"
+            component={RenderTextField}
+            floatingLabelText="Password"
+            name="email-sign-in-password"
+            className="email-sign-in-password"
+            disabled={disabled}
+            {...this.props.inputProps.password} />
 
-        <Field
-          component={RenderTextField}
-          floatingLabelText="Password"
-          name="email-sign-in-password"
-          className="email-sign-in-password"
-          disabled={disabled}
-          {...this.props.inputProps.password} />
-
-        <ButtonLoader
-          loading={this.props.auth.getIn(["emailSignIn", "loading"])}
-          type="submit"
-          icon={MdExitToApp}
-          className='email-sign-in-submit'
-          disabled={disabled}
-          onClick={this.handleSubmit.bind(this)}
-          primary={true}
-          {...this.props.inputProps.submit}>
-          Sign In
-        </ButtonLoader>
+        </div>
+        <div className={css.fieldWrapper}>
+          <ButtonLoader
+            loading={this.props.auth.getIn(["emailSignIn", "loading"])}
+            type="submit"
+            icon={MdExitToApp}
+            className='email-sign-in-submit'
+            disabled={disabled}
+            onClick={this.handleSubmit.bind(this)}
+            primary={true}
+            {...this.props.inputProps.submit}>
+            Sign In
+          </ButtonLoader>
+        </div>
       </form>
     );
   }

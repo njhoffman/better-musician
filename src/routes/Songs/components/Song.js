@@ -7,6 +7,7 @@ import { RenderStars, RenderDifficulty } from 'components/Field';
 
 
 const Song = ({ songValues, viewSong, maxDifficulty, columnWidths, muiTheme, ...custom }) => {
+
   return (
     <TableRow
       hoverable={true}

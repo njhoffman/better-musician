@@ -38,6 +38,7 @@ const apiFetch = (endpoint, options) => {
 }
 
 export default (store) => next => action => {
+  if (typeof action === 'undefined') debugger;
 	const callAPI = action[CALL_API]
 	if (typeof callAPI === 'undefined') {
 		return next(action);

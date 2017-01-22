@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Drawer, Divider, MenuItem } from 'material-ui';
-import { Link, IndexLink } from 'react-router';
+import { Link, IndexLink, browserHistory } from 'react-router';
 
 import OAuthSignInButton from 'components/OAuthSignInButton'
 import SignOutButton from 'components/SignOutButton';
@@ -10,11 +10,12 @@ import googleIcon from 'assets/google-icon.png';
 import css from './DrawerMenu.scss';
 
 
-const googleIconComponent =
+const googleIconComponent = () =>
   <img
     src={googleIcon}
     style={{marginTop: '-10px', maxWidth: '30px', width: '30px', height: '30px' }} />;
-const facebookIconComponent =
+
+const facebookIconComponent = () =>
   <img
     src={facebookIcon}
     style={{marginTop: '-10px', width: '20px', maxWidth: '20px' }} />;
@@ -72,6 +73,10 @@ const renderSignedIn = (props) => (
         <SignOutButton
           flatButton={true}
           label='LOGOUT'
+          next={() => {
+            props.hideDrawerMenu();
+            browserHistory.push('/') }
+          }
           style={{ backgroundColor: 'transparent', width: '100%' }}
         />
       </MenuItem>
@@ -121,34 +126,35 @@ const renderSignedOut = (props) => (
         </Link>
       </MenuItem>
       <Divider />
-      {/* <OAuthSignInButton */}
-      {/*   style={{ width: '245px', margin: '5px 0px 5px 5px' }} */}
-      {/*   backgroundColor={'#4c69ba'} */}
-      {/*   labelColor={'#ffffff'} */}
-      {/*   icon={facebookIconComponent} */}
-      {/*   provider="facebook"> */}
-      {/*   Sign In With Facebook */}
-      {/* </OAuthSignInButton> */}
-      {/* <OAuthSignInButton */}
-      {/*   style={{ width: '245px', margin: '0px 0px 5px 5px' }} */}
-      {/*   backgroundColor={'#4285f4'} */}
-      {/*   labelColor={'#ffffff'} */}
-      {/*   icon={googleIconComponent} */}
-      {/*   provider="google"> */}
-      {/*   Sign In With Google */}
-      {/* </OAuthSignInButton> */}
+      <OAuthSignInButton
+        style={{ width: '245px', margin: '5px 0px 5px 5px' }}
+        backgroundColor={'#4c69ba'}
+        labelColor={'#ffffff'}
+        icon={facebookIconComponent}
+        provider="facebook">
+        Sign In With Facebook
+      </OAuthSignInButton>
+      <OAuthSignInButton
+        style={{ width: '245px', margin: '0px 0px 5px 5px' }}
+        backgroundColor={'#4285f4'}
+        labelColor={'#ffffff'}
+        icon={googleIconComponent}
+        provider="google">
+        Sign In With Google
+      </OAuthSignInButton>
       <Link
         to='/profile'
-        onClick={props.hideDrawerMenu}
         activeClassName='active'>
-        {/* <ButtonLoader */}
-        {/*   icon={googleIconComponent} */}
-        {/*   onClick */}
-        {/*   backgroundColor={'#ffffff'} */}
-        {/*   labelColor={'#000000'} */}
-        {/*   style={{ width: '245px', margin: '0px 0px 5px 5px' }}> */}
-        {/*   Sign In With Email */}
-        {/* </ButtonLoader> */}
+        <ButtonLoader
+          icon={googleIconComponent}
+          onClick={() => {
+            props.hideDrawerMenu();
+            browserHistory.push('/login')}}
+          backgroundColor={'#ffffff'}
+          labelColor={'#000000'}
+          style={{ width: '245px', margin: '0px 0px 5px 5px' }}>
+          Sign In With Email
+        </ButtonLoader>
       </Link>
     </Drawer>
   </div>

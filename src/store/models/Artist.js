@@ -1,10 +1,6 @@
 import BaseModel from './BaseModel';
 
 class Artist extends BaseModel {
-  constructor(artist) {
-    artist.fullName = artist.lastName + ', ' + artist.firstName;
-    super(artist);
-  }
   static findByFullName(name) {
     return this.all().toModelArray().filter(artist => {
       return artist.fullName === name;
@@ -23,6 +19,10 @@ class Artist extends BaseModel {
       default:
         break;
     }
+  }
+  constructor(artist) {
+    artist.fullName = artist.lastName + ', ' + artist.firstName;
+    super(artist);
   }
   toString() {
     return `Artist: ${this.lastName}`;

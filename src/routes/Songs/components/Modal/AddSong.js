@@ -1,12 +1,13 @@
 import React from 'react';
 import { chunk } from 'lodash';
-import { Field, reduxForm } from 'redux-form';
+import { Field, FieldArray, reduxForm } from 'redux-form';
 import { Dialog, FlatButton, RaisedButton, MenuItem, Tabs, Tab } from 'material-ui';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import css from './AddSong.scss';
 
 import {
   RenderSelectField,
+  RenderChip,
   RenderAutoCompleteField,
   RenderStars,
   RenderDifficulty,
@@ -125,7 +126,8 @@ export const AddSongModal = (props) => {
     );
   };
 
-  const renderField = ({ id, type, label, optionValues }) => {
+  const renderField = ({ id, type, label, value, optionValues }) => {
+    debugger;
     switch(parseInt(type)) {
       case 0:
         return <Field style={{ width: '200px' }} name={id} component={RenderTextField} label={label} />
@@ -136,8 +138,21 @@ export const AddSongModal = (props) => {
         return <Field style={{ width: '200px' }} name={id} component={RenderSelectField} label={label} dataSource={optionValues} />
           break;
       case 3:
-        return <Field style={{ width: '200px' }} name={id} component={RenderSelectField} label={label} dataSource={optionValues} />
-          break;
+        return (
+          <div>
+            <div className={css.selectOptions}>
+              <FieldArray name={id} component={options =>
+                {options.fields.map((option, index, fields) =>
+                    <Field
+                      key={index}
+                      name={`${option}`}
+                      component={RenderChip}
+                      style={{ margin: '5px 2px', fontSize: "0.8em" }} />
+                )}} />
+            </div>
+        </div>
+        );
+        break;
       case 4:
         break;
       case 5:
@@ -150,6 +165,8 @@ export const AddSongModal = (props) => {
         break;
     }
   };
+
+  debugger;
 
   return (
     <Dialog
@@ -231,7 +248,7 @@ export const AddSongModal = (props) => {
               </div>
             </div>
           </Tab>
-          {props.savedTabs.map((tab, i) =>
+          {false && props.savedTabs.map((tab, i) =>
             <Tab
               key={i}
               label={tab.name}>
@@ -239,13 +256,13 @@ export const AddSongModal = (props) => {
                 <div key={i} className={css.fieldGroup}>
                   {fields.map((field, i) =>
                     <div key={i} className={fields.length === 1 ? css.flexOne : css.flexTwo}>
-                      {renderField(field)}
+                        { renderField(field) }
                     </div>
                   )}
                 </div>
               )}
             </Tab>
-          )}
+            )}
         </Tabs>
       </form>
     </Dialog>

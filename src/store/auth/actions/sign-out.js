@@ -14,6 +14,7 @@ export function signOutComplete(endpoint, user) {
   return { type: SIGN_OUT_COMPLETE, user, endpoint };
 }
 export function signOutError(endpoint, errors) {
+  debugger;
   return { type: SIGN_OUT_ERROR, endpoint, errors };
 }
 export function signOut(endpoint) {

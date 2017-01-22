@@ -1,3 +1,5 @@
+import { fetchSongs } from 'store/api';
+import { browserHistory } from 'react-router';
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -6,15 +8,14 @@ export const COUNTER_INCREMENT = 'COUNTER_INCREMENT';
 // ------------------------------------
 // Actions
 // ------------------------------------
-export function increment (value = 1) {
-  return {
-    type    : COUNTER_INCREMENT,
-    payload : value
-  };
-}
+
+export const handleRegisterSuccess = () => (dispatch, getState) => {
+  fetchSongs({ dispatch, getState });
+  browserHistory.push('/songs');
+};
 
 export const actions = {
-  increment
+ handleRegisterSuccess
 };
 
 // ------------------------------------

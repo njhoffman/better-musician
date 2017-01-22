@@ -10,7 +10,7 @@ export const LoginView = (props) => (
     <Paper zDepth={5}>
       <div className={css.loginContainer}>
         <h2>This is the Login Page</h2>
-        <EmailSignInForm />
+        <EmailSignInForm next={props.handleLoginSuccess} />
       </div>
     </Paper>
   </Column>
