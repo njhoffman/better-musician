@@ -4,17 +4,16 @@ import FiltersModal from './FiltersContainer';
 
 
 export const ModalBase = (props) => {
-
   return (
     <div>
-      <AddSongModal {...props.modal.modalProps} />
-      <FiltersModal {...props.modal.modalProps} />
+      <AddSongModal {...props.modal.props} />
+      <FiltersModal {...props.modal.props} />
     </div>
   )
 };
 
 ModalBase.propTypes = {
-  modalProps: React.PropTypes.object
+  props: React.PropTypes.object
 };
 
 export default ModalBase;

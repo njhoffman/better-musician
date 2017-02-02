@@ -1,26 +1,19 @@
-import {
-  songs as songsSelector,
-  artists as artistsSelector ,
-  currentSong as currentSongSelector
-} from 'routes/Songs/modules/selectors';
+import { LOCATION_CHANGE } from 'store/location';
 
+// ------------------------------------
+// Constants
+// ------------------------------------
 
-export const INIT_SONG_VIEW   = 'INIT_SONG_VIEW';
-export const SET_CURRENT_SONG = 'SET_CURRENT_SONG';
-export const HIDE_MODAL       = 'HIDE_MODAL';
-export const SET_SORT         = 'SET_SORT';
-export const ADD_SONG         = 'ADD_SONG';
-
-export const MODAL_ADD_SONG = 'MODAL_ADD_SONG';
-
+export const INIT_SONG_VIEW           = 'INIT_SONG_VIEW';
+export const SET_CURRENT_SONG         = 'SET_CURRENT_SONG';
+export const SET_SORT                 = 'SET_SORT';
+export const ADD_SONG                 = 'ADD_SONG';
+export const SET_PAGINATION_PER_PAGE  = 'SET_PAGINATION_PER_PAGE';
+export const SET_PAGINATION_CURRENT   = 'SET_PAGINATION_CURRENT';
 
 // ------------------------------------
 // Action Creators
 // ------------------------------------
-
-export const hideModal = () => (dispatch, getState) => {
-  return dispatch({ type: HIDE_MODAL });
-}
 
 export const setCurrentSong = (songsCollection, selectedRow, arg3, arg4) => (dispatch, getState) => {
   if (selectedRow.length === 0) {
@@ -28,13 +21,12 @@ export const setCurrentSong = (songsCollection, selectedRow, arg3, arg4) => (dis
     // wait a bit before deselecting current song just in case it was a double click (opening view modal)
     // arbitrary wait time 200ms
     return window.setTimeout(() => {
-      if (! getState().modal.modalType) {
+      if (! getState().ui.modal.type) {
         return dispatch({ type: SET_CURRENT_SONG, payload: null });
       }
     }, 200);
   }
 
-  // const currentSong = songsCollection[selectedRow - 1];
   const currentSong = songsCollection[selectedRow[0] - 1];
   return dispatch({ type: SET_CURRENT_SONG, payload: currentSong.id });
 };
@@ -55,48 +47,8 @@ export const addSong = (values) => (dispatch, getState) => {
   return dispatch({ type: ADD_SONG, payload: { ...fieldValues, ...{ id: availableId }} });
 };
 
-export const viewSong = (songValues) => (dispatch, getState) => {
-  return dispatch({
-    type: 'SHOW_MODAL',
-    meta: {
-      modalType: MODAL_ADD_SONG,
-      modalView: 'view',
-      modalProps: {}
-    }
-  });
-};
-
-
-export const editSong = () => (dispatch, getState) => {
-  return dispatch({
-    type: 'SHOW_MODAL',
-    meta: {
-      modalType: MODAL_ADD_SONG,
-      modalView: 'edit',
-      modalProps: {}
-    }
-  });
-};
-
 export const actions = {
-  addSong, hideModal, setCurrentSong, viewSong
-};
-
-
-// ------------------------------------
-// Property Mappers
-// ------------------------------------
-
-export const isOpen = (modal) => {
-  return (modal.modalType === MODAL_ADD_SONG);
-};
-
-export const getCurrentSong = (state) => {
-  return currentSongSelector(state);
-};
-
-export const getVisibleSongs = (state) => {
-  return songsSelector(state);
+  addSong, setSort, setCurrentSong
 };
 
 // ------------------------------------
@@ -106,22 +58,19 @@ export const getVisibleSongs = (state) => {
 const ACTION_HANDLERS = {
   [SET_CURRENT_SONG]: (state, action) =>
     ({ ...state, currentSong: action.payload }),
-  ['LOCATION_CHANGE']: (state, action) =>
+  [LOCATION_CHANGE]: (state, action) =>
     ({ ...state, currentSong: null }),
-  ['SET_PAGINATION_PER_PAGE']: (state, action) =>
+  [SET_PAGINATION_PER_PAGE]: (state, action) =>
     ({ ...state, paginationPerPage: action.payload }),
-  ['SET_PAGINATION_CURRENT']: (state, action) =>
+  [SET_PAGINATION_CURRENT]: (state, action) =>
     ({ ...state, paginationCurrent: action.payload }),
   [SET_SORT]: (state, action) =>
     ({ ...state, sortField: action.payload, sortInverse:  !state.sortInverse } )
-
 };
-
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-
 
 const initialState = {
   currentGenres:      [],
@@ -136,7 +85,6 @@ const initialState = {
 
 export default function songsReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
-
   return handler ? handler(state, action) : state;
 }
 

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { Paper, Snackbar } from 'material-ui';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
@@ -10,6 +9,7 @@ import AuthGlobals from 'components/AuthGlobals';
 import Header from 'components/Header/HeaderContainer';
 import Footer from 'components/Footer/FooterContainer';
 import DrawerMenu from 'components/DrawerMenu/DrawerMenuContainer';
+import Snackbar from 'components/Snackbar/SnackbarContainer';
 import { Row } from 'react-foundation';
 
 // export const CoreLayout = ({ getState }) => ({ children }) => {
@@ -30,6 +30,7 @@ export class CoreLayout extends Component {
         <div className={css.appWrapper}>
           <AuthGlobals />
           <DrawerMenu />
+          <Snackbar />
           <Header />
           <div className={css.contentWrapper} style={{ background: theme.backgroundColor }}>
             <Row>
@@ -41,7 +42,6 @@ export class CoreLayout extends Component {
             style={{ background: theme.instrumental.footerFiller }}
             className={css.footerFiller}>
           </div>
-          <Snackbar open={true} action="OK" message="Settings successfully saved." />
         </div>
       </MuiThemeProvider>
     );

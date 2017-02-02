@@ -15,18 +15,17 @@ export const LOAD_GENRES      = 'LOAD_GENRES';
 export const LOAD_SONGS       = 'LOAD_SONGS';
 export const LOAD_FIELDS      = 'LOAD_FIELDS';
 
-// ------------------------------------
-export const UPDATE_USER = 'USER_UPDATE';
+export const UPDATE_USER  = 'USER_UPDATE';
 export const USER_SUCCESS = 'USER_SUCCESS';
 export const USER_FAILURE = 'USER_FAILURE';
 
 // ------------------------------------
-// Special Actions Creators
+// Action Creators
 // ------------------------------------
 
 export const fetchSongs = ({ dispatch, getState, nextLocation }) => {
   const state = getState();
-  if (!state.api || state.api.isFetching || state.api.initialized.indexOf('songs') !== -1) {
+  if (state.api.initialized.indexOf('songs') !== -1) {
     return false;
   }
   return dispatch({
@@ -52,6 +51,7 @@ export const updateUser = () => (dispatch, getState) => {
   const fieldValues = getState().form.updateProfileForm
     ? getState().form.updateProfileForm.values
     : getState().form.updateSettingsForm.values;
+
   return dispatch({
     [CALL_API]: {
       types: [ UPDATE_USER, userSuccess, USER_FAILURE],
@@ -62,14 +62,13 @@ export const updateUser = () => (dispatch, getState) => {
   });
 };
 
-
 export const userSuccess = (response) => (dispatch) => {
-  dispatch({ type: 'USER_SUCCESS' , user: response });
+  console.info('userSuccess');
+  dispatch({ type: USER_SUCCESS , user: response });
+  dispatch({ type: 'UI_SHOW_SNACKBAR', meta: { message: 'Profile Updated' } });
+  // reloads user attributes
   dispatch({ type: 'AUTHENTICATE_COMPLETE' , user: response });
 };
-
-
-
 
 // ------------------------------------
 // Action Handlers
@@ -101,6 +100,5 @@ const initialState = {
 
 export default function apiReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
-
   return handler ? handler(state, action) : state;
 }

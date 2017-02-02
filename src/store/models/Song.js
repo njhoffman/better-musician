@@ -1,12 +1,18 @@
 import { uniq } from 'lodash';
 import {fk, many } from 'redux-orm';
 import BaseModel from './BaseModel';
+
 import {
   ADD_SONG,
   SHOW_SONGS,
   DELETE_SONG,
   UPDATE_SONG
 } from './actionTypes';
+
+import {
+  FETCH_SONGS,
+  LOAD_SONGS
+} from 'store/api';
 
 class Song extends BaseModel {
   static getPointTotal() {
@@ -51,13 +57,13 @@ class Song extends BaseModel {
         const props = Object.assign({}, payload, { newSong });
         Song.create(props);
         break;
-      case 'SONGS_REQUEST':
+      case FETCH_SONGS:
         // remove all songs when fetching
         if (this.all().count() > 0) {
           this.all().delete();
         }
         break;
-      case 'LOAD_SONGS':
+      case LOAD_SONGS:
         this.loadData(action.payload, Song);
         break;
       case DELETE_SONG:

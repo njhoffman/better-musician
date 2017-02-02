@@ -1,21 +1,18 @@
 import React, { PropTypes } from 'react';
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn, } from 'material-ui/Table';
+import { Table, TableBody, TableHeaderColumn, TableRow } from 'material-ui/Table';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import SortIcon from 'react-icons/lib/md/import-export';
 
-import Song from './Song';
+import Song from './SongContainer';
 import css from './SongList.scss';
 
-
-const columnWidths = [
-  { textAlign: 'center' },
-  { textAlign: 'center' },
-  { textAlign: 'center' },
-  { textAlign: 'center' }
-];
-
-const SongsList = ({ songsCollection, muiTheme, setCurrentSong, onSortClick, currentSong, viewSong, maxDifficulty }) => (
-  <Table
+const SongsList = ({
+  songsCollection,
+  muiTheme,
+  setCurrentSong,
+  setSort,
+  currentSong }) => (
+    <Table
     selectable={true}
     onRowSelection={setCurrentSong.bind(undefined, songsCollection)}
     className={css.songsList}
@@ -26,34 +23,34 @@ const SongsList = ({ songsCollection, muiTheme, setCurrentSong, onSortClick, cur
       deselectOnClickaway={true}
       stripedRows={true}>
       <TableRow>
-        <TableHeaderColumn style={columnWidths[0]}>
+        <TableHeaderColumn style={{ textAlign: 'center' }}>
           <a
             style={{ color: muiTheme.palette.accent1Color }}
-            onClick={onSortClick.bind(undefined, 'title')}>
+            onClick={setSort.bind(undefined, 'title')}>
             Title
             <SortIcon />
           </a>
         </TableHeaderColumn>
-        <TableHeaderColumn style={columnWidths[1]}>
+        <TableHeaderColumn style={{ textAlign: 'center' }}>
           <a
             style={{ color: muiTheme.palette.accent1Color }}
-            onClick={onSortClick.bind(undefined, 'artist')}>
+            onClick={setSort.bind(undefined, 'artist')}>
             Artist
             <SortIcon />
           </a>
         </TableHeaderColumn>
-        <TableHeaderColumn style={columnWidths[2]}>
+        <TableHeaderColumn style={{ textAlign: 'center' }}>
           <a
             style={{ color: muiTheme.palette.accent1Color }}
-            onClick={onSortClick.bind(undefined, 'progress')} >
+            onClick={setSort.bind(undefined, 'progress')} >
             Progress
             <SortIcon />
           </a>
         </TableHeaderColumn>
-        <TableHeaderColumn style={columnWidths[3]}>
+        <TableHeaderColumn style={{ textAlign: 'center' }}>
           <a
             style={{ color: muiTheme.palette.accent1Color }}
-            onClick={onSortClick.bind(undefined, 'difficulty')}>
+            onClick={setSort.bind(undefined, 'difficulty')}>
             Difficulty
             <SortIcon />
           </a>
@@ -63,9 +60,6 @@ const SongsList = ({ songsCollection, muiTheme, setCurrentSong, onSortClick, cur
         <Song
           key={song.id}
           songValues={song}
-          maxDifficulty={maxDifficulty}
-          columnWidths={columnWidths}
-          viewSong={viewSong}
           selected={song.id === currentSong}
         />
       )}
@@ -79,7 +73,7 @@ SongsList.propTypes = {
       id:        PropTypes.string,
       title:     PropTypes.string
     }).isRequired),
-  onSortClick: PropTypes.func.isRequired
+  setSort: PropTypes.func.isRequired
 };
 
 export default muiThemeable()(SongsList);

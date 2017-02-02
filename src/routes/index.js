@@ -4,6 +4,7 @@ import HomeRoute from './Home';
 import SongsRoute from './Songs';
 import SettingsRoute from './Settings';
 import ProfileRoute from './Profile';
+import StatsRoute from './Stats';
 import FieldsRoute from './Fields';
 import ResetRoute from './Reset';
 import LoginRoute from './Login';
@@ -32,6 +33,7 @@ export const createRoutes = (store) => {
       RegisterRoute(store),
       ResetRoute(store),
       SongsRoute(store, auth('user')),
+      StatsRoute(store, auth('user')),
       FieldsRoute(store, auth('user')),
       SettingsRoute(store, auth('user')),
       ProfileRoute(store, auth('user'))

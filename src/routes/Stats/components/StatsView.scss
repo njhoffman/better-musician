@@ -1,0 +1,25 @@
+// @import "core.scss";
+
+.profileContainer {
+    text-align: center;
+    position: relative;
+    padding: 0px !important;
+
+    .avatarFrame  {
+      .avatar {
+        margin-bottom: 10px;
+      }
+    }
+    .profileForm {
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 15px;
+      text-align: center;
+    }
+    .buttons {
+      padding-top: 25px;
+      padding-bottom: 25px;
+    }
+}
+
+

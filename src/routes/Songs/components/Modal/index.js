@@ -5,7 +5,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => ({
-  modal: state.modal
+  modal: state.ui.modal
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalBase);

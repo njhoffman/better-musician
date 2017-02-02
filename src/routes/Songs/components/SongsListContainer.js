@@ -1,23 +1,16 @@
 import { connect } from 'react-redux';
-import { getVisibleSongs, setCurrentSong, setSort, viewSong } from 'routes/Songs/modules/songs';
+import { getVisibleSongs, setCurrentSong, setSort } from 'routes/Songs/modules/songs';
+import { songs as songsSelector } from 'routes/Songs/modules/selectors';
 import { maxDifficulty as maxDifficultySelector} from 'selectors/users';
 import SongsList from './SongsList';
 
-const getCurrentSong = (state) => {
-  return state.songsView && state.songsView.currentSong
-    ? state.songsView.currentSong
-    : "";
-};
-
 const mapStateToProps = (state, action) => ({
-  songsCollection: getVisibleSongs(state),
-  maxDifficulty:   maxDifficultySelector(state)
+  songsCollection: songsSelector(state),
 });
 
 const mapActionCreators = ({
   setCurrentSong,
-  onSortClick: setSort,
-  viewSong
+  setSort
 });
 
 export default connect(

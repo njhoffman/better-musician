@@ -1,9 +1,17 @@
 import { connect } from 'react-redux';
+
 import {
   visualTheme as visualThemeSelector,
   userDisplay as userDisplaySelector,
   userPoints as userPointsSelector
 } from 'selectors/users';
+
+import {
+  uiToggleDrawerMenu,
+  uiShowModal,
+  MODAL_ADD_SONG,
+  MODAL_FILTER_SONGS
+} from 'store/ui';
 
 import Header from './Header';
 
@@ -11,33 +19,11 @@ const localState = {
   searchIsOpen: false
 };
 
-// TODO: these are Songs route specific actionCreators but are in global headerContainer
-// extract Songs route specific header elements, dynamically based on route
-export const showFiltersModal = () => {
-  return (dispatch, getState) => {
-    return dispatch({ type: "SHOW_MODAL", modalType: "FILTER_SONGS", modalProps: {} });
-  };
-};
-
-export const toggleDrawerMenu = () => {
-  return (dispatch, getState) => {
-    return dispatch({ type: "TOGGLE_DRAWER_MENU" });
-  };
-};
+export const showAddSongModal = (modalView) => uiShowModal(MODAL_ADD_SONG, modalView);
+export const showFiltersModal = (modalView) => uiShowModal(MODAL_FILTER_SONGS, modalView);
 
 export const searchClose = () => {
   debugger;
-};
-
-export const showAddSongModal = (modalView) => (dispatch, getState) => {
-  return dispatch({
-    type: "SHOW_MODAL",
-    meta: {
-      modalType: "MODAL_ADD_SONG",
-      modalView,
-      modalProps: {}
-    }
-  });
 };
 
 export const toggleSearchPopover = () => {
@@ -46,20 +32,20 @@ export const toggleSearchPopover = () => {
 
 const mapActionCreators = {
   showFiltersModal,
-  toggleDrawerMenu,
+  toggleDrawerMenu : uiToggleDrawerMenu,
   searchClose,
   toggleSearchPopover,
   showAddSongModal
 };
 
 const mapStateToProps = (state) => ({
-  searchIsOpen: localState.searchIsOpen,
-  currentSong: state.songsView ? state.songsView.currentSong : null,
-  user: state.auth.get("user"),
-  visualTheme: visualThemeSelector(state),
+  searchIsOpen:    localState.searchIsOpen,
+  currentSong:     state.songsView ? state.songsView.currentSong : null,
+  user:            state.auth.get("user"),
+  visualTheme:     visualThemeSelector(state),
   userDisplayName: userDisplaySelector(state),
-  getUserPoints: userPointsSelector(state),
-  currentView: state.location ? state.location.currentView : null,
+  getUserPoints:   userPointsSelector(state),
+  currentView:     state.location ? state.location.currentView : null,
 });
 
 export default connect(mapStateToProps, mapActionCreators)(Header);

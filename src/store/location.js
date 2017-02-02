@@ -2,7 +2,7 @@
 // Constants
 // ------------------------------------
 export const LOCATION_CHANGE = 'LOCATION_CHANGE';
-export const INIT_VIEW = 'INIT_VIEW';
+export const INIT_VIEW       = 'INIT_VIEW';
 
 // ------------------------------------
 // Actions Creators
@@ -38,6 +38,5 @@ const initialState = null;
 
 export default function locationReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
-
   return handler ? handler(state, action) : state;
 }

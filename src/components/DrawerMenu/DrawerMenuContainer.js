@@ -1,18 +1,13 @@
 import { connect } from 'react-redux';
+import { UI_HIDE_DRAWER_MENU, uiHideDrawerMenu } from 'store/ui';
 import DrawerMenu from './DrawerMenu';
 
-export const hideDrawerMenu = () => {
-  return (dispatch) => {
-    return dispatch({ type: "HIDE_DRAWER_MENU" });
-  };
-}
-
 const mapDispatchToProps = {
-  hideDrawerMenu
+  hideDrawerMenu : uiHideDrawerMenu
 };
 
 const mapStateToProps = (state) => ({
-  isOpen: state.drawer.isOpen,
+  isOpen: state.ui.drawer.isOpen,
   user: state.auth && state.auth.get('user')
 });
 

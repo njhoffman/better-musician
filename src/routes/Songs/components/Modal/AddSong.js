@@ -30,8 +30,8 @@ let lastActiveField = 'artist';
 export const AddSongModal = (props) => {
 
   const { dispatch, addSong, editSong, modal } = props;
-  const modalView = modal.modalView;
-  const isView = props.modal.modalView === 'view';
+  const modalView = modal.props.view;
+  const isView = modalView === 'view';
 
   const buttonLabel = isView
     ? 'Edit'
@@ -43,7 +43,7 @@ export const AddSongModal = (props) => {
     <FlatButton
       label="Cancel"
       primary={true}
-      onTouchTap={ props.hideModal }
+      onTouchTap={ props.uiHideModal }
     />,
     <RaisedButton
       label={buttonLabel}
@@ -64,7 +64,7 @@ export const AddSongModal = (props) => {
   }
 
   const textColor = props.muiTheme.palette.textColor;
-  const className = css.addSongModal + ' ' + css[props.modal.modalView];
+  const className = css.addSongModal + ' ' + css[modalView];
 
   lastActiveField = ['artist', 'instrument'].indexOf(props.activeField) !== -1 ? props.activeField : lastActiveField;
   const renderImage = (props) => {
@@ -133,7 +133,7 @@ export const AddSongModal = (props) => {
       modal={false}
       actions={actionButtons}
       open={props.isOpen}
-      onRequestClose={props.hideModal}
+      onRequestClose={props.uiHideModal}
       bodyStyle={dialogBodyStyle}
       repositionOnUpdate={false}
       className={className}
@@ -157,12 +157,12 @@ export const AddSongModal = (props) => {
                   disabled={isView}
                   style={textStyle}
                   inputStyle={textInputStyle}
-                  viewType={props.modal.modalView}
+                  viewType={modalView}
                   label="Song Title" />
                 <FormField
                   name="artist.fullName"
                   type='autocomplete'
-                  viewType={props.modal.modalView}
+                  viewType={modalView}
                   underlineShow={!isView}
                   disabled={isView}
                   inputStyle={textInputStyle}
@@ -184,14 +184,14 @@ export const AddSongModal = (props) => {
                     centerOnSmall
                     style={{ ...textStyle, ...{ width: '100%' } }}
                     inputStyle={textInputStyle}
-                    viewType={props.modal.modalView}
+                    viewType={modalView}
                     label="Song Title" />
                 </Row>
                 <Row>
                   <FormField
                     name="artist.lastName"
                     type='autocomplete'
-                    viewType={props.modal.modalView}
+                    viewType={modalView}
                     underlineShow={!isView}
                     disabled={isView}
                     inputStyle={textInputStyle}
@@ -202,7 +202,7 @@ export const AddSongModal = (props) => {
                   <FormField
                     name="artist.firstName"
                     type='autocomplete'
-                    viewType={props.modal.modalView}
+                    viewType={modalView}
                     underlineShow={!isView}
                     disabled={isView}
                     inputStyle={textInputStyle}
@@ -233,13 +233,13 @@ export const AddSongModal = (props) => {
                 textFieldStyle={textInputStyle}
                 underlineShow={!isView}
                 disabled={isView}
-                viewType={props.modal.modalView}
+                viewType={modalView}
                 label="Instrument" />
             </Row>
             <Row>
               <FormField
                 type='slider'
-                viewType={props.modal.modalView}
+                viewType={modalView}
                 name="difficulty"
                 className={css.difficulty}
                 small={6}
@@ -252,7 +252,7 @@ export const AddSongModal = (props) => {
               <FormField
                 name="progress"
                 type='slider'
-                viewType={props.modal.modalView}
+                viewType={modalView}
                 className={css.progress}
                 valueDisplay={renderStars.bind(undefined, props.muiTheme)}
                 disabled={isView}
@@ -299,7 +299,7 @@ AddSongModal.propTypes = {
   addSong:     React.PropTypes.func,
   genres:      React.PropTypes.array,
   instruments: React.PropTypes.array,
-  hideModal:   React.PropTypes.func,
+  uiHideModal: React.PropTypes.func,
   isOpen:      React.PropTypes.bool
 };
 

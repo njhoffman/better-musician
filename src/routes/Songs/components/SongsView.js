@@ -15,7 +15,7 @@ export const SongsView = (props) => (
     <Column small={12}>
       <Paper zDepth={5}>
         <div className={css.songsContainer}>
-          <SongsList />
+          <SongsList {...props} />
           <SongsPagination />
           <ModalBase />
         </div>
@@ -23,14 +23,4 @@ export const SongsView = (props) => (
     </Column>
 );
 
-SongsView.PropTypes = {
-  showAddSongModal: React.PropTypes.func.isRequired
-};
-
-const UserIsAuthenticated = UserAuthWrapper({
-    authSelector: state => state.auth.get('user').toJS(), // how to get the user state
-    redirectAction: updateLocation, // the redux action to dispatch for redirect
-    wrapperDisplayName: 'UserIsAuthenticated' // a nice name for this auth check
-});
-
-export default UserIsAuthenticated(SongsView);
+export default SongsView;
