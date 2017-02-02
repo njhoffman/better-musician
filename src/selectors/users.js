@@ -16,17 +16,17 @@ export const userPoints = createSelector(
 );
 
 const userDisplaySelector = ormCreateSelector(orm, (session, user) => {
-  if (!user || !user.get('attributes')) {
-    return "";
+  let userName = "";
+  if (user && user.get('attributes')) {
+    userName += user.get('attributes').get('firstName')
+      ? user.get('attributes').get('firstName') + ' ' : '';
+    userName += user.get('attributes').get('lastName')
+      ? user.get('attributes').get('lastName') : ''
+    if (userName.length === 0) {
+      userName = user.get('attributes').get('email');
+    }
   }
-  if (user && user.get('attributes').get('lastName')
-    || user && user.get('attributes').get('firstName')) {
-
-      return user.get('attributes').get('firstName')
-        + ' ' + user.get('attributes').get('lastName');
-  } else if (user) {
-    return user.get('attributes').get('email');
-  }
+  return userName;
 });
 
 export const userDisplay = createSelector(
@@ -43,5 +43,17 @@ export const maxDifficulty = createSelector(
   ormSelector,
   state => state.auth.get('user'),
   maxDifficultySelector
+);
+
+
+const visualThemeSelector = ormCreateSelector(orm, (session, user) => {
+  return (user && user.get('attributes') && user.get('attributes').get('visualTheme')
+    ? user.get('attributes').get('visualTheme') : 'steelBlue-dark');
+});
+
+export const visualTheme = createSelector(
+  ormSelector,
+  state => state.auth.get('user'),
+  visualThemeSelector
 );
 

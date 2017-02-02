@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { MdExitToApp } from 'react-icons/lib/md/'
 import { Field, reduxForm } from 'redux-form';
 import { connect } from "react-redux";
+import { Row, Column } from 'react-foundation';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import ButtonLoader from './ButtonLoader';
@@ -59,12 +60,12 @@ class EmailSignInForm extends React.Component {
       <form className='redux-auth email-sign-in-form'
         style={{clear: "both", overflow: "hidden"}}
         onSubmit={this.handleSubmit.bind(this)}>
-        <div>
+        <Row>
           { errors && errors.map(error =>
             <p>{error}</p>
           )}
-        </div>
-        <div className={css.fieldWrapper}>
+        </Row>
+        <Row>
           <Field
             component={RenderTextField}
             floatingLabelText="Email"
@@ -73,8 +74,8 @@ class EmailSignInForm extends React.Component {
             ref="emailSignInEmail"
             disabled={disabled}
             {...this.props.inputProps.email} />
-        </div>
-        <div className={css.fieldWrapper}>
+        </Row>
+        <Row>
           <Field
             type="password"
             component={RenderTextField}
@@ -84,8 +85,8 @@ class EmailSignInForm extends React.Component {
             disabled={disabled}
             {...this.props.inputProps.password} />
 
-        </div>
-        <div className={css.fieldWrapper}>
+        </Row>
+        <Row>
           <ButtonLoader
             loading={this.props.auth.getIn(["emailSignIn", "loading"])}
             type="submit"
@@ -97,7 +98,7 @@ class EmailSignInForm extends React.Component {
             {...this.props.inputProps.submit}>
             Sign In
           </ButtonLoader>
-        </div>
+        </Row>
       </form>
     );
   }

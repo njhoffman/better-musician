@@ -81,7 +81,6 @@ Song.fields = {
   artist:       fk("Artist"),
   instrument:   fk("Instrument"),
   genre:        fk("Genre"),
-  customFieldIds: many('CustomField')
 };
 
 Song.shallowFields = {

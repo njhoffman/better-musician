@@ -176,7 +176,7 @@
     "nodemon": "^1.10.2",
     "phantomjs-prebuilt": "^2.1.12",
     "plato": "^1.7.0",
-    "prettyjson-256": "https://github.com/njhoffman/prettyjson-256/tarball/master",
+    "prettyjson-256": "git+https://bitbucket.org/njhoffman/prettyjson-256/prettyjson-256.git",
     "react-addons-test-utils": "^15.0.0",
     "react-transform-catch-errors": "^1.0.2",
     "redbox-react": "^1.2.10",

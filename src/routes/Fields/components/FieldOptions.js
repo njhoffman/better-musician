@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
   RenderChip,
-  RenderTextField,
+  RenderText,
 } from 'components/Field';
 import { Field, FieldArray } from 'redux-form';
 import { Chip, RaisedButton } from 'material-ui';
@@ -25,7 +25,7 @@ class FieldOptions extends Component {
     return (
       <div>
         <div className={css.flexThree}>
-          <RenderTextField
+          <RenderText
             label='Option Text'
             onChange={(e) => this.setState({ optionText: e.target.value }) }
             autoComplete='off'
@@ -35,6 +35,7 @@ class FieldOptions extends Component {
           />
           <RaisedButton
             onTouchTap={this.addOption.bind(this, this.props.fields)}
+            secondary={true}
             style={{ display: 'inline-block', minWidth: '30%', marginLeft: '10px' }}
             label='Add' />
         </div>

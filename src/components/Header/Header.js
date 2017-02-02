@@ -104,7 +104,7 @@ class Header extends Component  {
             style={{ width: '15%' }}
             onRequestClose={this.onRequestClose.bind(this)} >
             <Row>
-              <Column style={{ padding: '0px', textAlign: 'center' }}>
+              <Column style={{ padding: '0px', textAlign: 'center', height: '100%' }}>
                 <a style={{ padding: "5px 0px" }} className={css.headerLink} onClick={ this.showEditSongModal.bind(this) } >
                   <span className={css.iconWrapper}>
                     <AddIcon style={{ margin: "0px 12px 0px -12px" }} className={css.icon} />
@@ -114,7 +114,7 @@ class Header extends Component  {
               </Column>
             </Row>
             <Row style={{ padding: "5px 0px" }}>
-              <Column style={{ padding: '0px', textAlign: 'center' }}>
+              <Column style={{ padding: '0px', textAlign: 'center', height: '100%' }}>
                 <a style={{ padding: "5px 0px" }} className={css.headerLink}>
                   <span className={css.iconWrapper}>
                     <DeleteIcon className={css.icon} />
@@ -172,13 +172,13 @@ class Header extends Component  {
   renderMiddleColumn() {
     return (
       <Row className={css.wrapper}>
-        <Column style={{ padding: '0px' }}>
+        <Column style={{ padding: '0px', height: '100%' }}>
           { this.renderSongButton() }
         </Column>
-        <Column style={{ padding: '0px' }}>
+        <Column style={{ padding: '0px', height: '100%' }}>
           { this.renderFiltersButton() }
         </Column>
-        <Column style={{ padding: '0px' }}>
+        <Column style={{ padding: '0px', height: '100%' }}>
           { this.renderSearchButton() }
         </Column>
       </Row>
@@ -190,7 +190,12 @@ class Header extends Component  {
     const signedIn = this.props.user.get('isSignedIn');
     if (signedIn) {
       return (
-        <div className={css.header + ' ' + css.loggedIn }>
+        <div
+          style={{
+            backgroundColor: this.props.muiTheme.palette.canvasColor,
+            color: this.props.muiTheme.instrumental.headerLinksColor
+          }}
+          className={css.header + ' ' + css.loggedIn }>
           <Row className={css.wrapper}>
             <Column
               small={6}
@@ -199,6 +204,7 @@ class Header extends Component  {
               <HeaderLeft {...props} />
             </Column>
             <Column
+              medium={6}
               showFor={Breakpoints.MEDIUM} >
               { this.renderMiddleColumn() }
             </Column>
@@ -218,7 +224,12 @@ class Header extends Component  {
       );
     } else {
       return (
-        <div className={css.header + ' ' + css.loggedOut}>
+        <div
+          style={{
+            backgroundColor: this.props.muiTheme.palette.canvasColor,
+            color: this.props.muiTheme.instrumental.headerLinksColor
+          }}
+          className={css.header + ' ' + css.loggedOut}>
           <Row className={css.wrapper}>
             <Column
               small={6}

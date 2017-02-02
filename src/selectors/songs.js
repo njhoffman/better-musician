@@ -17,16 +17,19 @@ export const artists = createSelector(
   artistSelector
 );
 
-const artistMatchSelector = ormCreateSelector(orm, (session, addSongForm)  => {
-  if (addSongForm && addSongForm.values && addSongForm.values.artist) {
-    return session.Artist.findByFullName(addSongForm.values.artist);
+const artistMatchSelector = ormCreateSelector(orm, (session, addSongFormValues)  => {
+  if (addSongFormValues && addSongFormValues.artist) {
+    console.info('foundArtist', addSongFormValues);
+    return session.Artist.findByFullName(addSongFormValues.artist.fullName);
+  } else {
+    console.info('missingArtist', addSongFormValues);
   }
   return null;
 });
 
 export const artistsMatched = createSelector(
   ormSelector,
-  state => state.form.addSongForm,
+  state => state.form.addSongForm ? state.form.addSongForm.values : null,
   artistMatchSelector
 );
 

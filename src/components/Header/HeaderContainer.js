@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import {
+  visualTheme as visualThemeSelector,
   userDisplay as userDisplaySelector,
   userPoints as userPointsSelector
 } from 'selectors/users';
@@ -55,6 +56,7 @@ const mapStateToProps = (state) => ({
   searchIsOpen: localState.searchIsOpen,
   currentSong: state.songsView ? state.songsView.currentSong : null,
   user: state.auth.get("user"),
+  visualTheme: visualThemeSelector(state),
   userDisplayName: userDisplaySelector(state),
   getUserPoints: userPointsSelector(state),
   currentView: state.location ? state.location.currentView : null,

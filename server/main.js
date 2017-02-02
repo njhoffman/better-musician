@@ -8,12 +8,12 @@ import { morganOutput, requestOutput, webpackLog } from './server.utils';
 import setupProxy from './proxy';
 import webpackConfig from '../config/webpack.config';
 import project from '../config/project.config';
+import configDebug from './server.debug.js';
 
 // TODO: make logger for happypack
-const debug              = require('debug')('app:server');
-const requestDebug       = require('debug')('app:request');
-const responseDebug      = require('debug')('app:response');
-const webpackDebug       = require('debug')('app:webpack');
+
+const { log, info, error } = configDebug('app');
+const webpackDebug = configDebug('app:webpack');
 
 const app = express();
 setupProxy(app);
@@ -32,10 +32,10 @@ app.use(require('connect-history-api-fallback')());
 if (true || project.env === 'development') {
   const compiler = webpack(webpackConfig);
 
-  // app.use(requestOutput(requestDebug));
-  // app.use(morgan(morganOutput(responseDebug)));
+  app.use(requestOutput);
+  app.use(morgan(morganOutput));
 
-  debug('Enabling webpack dev and HMR middleware');
+  info('Enabling webpack dev and HMR middleware');
   app.use(require('webpack-dev-middleware')(compiler, {
     publicPath  : webpackConfig.output.publicPath,
     contentBase : project.paths.client(),
@@ -43,7 +43,7 @@ if (true || project.env === 'development') {
     quiet       : project.compiler_quiet,
     noInfo      : project.compiler_quiet,
     lazy        : false,
-    log         : webpackLog(webpackDebug),
+    log         : webpackDebug.info,
     stats       : project.compiler_stats,
     watchOptions : {
       aggregateTimeout: 300,
@@ -51,7 +51,7 @@ if (true || project.env === 'development') {
     }
   }));
   app.use(require('webpack-hot-middleware')(compiler, {
-    log: webpackLog,
+    log: webpackDebug.info,
     heartbeat: 3 * 1000
   }));
 
@@ -61,7 +61,7 @@ if (true || project.env === 'development') {
   // when the application is compiled.
   app.use(express.static(project.paths.public()));
 } else {
-  debug(
+  info(
     'Server is being run outside of live development mode, meaning it will ' +
     'only serve the compiled application bundle in ~/dist. Generally you ' +
     'do not need an application server for this and can instead use a web ' +
@@ -77,9 +77,9 @@ if (true || project.env === 'development') {
 
 // error handling
 app.use(function (err, req, res, next) {
-    debug("\n\n*** ERROR ***");
+    error("\n\n*** ERROR ***");
     console.error(err);
-    debug("*** ERROR ***\n\n");
+    error("*** ERROR ***\n\n");
     res.status(err.status ? err.status : 500).send(err.message)
 });
 

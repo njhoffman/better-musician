@@ -11,12 +11,11 @@ const getCurrentSong = (state) => {
 
 const mapStateToProps = (state, action) => ({
   songsCollection: getVisibleSongs(state),
-  currentSong:     getCurrentSong(state),
   maxDifficulty:   maxDifficultySelector(state)
 });
 
 const mapActionCreators = ({
-  onSongClick: setCurrentSong,
+  setCurrentSong,
   onSortClick: setSort,
   viewSong
 });

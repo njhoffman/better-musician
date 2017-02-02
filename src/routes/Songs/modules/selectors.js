@@ -6,13 +6,13 @@ import { find, isEmpty } from 'lodash';
 
 export const ormSelector = state => state.orm;
 
-const songsSelector = ormCreateSelector(orm, (session, songsView) => {
+
+const songsSelector = ormCreateSelector(orm, (Session, songsView) => {
   const sortField = songsView ? songsView.sortField : 'title';
   const perPage = songsView ? songsView.paginationPerPage : false;
   const paginationCurrent = songsView ? songsView.paginationCurrent : 1;
 
-
-  let retObj = session.Song.all().toModelArray();
+  let retObj = Session.Song.all().toModelArray();
 
   if (sortField) {
     retObj = retObj.sort( (a,b) => {
@@ -41,11 +41,13 @@ export const songs = createSelector(
   songsSelector
 );
 
-const currentSongSelector = ormCreateSelector(orm, (session, songsView) => {
-  // TODO: clean this up when you get footer component loaded dynamically
-
+const currentSongSelector = ormCreateSelector(orm, (Session, songsView) => {
   if (!isEmpty(songsView) && !isEmpty(songsView.currentSong)) {
-    const song = session.Song.withId(songsView.currentSong);
+    const song = Session.Song.withId(songsView.currentSong);
+    song.customFields = Session.CustomField.all().toModelArray().map((cf, idx) => {
+      const found = find(song.customFields, { id: cf.id });
+      return found ? found.value : '';
+    });
     return song;
   }
 });
@@ -57,8 +59,8 @@ export const currentSong = createSelector(
 );
 
 
-const paginationTotalSelector = ormCreateSelector(orm, session => {
-  return session.Song.count();
+const paginationTotalSelector = ormCreateSelector(orm, Session => {
+  return Session.Song.count();
 });
 
 export const paginationTotal = createSelector(
@@ -68,7 +70,7 @@ export const paginationTotal = createSelector(
 );
 
 
-const paginationStartSelector = ormCreateSelector(orm, (session, songsView) => {
+const paginationStartSelector = ormCreateSelector(orm, (Session, songsView) => {
   return (1 + (songsView.paginationCurrent - 1) * parseInt(songsView.paginationPerPage));
 });
 
@@ -79,9 +81,9 @@ export const paginationStart = createSelector(
 );
 
 
-const paginationEndSelector = ormCreateSelector(orm, (session, songsView) => {
-  return songsView.paginationCurrent * songsView.paginationPerPage > session.Song.count()
-    ? session.Song.count()
+const paginationEndSelector = ormCreateSelector(orm, (Session, songsView) => {
+  return songsView.paginationCurrent * songsView.paginationPerPage > Session.Song.count()
+    ? Session.Song.count()
     : songsView.paginationCurrent * songsView.paginationPerPage
 });
 
@@ -91,8 +93,8 @@ export const paginationEnd = createSelector(
   paginationEndSelector
 );
 
-const paginationPagesSelector = ormCreateSelector(orm, (session, songsView) => {
-  return parseInt(Math.ceil(session.Song.count() / songsView.paginationPerPage));
+const paginationPagesSelector = ormCreateSelector(orm, (Session, songsView) => {
+  return parseInt(Math.ceil(Session.Song.count() / songsView.paginationPerPage));
 });
 
 export const paginationPages = createSelector(
@@ -101,8 +103,8 @@ export const paginationPages = createSelector(
   paginationPagesSelector
 );
 
-const songStatsSelector = ormCreateSelector(orm, (session, state) => {
-  return session.Song ? session.Song.getStats() : {};
+const songStatsSelector = ormCreateSelector(orm, (Session, state) => {
+  return Session.Song ? Session.Song.getStats() : {};
 });
 
 export const songStats = createSelector(
@@ -111,20 +113,19 @@ export const songStats = createSelector(
   songStatsSelector
 );
 
-const savedTabsSelector = ormCreateSelector(orm, (session, currentSong) => {
+const savedTabsSelector = ormCreateSelector(orm, (Session, currentSong) => {
   let tabs = {};
-  session.CustomField.all().toModelArray().forEach(field => {
+  Session.CustomField.all().toModelArray().forEach((field, idx) => {
+    field.idx = idx;
     if (tabs[field.tabName]) {
       tabs[field.tabName].push(field);
     } else {
       tabs[field.tabName] = [field];
     }
   });
-  let ret = [];
-  Object.keys(tabs).forEach(tabKey => {
-    ret.push({ name: tabKey, fields: tabs[tabKey] });
+  return Object.keys(tabs).map(tabKey => {
+    return ({ name: tabKey, fields: tabs[tabKey] });
   });
-  return ret;
 });
 
 export const savedTabs = createSelector(

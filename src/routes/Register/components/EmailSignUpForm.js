@@ -3,12 +3,13 @@ import ContentSend from "material-ui/svg-icons/content/send";
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import muiThemeable from 'material-ui/styles/muiThemeable';
+import { Row, Column } from 'react-foundation';
 
 import { MdHelp as HelpIcon } from 'react-icons/lib/md';
 
 import { RaisedButton } from 'material-ui';
 import ButtonLoader from 'components/ButtonLoader';
-import { RenderTextField } from 'components/Field';
+import FormField from 'components/Field';
 import { emailSignUp } from 'store/auth/actions/email-sign-up';
 import css from './EmailSignUpForm.scss';
 
@@ -64,53 +65,60 @@ class EmailSignUpForm extends React.Component {
       <form className='redux-auth email-sign-up-form clearfix'
         style={{clear: "both", overflow: "hidden"}}
         onSubmit={this.handleSubmit.bind(this)}>
-        <div>
+        <Row>
+          <Column>
           { errors && errors.map(error =>
             <p>{error}</p>
           )}
-        </div>
-        <div className={css.fieldWrapper}>
-          <Field
-            component={RenderTextField}
+          </Column>
+        </Row>
+        <Row>
+          <FormField
+            type="text"
             label="Email"
             name="email-sign-up-email"
             disabled={disabled}
           />
-        </div>
-        <div className={css.fieldWrapper}>
-          <Field type="password"
-            component={RenderTextField}
+        </Row>
+        <Row>
+          <FormField type="password"
+            type="text"
             label="Password"
             name="email-sign-up-password"
             disabled={disabled}
             {...this.props.inputProps.password} />
-        </div>
-        <div className={css.fieldWrapper}>
-          <Field type="password"
-            component={RenderTextField}
+        </Row>
+        <Row>
+          <FormField type="password"
+            type="text"
             label="Password Confirmation"
             name="email-sign-up-password-confirmation"
             disabled={disabled}
             {...this.props.inputProps.passwordConfirmation} />
-        </div>
-        <div className={css.buttonWrapper}>
-          <RaisedButton
-            label="Reset Password"
-            style={{ marginRight: "10px" }}
-            icon={<HelpIcon />}
-          />
-          <ButtonLoader
-            loading={this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "loading"])}
-            type="submit"
-            name="email-sign-up-submit"
-            primary={true}
-            icon={ContentSend}
-            disabled={disabled}
-            onClick={this.handleSubmit.bind(this)}
-            {...this.props.inputProps.submit}>
-            Sign Up
-          </ButtonLoader>
-        </div>
+        </Row>
+        <Row className={css.buttonWrapper}>
+          <Column centerOnSmall small={7}>
+            <RaisedButton
+              label="Reset Password"
+              secondary={true}
+              style={{ marginRight: "10px" }}
+              icon={<HelpIcon />}
+            />
+          </Column>
+          <Column centerOnSmall small={5}>
+            <ButtonLoader
+              loading={this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "loading"])}
+              type="submit"
+              name="email-sign-up-submit"
+              primary={true}
+              icon={ContentSend}
+              disabled={disabled}
+              onClick={this.handleSubmit.bind(this)}
+              {...this.props.inputProps.submit}>
+              Sign Up
+            </ButtonLoader>
+          </Column>
+        </Row>
       </form>
     );
   }

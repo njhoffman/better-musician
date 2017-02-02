@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import AddSongModal from './AddSong';
-import { addSong, isOpen, hideModal } from '../../modules/songs';
+import { addSong, editSong, isOpen, hideModal } from '../../modules/songs';
 import {
   currentSong as currentSongSelector,
   savedTabs as savedTabsSelector,
@@ -15,21 +15,18 @@ import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
 
 const mapDispatchToProps = {
   hideModal,
-  addSong
+  addSong,
+  editSong
 };
 
-const initialValues = song => {
+const initialValues = (song) => {
   if (song) {
-    const iv = Object.assign({}, song.ref);
-    if (song.customFields) {
-      song.customFields.forEach(cf => {
-        iv[cf.id] = cf.value;
-      });
-      iv.artist = song.artist.fullName;
-      iv.genre = song.genre.name;
-      iv.instrument = song.instrument.name;
-    }
-    return iv;
+    // return object for nested models, redux form tries to reset and breaks if not a plain object
+    const ivSong = Object.assign({}, song);
+    ivSong.artist = song.artist.ref;
+    ivSong.genre = song.genre.ref;
+    ivSong.instrument = song.instrument.ref;
+    return ivSong;
   }
   return song;
 };

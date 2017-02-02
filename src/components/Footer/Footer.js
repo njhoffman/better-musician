@@ -12,18 +12,22 @@ class Footer extends Component  {
     super(props);
   };
 
-  renderBlankFooter() {
+  renderBlankFooter(backgroundColor) {
     return (
-      <div className={css.footerWrapper}>
+      <div
+        style={{ backgroundColor }}
+        className={css.footerWrapper}>
         <Row className={css.footer}>
         </Row>
       </div>
     )
   }
 
-  renderSongStatsFooter (stats) {
+  renderSongStatsFooter (stats, backgroundColor) {
     return (
-      <div className={css.footerWrapper}>
+      <div
+        style={{ backgroundColor }}
+        className={css.footerWrapper}>
         <Row className={css.footerStats}>
           <Column
             small={3}
@@ -64,10 +68,12 @@ class Footer extends Component  {
     )
   }
 
-  renderSongFooter (song) {
+  renderSongFooter (song, backgroundColor) {
     const artistPicture = song.artist.picture ? "artists/" + song.artist.picture : "artists/unknown_artist.png";
     return (
-      <div className={css.footerWrapper}>
+      <div
+        style={{ backgroundColor }}
+        className={css.footerWrapper}>
         <Row className={css.footerSong}>
           <Column
             small={3}
@@ -123,14 +129,15 @@ class Footer extends Component  {
   };
 
   render () {
-    const { song, stats, isSignedIn } = this.props;
+    const { song, stats, isSignedIn, muiTheme } = this.props;
+    const backgroundColor = muiTheme.palette.canvasColor;
     // TODO: figure out why this is double firing
     if (song && song.artist) {
-      return this.renderSongFooter(song);
+      return this.renderSongFooter(song, backgroundColor);
     } else if (isSignedIn) {
-      return this.renderSongStatsFooter(stats);
+      return this.renderSongStatsFooter(stats, backgroundColor);
     } else {
-      return this.renderBlankFooter();
+      return this.renderBlankFooter(backgroundColor);
     }
   }
 };

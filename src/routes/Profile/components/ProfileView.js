@@ -4,29 +4,28 @@ import { Row, Column } from 'react-foundation';
 import  ButtonLoader from 'components/ButtonLoader';
 import { Field, reduxForm } from 'redux-form';
 import { Link, browserHistory } from 'react-router';
+import muiThemeable from 'material-ui/styles/muiThemeable';
+import FormField from 'components/Field';
+import css from './ProfileView.scss';
 import {
   MdAccountCircle as AvatarIcon,
   MdSave as SaveIcon
 } from 'react-icons/lib/md';
-import muiThemeable from 'material-ui/styles/muiThemeable';
-import {
-  RenderSelectField,
-  RenderTextField,
-  RenderSliderField
-} from 'components/Field';
-import css from './ProfileView.scss';
 
 const renderImage = (props) => {
   return (
-    <div className={css.avatarFrame}>
+    <Column>
       <Avatar
         icon={<AvatarIcon />}
         className={css.avatar}
         backgroundColor={props.muiTheme.palette.primary1Color}
         size={100} />
       <div>No Picture</div>
-      <RaisedButton label="Add Picture" />
-    </div>
+      <RaisedButton
+        secondary={true}
+        label="Add Picture"
+      />
+    </Column>
   );
 }
 
@@ -40,11 +39,12 @@ export const ProfileView = (props) => {
   let disabled = props.api.isFetching;
   const redirectSettings = () => browserHistory.push('/settings');
   const redirectFields = () => browserHistory.push('/fields');
+  const redirectStats = () => browserHistory.push('/stats');
 
   const textColor = props.muiTheme.palette.textColor;
 
   return (
-    <Column small={8} centerOnSmall={true}>
+    <Column small={12} medium={8} centerOnSmall={true}>
       <Paper zDepth={5}>
         <div className={css.profileContainer}>
           <Tabs>
@@ -54,48 +54,56 @@ export const ProfileView = (props) => {
               <form
                 className={css.profileForm}>
                 <h3>Update Your Profile</h3>
-                <div className={css.flexRow}>
+                <Row>
                   { renderImage(props) }
-                </div>
-                <div className={css.flexRow}>
-                  <Field
+                </Row>
+                <Row>
+                  <FormField
                     name="email"
                     disabled={true}
-                    component={RenderTextField}
+                    type='text'
                     label="User Name" />
-                </div>
-                <div className={css.flexRow}>
-                  <Field
+                </Row>
+                <Row>
+                  <FormField
                     name="firstName"
-                    component={RenderTextField}
+                    type='text'
                     label="First Name" />
-                </div>
-                <div className={css.flexRow}>
-                  <Field
+                </Row>
+                <Row>
+                  <FormField
                     name="lastName"
-                    component={RenderTextField}
+                    type='text'
                     label="Last Name" />
-                </div>
-                <div className={css.flexRow}>
-                  <Field
+                </Row>
+                <Row>
+                  <FormField
                     name="notificationsEmail"
-                    component={RenderTextField}
+                    type='text'
                     label="Notifications Email" />
-                </div>
-                <div className={css.flexRow + ' ' + css.buttons}>
-                  <ButtonLoader
-                    type="submit"
-                    label="Save"
-                    loading={props.api.isFetching}
-                    labelStyle={{ color: textColor, paddingRight: '5px' }}
-                    onClick={props.updateProfile}
-                    icon={<SaveIcon style={{ marginTop: '-10px', color: textColor }} />}
-                    className='update-profile-submit'
-                    disabled={disabled}
-                    primary={true}>
-                  </ButtonLoader>
-                </div>
+                </Row>
+                <Row className={css.buttons}>
+                  <Column>
+                    <ButtonLoader
+                      type="submit"
+                      label="Save"
+                      loading={props.api.isFetching}
+                      labelStyle={{ color: textColor, paddingRight: '5px' }}
+                      onClick={props.updateProfile}
+                      icon={<SaveIcon style={{ marginTop: '-10px', color: textColor }} />}
+                      className='update-profile-submit'
+                      disabled={disabled}
+                      primary={true}>
+                    </ButtonLoader>
+                  </Column>
+                </Row>
               </form>
+            </Tab>
+            <Tab
+              data-route="/stats"
+              value="stats"
+              onActive={redirectStats}
+              label="Stats">
             </Tab>
             <Tab
               data-route="/settings"

@@ -42,7 +42,7 @@ export const addField = () => (dispatch, getState) => {
 
 export const fieldsSuccess = (data) => (dispatch) => {
   console.info('response', data);
-  dispatch({ type: 'ADD_FIELD', payload: data });
+  dispatch({ type: 'ADD_FIELD', payload: data.fields });
 };
 
 export const editField = ({ type, label, tabName, optionValues, id }) => (dispatch) => {

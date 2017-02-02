@@ -12,8 +12,7 @@ class HeaderRight extends Component {
       <div className={css.headerLink}>
         <div className={css.profileDisplay}>
           <Link
-            to='/profile'
-            style={linkStyle}>
+            to='/profile'>
             <div className={css.profilePoints}>
               { this.props.getUserPoints }
             </div>
@@ -24,8 +23,7 @@ class HeaderRight extends Component {
         </div>
         <div className={css.profileAvatar}>
           <Link
-            to='/profile'
-            style={linkStyle}>
+            to='/profile'>
             <Avatar
               icon={<AvatarIcon />}
               backgroundColor={this.props.muiTheme.palette.primary1Color}
@@ -56,6 +54,7 @@ class HeaderRight extends Component {
             style={linkStyle}>
             <RaisedButton
               style={buttonStyle}
+              secondary={true}
               labelStyle={buttonLabelStyle}
               className={css.registerButton}
               label="REGISTER" />

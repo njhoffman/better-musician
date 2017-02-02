@@ -1,7 +1,10 @@
 .footerWrapper {
-  background: #2b2d30;
   color: white;
-  height: 75px;
+  .footerStats,
+  .footerSong,
+  .footer {
+    height: 75px;
+  }
 }
 
 .footerSong {

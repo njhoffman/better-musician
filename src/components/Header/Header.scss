@@ -1,7 +1,11 @@
-.header {
-  background: #2b2d30;
+
+ .header {
   text-align: center;
   font-size: 1.0em;
+  a {
+    color: inherit;
+    height: 100%;
+  }
 
   .downArrow {
     &:hover {
@@ -29,9 +33,7 @@
 
   .homeLink,
   .menuIcon {
-    display: inline-block;
     vertical-align: middle;
-    color: #aaaacc;
   }
 
   .menuIcon:hover,
@@ -50,14 +52,15 @@
     .profileDisplay {
       display: inline-block;
       .profilePoints {
-        color: #aaaacc;
         font-size: 1.3em;
         line-height:1.3em;
       }
       .profileName {
-        color: #aaaacc;
         font-size: 0.8em;
         line-height: 0.8em;
+      }
+      .headerLink {
+        display: inline-block;
       }
     }
     .profileAvatar {
@@ -65,6 +68,9 @@
       display: inline-block;
       width: 50px;
       margin-left: 5px;
+      .headerLink {
+        display: inline-block;
+      }
     }
   }
 
@@ -98,12 +104,9 @@
   width: 100%;
   height: 100%;
   display: table;
-  white-space: nowrap;
-  color: #aaaacc;
   text-decoration: none;
   vertical-align: middle;
   &:hover {
-    color: #aaaacc;
     background-color: rgba(255, 255, 255, 0.078430);
   }
 }

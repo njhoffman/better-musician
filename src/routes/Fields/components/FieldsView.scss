@@ -9,7 +9,7 @@
   .fieldsForm {
     margin-left: auto;
     margin-right: auto;
-    margin-top: 25px;
+    margin: 25px 5px 5px 5px;
     text-align: center;
 
     .fieldAdd,
@@ -36,8 +36,8 @@
     }
 
     .flexTwo {
-      width: 265px;
-      flex: 0 0 265px;
+      width: 255px;
+      flex: 0 0 255px;
     }
     .extraFields {
       margin-left: auto;
@@ -68,6 +68,7 @@
       .tabNumber {
         text-align: left;
         font-weight: bold;
+        font-variant: small-caps;
         font-size: 0.8em;
         opacity: 0.8;
       }
@@ -82,6 +83,8 @@
         border-radius: 10px;
         border: solid 1px #456;
         margin-bottom: 5px;
+        margin-right: 0;
+        margin-left: 0;
         min-height: 75px;
         &.active {
           border: solid 1px rgb(170,180,204);

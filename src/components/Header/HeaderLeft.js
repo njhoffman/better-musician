@@ -12,7 +12,7 @@ class HeaderLeft extends Component {
             <MenuIcon />
           </a>
           <IndexLink className={css.homeLink} to ='/'>
-            instrumental.com
+            instrumental.io
           </IndexLink>
         </span>
       </span>

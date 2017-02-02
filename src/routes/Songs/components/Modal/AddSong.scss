@@ -32,6 +32,28 @@
       flex: 0 0 250px;
       width: 250px;
     }
+    .flexThree {
+      margin-left: auto;
+      margin-right: auto;
+      width: 250px;
+    }
+    .selectOptions {
+      margin-top: 10px;
+      max-width: 550px;
+      max-height: 400px;
+      overflow-y: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .videoWrapper {
+      margin-top: 10px;
+      max-width: 450px;
+      overflow-y: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
   }
 }
 

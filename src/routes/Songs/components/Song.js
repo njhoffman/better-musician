@@ -4,8 +4,6 @@ import css from './Song.scss';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { RenderStars, RenderDifficulty } from 'components/Field';
 
-
-
 const Song = ({ songValues, viewSong, maxDifficulty, columnWidths, muiTheme, ...custom }) => {
 
   return (
@@ -13,8 +11,7 @@ const Song = ({ songValues, viewSong, maxDifficulty, columnWidths, muiTheme, ...
       hoverable={true}
       onDoubleClick={viewSong.bind(undefined, songValues)}
       displayBorder={true}
-      {...custom}
-    >
+      {...custom}>
       <TableRowColumn
         data-rowId={songValues.id}
         style={columnWidths[0]}

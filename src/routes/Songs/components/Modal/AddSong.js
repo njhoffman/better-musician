@@ -2,30 +2,17 @@ import React from 'react';
 import { chunk } from 'lodash';
 import { Field, FieldArray, reduxForm } from 'redux-form';
 import { Dialog, FlatButton, RaisedButton, MenuItem, Tabs, Tab } from 'material-ui';
+import { Row, Column } from 'react-foundation';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import css from './AddSong.scss';
-
+import CustomField from 'components/CustomField';
+import FormField from 'components/Field';
 import {
-  RenderSelectField,
-  RenderChip,
-  RenderAutoCompleteField,
   RenderStars,
   RenderDifficulty,
-  RenderTextField,
-  RenderSliderField
 } from 'components/Field';
+import { MdDelete as DeleteIcon } from 'react-icons/lib/md';
 
-const dialogStyle = {
-  maxWidth: "650px"
-};
-
-const dialogBodyStyle = {
-  padding: "5px"
-};
-
-const tabContainerStyle = {
-  paddingTop: "20px"
-}
 
 const validate = (values) => {
   const errors = {};
@@ -42,10 +29,11 @@ let lastActiveField = 'artist';
 
 export const AddSongModal = (props) => {
 
-  const { dispatch, addSong, modal } = props;
+  const { dispatch, addSong, editSong, modal } = props;
   const modalView = modal.modalView;
+  const isView = props.modal.modalView === 'view';
 
-  const buttonLabel = modalView === 'view'
+  const buttonLabel = isView
     ? 'Edit'
     : modalView === 'edit'
     ? 'Save'
@@ -57,11 +45,10 @@ export const AddSongModal = (props) => {
       primary={true}
       onTouchTap={ props.hideModal }
     />,
-    <FlatButton
+    <RaisedButton
       label={buttonLabel}
       primary={true}
-      keyboardFocused={true}
-      onTouchTap={ addSong }
+      onTouchTap={ isView ? editSong : addSong }
     />
   ];
 
@@ -69,7 +56,8 @@ export const AddSongModal = (props) => {
     actionButtons.unshift(
       <FlatButton
         label='Delete'
-        style={{float: 'left' }}
+        icon={<DeleteIcon />}
+        style={{float: 'left', color: '#ff8888' }}
         onTouchTap={ addSong }
       />
     );
@@ -83,91 +71,63 @@ export const AddSongModal = (props) => {
     if (props.activeField === 'artist' || lastActiveField === 'artist') {
       if (props.matchedArtist) {
         return (
-          <div className={css.imageFrame}>
-            <img src={"/artists/" + props.matchedArtist.picture} />
-            <div>{props.matchedArtist.fullName}</div>
-            <RaisedButton label="Change Picture" />
-          </div>
+          <Row className={css.imageFrame}>
+            <Column>
+              <img src={"/artists/" + props.matchedArtist.picture} />
+              <div>{props.matchedArtist.fullName}</div>
+              { !isView && <RaisedButton secondary={true} label="Change Picture" /> }
+            </Column>
+          </Row>
         );
       } else {
         return (
-          <div className={css.imageFrame}>
-            <img src="/artists/unknown_artist.png" />
-            <div>Unknown Artist</div>
-            <RaisedButton label="Add Picture" />
-          </div>
+          <Row className={css.imageFrame}>
+            <Column>
+              <img src="/artists/unknown_artist.png" />
+              <div>Unknown Artist</div>
+              { !isView && <RaisedButton secondary={true} label="Add Picture" /> }
+            </Column>
+          </Row>
         );
       }
     } else if (props.activeField === 'instrument' || lastActiveField === 'instrument') {
         return (
-          <div className={css.imageFrame}>
-            <img src="/instruments/unknown_instrument.png" />
-            <div>Unknown Instrument</div>
-            <RaisedButton label="Add Picture" />
-          </div>
+          <Row className={css.imageFrame}>
+            <Column>
+              <img src="/instruments/unknown_instrument.png" />
+              <div>Unknown Instrument</div>
+              { !isView && <RaisedButton secondary={true} label="Add Picture" /> }
+            </Column>
+          </Row>
         );
     }
   }
 
-  const renderStars = (number) => {
+  const renderStars = (theme, number) => {
     return (
       <RenderStars
+        starColor={theme.starColor}
         number={number}
-      style={{ display: "inline", float: "right" }} />
+      style={{ float: "right", display: 'inline-block' }} />
     );
   };
 
-  const renderDifficulty = (difficulty, maxDifficulty) => {
+  const renderDifficulty = (value, maxDifficulty) => {
     return (
       <RenderDifficulty
-        difficulty={difficulty}
         maxDifficulty={maxDifficulty}
-        style={{ display: "inline", float: "right" }} />
+        number={value}
+        style={{ float: 'right' }}
+      />
     );
   };
 
-  const renderField = ({ id, type, label, value, optionValues }) => {
-    debugger;
-    switch(parseInt(type)) {
-      case 0:
-        return <Field style={{ width: '200px' }} name={id} component={RenderTextField} label={label} />
-          break;
-      case 1:
-        break;
-      case 2:
-        return <Field style={{ width: '200px' }} name={id} component={RenderSelectField} label={label} dataSource={optionValues} />
-          break;
-      case 3:
-        return (
-          <div>
-            <div className={css.selectOptions}>
-              <FieldArray name={id} component={options =>
-                {options.fields.map((option, index, fields) =>
-                    <Field
-                      key={index}
-                      name={`${option}`}
-                      component={RenderChip}
-                      style={{ margin: '5px 2px', fontSize: "0.8em" }} />
-                )}} />
-            </div>
-        </div>
-        );
-        break;
-      case 4:
-        break;
-      case 5:
-        break;
-      case 6:
-        break;
-      case 7:
-        break;
-      case 8:
-        break;
-    }
-  };
-
-  debugger;
-
+  const dialogStyle = { maxWidth: "650px", width: 'initial' };
+  const dialogBodyStyle = { padding: "5px" };
+  const tabContainerStyle = { paddingTop: "20px" }
+  const labelStyle = isView ? { textAlign: 'center', width: '100%' } : {};
+  const textInputStyle = isView ? { color: 'white', cursor: 'text', textOverflow: 'ellipsis' } : {};
+  const textStyle = isView ?  { cursor: 'default' }  : {};
   return (
     <Dialog
       modal={false}
@@ -183,83 +143,149 @@ export const AddSongModal = (props) => {
           <Tab
               value="main"
               label="Main Fields">
-            <div className={css.fieldGroup}>
+            <Row>
+              <Column>
               { renderImage(props) }
-            </div>
-            <div className={css.fieldGroup}>
-              <div className={css.flexTwo}>
-                <Field
+              </Column>
+            </Row>
+            {isView &&
+              <Row>
+                <FormField
                   name="title"
-                  component={RenderTextField}
+                  type='text'
+                  underlineShow={!isView}
+                  disabled={isView}
+                  style={textStyle}
+                  inputStyle={textInputStyle}
                   viewType={props.modal.modalView}
                   label="Song Title" />
-              </div>
-              <div className={css.flexTwo}>
-                <Field
-                  name="artist"
+                <FormField
+                  name="artist.fullName"
+                  type='autocomplete'
                   viewType={props.modal.modalView}
+                  underlineShow={!isView}
+                  disabled={isView}
+                  inputStyle={textInputStyle}
+                  style={textStyle}
+                  textFieldStyle={textInputStyle}
                   dataSource={props.artists}
-                  component={RenderAutoCompleteField}
                   label="Song Artist" />
+              </Row>
+            }
+            {!isView &&
+              <div>
+                <Row>
+                  <FormField
+                    name="title"
+                    type='text'
+                    underlineShow={!isView}
+                    disabled={isView}
+                    small={8}
+                    centerOnSmall
+                    style={{ ...textStyle, ...{ width: '100%' } }}
+                    inputStyle={textInputStyle}
+                    viewType={props.modal.modalView}
+                    label="Song Title" />
+                </Row>
+                <Row>
+                  <FormField
+                    name="artist.lastName"
+                    type='autocomplete'
+                    viewType={props.modal.modalView}
+                    underlineShow={!isView}
+                    disabled={isView}
+                    inputStyle={textInputStyle}
+                    style={textStyle}
+                    textFieldStyle={textInputStyle}
+                    dataSource={props.artists}
+                    label="Last Name / Band" />
+                  <FormField
+                    name="artist.firstName"
+                    type='autocomplete'
+                    viewType={props.modal.modalView}
+                    underlineShow={!isView}
+                    disabled={isView}
+                    inputStyle={textInputStyle}
+                    style={textStyle}
+                    textFieldStyle={textInputStyle}
+                    dataSource={props.artists}
+                    label="First Name" />
+                </Row>
               </div>
-            </div>
-            <div className={css.fieldGroup}>
-              <div className={css.flexTwo}>
-                <Field name="genre"
-                  component={RenderAutoCompleteField}
-                  label="Song Genre"
-                  dataSource={props.genres} />
-              </div>
-              <div className={css.flexTwo}>
-                <Field
-                  name="instrument"
-                  component={RenderAutoCompleteField}
-                  dataSource={props.instruments}
-                  viewType={props.modal.modalView}
-                  label="Instrument" />
-              </div>
-            </div>
-            <div className={css.fieldGroup}>
-              <div className={css.flexTwo}>
-                <Field
-                  component={RenderSliderField}
-                  viewType={props.modal.modalView}
-                  name="difficulty"
-                  className={css.difficulty}
-                  valueDisplay={(value) => renderDifficulty(value, props.maxDifficulty)}
-                  min={1}
-                  max={props.maxDifficulty}
-                  step={1}
-                  textColor={textColor}
-                  label="Difficulty" />
-              </div>
-              <div className={css.flexTwo}>
-                <Field
-                  name="progress"
-                  component={RenderSliderField}
-                  viewType={props.modal.modalView}
-                  className={css.progress}
-                  valueDisplay={(value) => renderStars(value)}
-                  min={0}
-                  max={4}
-                  step={1}
-                  textColor={textColor}
-                  label="Progress" />
-              </div>
-            </div>
+            }
+            <Row>
+              <FormField
+                name="genre.name"
+                type='autocomplete'
+                label="Song Genre"
+                underlineShow={!isView}
+                style={textStyle}
+                inputStyle={textInputStyle}
+                textFieldStyle={textInputStyle}
+                disabled={isView}
+                dataSource={props.genres} />
+              <FormField
+                name="instrument.name"
+                type='autocomplete'
+                dataSource={props.instruments}
+                style={textStyle}
+                inputStyle={textInputStyle}
+                textFieldStyle={textInputStyle}
+                underlineShow={!isView}
+                disabled={isView}
+                viewType={props.modal.modalView}
+                label="Instrument" />
+            </Row>
+            <Row>
+              <FormField
+                type='slider'
+                viewType={props.modal.modalView}
+                name="difficulty"
+                className={css.difficulty}
+                small={6}
+                min={1}
+                max={props.maxDifficulty}
+                step={1}
+                disabled={isView}
+                textColor={textColor}
+                label="Difficulty" />
+              <FormField
+                name="progress"
+                type='slider'
+                viewType={props.modal.modalView}
+                className={css.progress}
+                valueDisplay={renderStars.bind(undefined, props.muiTheme)}
+                disabled={isView}
+                small={6}
+                min={0}
+                max={4}
+                step={1}
+                textColor={textColor}
+                label="Progress" />
+            </Row>
           </Tab>
-          {false && props.savedTabs.map((tab, i) =>
+          {props.savedTabs.map((tab, tabIdx) =>
             <Tab
-              key={i}
+              key={tabIdx}
               label={tab.name}>
-              {chunk(tab.fields, 2).map((fields, i) =>
-                <div key={i} className={css.fieldGroup}>
-                  {fields.map((field, i) =>
-                    <div key={i} className={fields.length === 1 ? css.flexOne : css.flexTwo}>
-                        { renderField(field) }
-                    </div>
+              {chunk(tab.fields, 2).map((fields, fieldIdx) =>
+                <Row
+                  style={{ textAlign: 'center' }}
+                  key={fieldIdx}>
+                  {fields.map((field) =>
+                    <CustomField
+                      key={field.idx}
+                      style={textStyle}
+                      labelStyle={labelStyle}
+                      disabled={isView}
+                      underlineShow={!isView}
+                      inputStyle={textInputStyle}
+                      field={field}
+                      centerOnSmall={true}
+                      small={fields.length === 1 ? 12 : 6 }
+                    />
                   )}
-                </div>
+                </Row>
               )}
             </Tab>
             )}

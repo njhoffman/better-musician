@@ -3,45 +3,33 @@
 .settingsContainer {
     text-align: center;
     position: relative;
-    margin: 20px 0px !important;
-    padding: 0px !important;
 
     .fieldHint {
       opacity: 0.5;
       font-size: 0.9em;
     }
     .settingsForm {
-      margin-left: auto;
-      margin-right: auto;
-      margin-top: 25px;
       text-align: center;
+      margin-top: 25px;
+      label {
+        // text-align: left;
+      }
       input {
+        text-align: center;
         margin: 0;
       }
     }
 
-    .flexRow {
-      display: flex;
-      max-width: none;
-      width: 100%;
-      flex-wrap: wrap;
-      box-align: stretch;
-      align-items: center;
-      justify-content: space-around;
+    .emailCheckboxes {
+      padding: 20px 0px;
     }
-
     .bottom {
       margin-top: 15px;
     }
 
     .buttonWrapper {
-      padding-top: 25px;
+      padding-top: 10px;
       padding-bottom: 25px;
-    }
-    .flexTwo,
-    .flexTwo {
-      width: 200px;
-      flex: 0 0 200px;
     }
 
 }

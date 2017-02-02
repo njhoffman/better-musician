@@ -13,10 +13,11 @@ import {
   MdAdd as AddIcon
 } from 'react-icons/lib/md';
 import {
-  RenderSelectField,
-  RenderTextField
+  RenderSelect,
+  RenderText
 } from 'components/Field';
 
+import FormField from 'components/Field';
 import css from './FieldsView.scss';
 
 
@@ -70,6 +71,7 @@ export const FieldsView = (props) => {
       </ButtonLoader>
       <RaisedButton
         label='Cancel'
+        secondary={true}
       />
     </div>
   );
@@ -90,7 +92,7 @@ export const FieldsView = (props) => {
 
   const { editingField } = props;
   return (
-    <Column small={8} centerOnSmall={true}>
+    <Column small={12} medium={8} centerOnSmall={true}>
       <Paper zDepth={5}>
         <div className={css.fieldsContainer}>
           <Tabs value="fields">
@@ -112,30 +114,27 @@ export const FieldsView = (props) => {
               label="Fields">
               <form className={css.fieldsForm}>
                 <h3>Update Your Custom Fields</h3>
-                <div className={css.fieldAdd}>
-                  <div className={css.flexThree}>
-                    <Field
-                      label='Field Type'
-                      name='type'
-                      component={RenderSelectField}
-                      dataSource={fieldOptions}
-                    />
-                  </div>
-                  <div className={css.flexThree}>
-                    <Field
-                      label='Field Label'
-                      name='label'
-                      component={RenderTextField}
-                    />
-                  </div>
-                  <div className={css.flexThree}>
-                    <Field
-                      label='Tab Name'
-                      name='tabName'
-                      component={RenderTextField}
-                    />
-                  </div>
-                </div>
+                <Row className={css.fieldAdd}>
+                  <FormField
+                    small={4}
+                    label='Field Type'
+                    name='type'
+                    type='select'
+                    dataSource={fieldOptions}
+                  />
+                  <FormField
+                    small={4}
+                    label='Field Label'
+                    name='label'
+                    type='text'
+                  />
+                  <FormField
+                    small={4}
+                    label='Tab Name'
+                    name='tabName'
+                    type='text'
+                  />
+                </Row>
                 <div className={css.extraFields}>
                   {props.formValues && renderExtraFields(props.formValues)}
                 </div>

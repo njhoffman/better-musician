@@ -9,7 +9,7 @@ const project = require('./project.config');
 const HappyPack = require('happypack');
 const _ = require("lodash");
 
-const debug = require('debug')('app:config:webpack');
+const { log } = require('../server/server.debug')('app:config:webpack');
 
 const __DEV__ = project.globals.__DEV__;
 const __PROD__ = project.globals.__PROD__;
@@ -34,7 +34,7 @@ let resolvePaths = _.mapValues(_RESOLVE_PATHS, function (str) {
 });
 
 
-debug('Creating configuration.');
+log('Creating configuration.');
 const webpackConfig = {
   name    : 'client',
   profile : false,
@@ -118,7 +118,7 @@ if (__TEST__ && !argv.watch) {
 }
 
 if (__DEV__) {
-  debug('Enabling plugins for live development (HappyPack, HMR, NoErrors).');
+  log('Enabling plugins for live development (HappyPack, HMR, NoErrors).');
   webpackConfig.plugins.push(
     // new HappyPack({
     //   loaders: [ 'babel?presets[]=' + project.compiler_babel.presets.join(',presets[]=') ]
@@ -127,7 +127,7 @@ if (__DEV__) {
     new webpack.NoErrorsPlugin()
   );
 } else if (__PROD__) {
-  debug('Enabling plugins for production (OccurenceOrder, Dedupe & UglifyJS).');
+  log('Enabling plugins for production (OccurenceOrder, Dedupe & UglifyJS).');
   webpackConfig.plugins.push(
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.DedupePlugin(),
@@ -277,7 +277,7 @@ webpackConfig.module.loaders.push(
 // need to use the extractTextPlugin to fix this issue:
 // http://stackoverflow.com/questions/34133808/webpack-ots-parsing-error-loading-fonts/34133809#34133809
 if (!__DEV__) {
-  debug('Applying ExtractTextPlugin to CSS loaders.');
+  log('Applying ExtractTextPlugin to CSS loaders.');
   webpackConfig.module.loaders.filter((loader) =>
     loader.loaders && loader.loaders.find((name) => /css/.test(name.split('?')[0]))
   ).forEach((loader) => {

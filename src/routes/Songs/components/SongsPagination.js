@@ -27,20 +27,23 @@ const SongsPagination = ({
   <Row className={css.paginationRow}>
     <Column small={3} >
       <div className={css.paginationText}>
-        <span>Showing &nbsp;<strong>{paginationStart}</strong> - <strong>{paginationEnd}  </strong>of
-          <strong>  {paginationTotal}</strong> Songs</span>
+        <span>
+          <strong>{paginationStart}</strong> - <strong>{paginationEnd}</strong> of <strong>{paginationTotal}</strong> Songs
+        </span>
       </div>
     </Column>
     <Column small={6} >
       <div className={css.buttonWrapper}>
         <RaisedButton
-          style={{ minWidth: "50px", margin: "0px 5px" }}
+          style={{ minWidth: "50px", fontSize: "1.4em", margin: "0px 5px" }}
+          secondary={true}
           onTouchTap={setPaginationStart}
           icon={<span style={{ color: muiTheme.palette.textColor }}><BeforeIcon /><BeforeIcon style={{ marginLeft: '-10px' }} /></span>}
         />
         <RaisedButton
-          style={{ minWidth: "50px", margin: "0px 5px" }}
+          style={{ minWidth: "50px", fontSize: "1.4em", margin: "0px 5px" }}
           onTouchTap={setPaginationDecrement}
+          secondary={true}
           icon={<BeforeIcon />}
         />
         <TextField
@@ -51,14 +54,16 @@ const SongsPagination = ({
           underlineShow={false}
           inputStyle={{ textAlign: 'center', boxShadow: 'none' }}
           style={{ width: '50px' }} />
-        <span className={css.centerPageTotal}>out of {paginationPages} </span>
+        <span className={css.centerPageTotal}> / &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {paginationPages} </span>
         <RaisedButton
-          style={{ minWidth: "50px", margin: "0px 5px" }}
+          style={{ minWidth: "50px", fontSize: "1.4em", margin: "0px 5px" }}
+          secondary={true}
           onTouchTap={setPaginationIncrement}
           icon={<NextIcon />}
         />
         <RaisedButton
-          style={{ minWidth: "50px", margin: "0px 5px" }}
+          style={{ minWidth: "50px", fontSize: "1.4em", margin: "0px 5px" }}
+          secondary={true}
           onTouchTap={setPaginationEnd}
           icon={<span style={{ color: muiTheme.palette.textColor }}><NextIcon /><NextIcon style={{ marginLeft: '-10px' }} /></span>}
         />

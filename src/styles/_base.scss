@@ -13,3 +13,24 @@ For example:
 @import 'vendors';
 @import './variables/breakpoints';
 @import './variables/colors';
+
+.row {
+  align-items: center;
+}
+.columns {
+}
+
+%clearfix {
+  &:before, &:after {
+    content:" ";
+    display:table;
+  }
+
+  &:after {
+    clear:both;
+  }
+
+  & {
+    *zoom:1;
+  }
+}
