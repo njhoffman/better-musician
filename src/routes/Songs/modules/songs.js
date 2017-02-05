@@ -15,20 +15,12 @@ export const SET_PAGINATION_CURRENT   = 'SET_PAGINATION_CURRENT';
 // Action Creators
 // ------------------------------------
 
-export const setCurrentSong = (songsCollection, selectedRow, arg3, arg4) => (dispatch, getState) => {
-  if (selectedRow.length === 0) {
-    // TODO: figure out a better way to handle this
-    // wait a bit before deselecting current song just in case it was a double click (opening view modal)
-    // arbitrary wait time 200ms
-    return window.setTimeout(() => {
-      if (! getState().ui.modal.type) {
-        return dispatch({ type: SET_CURRENT_SONG, payload: null });
-      }
-    }, 200);
+export const setCurrentSong = (songsCollection, selectedRow) => (dispatch, getState) => {
+  if (getState().ui.modal.type) {
+    return;
   }
-
-  const currentSong = songsCollection[selectedRow[0] - 1];
-  return dispatch({ type: SET_CURRENT_SONG, payload: currentSong.id });
+  const currentSongId = selectedRow.length > 0 ? songsCollection[selectedRow[0] - 1].id : null;
+  return dispatch({ type: SET_CURRENT_SONG, payload: currentSongId });
 };
 
 export const setSort = (sortField) => (dispatch, getState) => {

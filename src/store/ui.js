@@ -10,7 +10,7 @@ export const UI_SHOW_MODAL         = 'UI_SHOW_MODAL';
 export const UI_HIDE_MODAL         = 'UI_HIDE_MODAL';
 
 export const MODAL_ADD_SONG     = 'MODAL_ADD_SONG';
-export const MODAL_FILTER_SONGS = 'MODAL_FTILER_SONGS';
+export const MODAL_FILTER_SONGS = 'MODAL_FILTER_SONGS';
 
 // ------------------------------------
 // Action Creators
@@ -24,7 +24,8 @@ export const uiToggleDrawerMenu = () => (dispatch, getState) => {
   return dispatch({ type: UI_TOGGLE_DRAWER_MENU });
 };
 
-export const uiShowModal = (type, view) => (dispatch, getState) => {
+export const uiShowModal = (type, viewType) => (dispatch, getState) => {
+  const view = typeof viewType === 'string' ? viewType : 'edit';
   return dispatch({ type: UI_SHOW_MODAL, meta: { type, props: { view } } });
 };
 
@@ -64,6 +65,8 @@ const showModal = (state, action) =>
 
 const hideModal = (state) =>
   ({ ...state, modal: { ...state.modal, ...initialState.modal }});
+
+
 
 const ACTION_HANDLERS = {
   [UI_TOGGLE_DRAWER_MENU]: toggleDrawerMenu,

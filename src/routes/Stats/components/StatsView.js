@@ -16,11 +16,18 @@ export const StatsView = (props) => {
   const textColor = props.muiTheme.palette.textColor;
 
   return (
-    <Column small={12} medium={8} centerOnSmall={true}>
+    <Column small={12} medium={10} large={8} centerOnSmall={true}>
       <Paper zDepth={5}>
         <div className={css.statsContainer}>
-          <Tabs>
+          <Tabs value="stats">
             <Tab
+              data-route="/profile"
+              value="profile"
+              onActive={redirectProfile}
+              label="Profile">
+            </Tab>
+            <Tab
+              value="stats"
               data-route="/stats"
               label="Stats">
               <form className={css.statsForm}>
@@ -28,19 +35,15 @@ export const StatsView = (props) => {
               </form>
             </Tab>
             <Tab
-              data-route="/stats"
-              value="stats"
-              onActive={redirectProfile}
-              label="Stats">
-            </Tab>
-            <Tab
               data-route="/settings"
               onActive={redirectSettings}
+              value="settings"
               label="Settings">
             </Tab>
             <Tab
               data-route="/fields"
               onActive={redirectFields}
+              value="fields"
               label="Fields">
             </Tab>
           </Tabs>

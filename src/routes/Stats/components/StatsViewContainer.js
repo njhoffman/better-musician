@@ -5,7 +5,9 @@ import { updateUser } from 'store/api';
 const mapActionCreators = { };
 
 const mapStateToProps = (state) => {
-  return ({ });
+  return ({
+    api: state.api,
+  });
 }
 
 export default connect(mapStateToProps, mapActionCreators)(StatsView);

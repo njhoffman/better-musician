@@ -30,6 +30,7 @@ export const FieldsView = (props) => {
   //   this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "loading"])
   // );
   const redirectProfile = () => browserHistory.push('/profile');
+  const redirectStats = () => browserHistory.push('/stats');
   const redirectSettings = () => browserHistory.push('/settings');
   const textColor = props.muiTheme.palette.textColor;
 
@@ -92,7 +93,7 @@ export const FieldsView = (props) => {
 
   const { editingField } = props;
   return (
-    <Column small={12} medium={8} centerOnSmall={true}>
+    <Column small={12} medium={10} large={8} centerOnSmall={true}>
       <Paper zDepth={5}>
         <div className={css.fieldsContainer}>
           <Tabs value="fields">
@@ -101,6 +102,12 @@ export const FieldsView = (props) => {
               value="profile"
               onActive={redirectProfile}
               label="Profile">
+            </Tab>
+            <Tab
+              data-route="/stats"
+              value="stats"
+              onActive={redirectStats}
+              label="Stats">
             </Tab>
             <Tab
               data-route="/settings"

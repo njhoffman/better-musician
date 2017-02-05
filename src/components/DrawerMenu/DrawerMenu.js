@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Drawer, Divider, MenuItem } from 'material-ui';
 import { Link, IndexLink, browserHistory } from 'react-router';
+import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import OAuthSignInButton from 'components/OAuthSignInButton'
 import SignOutButton from 'components/SignOutButton';
@@ -21,10 +22,11 @@ const facebookIconComponent = () =>
     style={{marginTop: '-10px', width: '20px', maxWidth: '20px' }} />;
 
 
-const linkStyle = {
+let linkStyle = {
   width: "100%",
   display: 'inline-block'
 }
+
 
 const renderSignedIn = (props) => (
   <div className={css.drawerMenuContainer}>
@@ -47,7 +49,25 @@ const renderSignedIn = (props) => (
           onClick={props.hideDrawerMenu}
           style={linkStyle}
           activeClassName='active'>
-          Songs
+          Song List
+        </Link>
+      </MenuItem>
+      <MenuItem>
+        <Link
+          to='/profile'
+          onClick={props.hideDrawerMenu}
+          style={linkStyle}
+          activeClassName='active'>
+          Profile
+        </Link>
+      </MenuItem>
+      <MenuItem>
+        <Link
+          to='/stats'
+          onClick={props.hideDrawerMenu}
+          style={linkStyle}
+          activeClassName='active'>
+          Statistics
         </Link>
       </MenuItem>
       <MenuItem>
@@ -61,11 +81,11 @@ const renderSignedIn = (props) => (
       </MenuItem>
       <MenuItem>
         <Link
-          to='/profile'
+          to='/fields'
           onClick={props.hideDrawerMenu}
           style={linkStyle}
           activeClassName='active'>
-          Profile
+          Field Builder
         </Link>
       </MenuItem>
       <Divider />
@@ -83,6 +103,7 @@ const renderSignedIn = (props) => (
     </Drawer>
   </div>
 );
+
 const renderSignedOut = (props) => (
   <div>
     <Drawer
@@ -164,6 +185,7 @@ class DrawerMenu extends Component {
   render() {
     const { props } = this;
     const isSignedIn = props.user && props.user.get('isSignedIn');
+    linkStyle.color = props.muiTheme.instrumental.headerLinksColor;
     if (isSignedIn) {
       return renderSignedIn(props);
     } else {
@@ -173,4 +195,4 @@ class DrawerMenu extends Component {
 }
 
 
-export default DrawerMenu;
+export default muiThemeable()(DrawerMenu);

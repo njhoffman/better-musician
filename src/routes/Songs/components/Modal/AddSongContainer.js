@@ -19,7 +19,7 @@ import {
 
 import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
 
-export const showEditSongModal = uiShowModal(MODAL_ADD_SONG, 'edit');
+export const showEditSongModal = () => uiShowModal(MODAL_ADD_SONG, 'edit');
 
 const mapDispatchToProps = {
   uiHideModal,

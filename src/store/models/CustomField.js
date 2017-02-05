@@ -44,6 +44,9 @@ class CustomField extends BaseModel {
   get typeName() {
     return this.typeOptions[this.type];
   }
+  get name() {
+    return isNaN(this.idx) ? this.id : 'customFields[' + this.idx + ']';
+  }
   toString() {
     return `CustomField: ${this.type} ${this.label}`;
   }
@@ -54,7 +57,7 @@ CustomField.fields = { };
 
 CustomField.shallowFields = {
   id: 'number',
-  name: 'string',
+  idx: 'number',
   label: 'string',
   type: 'string',
   tabName: 'string',

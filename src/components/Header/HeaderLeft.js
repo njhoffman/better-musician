@@ -6,7 +6,7 @@ import css from './Header.scss';
 class HeaderLeft extends Component {
   render() {
     return (
-      <span className={css.headerLink + ' ' +  css.leftColumn}>
+      <span className={css.headerLink}>
         <span className={css.iconWrapper}>
           <a className={css.menuIcon} onClick={this.props.toggleDrawerMenu}>
             <MenuIcon />

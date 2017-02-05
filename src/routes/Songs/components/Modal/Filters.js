@@ -1,20 +1,19 @@
 import React from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
-// import css from './Counter.scss';
 
 export const FiltersModal = (props) => {
   const actions = [
     <FlatButton
       label="Cancel"
       primary={true}
-      onTouchTap={ props.hideModal }
+      onTouchTap={ props.uiHideModal }
     />,
     <FlatButton
       label="Submit"
       primary={true}
       keyboardFocused={true}
-      onTouchTap={props.hideModal}
+      onTouchTap={props.uiHideModal}
     />
   ];
  return (
@@ -22,7 +21,7 @@ export const FiltersModal = (props) => {
         title="Filters Dialog"
         modal={false}
         actions={actions}
-        open={false}
+        open={props.isOpen}
     >
       <p>Filters</p>
     </Dialog>
@@ -30,8 +29,8 @@ export const FiltersModal = (props) => {
 };
 
 FiltersModal.propTypes = {
-  addSong: React.PropTypes.func,
-  hideModal: React.PropTypes.func
+  addSong:     React.PropTypes.func,
+  uiHideModal: React.PropTypes.func
 };
 
 export default FiltersModal;

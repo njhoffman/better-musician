@@ -3,7 +3,7 @@ import { Avatar, Paper, Tabs, Tab, RaisedButton } from 'material-ui';
 import { Row, Column } from 'react-foundation';
 import  ButtonLoader from 'components/ButtonLoader';
 import { Field, reduxForm } from 'redux-form';
-import { Link, browserHistory } from 'react-router';
+import { browserHistory } from 'react-router';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import FormField from 'components/Field';
 import css from './ProfileView.scss';
@@ -44,11 +44,12 @@ export const ProfileView = (props) => {
   const textColor = props.muiTheme.palette.textColor;
 
   return (
-    <Column small={12} medium={8} centerOnSmall={true}>
+    <Column small={12} medium={10} large={8} centerOnSmall={true}>
       <Paper zDepth={5}>
         <div className={css.profileContainer}>
           <Tabs>
             <Tab
+              value="profile"
               data-route="/profile"
               label="Profile">
               <form
@@ -108,14 +109,14 @@ export const ProfileView = (props) => {
             <Tab
               data-route="/settings"
               onActive={redirectSettings}
+              value="settings"
               label="Settings">
-              <Link to='/settings' />
             </Tab>
             <Tab
               data-route="/fields"
+              value="fields"
               onActive={redirectFields}
               label="Fields">
-              <Link to='/fields' />
             </Tab>
           </Tabs>
         </div>

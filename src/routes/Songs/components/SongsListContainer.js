@@ -6,6 +6,7 @@ import SongsList from './SongsList';
 
 const mapStateToProps = (state, action) => ({
   songsCollection: songsSelector(state),
+  currentSongId:   state.songsView.currentSong
 });
 
 const mapActionCreators = ({

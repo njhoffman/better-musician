@@ -1,5 +1,4 @@
-
- .header {
+.header {
   text-align: center;
   font-size: 1.0em;
   a {
@@ -7,49 +6,65 @@
     height: 100%;
   }
 
-  .downArrow {
-    &:hover {
-      stroke: white;
-    }
-    font-size: 1.5em;
-    margin-left: 5px;
-  }
-
   .wrapper {
     height: 45px;
   }
 
 
-  .leftColumn.headerLink:hover {
-    background-color: inherit;
+  .headerLeft {
+    padding: 0px 0px 0px 15px;
+    text-align: left;
+
+    .headerLink:hover {
+      background-color: inherit;
+    }
+    .menuIcon {
+      margin-right: 15px;
+      font-size: 1.5em;
+      line-height: .8em;
+    }
+
+    .homeLink,
+    .menuIcon {
+      vertical-align: middle;
+    }
+
+    .menuIcon:hover,
+    .homeLink:hover {
+      background-color: none;
+    }
+    .menuIcon:hover  {
+      stroke: white;
+    }
+
+    .homeLink:hover {
+      text-shadow: 0px 0px 3px rgba(255,255,255,0.3), 0px -0px 3px rgba(255,255,255,0.5);
+    }
   }
 
-
-  .menuIcon {
-    margin-right: 15px;
-    font-size: 1.5em;
-    line-height: .8em;
+  .headerMiddle {
+    .downArrow {
+      &:hover {
+        stroke: white;
+      }
+      font-size: 1.5em;
+      margin-left: 5px;
+    }
+    .headerLinkActive {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
   }
 
-  .homeLink,
-  .menuIcon {
-    vertical-align: middle;
-  }
+  .headerRight {
+    text-align: right;
+    padding: 0px;
 
-  .menuIcon:hover,
-  .homeLink:hover {
-    background-color: none;
-  }
-  .menuIcon:hover  {
-    stroke: white;
-  }
-
-  .homeLink:hover {
-     text-shadow: 0px 0px 3px rgba(255,255,255,0.3), 0px -0px 3px rgba(255,255,255,0.5);
-  }
-
-  &.loggedIn {
+    .headerLink {
+      display: inline-block;
+    }
     .profileDisplay {
+      vertical-align: middle;
+      width: calc(100% - 55px);
       display: inline-block;
       .profilePoints {
         font-size: 1.3em;
@@ -57,24 +72,19 @@
       }
       .profileName {
         font-size: 0.8em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         line-height: 0.8em;
-      }
-      .headerLink {
-        display: inline-block;
       }
     }
     .profileAvatar {
+      vertical-align: middle;
       margin-top: 2px;
       display: inline-block;
       width: 50px;
       margin-left: 5px;
-      .headerLink {
-        display: inline-block;
-      }
     }
-  }
-
-  &.loggedOut {
     .loginButton {
       margin-right: 5px;
     }
@@ -108,6 +118,20 @@
   vertical-align: middle;
   &:hover {
     background-color: rgba(255, 255, 255, 0.078430);
+  }
+}
+.menuPopover {
+  width: 15%;
+  .row {
+    height: 45px;
+    .column {
+      padding: 0px;
+      text-align:: center;
+      height: 100%;
+      a {
+        padding: 5px 0px;
+      }
+    }
   }
 }
 

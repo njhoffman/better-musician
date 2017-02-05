@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import RenderSelect from './Select';
+import RenderMultiSelect from './MultiSelect';
 import RenderText from './Text';
 import RenderSlider from './Slider';
 import RenderNumber from './Number';
@@ -55,6 +56,7 @@ class RenderFormField extends Component {
 
 export {
   RenderSelect,
+  RenderMultiSelect,
   RenderText,
   RenderSlider,
   RenderStars,

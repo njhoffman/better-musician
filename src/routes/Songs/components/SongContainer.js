@@ -6,10 +6,11 @@ import {
   MODAL_ADD_SONG
 } from 'store/ui';
 
+
 export const showViewSongModal = () => uiShowModal(MODAL_ADD_SONG, 'view');
 
 const mapStateToProps = (state, action) => ({
-  maxDifficulty:   maxDifficultySelector(state)
+  maxDifficulty:   maxDifficultySelector(state),
 });
 
 const mapActionCreators = ({

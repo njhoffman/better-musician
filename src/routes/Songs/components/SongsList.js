@@ -11,61 +11,64 @@ const SongsList = ({
   muiTheme,
   setCurrentSong,
   setSort,
-  currentSong }) => (
+  currentSongId }) => (
     <Table
-    selectable={true}
-    onRowSelection={setCurrentSong.bind(undefined, songsCollection)}
-    className={css.songsList}
-    style={{ tableLayout: 'auto' }}>
-    <TableBody
-      showRowHover={true}
-      displayRowCheckbox={false}
-      deselectOnClickaway={true}
-      stripedRows={true}>
-      <TableRow>
-        <TableHeaderColumn style={{ textAlign: 'center' }}>
-          <a
-            style={{ color: muiTheme.palette.accent1Color }}
-            onClick={setSort.bind(undefined, 'title')}>
-            Title
-            <SortIcon />
-          </a>
-        </TableHeaderColumn>
-        <TableHeaderColumn style={{ textAlign: 'center' }}>
-          <a
-            style={{ color: muiTheme.palette.accent1Color }}
-            onClick={setSort.bind(undefined, 'artist')}>
-            Artist
-            <SortIcon />
-          </a>
-        </TableHeaderColumn>
-        <TableHeaderColumn style={{ textAlign: 'center' }}>
-          <a
-            style={{ color: muiTheme.palette.accent1Color }}
-            onClick={setSort.bind(undefined, 'progress')} >
-            Progress
-            <SortIcon />
-          </a>
-        </TableHeaderColumn>
-        <TableHeaderColumn style={{ textAlign: 'center' }}>
-          <a
-            style={{ color: muiTheme.palette.accent1Color }}
-            onClick={setSort.bind(undefined, 'difficulty')}>
-            Difficulty
-            <SortIcon />
-          </a>
-        </TableHeaderColumn>
-      </TableRow>
-      {songsCollection && songsCollection.map(song =>
-        <Song
-          key={song.id}
-          songValues={song}
-          selected={song.id === currentSong}
-        />
-      )}
-    </TableBody>
-  </Table>
-);
+      selectable={true}
+      onRowSelection={setCurrentSong.bind(undefined, songsCollection)}
+      className={css.songsList}
+      style={{ tableLayout: 'auto' }}>
+      <TableBody
+        showRowHover={true}
+        displayRowCheckbox={false}
+        deselectOnClickaway={true}
+        stripedRows={true}>
+        <TableRow>
+          <TableHeaderColumn style={{ textAlign: 'center' }}>
+            <a
+              style={{ color: muiTheme.palette.accent1Color }}
+              onClick={setSort.bind(undefined, 'title')}>
+              Title
+              <SortIcon />
+            </a>
+          </TableHeaderColumn>
+          <TableHeaderColumn style={{ textAlign: 'center' }}>
+            <a
+              style={{ color: muiTheme.palette.accent1Color }}
+              onClick={setSort.bind(undefined, 'artist')}>
+              Artist
+              <SortIcon />
+            </a>
+          </TableHeaderColumn>
+          <TableHeaderColumn style={{ textAlign: 'center' }}>
+            <a
+              style={{ color: muiTheme.palette.accent1Color }}
+              onClick={setSort.bind(undefined, 'progress')} >
+              Progress
+              <SortIcon />
+            </a>
+          </TableHeaderColumn>
+          <TableHeaderColumn style={{ textAlign: 'center' }}>
+            <a
+              style={{ color: muiTheme.palette.accent1Color }}
+              onClick={setSort.bind(undefined, 'difficulty')}>
+              Difficulty
+              <SortIcon />
+            </a>
+          </TableHeaderColumn>
+        </TableRow>
+        {songsCollection && songsCollection.map(song => {
+          return (
+            <Song
+              key={song.id}
+              songValues={song}
+              selectable={song.id !== currentSongId}
+            />
+          );
+        }
+        )}
+      </TableBody>
+    </Table>
+  );
 
 SongsList.propTypes = {
   songsCollection: PropTypes.arrayOf(

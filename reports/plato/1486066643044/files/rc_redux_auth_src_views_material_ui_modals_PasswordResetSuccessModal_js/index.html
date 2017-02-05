@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/redux-auth/src/views/material-ui/modals/PasswordResetSuccessModal.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/redux-auth/src/views/material-ui/modals/PasswordResetSuccessModal.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">80.53</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">107</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">22.36</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">0.77</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import React, { PropTypes } from &quot;react&quot;;
+import ActionLock from &quot;material-ui/svg-icons/action/lock&quot;;
+import Dialog from &quot;material-ui/Dialog&quot;;
+import FlatButton from &quot;material-ui/FlatButton&quot;;
+import MuiThemeProvider from &#039;material-ui/styles/MuiThemeProvider&#039;;
+import ButtonLoader from &quot;../ButtonLoader&quot;;
+import Input from &quot;../Input&quot;;
+import { connect } from &quot;react-redux&quot;;
+import { hidePasswordResetSuccessModal } from &quot;../../../actions/ui&quot;;
+import {
+  updatePasswordModal,
+  updatePasswordModalFormUpdate
+} from &quot;../../../actions/update-password-modal&quot;;
+
+class PasswordResetSuccessModal extends React.Component {
+  static propTypes = {
+    endpoint: PropTypes.string,
+    show: PropTypes.bool,
+    inputProps: PropTypes.object
+  };
+
+  static defaultProps = {
+    show: false,
+    inputProps: {}
+  };
+
+  getEndpoint () {
+    return (
+      this.props.endpoint ||
+      this.props.auth.getIn([&quot;configure&quot;, &quot;currentEndpointKey&quot;]) ||
+      this.props.auth.getIn([&quot;configure&quot;, &quot;defaultEndpointKey&quot;])
+    );
+  }
+
+  handleInput (key, val) {
+    this.props.dispatch(updatePasswordModalFormUpdate(this.getEndpoint(), key, val));
+  }
+
+  handleSubmit () {
+    let formData = this.props.auth.getIn([&quot;updatePasswordModal&quot;, this.getEndpoint(), &quot;form&quot;]).toJS();
+    this.props.dispatch(updatePasswordModal(formData, this.getEndpoint()));
+  }
+
+  close () {
+    this.props.dispatch(hidePasswordResetSuccessModal());
+  }
+
+  render () {
+    let endpoint = this.getEndpoint();
+    let loading = this.props.auth.getIn([&quot;updatePasswordModal&quot;, endpoint, &quot;loading&quot;]);
+
+    return (
+      &lt;MuiThemeProvider&gt;
+        &lt;Dialog
+          open={this.props.show}
+          contentClassName=&quot;redux-auth-modal password-reset-success-modal&quot;
+          actions={[
+            &lt;FlatButton
+              key=&quot;cancel&quot;
+              className=&quot;password-reset-success-modal-close&quot;
+              onClick={this.close.bind(this)}
+              secondary={true}
+              {...this.props.inputProps.cancel}&gt;
+              Cancel
+            &lt;/FlatButton&gt;,
+            &lt;ButtonLoader
+              key=&quot;submit&quot;
+              {...this.props}
+              loading={loading}
+              type=&quot;submit&quot;
+              primary={true}
+              className=&quot;password-reset-success-modal-submit&quot;
+              icon={ActionLock}
+              onClick={this.handleSubmit.bind(this)}
+              {...this.props.inputProps.submit} /&gt;
+          ]}
+          title=&quot;Reset Your Password&quot;&gt;
+          &lt;form&gt;
+            &lt;Input
+              type=&quot;password&quot;
+              label=&quot;Password&quot;
+              placeholder=&quot;Password&quot;
+              disabled={loading}
+              className=&quot;password-reset-success-modal-password&quot;
+              value={this.props.auth.getIn([&quot;updatePasswordModal&quot;, endpoint, &quot;form&quot;, &quot;password&quot;])}
+              errors={this.props.auth.getIn([&quot;updatePasswordModal&quot;, endpoint, &quot;errors&quot;, &quot;password&quot;])}
+              onChange={this.handleInput.bind(this, &quot;password&quot;)}
+              {...this.props.inputProps.password} /&gt;
+
+            &lt;Input
+              type=&quot;password&quot;
+              label=&quot;Password Confirmation&quot;
+              placeholder=&quot;Password Confirmation&quot;
+              disabled={loading}
+              className=&quot;password-reset-success-modal-password-confirmation&quot;
+              value={this.props.auth.getIn([&quot;updatePasswordModal&quot;, endpoint, &quot;form&quot;, &quot;password_confirmation&quot;])}
+              errors={this.props.auth.getIn([&quot;updatePasswordModal&quot;, endpoint, &quot;errors&quot;, &quot;password_confirmation&quot;])}
+              onChange={this.handleInput.bind(this, &quot;password_confirmation&quot;)}
+              {...this.props.inputProps.passwordConfirmation} /&gt;
+          &lt;/form&gt;
+        &lt;/Dialog&gt;
+      &lt;/MuiThemeProvider&gt;
+    );
+  }
+}
+
+export default connect(({auth}) =&gt; ({auth}))(PasswordResetSuccessModal);</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

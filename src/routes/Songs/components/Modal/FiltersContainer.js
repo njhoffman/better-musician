@@ -1,17 +1,14 @@
 import { connect } from 'react-redux';
 import FiltersModal from './Filters';
+import { uiHideModal } from 'store/ui';
 
-export const hideModal = () => {
-  return (dispatch, getState) => {
-    return dispatch({ type: "HIDE_MODAL" });
-  };
-}
 const mapDispatchToProps = {
-  hideModal
+  uiHideModal
 };
 
 const mapStateToProps = (state) => ({
-  modal: state.ui.modal
+  modal:         state.ui.modal,
+  isOpen:        state.ui.modal.type === 'MODAL_FILTER_SONGS'
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FiltersModal);
