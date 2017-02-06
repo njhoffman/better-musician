@@ -18,13 +18,14 @@
     .tabbedField {
       display: flex;
       max-width: none;
-      width: 100%;
       flex-wrap: wrap;
       box-align: stretch;
       align-items: center;
       justify-content: space-around;
     }
-
+    .fieldAdd {
+      padding: 0px 20px;
+    }
     .buttons {
       padding-top: 25px;
       padding-bottom: 25px;
@@ -90,6 +91,13 @@
           border: solid 1px rgb(170,180,204);
           background-color: rgba(170, 180, 204, 0.1);
         }
+        .fieldPreviewLabel {
+          text-align: left;
+          font-size: 0.8em;
+          font-variant: small-caps;
+          margin: 5px 0px -20px 0px;
+          padding: 0px;
+        }
         .fieldValue,
         .fieldButtons,
         .fieldLabel {
@@ -98,7 +106,6 @@
           text-align: right;
         }
         .fieldLabel {
-          color: rgb(0, 151, 167);
           font-variant: small-caps;
           width: 25%;
         }

@@ -20,15 +20,9 @@ import {
 import FormField from 'components/Field';
 import css from './FieldsView.scss';
 
-
-
 export const FieldsView = (props) => {
   // const user = props.settings.get('attributes');
   let disabled =  false;
-  // (
-  //   this.props.auth.getIn(["user", "isSignedIn"]) ||
-  //   this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "loading"])
-  // );
   const redirectProfile = () => browserHistory.push('/profile');
   const redirectStats = () => browserHistory.push('/stats');
   const redirectSettings = () => browserHistory.push('/settings');
@@ -45,7 +39,6 @@ export const FieldsView = (props) => {
     7: "YouTube Link",
     8: "PDF Link"
   };
-
 
   const renderExtraFields = (formValues) => {
     switch(parseInt(formValues.type)) {
@@ -120,7 +113,7 @@ export const FieldsView = (props) => {
               value="fields"
               label="Fields">
               <form className={css.fieldsForm}>
-                <h3>Update Your Custom Fields</h3>
+                <h3>Build Your Custom Fields</h3>
                 <Row className={css.fieldAdd}>
                   <FormField
                     small={4}

@@ -1,8 +1,10 @@
 const chalk = require("chalk");
 const util = require("util");
 const _ = require('lodash');
+const StatsD = require('node-statsd');
 const configDebug = require('./server.debug');
 
+const sdc = new StatsD();
 const verbosity = 9;
 
 function padLeft(str, len) {
@@ -55,6 +57,7 @@ const requestOutput = (req, res, next) => {
     else { info('Body', body); }
   }
   if (Object.keys(query).length > 0) { info("Query", query); }
+  sdc.increment('app_request');
   if (next) { next(); }
 };
 
@@ -86,6 +89,7 @@ const proxyRequestOutput = (req, res, next) => {
     else { info('Body', body); }
   }
   if (Object.keys(query).length > 0) { info("Query", query); }
+  sdc.increment('app_proxy_request');
   if (next) { next(); }
 };
 

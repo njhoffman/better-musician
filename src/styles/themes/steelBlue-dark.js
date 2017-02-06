@@ -46,6 +46,7 @@ export default {
   },
   instrumental: {
     headerLinksColor: blueGrey300,
-    footerFiller: "linear-gradient(180deg, rgb(33,33,33) 0%, rgb(10,10,10) 20%, rgb(0,0,0) 100%)"
+    footerFiller: "linear-gradient(180deg, rgb(33,33,33) 0%, rgb(10,10,10) 20%, rgb(0,0,0) 100%)",
+    fieldsViewLabelColor: blueGrey500,
   }
 };

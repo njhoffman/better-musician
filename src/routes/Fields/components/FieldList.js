@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import muiThemeable from 'material-ui/styles/muiThemeable';
 import { FlatButton, List, ListItem } from 'material-ui';
 import { Row, Column } from 'react-foundation';
 import CustomField from 'components/CustomField';
@@ -20,30 +21,56 @@ const renderFieldItem = (props, field) => {
       <Row className={css.tabbedField + ' ' +  (field.id === editingId ? css.active  : '')}>
         <Column centerOnSmall small={6}>
           <Row>
-            <Column small={4} className={css.fieldLabel}>Label:</Column>
-            <Column small={8} className={css.fieldValue}>{field.label}</Column>
+            <Column
+              small={4}
+              style={{ color: props.muiTheme.instrumental.fieldsViewLabelColor }}
+              className={css.fieldLabel}>Label:
+            </Column>
+            <Column
+              small={8}
+              className={css.fieldValue}>{field.label}
+            </Column>
           </Row>
           <Row>
-            <Column small={4} className={css.fieldLabel}>Type:</Column>
-            <Column small={8} className={css.fieldValue}>{field.typeName}</Column>
+            <Column
+              small={4}
+              style={{ color: props.muiTheme.instrumental.fieldsViewLabelColor }}
+              className={css.fieldLabel}>Type:
+            </Column>
+            <Column
+              small={8}
+              className={css.fieldValue}>{field.typeName}
+            </Column>
           </Row>
         </Column>
         <Column centerOnSmall small={4}>
-          <CustomField field={field} preview={true} />
+          <Row>
+            <Column
+              style={{ color: props.muiTheme.instrumental.fieldsViewLabelColor }}
+              className={css.fieldPreviewLabel}>Field Preview
+            </Column>
+          </Row>
+          <Row>
+            <CustomField field={field} preview={true} />
+          </Row>
         </Column>
-        <Column centerOnSmall small={2}>
-          <FlatButton
-            onTouchTap={field.id === editingId ? props.cancelEdit : props.editField.bind(undefined, field)}
-            style={{ minWidth: '35px', width: '35px', float: 'right', color: '#bbbbff' }}
-            icon={field.id === editingId ? <CancelIcon onTouchTap={props.cancelEdit} /> : <EditIcon />}
-          />
-          {!(field.id === editingId) &&
+        <Column centerOnSmall small={1}>
+          <Row>
             <FlatButton
-              onTouchTap={props.deleteField.bind(undefined, field.id)}
-              style={{ minWidth: '35px', width: '35px', float: 'right', color: '#FFBBBB' }}
-              icon={<DeleteIcon />}
+              onTouchTap={field.id === editingId ? props.cancelEdit : props.editField.bind(undefined, field)}
+              style={{ minWidth: '35px', width: '35px', float: 'right', color: '#bbbbff' }}
+              icon={field.id === editingId ? <CancelIcon onTouchTap={props.cancelEdit} /> : <EditIcon />}
             />
-          }
+          </Row>
+          <Row>
+            {!(field.id === editingId) &&
+              <FlatButton
+                onTouchTap={props.deleteField.bind(undefined, field.id)}
+                style={{ minWidth: '35px', width: '35px', float: 'right', color: '#FFBBBB' }}
+                icon={<DeleteIcon />}
+              />
+            }
+        </Row>
         </Column>
       </Row>
     </ListItem>
@@ -83,4 +110,4 @@ class FieldList extends Component {
   }
 }
 
-export default FieldList;
+export default muiThemeable()(FieldList);

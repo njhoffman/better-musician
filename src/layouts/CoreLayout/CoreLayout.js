@@ -24,6 +24,7 @@ export class CoreLayout extends Component {
     }
     theme.instrumental.headerLinksColor = theme.instrumental.headerLinksColor || theme.palette.secondaryTextColor;
     theme.instrumental.footerFiller = theme.instrumental.footerFiller || theme.palette.canvasColor;
+    theme.instrumental.fieldsViewLabel = theme.instrumental.fieldsViewLabel || theme.palette.accent1Color;
 
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
