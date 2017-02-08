@@ -1,6 +1,5 @@
 const http = require('http');
 const httpProxy = require('http-proxy');
-const proxyRequestDebug  = require('debug')('app:request:proxy');
 const project = require('../config/project.config');
 const requestOutput = require('./server.utils').proxyRequestOutput;
 const responseOutput = require('./server.utils').proxyResponseOutput;
@@ -12,12 +11,14 @@ module.exports = function (app) {
   const server = new http.Server(app);
   const targetUrl = 'http://' + project.api_host + ':' + project.api_port;
   const proxy = httpProxy.createProxyServer({
-      target: targetUrl,
-      ws: false
+    target: targetUrl,
+    ws: false
   });
-  app.use('/api', (req, res)               => { proxy.web(req, res, {target: targetUrl}); });
-  app.use('/ws', (req, res)                => { proxy.web(req, res, {target: targetUrl + '/ws'}); });
+  /* eslint-disable no-multi-spaces */
+  app.use('/api', (req, res)               => { proxy.web(req, res, { target: targetUrl }); });
+  app.use('/ws', (req, res)                => { proxy.web(req, res, { target: targetUrl + '/ws' }); });
   server.on('upgrade', (req, socket, head) => { proxy.ws(req, socket, head); });
+  /* eslint-enable no-multi-spaces */
 
   proxy.on('proxyReq', (proxyReq, req, res, options) => {
     // proxyReq.setHeader('Content-Type', 'application/json');
@@ -35,14 +36,14 @@ module.exports = function (app) {
 
   // added the error handling to avoid https://github.com/nodejitsu/node-http-proxy/issues/527
   proxy.on('error', (err, req, res) => {
-    const json = {error: 'proxy_error', reason: err.message};
+    const json = { error: 'proxy_error', reason: err.message };
     if (err.code !== 'ECONNRESET') {
-      error("PROXY ERROR");
+      error('PROXY ERROR');
       error(err);
     }
     if (!res.headersSent) {
-      res.writeHead(500, {'content-type': 'application/json'});
+      res.writeHead(500, { 'content-type': 'application/json' });
     }
     res.end(JSON.stringify(json));
   });
-}
+};

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { TextField } from 'redux-form-material-ui';
 
 const RenderNumber = ({
@@ -6,17 +6,23 @@ const RenderNumber = ({
   label,
   meta,
   ...custom }) => {
-    return (
-      <TextField
-        type='number'
-        floatingLabelText={label}
-        style={{ width: "125px", textAlign: 'center' }}
-        inputStyle={{ textAlign: 'center', boxShadow: 'none' }}
-        min={0}
-        errorText={meta && meta.touched && meta.error}
-        {...custom}
-      />
-    );
-  };
+  return (
+    <TextField
+      type='number'
+      floatingLabelText={label}
+      style={{ width: '125px', textAlign: 'center' }}
+      inputStyle={{ textAlign: 'center', boxShadow: 'none' }}
+      min={0}
+      errorText={meta && meta.touched && meta.error}
+      {...custom}
+    />
+  );
+};
 
-export default RenderNumber
+RenderNumber.propTypes = {
+  label: PropTypes.string,
+  meta: PropTypes.object,
+  viewType: PropTypes.string
+};
+
+export default RenderNumber;

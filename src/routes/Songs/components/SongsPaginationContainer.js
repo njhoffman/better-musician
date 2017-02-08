@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { getVisibleSongs, setCurrentSong, setSort, viewSong } from 'routes/Songs/modules/songs';
 import {
   paginationTotal as paginationTotalSelector,
   paginationStart as paginationStartSelector,
@@ -8,7 +7,6 @@ import {
 } from 'routes/Songs/modules/selectors';
 
 import SongsPagination from './SongsPagination';
-
 
 const setPaginationCurrent = (e, val) => (dispatch) => {
   dispatch({ type: 'SET_PAGINATION_CURRENT', payload: val });
@@ -39,7 +37,6 @@ const setPaginationStart = () => (dispatch, getState) => {
 const setPaginationEnd = () => (dispatch, getState) => {
   dispatch({ type: 'SET_PAGINATION_CURRENT', payload: paginationEndSelector(getState()) });
 };
-
 
 const mapStateToProps = (state, action) => ({
   paginationCurrent: state.songsView.paginationCurrent,

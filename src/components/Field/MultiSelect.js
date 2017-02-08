@@ -1,10 +1,8 @@
-import React, { Component, PropTypes } from 'react';
-import { MenuItem, RaisedButton } from 'material-ui';
+import React, { PropTypes } from 'react';
+import { RaisedButton } from 'material-ui';
 import { Row, Column } from 'react-foundation';
 import { Field } from 'redux-form';
-import { SelectField } from 'redux-form-material-ui'
 import { RenderChip, RenderSelect } from 'components/Field';
-
 
 const RenderMultiSelect = ({
   fields,
@@ -23,7 +21,7 @@ const RenderMultiSelect = ({
             <Column centerOnSmall small={disabled ? 12 : 8}>
               <Field
                 label={label}
-                onChange={(e) => (e) }
+                onChange={(e) => (e)}
                 component={RenderSelect}
                 disabled={disabled}
                 underlineShow={disabled}
@@ -37,7 +35,7 @@ const RenderMultiSelect = ({
             <Column centerOnSmall small={disabled ? 0 : 4}>
               {!disabled &&
                 <RaisedButton
-                  secondary={true}
+                  secondary
                   label='Add' />
               }
             </Column>
@@ -57,7 +55,7 @@ const RenderMultiSelect = ({
                   name={name}
                   onChange={() => { }}
                   component={RenderChip}
-                  style={{ margin: '5px 2px', fontSize: "0.8em" }} />
+                  style={{ margin: '5px 2px', fontSize: '0.8em' }} />
               );
             } else {
               return (
@@ -67,7 +65,7 @@ const RenderMultiSelect = ({
                   onChange={() => { }}
                   component={RenderChip}
                   onRequestDelete={() => fields.remove(idx)}
-                  style={{ margin: '5px 2px', fontSize: "0.8em" }} />
+                  style={{ margin: '5px 2px', fontSize: '0.8em' }} />
               );
             }
           })}
@@ -77,6 +75,14 @@ const RenderMultiSelect = ({
   );
 };
 
+RenderMultiSelect.propTypes = {
+  fields:     PropTypes.array.isRequired,
+  name:       PropTypes.string.isRequired,
+  disabled:   PropTypes.bool,
+  labelStyle: PropTypes.object,
+  inputStyle: PropTypes.object,
+  label:      PropTypes.string,
+  dataSource: PropTypes.array.isRequired
+};
 
-
-export default RenderMultiSelect
+export default RenderMultiSelect;

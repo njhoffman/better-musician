@@ -11,9 +11,7 @@ import LoginRoute from './Login';
 import RegisterRoute from './Register';
 import { browserHistory } from 'react-router';
 
-
 export const createRoutes = (store) => {
-
   const auth = (level) => () => {
     const user = store.getState().auth ? store.getState().auth.get('user') : null;
     if (!user || !user.get('isSignedIn')) {
@@ -39,7 +37,6 @@ export const createRoutes = (store) => {
       ProfileRoute(store, auth('user'))
     ]
   });
-}
-
+};
 
 export default createRoutes;

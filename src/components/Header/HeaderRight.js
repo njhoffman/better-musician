@@ -1,4 +1,4 @@
-import React, { Component }  from 'react';
+import React, { Component, PropTypes }  from 'react';
 import { MdAccountCircle as AvatarIcon } from 'react-icons/lib/md';
 import { Avatar, RaisedButton } from 'material-ui';
 import { Link } from 'react-router';
@@ -7,6 +7,13 @@ import css from './Header.scss';
 const linkStyle = { display: 'table-cell', verticalAlign: 'middle', paddingRight: '5px' };
 
 class HeaderRight extends Component {
+  static propTypes = {
+    muiTheme: PropTypes.object.isRequired,
+    user: PropTypes.object,
+    getUserPoints: PropTypes.func.isRequired,
+    userDisplayName: PropTypes.string
+  }
+
   renderSignedIn() {
     return (
       <div className={css.headerLink}>
@@ -46,18 +53,18 @@ class HeaderRight extends Component {
               style={buttonStyle}
               labelStyle={buttonLabelStyle}
               className={css.loginButton}
-              label="LOGIN"
-              primary={true} />
+              primary
+              label='LOGIN' />
           </Link>
           <Link
             to='/register'
             style={linkStyle}>
             <RaisedButton
               style={buttonStyle}
-              secondary={true}
+              secondary
               labelStyle={buttonLabelStyle}
               className={css.registerButton}
-              label="REGISTER" />
+              label='REGISTER' />
           </Link>
         </div>
       </div>
@@ -65,7 +72,7 @@ class HeaderRight extends Component {
   }
 
   render() {
-    if (this.props.user && this.props.user.get("isSignedIn")) {
+    if (this.props.user && this.props.user.get('isSignedIn')) {
       return this.renderSignedIn();
     }
     return this.renderSignedOut();

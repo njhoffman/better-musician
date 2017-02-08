@@ -1,14 +1,14 @@
-import React from "react";
-import { hideSignOutErrorModal } from "../../../actions/ui";
-import Modal from "./Modal";
+import React from 'react';
+import { hideSignOutErrorModal } from '../../../actions/ui';
+import Modal from './Modal';
 
 class SignOutErrorModal extends React.Component {
-  render () {
+  render() {
     return (
       <Modal
         {...this.props}
-        containerClass="sign-out-error-modal"
-        title="Sign Out Error"
+        containerClass='sign-out-error-modal'
+        title='Sign Out Error'
         closeAction={hideSignOutErrorModal}>
         <p>
           The server encountered an error while trying to sign you out. Your

@@ -15,7 +15,7 @@ export const handleRegisterSuccess = () => (dispatch, getState) => {
 };
 
 export const actions = {
- handleRegisterSuccess
+  handleRegisterSuccess
 };
 
 // ------------------------------------
@@ -29,7 +29,7 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState = 0;
-export default function loginReducer (state = initialState, action) {
+export default function loginReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
 
   return handler ? handler(state, action) : state;

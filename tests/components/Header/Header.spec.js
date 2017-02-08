@@ -1,7 +1,6 @@
 import React from 'react';
 import { Header } from 'components/Header/Header';
 import { IndexLink, Link } from 'react-router';
-import MenuIcon from 'react-icons/lib/md/menu';
 import { shallow } from 'enzyme';
 
 describe('(Component) Header', () => {

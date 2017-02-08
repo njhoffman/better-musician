@@ -1,11 +1,11 @@
-import React, { Component }  from 'react';
-import { Row, Column, Breakpoints } from 'react-foundation';
+import React, { Component, PropTypes }  from 'react';
+import { Row, Column } from 'react-foundation';
 import { Link } from 'react-router';
-import { Drawer, MenuItem, Popover, RaisedButton, Avatar } from 'material-ui';
+import { Popover }  from 'material-ui';
 import SearchPopover from './SearchPopover';
+/* eslint-disable no-multi-spaces */
 import {
   MdFilterList    as FilterIcon,
-  MdImportExport  as SortIcon,
   MdSearch        as SearchIcon,
   MdLibraryAdd    as AddIcon,
   MdModeEdit      as EditIcon,
@@ -13,6 +13,7 @@ import {
   MdDashboard     as ViewIcon,
   MdArrowDropDown as ArrowDropDownIcon
 } from 'react-icons/lib/md';
+/* eslint-enable no-multi-spaces */
 
 import css from './Header.scss';
 
@@ -22,6 +23,15 @@ const popoverStyle = {
 };
 
 class HeaderMiddle extends Component {
+
+  static propTypes = {
+    showAddSongModal: PropTypes.func.isRequired,
+    muiTheme: PropTypes.object.isRequired,
+    showFiltersModal: PropTypes.func.isRequired,
+    currentSong: PropTypes.string,
+    modal: PropTypes.object.isRequired,
+    currentView: PropTypes.string
+  }
 
   constructor(props) {
     super(props);
@@ -67,25 +77,27 @@ class HeaderMiddle extends Component {
   };
 
   renderSongButtonOther() {
-      return (
-        <Link className={css.headerLink} to='/songs'>
-          <span className={css.iconWrapper}>
-            <ViewIcon className={css.icon} />
-            <span className={css.iconText}>View Songs</span>
-          </span>
-        </Link>
-      )
+    return (
+      <Link className={css.headerLink} to='/songs'>
+        <span className={css.iconWrapper}>
+          <ViewIcon className={css.icon} />
+          <span className={css.iconText}>View Songs</span>
+        </span>
+      </Link>
+    );
   }
 
   renderSongButtonAdd() {
-      return (
-        <a className={css.headerLink} onClick={ this.showAddSongModal.bind(this) }>
-          <span className={css.iconWrapper}>
-            <AddIcon className={css.icon} />
-            <span className={css.iconText}>Add Song</span>
-          </span>
-        </a>
-      );
+    return (
+      <a
+        className={css.headerLink}
+        onClick={this.showAddSongModal.bind(this)}>
+        <span className={css.iconWrapper}>
+          <AddIcon className={css.icon} />
+          <span className={css.iconText}>Add Song</span>
+        </span>
+      </a>
+    );
   }
 
   renderSongButtonView() {
@@ -109,9 +121,9 @@ class HeaderMiddle extends Component {
                 <a
                   style={{ color: this.props.muiTheme.instrumental.headerLinksColor }}
                   className={css.headerLink}
-                  onClick={ this.showEditSongModal.bind(this) } >
+                  onClick={this.showEditSongModal.bind(this)} >
                   <span className={css.iconWrapper}>
-                    <AddIcon style={{ margin: "0px 12px 0px -12px" }} className={css.icon} />
+                    <AddIcon style={{ margin: '0px 12px 0px -12px' }} className={css.icon} />
                     <span className={css.iconText}>Add Song</span>
                   </span>
                 </a>
@@ -140,15 +152,17 @@ class HeaderMiddle extends Component {
       if (this.props.currentSong) {
         return this.renderSongButtonView();
       }
-      return this.renderSongButtonAdd()
+      return this.renderSongButtonAdd();
     }
-    return this.renderSongButtonOther()
+    return this.renderSongButtonOther();
   }
 
   renderFiltersButton() {
     const isActive = this.props.modal.type === 'MODAL_FILTER_SONGS';
     return (
-      <a className={css.headerLink + ' ' + (isActive ? css.headerLinkActive : '') } onClick={this.props.showFiltersModal} >
+      <a
+        className={css.headerLink + ' ' + (isActive ? css.headerLinkActive : '')}
+        onClick={this.props.showFiltersModal} >
         <span className={css.iconWrapper}>
           <FilterIcon className={css.icon} />
           <span className={css.iconText}>Filters</span>
@@ -160,16 +174,16 @@ class HeaderMiddle extends Component {
   renderSearchButton() {
     return (
       <a className={css.headerLink}
-        onTouchTap={ this.toggleSearchPopover.bind(this) }>
+        onTouchTap={this.toggleSearchPopover.bind(this)}>
         <span className={css.iconWrapper}>
           <SearchIcon className={css.icon} />
           <span className={css.iconText}>Search</span>
           <SearchPopover
-            open={ this.state.searchPopoverOpen }
+            open={this.state.searchPopoverOpen}
             anchorEl={this.state.searchPopoverAnchor}
             anchorOrigin={popoverStyle.anchor}
             targetOrigin={popoverStyle.target}
-            onRequestClose={ this.onRequestClose.bind(this) } />
+            onRequestClose={this.onRequestClose.bind(this)} />
         </span>
       </a>
     );

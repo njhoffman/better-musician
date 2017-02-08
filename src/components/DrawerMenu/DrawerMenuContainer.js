@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { UI_HIDE_DRAWER_MENU, uiHideDrawerMenu } from 'store/ui';
+import { uiHideDrawerMenu } from 'store/ui';
 import DrawerMenu from './DrawerMenu';
 
 const mapDispatchToProps = {

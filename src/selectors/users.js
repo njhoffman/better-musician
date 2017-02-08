@@ -6,7 +6,7 @@ export const ormSelector = state => state.orm;
 
 const userPointsSelector = ormCreateSelector(orm, (session, user) => {
   const points = session.Song && session.Song.getPointTotal();
-  return isNaN(points) ? 0 : points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return isNaN(points) ? 0 : points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 });
 
 export const userPoints = createSelector(
@@ -16,12 +16,12 @@ export const userPoints = createSelector(
 );
 
 const userDisplaySelector = ormCreateSelector(orm, (session, user) => {
-  let userName = "";
+  let userName = '';
   if (user && user.get('attributes')) {
     userName += user.get('attributes').get('firstName')
       ? user.get('attributes').get('firstName') + ' ' : '';
     userName += user.get('attributes').get('lastName')
-      ? user.get('attributes').get('lastName') : ''
+      ? user.get('attributes').get('lastName') : '';
     if (userName.length === 0) {
       userName = user.get('attributes').get('email');
     }
@@ -44,7 +44,6 @@ export const maxDifficulty = createSelector(
   state => state.auth.get('user'),
   maxDifficultySelector
 );
-
 
 const visualThemeSelector = ormCreateSelector(orm, (session, user) => {
   return (user && user.get('attributes') && user.get('attributes').get('visualTheme')

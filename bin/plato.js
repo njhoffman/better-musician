@@ -4,10 +4,10 @@ const plato = require('plato');
 const fs = require('fs');
 const path = require('path');
 
-const reportsDir = __dirname + '/../reports/plato';
-const srcFiles = __dirname + '/../src';
-const serverFiles = __dirname + '/../server';
-const outputDir = reportsDir + '/' + Date.now();
+const reportsDir = path.join(__dirname, '/../reports/plato');
+const srcFiles = path.join(__dirname, '/../src');
+const serverFiles = path.join(__dirname, '/../server');
+const outputDir = path.join(reportsDir, '/' + Date.now());
 
 var platoOptions = {
   title: 'Plato Report'
@@ -16,32 +16,31 @@ var platoOptions = {
 const mkdirSync = (path) => {
   try {
     fs.mkdirSync(path);
-  } catch(e) {
-    if ( e.code != 'EEXIST' ) throw e;
+  } catch (e) {
+    if (e.code !== 'EEXIST') throw e;
   }
-}
+};
 
-const walkSync = (dir, filelist = []) => {
+const walkSync = (dir, fileList = []) => {
   fs.readdirSync(dir).forEach(file => {
-    filelist = fs.statSync(path.join(dir, file)).isDirectory()
-      ? walkSync(path.join(dir, file), filelist)
-      : filelist.concat(path.join(dir, file));
-
+    fileList = fs.statSync(path.join(dir, file)).isDirectory()
+      ? walkSync(path.join(dir, file), fileList)
+      : fileList.concat(path.join(dir, file));
   });
-  return filelist;
-}
+  return fileList;
+};
 
 const platoFinished = (report) => {
-  console.log("\n\n**** PLATO REPORT ***\n\n");
+  console.log('\n\n**** PLATO REPORT ***\n\n');
   console.log(report);
-  console.log("\n\n**** PLATO REPORT ***\n\n");
+  console.log('\n\n**** PLATO REPORT ***\n\n');
 };
 
 let fileList = walkSync(srcFiles);
 fileList = walkSync(serverFiles, fileList);
 fileList = fileList.filter(file => {
   const ext = file.split('.').pop();
-  return ((ext === "js" || ext === "jsx") && ! /redux-orm/.test(file));
+  return ((ext === 'js' || ext === 'jsx') && !/redux-orm/.test(file));
 });
 
 console.log(fileList.length);

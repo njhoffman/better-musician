@@ -1,5 +1,3 @@
-import { CALL_API, Schemas } from 'middleware/api';
-
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -8,20 +6,19 @@ import { CALL_API, Schemas } from 'middleware/api';
 // Actions Creators
 // ------------------------------------
 
-export const actions = {
-};
+export const actions = {};
 
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
-const ACTION_HANDLERS = { };
+const ACTION_HANDLERS = {};
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 
 const initialState = 0;
-export default function statsReducer (state = initialState, action) {
+export default function statsReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
   return handler ? handler(state, action) : state;
 }

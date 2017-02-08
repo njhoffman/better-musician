@@ -3,30 +3,26 @@ import { initView } from 'store/view';
 import { fetchSongs } from 'store/api';
 
 export default (store, auth) => ({
-  path : 'profile',
-  getComponent (nextState, cb) {
+  path: 'profile',
+  getComponent(nextState, cb) {
     require.ensure([], (require) => {
       if (auth && (auth() === false)) {
         console.info('authentication failed');
         return;
       }
-
       const importModules = Promise.all([
         require('./components/ProfileViewContainer').default,
         require('./modules/profile').default
       ]);
-
-      importModules.then( ([container, reducer]) => {
+      importModules.then(([container, reducer]) => {
         injectReducer(store, { key: 'profileView', reducer: reducer });
         initView(store, 'profileView');
         fetchSongs(store);
         cb(null, container);
       });
-
       importModules.catch(error => {
-        console.error("Error importing dynamic modules", error);
+        console.error('Error importing dynamic modules', error);
       });
-
     }, 'profileView');
   }
 });

@@ -7,7 +7,6 @@ import { configure as authConfigure } from './store/auth/actions/configure';
 // import 'material-design-lite/src/typography/_typography.scss';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
-
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
@@ -45,13 +44,11 @@ let render = () => {
     serverSideRendering: false,
     clientOnly:          true
     // cleanSession:        true
-    }
-  )).then(() => {
-
-      ReactDOM.render(
-        <AppContainer store={store} routes={routes} />,
-        MOUNT_NODE
-      );
+  })).then(() => {
+    ReactDOM.render(
+      <AppContainer store={store} routes={routes} />,
+      MOUNT_NODE
+    );
   });
 };
 

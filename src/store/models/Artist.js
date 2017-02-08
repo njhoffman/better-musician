@@ -8,7 +8,7 @@ class Artist extends BaseModel {
     })[0];
   }
   static reducer(action, Artist, session) {
-    const { payload, type } = action;
+    const { type } = action;
     switch (type) {
       case FETCH_SONGS:
         // remove all songs when fetching

@@ -1,20 +1,24 @@
-import React from "react";
-import { connect } from "react-redux";
-import { hidePasswordResetRequestSuccessModal } from "../../../actions/ui";
-import Modal from "./Modal";
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { hidePasswordResetRequestSuccessModal } from '../../../actions/ui';
+import Modal from './Modal';
 
 class RequestPasswordResetSuccessModal extends React.Component {
-  render () {
+  static propTypes = {
+    auth: PropTypes.object.isRequired
+  }
+
+  render() {
     return (
       <Modal
         {...this.props}
-        containerClass="request-password-reset-success-modal"
+        containerClass='request-password-reset-success-modal'
         closeAction={hidePasswordResetRequestSuccessModal}
-        title="Password Reset Request Success">
-        <p>{this.props.auth.getIn(["ui", "requestPasswordResetSuccessMessage"])}</p>
+        title='Password Reset Request Success'>
+        <p>{this.props.auth.getIn(['ui', 'requestPasswordResetSuccessMessage'])}</p>
       </Modal>
     );
   }
 }
 
-export default connect(({auth}) => ({auth}))(RequestPasswordResetSuccessModal);
+export default connect(({ auth }) => ({ auth }))(RequestPasswordResetSuccessModal);

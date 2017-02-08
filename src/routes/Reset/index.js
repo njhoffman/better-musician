@@ -1,30 +1,26 @@
 import { injectReducer } from 'store/reducers';
-import { initView } from 'store/view'
+import { initView } from 'store/view';
 
 export default (store, auth) => ({
   path : 'reset',
-  getComponent (nextState, cb) {
+  getComponent(nextState, cb) {
     require.ensure([], (require) => {
       if (auth && (auth() === false)) {
         console.info('authentication failed');
         return;
       }
-
       const importModules = Promise.all([
         require('./components/ResetViewContainer').default,
         require('./modules/reset').default
       ]);
-
-      importModules.then( ([container, reducer]) => {
+      importModules.then(([container, reducer]) => {
         injectReducer(store, { key: 'resetView', reducer: reducer });
         initView(store, 'resetView');
         cb(null, container);
       });
-
       importModules.catch(error => {
-        console.error("Error importing dynamic modules", error);
+        console.error('Error importing dynamic modules', error);
       });
-
     }, 'resetView');
   }
 });

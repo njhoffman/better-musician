@@ -1,7 +1,5 @@
 import React, { Component }  from 'react';
-import { IndexLink, Link } from 'react-router';
 import { Row, Column, Breakpoints } from 'react-foundation';
-import { Drawer, MenuItem, Popover, RaisedButton, Avatar } from 'material-ui';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import HeaderLeft from './HeaderLeftContainer';
@@ -9,9 +7,8 @@ import HeaderMiddle from './HeaderMiddleContainer';
 import HeaderRight from './HeaderRightContainer';
 import css from './Header.scss';
 
-class Header extends Component  {
-
-  render () {
+class Header extends Component {
+  render() {
     const { ...props } = this.props;
     const signedIn = props.user.get('isSignedIn');
     if (signedIn) {
@@ -30,7 +27,7 @@ class Header extends Component  {
               <HeaderMiddle {...props} />
             </Column>
             <Column small={6} medium={3} className={css.headerRight}>
-                <HeaderRight {...props} />
+              <HeaderRight {...props} />
             </Column>
           </Row>
           <Row className={css.wrapper} showOnlyFor={Breakpoints.SMALL}>
@@ -60,9 +57,6 @@ class Header extends Component  {
       );
     }
   }
-};
-
-Header.propTypes = {
 };
 
 export default muiThemeable()(Header);

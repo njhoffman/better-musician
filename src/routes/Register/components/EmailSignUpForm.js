@@ -1,7 +1,7 @@
-import React, { PropTypes } from "react";
-import ContentSend from "material-ui/svg-icons/content/send";
+import React, { PropTypes } from 'react';
+import ContentSend from 'material-ui/svg-icons/content/send';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { Row, Column } from 'react-foundation';
 
@@ -15,36 +15,39 @@ import css from './EmailSignUpForm.scss';
 
 class EmailSignUpForm extends React.Component {
   static propTypes = {
-    endpoint: PropTypes.string,
-    next: PropTypes.func,
-    emailSignUp: PropTypes.func,
-    inputProps: PropTypes.shape({
-      email: PropTypes.object,
-      password: PropTypes.object,
+    auth:                   PropTypes.object.isRequired,
+    endpoint:               PropTypes.string,
+    next:                   PropTypes.func.isRequired,
+    emailSignUp:            PropTypes.func.isRequired,
+    dispatch:               PropTypes.func.isRequired,
+    registerForm:           PropTypes.object.isRequired,
+    inputProps:             PropTypes.shape({
+      email:                PropTypes.object,
+      password:             PropTypes.object,
       passwordConfirmation: PropTypes.object,
-      submit: PropTypes.object
+      submit:               PropTypes.object
     })
   };
 
   static defaultProps = {
-    next: () => {},
+    next:       () => {},
     inputProps: {
-      email: {},
+      email:    {},
       password: {},
-      submit: {}
+      submit:   {}
     }
   };
 
-  getEndpoint () {
+  getEndpoint() {
     return (
       this.props.endpoint ||
-      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
-      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+      this.props.auth.getIn(['configure', 'currentEndpointKey']) ||
+      this.props.auth.getIn(['configure', 'defaultEndpointKey'])
     );
   }
 
-  handleSubmit (event) {
-    console.log("@-->handling submit");
+  handleSubmit(event) {
+    console.log('@-->handling submit');
     event.preventDefault();
 
     let formData = this.props.registerForm.values;
@@ -53,64 +56,64 @@ class EmailSignUpForm extends React.Component {
       .catch(() => {});
   }
 
-  render () {
+  render() {
     let disabled = (
-      this.props.auth.getIn(["user", "isSignedIn"]) ||
-      this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "loading"])
+      this.props.auth.getIn(['user', 'isSignedIn']) ||
+      this.props.auth.getIn(['emailSignUp', this.getEndpoint(), 'loading'])
     );
 
-    const errors = this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "errors"]);
+    const errors = this.props.auth.getIn(['emailSignUp', this.getEndpoint(), 'errors']);
 
     return (
       <form className='redux-auth email-sign-up-form clearfix'
-        style={{clear: "both", overflow: "hidden"}}
+        style={{ clear: 'both', overflow: 'hidden' }}
         onSubmit={this.handleSubmit.bind(this)}>
         <Row>
           <Column>
-          { errors && errors.map(error =>
-            <p>{error}</p>
+            {errors && errors.map(error =>
+              <p>{error}</p>
           )}
           </Column>
         </Row>
         <Row>
           <FormField
-            type="text"
-            label="Email"
-            name="email-sign-up-email"
+            type='text'
+            label='Email'
+            name='email-sign-up-email'
             disabled={disabled}
           />
         </Row>
         <Row>
-          <FormField type="password"
-            type="text"
-            label="Password"
-            name="email-sign-up-password"
+          <FormField
+            type='text'
+            label='Password'
+            name='email-sign-up-password'
             disabled={disabled}
             {...this.props.inputProps.password} />
         </Row>
         <Row>
-          <FormField type="password"
-            type="text"
-            label="Password Confirmation"
-            name="email-sign-up-password-confirmation"
+          <FormField
+            type='text'
+            label='Password Confirmation'
+            name='email-sign-up-password-confirmation'
             disabled={disabled}
             {...this.props.inputProps.passwordConfirmation} />
         </Row>
         <Row className={css.buttonWrapper}>
           <Column centerOnSmall small={7}>
             <RaisedButton
-              label="Reset Password"
-              secondary={true}
-              style={{ marginRight: "10px" }}
+              label='Reset Password'
+              secondary
+              style={{ marginRight: '10px' }}
               icon={<HelpIcon />}
             />
           </Column>
           <Column centerOnSmall small={5}>
             <ButtonLoader
-              loading={this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "loading"])}
-              type="submit"
-              name="email-sign-up-submit"
-              primary={true}
+              loading={this.props.auth.getIn(['emailSignUp', this.getEndpoint(), 'loading'])}
+              type='submit'
+              name='email-sign-up-submit'
+              primary
               icon={ContentSend}
               disabled={disabled}
               onClick={this.handleSubmit.bind(this)}
@@ -126,10 +129,10 @@ class EmailSignUpForm extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    auth: state.auth,
+    auth:         state.auth,
     registerForm: state.form.register,
-    emailSignUp: emailSignUp
+    emailSignUp:  emailSignUp
   };
-}
+};
 
-export default connect(mapStateToProps)( muiThemeable()(reduxForm({ form: 'register' })(EmailSignUpForm)) );
+export default connect(mapStateToProps)(muiThemeable()(reduxForm({ form: 'register' })(EmailSignUpForm)));

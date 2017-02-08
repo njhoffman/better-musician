@@ -9,10 +9,7 @@ import {
   cancelEdit
 } from '../modules/fields';
 
-import {
-  savedFields as savedFieldsSelector,
-  savedTabs as savedTabsSelector
-} from '../modules/selectors';
+import { savedTabs as savedTabsSelector } from '../modules/selectors';
 
 const mapActionCreators = {
   addField,

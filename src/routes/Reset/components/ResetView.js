@@ -1,12 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { Paper } from 'material-ui';
-
-import { Row, Column} from 'react-foundation';
-import css from './ResetView.scss';
+import { Column } from 'react-foundation';
 
 export const ResetView = (props) => (
-  <Column small={8} centerOnSmall={true}>
+  <Column centerOnSmall small={8}>
     <Paper zDepth={5}>
       <p>This is the home screen</p>
       <Link to='/songs' activeClassName='route--active'>
@@ -16,4 +14,4 @@ export const ResetView = (props) => (
   </Column>
 );
 
-export default HomeView;
+export default ResetView;

@@ -13,15 +13,15 @@ const SongsList = ({
   setSort,
   currentSongId }) => (
     <Table
-      selectable={true}
+      selectable
       onRowSelection={setCurrentSong.bind(undefined, songsCollection)}
       className={css.songsList}
       style={{ tableLayout: 'auto' }}>
       <TableBody
-        showRowHover={true}
-        displayRowCheckbox={false}
-        deselectOnClickaway={true}
-        stripedRows={true}>
+        showRowHover
+        stripedRows
+        deselectOnClickaway
+        displayRowCheckbox={false}>
         <TableRow>
           <TableHeaderColumn style={{ textAlign: 'center' }}>
             <a
@@ -76,7 +76,10 @@ SongsList.propTypes = {
       id:        PropTypes.string,
       title:     PropTypes.string
     }).isRequired),
-  setSort: PropTypes.func.isRequired
+  setSort: PropTypes.func.isRequired,
+  muiTheme: PropTypes.object,
+  setCurrentSong: PropTypes.func,
+  currentSongId: PropTypes.string
 };
 
 export default muiThemeable()(SongsList);

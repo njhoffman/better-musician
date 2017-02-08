@@ -1,12 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router';
-import DuckImage from '../assets/Duck.jpg';
 import { Paper } from 'material-ui';
-import { Row, Column} from 'react-foundation';
+import { Column } from 'react-foundation';
 import css from './HomeView.scss';
 
 export const HomeView = (props) => (
-  <Column small={8} centerOnSmall={true}>
+  <Column centerOnSmall small={8}>
     <Paper zDepth={5}>
       <div className={css.homeContainer}>
         <h2>This is the home screen</h2>

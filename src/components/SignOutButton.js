@@ -1,15 +1,17 @@
-import React, { PropTypes } from "react";
-import ButtonLoader from "./ButtonLoader";
-import ActionLock from "material-ui/svg-icons/action/lock";
-import { connect } from "react-redux";
-import { signOut } from "store/auth/actions/sign-out";
+import React, { PropTypes } from 'react';
+import ButtonLoader from './ButtonLoader';
+import ActionLock from 'material-ui/svg-icons/action/lock';
+import { connect } from 'react-redux';
+import { signOut } from 'store/auth/actions/sign-out';
 
 class SignOutButton extends React.Component {
   static propTypes = {
-    next: PropTypes.func,
-    endpoint: PropTypes.string,
+    next:     PropTypes.func.isRequired,
+    endpoint: PropTypes.string.isRequired,
     children: PropTypes.node,
-    icon: PropTypes.func
+    icon:     PropTypes.func,
+    dispatch: PropTypes.func.isRequired,
+    auth:     PropTypes.object.isRequired
   };
 
   static defaultProps = {
@@ -18,33 +20,33 @@ class SignOutButton extends React.Component {
     icon: ActionLock
   };
 
-  getEndpoint () {
+  getEndpoint() {
     return (
       this.props.endpoint ||
-      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
-      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+      this.props.auth.getIn(['configure', 'currentEndpointKey']) ||
+      this.props.auth.getIn(['configure', 'defaultEndpointKey'])
     );
   }
 
-  handleClick () {
+  handleClick() {
     this.props.dispatch(signOut(this.getEndpoint()))
       .then(this.props.next)
       .catch(() => {});
   }
 
-  render () {
-    let disabled = !this.props.auth.getIn(["user", "isSignedIn"]);
+  render() {
+    let disabled = !this.props.auth.getIn(['user', 'isSignedIn']);
     return (
       <ButtonLoader
-        loading={this.props.auth.getIn(["signOut", this.getEndpoint(), "loading"])}
+        loading={this.props.auth.getIn(['signOut', this.getEndpoint(), 'loading'])}
         icon={this.props.icon}
         disabled={disabled}
-        primary={true}
-        className="sign-out-submit"
+        primary
+        className='sign-out-submit'
         onClick={this.handleClick.bind(this)}
         {...this.props} />
     );
   }
 }
 
-export default connect(({auth}) => ({auth}))(SignOutButton);
+export default connect(({ auth }) => ({ auth }))(SignOutButton);

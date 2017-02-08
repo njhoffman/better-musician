@@ -7,11 +7,9 @@
 // ------------------------------------
 
 export const updateSettings = () => (dispatch) => {
-  debugger;
 };
 
 export const resetSettings = () => (dispatch) => {
-  debugger;
 };
 
 export const actions = {
@@ -28,7 +26,7 @@ const ACTION_HANDLERS = { };
 // Reducer
 // ------------------------------------
 const initialState = 0;
-export default function settingsReducer (state = initialState, action) {
+export default function settingsReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
 
   return handler ? handler(state, action) : state;

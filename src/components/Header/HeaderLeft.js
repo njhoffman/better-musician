@@ -1,9 +1,13 @@
-import React, { Component }  from 'react';
+import React, { Component, PropTypes }  from 'react';
 import { MdMenu as MenuIcon } from 'react-icons/lib/md';
 import { IndexLink } from 'react-router';
 import css from './Header.scss';
 
 class HeaderLeft extends Component {
+  static propTypes = {
+    toggleDrawerMenu: PropTypes.func.isRequired
+  }
+
   render() {
     return (
       <span className={css.headerLink}>
@@ -11,7 +15,7 @@ class HeaderLeft extends Component {
           <a className={css.menuIcon} onClick={this.props.toggleDrawerMenu}>
             <MenuIcon />
           </a>
-          <IndexLink className={css.homeLink} to ='/'>
+          <IndexLink className={css.homeLink} to='/'>
             instrumental.io
           </IndexLink>
         </span>

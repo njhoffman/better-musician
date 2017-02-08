@@ -5,32 +5,32 @@ import Dialog from 'material-ui/Dialog';
 export const FiltersModal = (props) => {
   const actions = [
     <FlatButton
-      label="Cancel"
-      primary={true}
-      onTouchTap={ props.uiHideModal }
+      label='Cancel'
+      primary
+      onTouchTap={props.uiHideModal}
     />,
     <FlatButton
-      label="Submit"
-      primary={true}
-      keyboardFocused={true}
+      label='Submit'
+      primary
+      keyboardFocused
       onTouchTap={props.uiHideModal}
     />
   ];
- return (
+  return (
     <Dialog
-        title="Filters Dialog"
-        modal={false}
-        actions={actions}
-        open={props.isOpen}
-    >
+      title='Filters Dialog'
+      modal={false}
+      actions={actions}
+      open={props.isOpen}>
       <p>Filters</p>
     </Dialog>
-  )
+  );
 };
 
 FiltersModal.propTypes = {
   addSong:     React.PropTypes.func,
-  uiHideModal: React.PropTypes.func
+  uiHideModal: React.PropTypes.func,
+  isOpen:      React.PropTypes.bool
 };
 
 export default FiltersModal;

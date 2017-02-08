@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 import { RaisedButton, Paper, Tabs, Tab } from 'material-ui';
 import { Row, Column } from 'react-foundation';
-import { Field, FieldArray, reduxForm } from 'redux-form';
-import { Link, browserHistory } from 'react-router';
+import { FieldArray, reduxForm } from 'redux-form';
+import { browserHistory } from 'react-router';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import ButtonLoader from 'components/ButtonLoader';
@@ -12,10 +12,6 @@ import {
   MdSave as SaveIcon,
   MdAdd as AddIcon
 } from 'react-icons/lib/md';
-import {
-  RenderSelect,
-  RenderText
-} from 'components/Field';
 
 import FormField from 'components/Field';
 import css from './FieldsView.scss';
@@ -29,89 +25,80 @@ export const FieldsView = (props) => {
   const textColor = props.muiTheme.palette.textColor;
 
   const fieldOptions = {
-    0: "Text Box",
-    1: "AutoComplete Box",
-    2: "Select Menu",
-    3: "Multi-Select Menu",
-    4: "Check Box",
-    5: "Radio Buttons",
-    6: "Date",
-    7: "YouTube Link",
-    8: "PDF Link"
+    0: 'Text Box',
+    1: 'AutoComplete Box',
+    2: 'Select Menu',
+    3: 'Multi-Select Menu',
+    4: 'Check Box',
+    5: 'Radio Buttons',
+    6: 'Date',
+    7: 'YouTube Link',
+    8: 'PDF Link'
   };
 
   const renderExtraFields = (formValues) => {
-    switch(parseInt(formValues.type)) {
+    switch (parseInt(formValues.type)) {
       case 2:
       case 3:
       case 5:
-        return <FieldArray name='optionValues' component={FieldOptions} />
-        break;
+        return <FieldArray name='optionValues' component={FieldOptions} />;
     }
   };
 
   const renderEditButtons = (props) => (
     <div>
       <ButtonLoader
-        type="submit"
-        label="Update"
+        type='submit'
+        label='Update'
         labelStyle={{ color: textColor, paddingRight: '5px' }}
         style={{ width: '100px', marginRight: '15px' }}
         onClick={props.updateField}
-        primary={true}
+        primary
         icon={<SaveIcon style={{ marginTop: '-10px', color: textColor }} />}
         className='update-fields-submit'
-        disabled={disabled} >
-      </ButtonLoader>
-      <RaisedButton
-        label='Cancel'
-        secondary={true}
-      />
+        disabled={disabled} />
+      <RaisedButton label='Cancel' secondary />
     </div>
   );
 
   const renderAddButtons = (props) => (
-      <ButtonLoader
-        type="submit"
-        label="Add Field"
-        labelStyle={{ color: textColor, paddingRight: '5px' }}
-        style={{ width: '160px', marginRight: '15px' }}
-        onClick={props.addField}
-        primary={true}
-        icon={<AddIcon style={{ marginTop: '-10px', color: textColor }} />}
-        className='update-fields-submit'
-        disabled={disabled} >
-      </ButtonLoader>
+    <ButtonLoader
+      type='submit'
+      label='Add Field'
+      labelStyle={{ color: textColor, paddingRight: '5px' }}
+      style={{ width: '160px', marginRight: '15px' }}
+      onClick={props.addField}
+      primary
+      icon={<AddIcon style={{ marginTop: '-10px', color: textColor }} />}
+      className='update-fields-submit'
+      disabled={disabled} />
   );
 
   const { editingField } = props;
   return (
-    <Column small={12} medium={10} large={8} centerOnSmall={true}>
+    <Column centerOnSmall small={12} medium={10} large={8}>
       <Paper zDepth={5}>
         <div className={css.fieldsContainer}>
-          <Tabs value="fields">
+          <Tabs value='fields'>
             <Tab
-              data-route="/profile"
-              value="profile"
+              data-route='/profile'
+              value='profile'
               onActive={redirectProfile}
-              label="Profile">
-            </Tab>
+              label='Profile' />
             <Tab
-              data-route="/stats"
-              value="stats"
+              data-route='/stats'
+              value='stats'
               onActive={redirectStats}
-              label="Stats">
-            </Tab>
+              label='Stats' />
             <Tab
-              data-route="/settings"
-              value="settings"
+              data-route='/settings'
+              value='settings'
               onActive={redirectSettings}
-              label="Settings">
-            </Tab>
+              label='Settings' />
             <Tab
-              data-route="/fields"
-              value="fields"
-              label="Fields">
+              data-route='/fields'
+              value='fields'
+              label='Fields'>
               <form className={css.fieldsForm}>
                 <h3>Build Your Custom Fields</h3>
                 <Row className={css.fieldAdd}>
@@ -151,5 +138,14 @@ export const FieldsView = (props) => {
     </Column>
   );
 };
+
+FieldsView.propTypes = {
+  muiTheme:     PropTypes.object.isRequired,
+  updateField:  PropTypes.func.isRequired,
+  editingField: PropTypes.bool.isRequired,
+  formValues:   PropTypes.object.isRequired,
+  addField:     PropTypes.func.isRequired
+};
+
 const updateFieldsForm = reduxForm({ form: 'updateFieldsForm', enableReinitialize: true })(muiThemeable()(FieldsView));
 export default updateFieldsForm;

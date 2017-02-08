@@ -1,4 +1,4 @@
-import { CALL_API, Schemas } from 'middleware/api';
+import { CALL_API } from 'middleware/api';
 
 // ------------------------------------
 // Constants
@@ -10,7 +10,6 @@ export const UPDATE_FIELD = 'UPDATE_FIELD';
 export const EDIT_FIELD = 'EDIT_FIELD';
 export const FIELDS_SUCCESS = 'FIELDS_SUCCESS';
 export const FIELDS_FAILURE = 'FIELDS_FAILURE';
-
 
 // ------------------------------------
 // Actions
@@ -67,14 +66,12 @@ export const fieldsDeleteSuccess = (data) => (dispatch) => {
   dispatch({ type: 'DELETE_FIELD', payload: data });
 };
 
-
 export const cancelEdit = () => (dispatch) => {
   return dispatch({
     type: EDIT_FIELD,
     payload: null
   });
 };
-
 
 export const actions = {
   updateField,
@@ -87,7 +84,7 @@ export const actions = {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [EDIT_FIELD] : (state, action) =>
-    ({...state, editingField: action.payload })
+    ({ ...state, editingField: action.payload })
 };
 
 // ------------------------------------
@@ -96,8 +93,7 @@ const ACTION_HANDLERS = {
 const initialState =  {
   editingField: null
 };
-export default function fieldsReducer (state = initialState, action) {
+export default function fieldsReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
-
   return handler ? handler(state, action) : state;
 }

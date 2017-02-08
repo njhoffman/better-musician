@@ -1,10 +1,9 @@
 import { uniq } from 'lodash';
-import {fk, many } from 'redux-orm';
+import { fk } from 'redux-orm';
 import BaseModel from './BaseModel';
 
 import {
   ADD_SONG,
-  SHOW_SONGS,
   DELETE_SONG,
   UPDATE_SONG
 } from './actionTypes';
@@ -17,10 +16,11 @@ import {
 class Song extends BaseModel {
   static getPointTotal() {
     const songs = this.all().toModelArray();
-    return songs.reduce( (a,b) => {
-      return a + parseInt(b.progress * b.difficulty * 10)
+    return songs.reduce((a, b) => {
+      return a + parseInt(b.progress * b.difficulty * 10);
     }, 0);
   }
+
   static getMaxDifficulty() {
     let max = 0;
     const songs = this.all().toModelArray();
@@ -31,8 +31,8 @@ class Song extends BaseModel {
       max = 20;
     }
     return max;
-
   }
+
   static getStats() {
     const songs = this.all().toModelArray();
     const artists = uniq(songs.map(song => {
@@ -46,9 +46,9 @@ class Song extends BaseModel {
       songCount: this.count(),
       artistCount: artists.length,
       genresCount: genres.length
-
-    }
+    };
   }
+
   static reducer(action, Song, session) {
     const { payload, type } = action;
     switch (type) {
@@ -73,9 +73,7 @@ class Song extends BaseModel {
         break;
     }
   }
-  constructor(song) {
-    super(song);
-  }
+
   toString() {
     return `Song: ${this.title}`;
   }
@@ -84,9 +82,9 @@ class Song extends BaseModel {
 Song.modelName = 'Song';
 
 Song.fields = {
-  artist:       fk("Artist"),
-  instrument:   fk("Instrument"),
-  genre:        fk("Genre"),
+  artist:       fk('Artist'),
+  instrument:   fk('Instrument'),
+  genre:        fk('Genre')
 };
 
 Song.shallowFields = {

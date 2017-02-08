@@ -18,7 +18,7 @@ export const MODAL_FILTER_SONGS = 'MODAL_FILTER_SONGS';
 
 export const uiHideDrawerMenu = () => (dispatch) => {
   return dispatch({ type: UI_HIDE_DRAWER_MENU });
-}
+};
 
 export const uiToggleDrawerMenu = () => (dispatch, getState) => {
   return dispatch({ type: UI_TOGGLE_DRAWER_MENU });
@@ -46,27 +46,25 @@ export const uiHideSnackbar = () => (dispatch, getState) => {
 // ------------------------------------
 
 const toggleDrawerMenu = (state) =>
-  ({ ...state, drawer: { ...state.drawer, isOpen: !state.isOpen }});
+  ({ ...state, drawer: { ...state.drawer, isOpen: !state.isOpen } });
 
 const showDrawerMenu = (state) =>
-  ({ ...state, drawer: { ...state.drawer, isOpen: true }});
+  ({ ...state, drawer: { ...state.drawer, isOpen: true } });
 
 const hideDrawerMenu = (state) =>
-  ({ ...state, drawer: { ...state.drawer, isOpen: false }});
+  ({ ...state, drawer: { ...state.drawer, isOpen: false } });
 
 const showSnackbar = (state, action) =>
-  ({ ...state, snackbar: { ...state.snackbar, isOpen: true, message: action.meta.message }});
+  ({ ...state, snackbar: { ...state.snackbar, isOpen: true, message: action.meta.message } });
 
 const hideSnackbar = (state) =>
-  ({ ...state, snackbar: { ...state.snackbar, isOpen: false }});
+  ({ ...state, snackbar: { ...state.snackbar, isOpen: false } });
 
 const showModal = (state, action) =>
-  ({ ...state, modal: { ...state.modal, type: action.meta.type, props: action.meta.props }});
+  ({ ...state, modal: { ...state.modal, type: action.meta.type, props: action.meta.props } });
 
 const hideModal = (state) =>
-  ({ ...state, modal: { ...state.modal, ...initialState.modal }});
-
-
+  ({ ...state, modal: { ...state.modal, ...initialState.modal } });
 
 const ACTION_HANDLERS = {
   [UI_TOGGLE_DRAWER_MENU]: toggleDrawerMenu,
@@ -84,8 +82,8 @@ const ACTION_HANDLERS = {
 const initialState = {
   snackbar: {
     isOpen: false,
-    message: "",
-    action: "OK"
+    message: '',
+    action: 'OK'
   },
   drawer: {
     isOpen: false,
@@ -97,7 +95,7 @@ const initialState = {
   }
 };
 
-export default function uiReducer (state = initialState, action) {
+export default function uiReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
   return handler ? handler(state, action) : state;
 }

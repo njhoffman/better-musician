@@ -1,4 +1,4 @@
-import {Model, ORM as Schema} from 'redux-orm';
+import { Model } from 'redux-orm';
 
 export default class BaseModel extends Model {
   static loadData(data, Model) {

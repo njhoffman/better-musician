@@ -1,4 +1,4 @@
-import { CALL_API, Schemas } from 'middleware/api';
+import { CALL_API } from 'middleware/api';
 
 // ------------------------------------
 // Constants
@@ -24,7 +24,7 @@ export const updateProfile = () => (dispatch, getState) => {
 };
 
 export const actions = {
-   updateProfile
+  updateProfile
 };
 
 // ------------------------------------
@@ -32,11 +32,9 @@ export const actions = {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [PROFILE_SUCCESS]: (state, action) => {
-    debugger;
     return state;
   },
   [PROFILE_FAILURE]: (state, action) => {
-    debugger;
     return state;
   }
 };
@@ -45,7 +43,7 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState = 0;
-export default function profileReducer (state = initialState, action) {
+export default function profileReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
 
   return handler ? handler(state, action) : state;

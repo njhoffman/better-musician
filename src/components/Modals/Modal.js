@@ -1,67 +1,73 @@
-import React, { PropTypes } from "react";
-import Dialog from "material-ui/Dialog";
-import FlatButton from "material-ui/FlatButton";
-import ErrorList from "../ErrorList";
-import { connect } from "react-redux";
+import React, { PropTypes } from 'react';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import ErrorList from '../ErrorList';
+import { connect } from 'react-redux';
 
 class BaseModal extends React.Component {
   static propTypes = {
-    show: PropTypes.bool,
-    errorAddr: PropTypes.array,
-    closeBtnLabel: PropTypes.string,
-    actions: PropTypes.array,
-    closeAction: PropTypes.func
+    show:           PropTypes.bool,
+    dispatch:       PropTypes.func.isRequired,
+    children:       PropTypes.array,
+    endpoint:       PropTypes.string.isRequired,
+    errorAddr:      PropTypes.array,
+    closeBtnLabel:  PropTypes.string,
+    actions:        PropTypes.array,
+    closeAction:    PropTypes.func,
+    title:          PropTypes.string,
+    containerClass: PropTypes.string,
+    auth:           PropTypes.object.isRequired
   };
 
   static defaultProps = {
     show: false,
     errorAddr: null,
-    closeBtnLabel: "Ok",
+    closeBtnLabel: 'Ok',
     actions: []
   };
 
-  close () {
+  close() {
     this.props.dispatch(this.props.closeAction());
   }
 
-  getEndpoint () {
+  getEndpoint() {
     return (
       this.props.endpoint ||
-      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
-      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+      this.props.auth.getIn(['configure', 'currentEndpointKey']) ||
+      this.props.auth.getIn(['configure', 'defaultEndpointKey'])
     );
   }
 
-  getErrorList () {
+  getErrorList() {
     let [base, ...rest] = this.props.errorAddr;
     return <ErrorList errors={this.props.auth.getIn([
       base, this.getEndpoint(), ...rest
-    ])} />
+    ])} />;
   }
 
-  render () {
+  render() {
     let body = (this.props.errorAddr)
       ? this.getErrorList()
       : this.props.children;
 
     return (
-        <Dialog
-          open={this.props.show}
-          contentClassName={`redux-auth-modal ${this.props.containerClass}`}
-          title={this.props.title}
-          actions={[
-            <FlatButton
-              key="close"
-              className={`${this.props.containerClass}-close`}
-              onClick={this.close.bind(this)}>
-              {this.props.closeBtnLabel}
-            </FlatButton>,
-            ...this.props.actions
-          ]}>
-          {body}
-        </Dialog>
+      <Dialog
+        open={this.props.show}
+        contentClassName={`redux-auth-modal ${this.props.containerClass}`}
+        title={this.props.title}
+        actions={[
+          <FlatButton
+            key='close'
+            className={`${this.props.containerClass}-close`}
+            onClick={this.close.bind(this)}>
+            {this.props.closeBtnLabel}
+          </FlatButton>,
+          ...this.props.actions
+        ]}>
+        {body}
+      </Dialog>
     );
   }
 }
 
-export default connect(({auth}) => ({auth}))(BaseModal);
+export default connect(({ auth }) => ({ auth }))(BaseModal);

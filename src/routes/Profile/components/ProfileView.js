@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Avatar, Paper, Tabs, Tab, RaisedButton } from 'material-ui';
 import { Row, Column } from 'react-foundation';
-import  ButtonLoader from 'components/ButtonLoader';
-import { Field, reduxForm } from 'redux-form';
+import ButtonLoader from 'components/ButtonLoader';
+import { reduxForm } from 'redux-form';
 import { browserHistory } from 'react-router';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import FormField from 'components/Field';
@@ -22,19 +22,20 @@ const renderImage = (props) => {
         size={100} />
       <div>No Picture</div>
       <RaisedButton
-        secondary={true}
-        label="Add Picture"
+        secondary
+        label='Add Picture'
       />
     </Column>
   );
-}
-
+};
+renderImage.propTypes = {
+  muiTheme: PropTypes.object.isRequired
+};
 
 export const ProfileView = (props) => {
-  const user = props.user && props.user.get('attributes') ? props.user.get('attributes') : null;
   // (
-  //   this.props.auth.getIn(["user", "isSignedIn"]) ||
-  //   this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "loading"])
+  //   this.props.auth.getIn(['user', 'isSignedIn']) ||
+  //   this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'loading'])
   // );
   let disabled = props.api.isFetching;
   const redirectSettings = () => browserHistory.push('/settings');
@@ -44,14 +45,14 @@ export const ProfileView = (props) => {
   const textColor = props.muiTheme.palette.textColor;
 
   return (
-    <Column small={12} medium={10} large={8} centerOnSmall={true}>
+    <Column centerOnSmall small={12} medium={10} large={8}>
       <Paper zDepth={5}>
         <div className={css.profileContainer}>
           <Tabs>
             <Tab
-              value="profile"
-              data-route="/profile"
-              label="Profile">
+              value='profile'
+              data-route='/profile'
+              label='Profile'>
               <form
                 className={css.profileForm}>
                 <h3>Update Your Profile</h3>
@@ -60,69 +61,72 @@ export const ProfileView = (props) => {
                 </Row>
                 <Row>
                   <FormField
-                    name="email"
-                    disabled={true}
+                    name='email'
+                    disabled
                     type='text'
-                    label="User Name" />
+                    label='User Name' />
                 </Row>
                 <Row>
                   <FormField
-                    name="firstName"
+                    name='firstName'
                     type='text'
-                    label="First Name" />
+                    label='First Name' />
                 </Row>
                 <Row>
                   <FormField
-                    name="lastName"
+                    name='lastName'
                     type='text'
-                    label="Last Name" />
+                    label='Last Name' />
                 </Row>
                 <Row>
                   <FormField
-                    name="notificationsEmail"
+                    name='notificationsEmail'
                     type='text'
-                    label="Notifications Email" />
+                    label='Notifications Email' />
                 </Row>
                 <Row className={css.buttons}>
                   <Column>
                     <ButtonLoader
-                      type="submit"
-                      label="Save"
+                      type='submit'
+                      label='Save'
                       loading={props.api.isFetching}
                       labelStyle={{ color: textColor, paddingRight: '5px' }}
                       onClick={props.updateProfile}
                       icon={<SaveIcon style={{ marginTop: '-10px', color: textColor }} />}
                       className='update-profile-submit'
-                      disabled={disabled}
-                      primary={true}>
-                    </ButtonLoader>
+                      primary
+                      disabled={disabled} />
                   </Column>
                 </Row>
               </form>
             </Tab>
             <Tab
-              data-route="/stats"
-              value="stats"
+              data-route='/stats'
+              value='stats'
               onActive={redirectStats}
-              label="Stats">
-            </Tab>
+              label='Stats' />
             <Tab
-              data-route="/settings"
+              data-route='/settings'
               onActive={redirectSettings}
-              value="settings"
-              label="Settings">
-            </Tab>
+              value='settings'
+              label='Settings' />
             <Tab
-              data-route="/fields"
-              value="fields"
+              data-route='/fields'
+              value='fields'
               onActive={redirectFields}
-              label="Fields">
-            </Tab>
+              label='Fields' />
           </Tabs>
         </div>
       </Paper>
     </Column>
   );
 };
-const updateProfileForm = reduxForm({ form: 'updateProfileForm' })(muiThemeable()(ProfileView));
-export default updateProfileForm;
+
+ProfileView.propTypes = {
+  muiTheme:      PropTypes.object.isRequired,
+  api:           PropTypes.object.isRequired,
+  updateProfile: PropTypes.func.isRequired
+};
+
+export default reduxForm({ form: 'updateProfileForm' })(muiThemeable()(ProfileView));
+

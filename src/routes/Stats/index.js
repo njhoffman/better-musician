@@ -4,7 +4,7 @@ import { fetchSongs } from 'store/api';
 
 export default (store, auth) => ({
   path : 'stats',
-  getComponent (nextState, cb) {
+  getComponent(nextState, cb) {
     require.ensure([], (require) => {
       if (auth && (auth() === false)) {
         console.info('authentication failed');
@@ -16,7 +16,7 @@ export default (store, auth) => ({
         require('./modules/stats').default
       ]);
 
-      importModules.then( ([container, reducer]) => {
+      importModules.then(([container, reducer]) => {
         injectReducer(store, { key: 'statsView', reducer: reducer });
         initView(store, 'statsView');
         fetchSongs(store);
@@ -24,9 +24,8 @@ export default (store, auth) => ({
       });
 
       importModules.catch(error => {
-        console.error("Error importing dynamic modules", error);
+        console.error('Error importing dynamic modules', error);
       });
-
     }, 'statsView');
   }
 });

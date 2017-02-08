@@ -12,6 +12,6 @@ const mapStateToProps = (state) => {
     user: state.auth ? state.auth.get('user') : null,
     initialValues: state.auth ? state.auth.get('user').get('attributes').toJS() : null
   });
-}
+};
 
 export default connect(mapStateToProps, mapActionCreators)(ProfileView);

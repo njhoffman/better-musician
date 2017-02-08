@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Paper } from 'material-ui';
-import { Row, Column } from 'react-foundation';
+import { Column } from 'react-foundation';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import css from './LoginView.scss';
 import EmailSignInForm from './EmailSignInForm';
 
 export const LoginView = (props) => (
-  <Column small={8} centerOnSmall={true}>
+  <Column centerOnSmall small={8}>
     <Paper zDepth={5}>
       <div className={css.loginContainer}>
         <h2>This is the Login Page</h2>
@@ -15,5 +15,9 @@ export const LoginView = (props) => (
     </Paper>
   </Column>
 );
+
+LoginView.propTypes = {
+  handleLoginSuccess: PropTypes.func.isRequired
+};
 
 export default muiThemeable()(LoginView);

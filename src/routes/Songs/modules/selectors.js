@@ -3,9 +3,7 @@ import { createSelector as ormCreateSelector } from 'redux-orm';
 import { createSelector } from 'reselect';
 import { find, isEmpty } from 'lodash';
 
-
 export const ormSelector = state => state.orm;
-
 
 const songsSelector = ormCreateSelector(orm, (Session, songsView) => {
   const sortField = songsView ? songsView.sortField : 'title';
@@ -15,7 +13,7 @@ const songsSelector = ormCreateSelector(orm, (Session, songsView) => {
   let retObj = Session.Song.all().toModelArray();
 
   if (sortField) {
-    retObj = retObj.sort( (a,b) => {
+    retObj = retObj.sort((a, b) => {
       if (sortField === 'artist') {
         return a.artist.fullName > b.artist.fullName;
       } else {
@@ -58,7 +56,6 @@ export const currentSong = createSelector(
   currentSongSelector
 );
 
-
 const paginationTotalSelector = ormCreateSelector(orm, Session => {
   return Session.Song.count();
 });
@@ -68,7 +65,6 @@ export const paginationTotal = createSelector(
   state => state.songsView,
   paginationTotalSelector
 );
-
 
 const paginationStartSelector = ormCreateSelector(orm, (Session, songsView) => {
   return (1 + (songsView.paginationCurrent - 1) * parseInt(songsView.paginationPerPage));
@@ -80,11 +76,10 @@ export const paginationStart = createSelector(
   paginationStartSelector
 );
 
-
 const paginationEndSelector = ormCreateSelector(orm, (Session, songsView) => {
   return songsView.paginationCurrent * songsView.paginationPerPage > Session.Song.count()
     ? Session.Song.count()
-    : songsView.paginationCurrent * songsView.paginationPerPage
+    : songsView.paginationCurrent * songsView.paginationPerPage;
 });
 
 export const paginationEnd = createSelector(

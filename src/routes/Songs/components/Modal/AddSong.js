@@ -1,18 +1,13 @@
 import React from 'react';
 import { chunk } from 'lodash';
-import { Field, FieldArray, reduxForm } from 'redux-form';
-import { Dialog, FlatButton, RaisedButton, MenuItem, Tabs, Tab } from 'material-ui';
+import { reduxForm } from 'redux-form';
+import { Dialog, FlatButton, RaisedButton, Tabs, Tab } from 'material-ui';
 import { Row, Column } from 'react-foundation';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import css from './AddSong.scss';
 import CustomField from 'components/CustomField';
-import FormField from 'components/Field';
-import {
-  RenderStars,
-  RenderDifficulty,
-} from 'components/Field';
+import FormField, { RenderStars } from 'components/Field';
 import { MdDelete as DeleteIcon } from 'react-icons/lib/md';
-
 
 const validate = (values) => {
   const errors = {};
@@ -28,8 +23,7 @@ const validate = (values) => {
 let lastActiveField = 'artist';
 
 export const AddSongModal = (props) => {
-
-  const { dispatch, addSong, editSong, modal } = props;
+  const { addSong, editSong, modal } = props;
   const modalView = modal.props.view;
   const isView = modalView === 'view';
 
@@ -41,14 +35,14 @@ export const AddSongModal = (props) => {
 
   const actionButtons = [
     <FlatButton
-      label="Cancel"
-      primary={true}
-      onTouchTap={ props.uiHideModal }
+      label='Cancel'
+      primary
+      onTouchTap={props.uiHideModal}
     />,
     <RaisedButton
       label={buttonLabel}
-      primary={true}
-      onTouchTap={ isView ? editSong : addSong }
+      primary
+      onTouchTap={isView ? editSong : addSong}
     />
   ];
 
@@ -57,8 +51,8 @@ export const AddSongModal = (props) => {
       <FlatButton
         label='Delete'
         icon={<DeleteIcon />}
-        style={{float: 'left', color: '#ff8888' }}
-        onTouchTap={ addSong }
+        style={{ float: 'left', color: '#ff8888' }}
+        onTouchTap={addSong}
       />
     );
   }
@@ -73,9 +67,9 @@ export const AddSongModal = (props) => {
         return (
           <Row className={css.imageFrame}>
             <Column>
-              <img src={"/artists/" + props.matchedArtist.picture} />
+              <img src={'/artists/' + props.matchedArtist.picture} />
               <div>{props.matchedArtist.fullName}</div>
-              { !isView && <RaisedButton secondary={true} label="Change Picture" /> }
+              { !isView && <RaisedButton secondary label='Change Picture' /> }
             </Column>
           </Row>
         );
@@ -83,51 +77,41 @@ export const AddSongModal = (props) => {
         return (
           <Row className={css.imageFrame}>
             <Column>
-              <img src="/artists/unknown_artist.png" />
+              <img src='/artists/unknown_artist.png' />
               <div>Unknown Artist</div>
-              { !isView && <RaisedButton secondary={true} label="Add Picture" /> }
+              { !isView && <RaisedButton secondary label='Add Picture' /> }
             </Column>
           </Row>
         );
       }
     } else if (props.activeField === 'instrument' || lastActiveField === 'instrument') {
-        return (
-          <Row className={css.imageFrame}>
-            <Column>
-              <img src="/instruments/unknown_instrument.png" />
-              <div>Unknown Instrument</div>
-              { !isView && <RaisedButton secondary={true} label="Add Picture" /> }
-            </Column>
-          </Row>
-        );
+      return (
+        <Row className={css.imageFrame}>
+          <Column>
+            <img src='/instruments/unknown_instrument.png' />
+            <div>Unknown Instrument</div>
+            { !isView && <RaisedButton secondary label='Add Picture' /> }
+          </Column>
+        </Row>
+      );
     }
-  }
+  };
 
   const renderStars = (theme, number) => {
     return (
       <RenderStars
         starColor={theme.starColor}
         number={number}
-      style={{ float: "right", display: 'inline-block' }} />
+        style={{ float: 'right', display: 'inline-block' }} />
     );
   };
 
-  const renderDifficulty = (value, maxDifficulty) => {
-    return (
-      <RenderDifficulty
-        maxDifficulty={maxDifficulty}
-        number={value}
-        style={{ float: 'right' }}
-      />
-    );
-  };
-
-  const dialogStyle = { maxWidth: "650px", width: 'initial' };
-  const dialogBodyStyle = { padding: "5px" };
-  const tabContainerStyle = { paddingTop: "20px" }
+  const dialogStyle = { maxWidth: '650px', width: 'initial' };
+  const dialogBodyStyle = { padding: '5px' };
+  const tabContainerStyle = { paddingTop: '20px' };
   const labelStyle = isView ? { textAlign: 'center', width: '100%' } : {};
   const textInputStyle = isView ? { color: 'white', cursor: 'text', textOverflow: 'ellipsis' } : {};
-  const textStyle = isView ?  { cursor: 'default' }  : {};
+  const textStyle = isView ? { cursor: 'default' } : {};
   return (
     <Dialog
       modal={false}
@@ -141,26 +125,26 @@ export const AddSongModal = (props) => {
       <form onSubmit={props.addSong}>
         <Tabs contentContainerStyle={tabContainerStyle}>
           <Tab
-              value="main"
-              label="Main Fields">
+            value='main'
+            label='Main Fields'>
             <Row>
               <Column>
-              { renderImage(props) }
+                { renderImage(props) }
               </Column>
             </Row>
             {isView &&
               <Row>
                 <FormField
-                  name="title"
+                  name='title'
                   type='text'
                   underlineShow={!isView}
                   disabled={isView}
                   style={textStyle}
                   inputStyle={textInputStyle}
                   viewType={modalView}
-                  label="Song Title" />
+                  label='Song Title' />
                 <FormField
-                  name="artist.fullName"
+                  name='artist.fullName'
                   type='autocomplete'
                   viewType={modalView}
                   underlineShow={!isView}
@@ -169,14 +153,14 @@ export const AddSongModal = (props) => {
                   style={textStyle}
                   textFieldStyle={textInputStyle}
                   dataSource={props.artists}
-                  label="Song Artist" />
+                  label='Song Artist' />
               </Row>
             }
             {!isView &&
               <div>
                 <Row>
                   <FormField
-                    name="title"
+                    name='title'
                     type='text'
                     underlineShow={!isView}
                     disabled={isView}
@@ -185,11 +169,11 @@ export const AddSongModal = (props) => {
                     style={{ ...textStyle, ...{ width: '100%' } }}
                     inputStyle={textInputStyle}
                     viewType={modalView}
-                    label="Song Title" />
+                    label='Song Title' />
                 </Row>
                 <Row>
                   <FormField
-                    name="artist.lastName"
+                    name='artist.lastName'
                     type='autocomplete'
                     viewType={modalView}
                     underlineShow={!isView}
@@ -198,9 +182,9 @@ export const AddSongModal = (props) => {
                     style={textStyle}
                     textFieldStyle={textInputStyle}
                     dataSource={props.artists}
-                    label="Last Name / Band" />
+                    label='Last Name / Band' />
                   <FormField
-                    name="artist.firstName"
+                    name='artist.firstName'
                     type='autocomplete'
                     viewType={modalView}
                     underlineShow={!isView}
@@ -209,15 +193,15 @@ export const AddSongModal = (props) => {
                     style={textStyle}
                     textFieldStyle={textInputStyle}
                     dataSource={props.artists}
-                    label="First Name" />
+                    label='First Name' />
                 </Row>
               </div>
             }
             <Row>
               <FormField
-                name="genre.name"
+                name='genre.name'
                 type='autocomplete'
-                label="Song Genre"
+                label='Song Genre'
                 underlineShow={!isView}
                 style={textStyle}
                 inputStyle={textInputStyle}
@@ -225,7 +209,7 @@ export const AddSongModal = (props) => {
                 disabled={isView}
                 dataSource={props.genres} />
               <FormField
-                name="instrument.name"
+                name='instrument.name'
                 type='autocomplete'
                 dataSource={props.instruments}
                 style={textStyle}
@@ -234,13 +218,13 @@ export const AddSongModal = (props) => {
                 underlineShow={!isView}
                 disabled={isView}
                 viewType={modalView}
-                label="Instrument" />
+                label='Instrument' />
             </Row>
             <Row>
               <FormField
                 type='slider'
                 viewType={modalView}
-                name="difficulty"
+                name='difficulty'
                 className={css.difficulty}
                 small={6}
                 min={1}
@@ -248,9 +232,9 @@ export const AddSongModal = (props) => {
                 step={1}
                 disabled={isView}
                 textColor={textColor}
-                label="Difficulty" />
+                label='Difficulty' />
               <FormField
-                name="progress"
+                name='progress'
                 type='slider'
                 viewType={modalView}
                 className={css.progress}
@@ -261,7 +245,7 @@ export const AddSongModal = (props) => {
                 max={4}
                 step={1}
                 textColor={textColor}
-                label="Progress" />
+                label='Progress' />
             </Row>
           </Tab>
           {props.savedTabs.map((tab, tabIdx) =>
@@ -281,8 +265,8 @@ export const AddSongModal = (props) => {
                       underlineShow={!isView}
                       inputStyle={textInputStyle}
                       field={field}
-                      centerOnSmall={true}
-                      small={fields.length === 1 ? 12 : 6 }
+                      centerOnSmall
+                      small={fields.length === 1 ? 12 : 6}
                     />
                   )}
                 </Row>
@@ -292,15 +276,23 @@ export const AddSongModal = (props) => {
         </Tabs>
       </form>
     </Dialog>
-  )
+  );
 };
 
 AddSongModal.propTypes = {
-  addSong:     React.PropTypes.func,
-  genres:      React.PropTypes.array,
-  instruments: React.PropTypes.array,
-  uiHideModal: React.PropTypes.func,
-  isOpen:      React.PropTypes.bool
+  addSong:       React.PropTypes.func,
+  genres:        React.PropTypes.array,
+  instruments:   React.PropTypes.array,
+  uiHideModal:   React.PropTypes.func,
+  isOpen:        React.PropTypes.bool,
+  modal:         React.PropTypes.object,
+  activeField:   React.PropTypes.string,
+  matchedArtist: React.PropTypes.object,
+  savedTabs:     React.PropTypes.array,
+  muiTheme:      React.PropTypes.object,
+  editSong:      React.PropTypes.func,
+  artists:       React.PropTypes.array,
+  maxDifficulty: React.PropTypes.number
 };
 
 export default muiThemeable()(reduxForm({ form: 'addSongForm', enableReinitialize: true, validate })(AddSongModal));

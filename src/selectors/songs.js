@@ -17,7 +17,7 @@ export const artists = createSelector(
   artistSelector
 );
 
-const artistMatchSelector = ormCreateSelector(orm, (session, addSongFormValues)  => {
+const artistMatchSelector = ormCreateSelector(orm, (session, addSongFormValues) => {
   if (addSongFormValues && addSongFormValues.artist) {
     console.info('foundArtist', addSongFormValues);
     return session.Artist.findByFullName(addSongFormValues.artist.fullName);

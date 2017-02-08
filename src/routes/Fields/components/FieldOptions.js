@@ -1,25 +1,27 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
   RenderChip,
-  RenderText,
+  RenderText
 } from 'components/Field';
-import { Field, FieldArray } from 'redux-form';
-import { Chip, RaisedButton } from 'material-ui';
+import { Field } from 'redux-form';
+import { RaisedButton } from 'material-ui';
 import css from './FieldsView.scss';
 
 class FieldOptions extends Component {
+
+  static propTypes = {
+    fields: PropTypes.array.isRequired
+  }
+
   state = {
     optionText : ''
   };
-  constructor(props) {
-    super(props);
-  }
 
   addOption(fields) {
     fields.push(this.state.optionText.trim());
     this.setState({
       optionText: ''
-    })
+    });
   }
   render() {
     return (
@@ -27,7 +29,7 @@ class FieldOptions extends Component {
         <div className={css.flexThree}>
           <RenderText
             label='Option Text'
-            onChange={(e) => this.setState({ optionText: e.target.value }) }
+            onChange={(e) => this.setState({ optionText: e.target.value })}
             autoComplete='off'
             style={{ width: '60%', display: 'inline-block' }}
             value={this.state.optionText}
@@ -35,7 +37,7 @@ class FieldOptions extends Component {
           />
           <RaisedButton
             onTouchTap={this.addOption.bind(this, this.props.fields)}
-            secondary={true}
+            secondary
             style={{ display: 'inline-block', minWidth: '30%', marginLeft: '10px' }}
             label='Add' />
         </div>
@@ -46,12 +48,12 @@ class FieldOptions extends Component {
               name={`${option}`}
               component={RenderChip}
               onRequestDelete={() => fields.remove(index)}
-              style={{ margin: '5px 2px', fontSize: "0.8em" }}
+              style={{ margin: '5px 2px', fontSize: '0.8em' }}
             />
           )}
         </div>
       </div>
-    )
+    );
   }
 }
 

@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux'
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
@@ -15,9 +15,11 @@ import { Row } from 'react-foundation';
 // export const CoreLayout = ({ getState }) => ({ children }) => {
 
 export class CoreLayout extends Component {
+  static propTypes = {
+    theme: PropTypes.object.isRequired
+  }
 
   render() {
-
     const theme = require('themes/' + this.props.theme).default;
     if (!theme.instrumental) {
       theme.instrumental = {};
@@ -25,7 +27,6 @@ export class CoreLayout extends Component {
     theme.instrumental.headerLinksColor = theme.instrumental.headerLinksColor || theme.palette.secondaryTextColor;
     theme.instrumental.footerFiller = theme.instrumental.footerFiller || theme.palette.canvasColor;
     theme.instrumental.fieldsViewLabel = theme.instrumental.fieldsViewLabel || theme.palette.accent1Color;
-
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
         <div className={css.appWrapper}>
@@ -41,14 +42,12 @@ export class CoreLayout extends Component {
           <Footer />
           <div
             style={{ background: theme.instrumental.footerFiller }}
-            className={css.footerFiller}>
-          </div>
+            className={css.footerFiller} />
         </div>
       </MuiThemeProvider>
     );
   }
 }
-
 
 const mapStateToProps = (state) => ({
   theme: state.auth && state.auth.get('user') && state.auth.get('user').get('attributes')

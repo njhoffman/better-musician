@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { increment } from '../modules/login';
 import LoginView from './LoginView';
 import { handleLoginSuccess } from '../modules/login';
 

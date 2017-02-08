@@ -29,14 +29,14 @@ export const setSort = (sortField) => (dispatch, getState) => {
 
 const nextAvailableId = (songCollection) =>
   songCollection
-    .map( (song) => song.id )
-    .sort( (a, b) => a - b )
+    .map((song) => song.id)
+    .sort((a, b) => a - b)
     .pop() + 1;
 
 export const addSong = (values) => (dispatch, getState) => {
   const fieldValues = getState().form.addSongForm.values;
   const availableId = nextAvailableId(getState().songs.collection);
-  return dispatch({ type: ADD_SONG, payload: { ...fieldValues, ...{ id: availableId }} });
+  return dispatch({ type: ADD_SONG, payload: { ...fieldValues, ...{ id: availableId } } });
 };
 
 export const actions = {
@@ -57,7 +57,7 @@ const ACTION_HANDLERS = {
   [SET_PAGINATION_CURRENT]: (state, action) =>
     ({ ...state, paginationCurrent: action.payload }),
   [SET_SORT]: (state, action) =>
-    ({ ...state, sortField: action.payload, sortInverse:  !state.sortInverse } )
+    ({ ...state, sortField: action.payload, sortInverse:  !state.sortInverse })
 };
 
 // ------------------------------------
@@ -75,7 +75,7 @@ const initialState = {
   paginationPerPage:  10
 };
 
-export default function songsReducer (state = initialState, action) {
+export default function songsReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
   return handler ? handler(state, action) : state;
 }

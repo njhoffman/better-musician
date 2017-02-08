@@ -16,7 +16,7 @@ const karmaConfig = {
   ],
   singleRun     : !argv.watch,
   frameworks    : ['mocha'],
-  reporters     : ['mocha'/*, 'mocha', 'spec', 'json', 'progress', 'dots' */],
+  reporters     : ['mocha'], // 'mocha', 'spec', 'json', 'progress', 'dots'
   specReporter: {
     maxLogLines: 5,         // limit number of lines logged per test
     suppressErrorSummary: true,  // do not print error summary

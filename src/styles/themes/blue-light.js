@@ -1,15 +1,13 @@
 import {
-  blue500,
-  blue700,
-  blueGrey100,
-  blueGrey500,
+  blue500, blue700,
+  blueGrey100, blueGrey500,
   darkBlack,
   grey300,
   lightBlack,
   purpleA200,
   white
 } from 'material-ui/styles/colors';
-import {fade} from 'material-ui/utils/colorManipulator';
+import { fade } from 'material-ui/utils/colorManipulator';
 
 export default {
   themeName: 'Blue (Light)',
@@ -24,7 +22,7 @@ export default {
     desktopDropDownMenuFontSize: 15,
     desktopLeftNavMenuItemHeight: 48,
     desktopSubheaderHeight: 48,
-    desktopToolbarHeight: 56,
+    desktopToolbarHeight: 56
   },
   fontFamily: 'Roboto, sans-serif',
   palette: {
@@ -38,10 +36,10 @@ export default {
     alternateTextColor: white,
     canvasColor: white,
     borderColor: grey300,
-    disabledColor: fade( darkBlack, 0.3 ),
-    pickerHeaderColor: blue500,
+    disabledColor: fade(darkBlack, 0.3),
+    pickerHeaderColor: blue500
   },
   avatar: {
-    borderColor: null,
-  },
+    borderColor: null
+  }
 };

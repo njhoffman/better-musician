@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
-import { getVisibleSongs, setCurrentSong, setSort } from 'routes/Songs/modules/songs';
+import { setCurrentSong, setSort } from 'routes/Songs/modules/songs';
 import { songs as songsSelector } from 'routes/Songs/modules/selectors';
-import { maxDifficulty as maxDifficultySelector} from 'selectors/users';
 import SongsList from './SongsList';
 
 const mapStateToProps = (state, action) => ({

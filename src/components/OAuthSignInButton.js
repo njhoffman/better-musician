@@ -1,19 +1,24 @@
-import React, { PropTypes } from "react";
-import { connect } from "react-redux";
-import ButtonLoader from "./ButtonLoader";
-import ActionExitToApp from "material-ui/svg-icons/action/exit-to-app";
-import { oAuthSignIn as _oAuthSignIn } from "store/auth/actions/oauth-sign-in";
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
+import ButtonLoader from './ButtonLoader';
+import ActionExitToApp from 'material-ui/svg-icons/action/exit-to-app';
+import { oAuthSignIn as _oAuthSignIn } from 'store/auth/actions/oauth-sign-in';
 
 // hook for rewire
 var oAuthSignIn = _oAuthSignIn;
 
 class OAuthSignInButton extends React.Component {
   static propTypes = {
-    provider: PropTypes.string.isRequired,
-    label: PropTypes.string,
+    provider:     PropTypes.string.isRequired,
+    endpoint:     PropTypes.string.isRequired,
+    auth:         PropTypes.object.isRequired,
+    className:    PropTypes.string,
+    label:        PropTypes.string,
     signInParams: PropTypes.object,
-    children: PropTypes.node,
-    icon: PropTypes.func
+    children:     PropTypes.node,
+    icon:         PropTypes.func,
+    next:         PropTypes.func,
+    dispatch:     PropTypes.func
   };
 
   static defaultProps = {
@@ -22,15 +27,15 @@ class OAuthSignInButton extends React.Component {
     icon: ActionExitToApp
   };
 
-  getEndpoint () {
+  getEndpoint() {
     return (
       this.props.endpoint ||
-      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
-      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+      this.props.auth.getIn(['configure', 'currentEndpointKey']) ||
+      this.props.auth.getIn(['configure', 'defaultEndpointKey'])
     );
   }
 
-  handleClick () {
+  handleClick() {
     this.props.dispatch(oAuthSignIn({
       provider: this.props.provider,
       params: this.props.signInParams,
@@ -40,18 +45,18 @@ class OAuthSignInButton extends React.Component {
       .catch(() => {});
   }
 
-  render () {
-    let disabled = this.props.auth.getIn(["user", "isSignedIn"]);
+  render() {
+    let disabled = this.props.auth.getIn(['user', 'isSignedIn']);
     let loading = (
-      (this.props.auth.getIn(["ui", "oAuthSignInLoadingProvider"]) === this.props.provider) &&
-      this.props.auth.getIn(["oAuthSignIn", this.getEndpoint(), "loading"])
+      (this.props.auth.getIn(['ui', 'oAuthSignInLoadingProvider']) === this.props.provider) &&
+      this.props.auth.getIn(['oAuthSignIn', this.getEndpoint(), 'loading'])
     );
 
     return (
       <ButtonLoader
         loading={loading}
         icon={this.props.icon}
-        className={this.props.className + " oauth-sign-in-submit"}
+        className={this.props.className + ' oauth-sign-in-submit'}
         disabled={disabled}
         onClick={this.handleClick.bind(this)}
         {...this.props} />
@@ -59,4 +64,4 @@ class OAuthSignInButton extends React.Component {
   }
 }
 
-export default connect(({auth}) => ({auth}))(OAuthSignInButton);
+export default connect(({ auth }) => ({ auth }))(OAuthSignInButton);

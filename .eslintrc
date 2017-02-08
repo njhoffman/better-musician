@@ -19,10 +19,12 @@
     "__COVERAGE__" : false
   },
   "rules": {
-    "key-spacing"          : 0,
-    "jsx-quotes"           : [2, "prefer-single"],
-    "max-len"              : [2, 120, 2],
-    "object-curly-spacing" : [2, "always"],
-    "semi": [2, "always" ]
+    "key-spacing":                 [0, { align: "value" }],
+    "jsx-quotes":                  [2, "prefer-single"],
+    "max-len":                     [2, 120, 2],
+    "object-curly-spacing":        [2, "always"],
+    "no-multi-spaces":             ["error", { exceptions: { "VariableDeclarator": true, "ImportDeclaration" : true } }],
+    "space-before-function-paren": ["error", {"anonymous": "always", "named": "never", "asyncArrow" : "always"}],
+    "semi":                        [2, "always" ]
   }
 }

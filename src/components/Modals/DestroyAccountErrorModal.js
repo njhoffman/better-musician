@@ -1,16 +1,16 @@
-import React from "react";
-import Modal from "./Modal";
-import { hideDestroyAccountErrorModal } from "../../../actions/ui";
+import React from 'react';
+import Modal from './Modal';
+import { hideDestroyAccountErrorModal } from '../../../actions/ui';
 
 class DestroyAccountErrorModal extends React.Component {
-  render () {
+  render() {
     return (
       <Modal
         {...this.props}
-        containerClass="destroy-account-error-modal"
+        containerClass='destroy-account-error-modal'
         closeAction={hideDestroyAccountErrorModal}
-        errorAddr={["destroyAccount", "errors"]}
-        title="Error" />
+        errorAddr={['destroyAccount', 'errors']}
+        title='Error' />
     );
   }
 }

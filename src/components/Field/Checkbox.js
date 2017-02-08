@@ -1,15 +1,20 @@
-import React, { Component, PropTypes } from 'react';
-import { Checkbox } from 'redux-form-material-ui'
+import React, { PropTypes } from 'react';
+import { Checkbox } from 'redux-form-material-ui';
 
 const RenderCheckbox = ({
   viewType,
   meta: { touched, error },
-  ...custom}) => (
+  ...custom }) => (
     <Checkbox
       style={{ textAlign: 'left', marginLeft: 'auto', marginRight: 'auto', width: 'initial' }}
       labelStyle={{ width: '100%' }}
       {...custom}
     />
 );
+
+RenderCheckbox.propTypes = {
+  viewType: PropTypes.string,
+  meta: PropTypes.object
+};
 
 export default RenderCheckbox;

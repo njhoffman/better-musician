@@ -1,29 +1,31 @@
-import React, { Component }  from 'react';
-import StarIcon from 'react-icons/lib/md/star';
-import { Row, Column, Breakpoints } from 'react-foundation';
+import React, { Component, PropTypes }  from 'react';
+import { Row, Column } from 'react-foundation';
 import { RenderStars, RenderDifficulty } from 'components/Field';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import css from './Footer.scss';
 
-class Footer extends Component  {
+class Footer extends Component {
 
-  constructor(props) {
-    super(props);
-  };
+  static propTypes = {
+    song: PropTypes.object,
+    muiTheme: PropTypes.object.isRequired,
+    stats: PropTypes.object,
+    isSignedIn: PropTypes.bool.isRequired,
+    maxDifficulty: PropTypes.number
+  }
 
   renderBlankFooter(backgroundColor) {
     return (
       <div
         style={{ backgroundColor }}
         className={css.footerWrapper}>
-        <Row className={css.footer}>
-        </Row>
+        <Row className={css.footer} />
       </div>
-    )
+    );
   }
 
-  renderSongStatsFooter (stats, backgroundColor) {
+  renderSongStatsFooter(stats, backgroundColor) {
     return (
       <div
         style={{ backgroundColor }}
@@ -65,11 +67,11 @@ class Footer extends Component  {
           </Column>
         </Row>
       </div>
-    )
+    );
   }
 
-  renderSongFooter (song, backgroundColor) {
-    const artistPicture = song.artist.picture ? "artists/" + song.artist.picture : "artists/unknown_artist.png";
+  renderSongFooter(song, backgroundColor) {
+    const artistPicture = song.artist.picture ? 'artists/' + song.artist.picture : 'artists/unknown_artist.png';
     return (
       <div
         style={{ backgroundColor }}
@@ -80,7 +82,7 @@ class Footer extends Component  {
             className={css.leftColumn}>
             <img
               className={css.instrumentPicture}
-              src={"instruments/" + song.instrument.picture} />
+              src={'instruments/' + song.instrument.picture} />
             <img
               className={css.artistPicture}
               src={artistPicture} />
@@ -113,7 +115,7 @@ class Footer extends Component  {
               <Column>
                 <RenderDifficulty
                   difficulty={song.difficulty}
-                  maxDifficulty={this.props.maxDifficulty}/>
+                  maxDifficulty={this.props.maxDifficulty} />
 
               </Column>
             </Row>
@@ -125,10 +127,10 @@ class Footer extends Component  {
           </Column>
         </Row>
       </div>
-    )
+    );
   };
 
-  render () {
+  render() {
     const { song, stats, isSignedIn, muiTheme } = this.props;
     const backgroundColor = muiTheme.palette.canvasColor;
     // TODO: figure out why this is double firing

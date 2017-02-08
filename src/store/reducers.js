@@ -2,7 +2,6 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import { authStateReducer } from './auth';
-import Immutable from 'immutable'
 import locationReducer from './location';
 import uiReducer from './ui';
 import apiReducer from './api';
@@ -16,7 +15,6 @@ orm.register(...models);
 const ormReducer = createReducer(orm);
 
 export const makeRootReducer = (asyncReducers, injectedModels = []) => {
-
   if (injectedModels.length > 0) {
     orm.register(...injectedModels);
   }
@@ -33,7 +31,7 @@ export const makeRootReducer = (asyncReducers, injectedModels = []) => {
   });
 };
 
-export const injectReducer = (store, { key, reducer, models}) => {
+export const injectReducer = (store, { key, reducer, models }) => {
   if (Object.hasOwnProperty.call(store.asyncReducers, key)) {
     return;
   }
@@ -41,6 +39,5 @@ export const injectReducer = (store, { key, reducer, models}) => {
   store.asyncReducers[key] = reducer;
   store.replaceReducer(makeRootReducer(store.asyncReducers, models));
 };
-
 
 export default makeRootReducer;

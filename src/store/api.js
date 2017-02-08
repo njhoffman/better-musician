@@ -1,5 +1,4 @@
-import { CALL_API, Schemas } from 'middleware/api';
-import { browserHistory } from 'react-router';
+import { CALL_API } from 'middleware/api';
 
 // ------------------------------------
 // Constants
@@ -34,17 +33,19 @@ export const fetchSongs = ({ dispatch, getState, nextLocation }) => {
       endpoint: '/songs'
     }
   });
-}
+};
 
 export const songsSuccess = (response) => (dispatch) => {
   const tables = response.tables;
 
+  /* eslint-disable no-multi-spaces */
   dispatch({ type: SONGS_SUCCESS,    payload: response });
   dispatch({ type: LOAD_ARTISTS,     payload: tables.artists });
   dispatch({ type: LOAD_INSTRUMENTS, payload: tables.instruments });
   dispatch({ type: LOAD_GENRES,      payload: tables.genres });
   dispatch({ type: LOAD_FIELDS,      payload: tables.fields });
   dispatch({ type: LOAD_SONGS,       payload: tables.songs });
+  /* eslint-enable no-multi-spaces */
 };
 
 export const updateUser = () => (dispatch, getState) => {
@@ -54,20 +55,20 @@ export const updateUser = () => (dispatch, getState) => {
 
   return dispatch({
     [CALL_API]: {
-      types: [ UPDATE_USER, userSuccess, USER_FAILURE],
-      method: 'POST',
+      types:    [UPDATE_USER, userSuccess, USER_FAILURE],
+      method:   'POST',
       endpoint: '/users/update',
-      payload: { ...fieldValues }
+      payload:  { ...fieldValues }
     }
   });
 };
 
 export const userSuccess = (response) => (dispatch) => {
   console.info('userSuccess');
-  dispatch({ type: USER_SUCCESS , user: response });
+  dispatch({ type: USER_SUCCESS, user: response });
   dispatch({ type: 'UI_SHOW_SNACKBAR', meta: { message: 'Profile Updated' } });
   // reloads user attributes
-  dispatch({ type: 'AUTHENTICATE_COMPLETE' , user: response });
+  dispatch({ type: 'AUTHENTICATE_COMPLETE', user: response });
 };
 
 // ------------------------------------
@@ -82,12 +83,12 @@ const ACTION_HANDLERS = {
       isFetching: false,
       initialized: state.initialized.indexOf('user') === -1 ? state.initialized.concat('user') : state.initialized
     }),
-  [SONGS_REQUEST] : (state) => ({...state, isFetching: true }),
+  [SONGS_REQUEST] : (state) => ({ ...state, isFetching: true }),
   [SONGS_SUCCESS] : (state) =>
     ({ ...state,
       isFetching: false,
       initialized: state.initialized.indexOf('songs') === -1 ? state.initialized.concat('songs') : state.initialized }),
-  [UPDATE_USER] : (state) => ({...state, isFetching: true }),
+  [UPDATE_USER] : (state) => ({ ...state, isFetching: true })
 };
 
 // ------------------------------------
@@ -95,10 +96,10 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
   isFetching: false,
-  initialized: [],
+  initialized: []
 };
 
-export default function apiReducer (state = initialState, action) {
+export default function apiReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
   return handler ? handler(state, action) : state;
 }

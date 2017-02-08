@@ -2,13 +2,11 @@ import { applyMiddleware, compose, createStore } from 'redux';
 import { browserHistory } from 'react-router';
 import makeRootReducer from './reducers';
 import { updateLocation } from './location';
-import createLogger from 'redux-logger';
 import apiMiddleware from 'middleware/api';
 import promiseMiddleware from 'redux-promise-middleware';
 import thunkMiddleware from 'redux-thunk';
 
 export default (initialState = {}) => {
-
   // const middleware = [thunk, middlewareApi, createLogger()];
   const middleware = [apiMiddleware, thunkMiddleware, promiseMiddleware()];
 
@@ -42,5 +40,4 @@ export default (initialState = {}) => {
   }
 
   return store;
-
 };

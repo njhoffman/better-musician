@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Paper, Tabs, Tab } from 'material-ui';
 import { Row, Column } from 'react-foundation';
-import { Field, reduxForm } from 'redux-form';
-import { Link, browserHistory } from 'react-router';
+import { reduxForm } from 'redux-form';
+import { browserHistory } from 'react-router';
 import {
   MdClose as ResetIcon,
   MdSave as SaveIcon
@@ -20,8 +20,10 @@ class SettingsView extends Component {
     this.hintMap = {
       default: 'Hover or select a field for additional information...',
       visualTheme: 'Select a color theme to apply to the whole application.',
-      normalizePoints: 'Calculate point total based on highest difficulty (adding songs of higer difficulty reduces points totaled from lower difficulty songs).',
-      maxDifficulty: 'The highest difficulty you anticipate assigning a song. This is automatically calculated if not set or existing songs exceed it.',
+      normalizePoints: 'Calculate point total based on highest difficulty ' +
+        '(adding songs of higer difficulty reduces points totaled from lower difficulty songs).',
+      maxDifficulty: 'The highest difficulty you anticipate assigning a song. ' +
+        'This is automatically calculated if not set or existing songs exceed it.',
       maxProgress: 'The highest number you want to assign your progress on a song.'
     };
     this.state = {
@@ -47,38 +49,36 @@ class SettingsView extends Component {
     const textColor = this.props.muiTheme.palette.textColor;
     let disabled = this.props.api.isFetching;
     return (
-      <Column small={12} medium={10} large={8} centerOnSmall={true}>
+      <Column small={12} medium={10} centerOnSmall large={8}>
         <Paper zDepth={5}>
           <div className={css.settingsContainer}>
-            <Tabs value="settings">
+            <Tabs value='settings'>
               <Tab
-                data-route="/profile"
-                value="profile"
+                data-route='/profile'
+                value='profile'
                 onActive={redirectProfile}
-                label="Profile">
-              </Tab>
+                label='Profile' />
               <Tab
-                data-route="/stats"
-                value="stats"
+                data-route='/stats'
+                value='stats'
                 onActive={redirectStats}
-                label="Stats">
-              </Tab>
+                label='Stats' />
               <Tab
-                data-route="/settings"
-                value="settings"
-                label="Settings">
+                data-route='/settings'
+                value='settings'
+                label='Settings'>
                 <form className={css.settingsForm}>
                   <h3>Update Your Settings</h3>
                   <Row className={css.fieldHint}>
                     <Column>
-                    {this.state.fieldHint}
+                      {this.state.fieldHint}
                     </Column>
                   </Row>
                   <Row>
                     <FormField
-                      name="visualTheme"
+                      name='visualTheme'
                       onTouchTap={this.showHint.bind(this, 'visualTheme')}
-                      style={{width: '200px' }}
+                      style={{ width: '200px' }}
                       dataSource={{
                         'deepRed-dark': 'Deep Red (Dark)',
                         'steelBlue-dark' : 'Steel Blue (Dark)',
@@ -86,62 +86,61 @@ class SettingsView extends Component {
                       }}
                       onChange={this.props.setTheme}
                       type='select'
-                      label="Visual Theme" />
+                      label='Visual Theme' />
                     <FormField
-                      name="normalizePoints"
+                      name='normalizePoints'
                       onTouchTap={this.showHint.bind(this, 'normalizePoints')}
                       type='checkbox'
-                      label="Normalize Points" />
+                      label='Normalize Points' />
                   </Row>
                   <Row>
                     <FormField
-                      name="maxDifficulty"
+                      name='maxDifficulty'
                       onTouchTap={this.showHint.bind(this, 'maxDifficulty')}
                       type='number'
-                      label="Max Difficulty" />
+                      label='Max Difficulty' />
                     <FormField
-                      name="maxProgress"
+                      name='maxProgress'
                       onTouchTap={this.showHint.bind(this, 'maxProgress')}
                       type='number'
-                      label="Max Progress" />
+                      label='Max Progress' />
                   </Row>
                   <Row>
                     <FormField
-                      name="songBrushUpInterval"
+                      name='songBrushUpInterval'
                       type='number'
-                      label="Brush Up Interval" />
+                      label='Brush Up Interval' />
                     <FormField
-                      name="songBrushUpDuration"
+                      name='songBrushUpDuration'
                       type='number'
-                      label="Brush Up Duration" />
+                      label='Brush Up Duration' />
                   </Row>
                   <Row className={css.emailCheckboxes}>
                     <FormField
-                      name="songGoalEmail"
+                      name='songGoalEmail'
                       type='checkbox'
-                      label="Receive Goal Notifications" />
+                      label='Receive Goal Notifications' />
                     <FormField
-                      name="songBrushUpEmail"
+                      name='songBrushUpEmail'
                       type='checkbox'
-                      label="Receive Brush Up Notifications" />
+                      label='Receive Brush Up Notifications' />
                   </Row>
                   <Row className={css.buttonWrapper}>
                     <Column>
                       <ButtonLoader
-                        type="submit"
-                        label="Reset"
-                        secondary={true}
+                        type='submit'
+                        label='Reset'
+                        secondary
                         loading={this.props.api.isFetching}
                         labelStyle={{ paddingRight: '5px' }}
                         style={{ width: '160px', marginRight: '15px' }}
                         onClick={this.props.resetSettings}
                         icon={<ResetIcon style={{ marginTop: '-10px', color: textColor }} />}
                         className='update-profile-submit'
-                        disabled={disabled} >
-                      </ButtonLoader>
+                        disabled={disabled} />
                       <ButtonLoader
-                        type="submit"
-                        label="Save"
+                        type='submit'
+                        label='Save'
                         loading={this.props.api.isFetching}
                         labelStyle={{ color: textColor, paddingRight: '5px' }}
                         style={{ width: '160px', marginRight: '15px' }}
@@ -149,18 +148,16 @@ class SettingsView extends Component {
                         icon={<SaveIcon style={{ marginTop: '-10px', color: textColor }} />}
                         className='update-profile-submit'
                         disabled={disabled}
-                        primary={true}>
-                      </ButtonLoader>
+                        primary />
                     </Column>
                   </Row>
                 </form>
               </Tab>
               <Tab
-                data-route="/fields"
-                value="fields"
+                data-route='/fields'
+                value='fields'
                 onActive={redirectFields}
-                label="Fields">
-              </Tab>
+                label='Fields' />
             </Tabs>
           </div>
         </Paper>
@@ -168,5 +165,14 @@ class SettingsView extends Component {
     );
   }
 };
+
+SettingsView.propTypes = {
+  muiTheme:       React.PropTypes.object,
+  api:            React.PropTypes.api,
+  setTheme:       React.PropTypes.func,
+  updateSettings: React.PropTypes.func,
+  resetSettings:  React.PropTypes.func
+};
+
 const updateSettingsForm = reduxForm({ form: 'updateSettingsForm' })(muiThemeable()(SettingsView));
 export default updateSettingsForm;

@@ -10,12 +10,11 @@ const Song = ({
   maxDifficulty,
   muiTheme,
   ...custom }) => {
-
   return (
     <TableRow
-      hoverable={true}
+      hoverable
       onDoubleClick={showViewSongModal}
-      displayBorder={true}
+      displayBorder
       {...custom}>
       <TableRowColumn
         style={{ textAlign: 'center' }}
@@ -43,7 +42,7 @@ const Song = ({
           difficulty={songValues.difficulty}
           maxDifficulty={maxDifficulty} />
       </TableRowColumn>
-  </TableRow>
+    </TableRow>
   );
 };
 
@@ -53,7 +52,10 @@ Song.propTypes = {
     title:     PropTypes.string.isRequired,
     progress:  PropTypes.number,
     difficulty: PropTypes.number
-  })
+  }),
+  showViewSongModal: PropTypes.func,
+  maxDifficulty: PropTypes.number,
+  muiTheme: PropTypes.object
 };
 
 export default muiThemeable()(Song);

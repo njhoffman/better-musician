@@ -1,13 +1,13 @@
 const argv = require('yargs').argv;
-const path = require("path");
+const path = require('path');
 const webpack = require('webpack');
 const cssnano = require('cssnano');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const StatsPlugin = require('stats-webpack-plugin');
+// const StatsPlugin = require('stats-webpack-plugin');
 const project = require('./project.config');
-const HappyPack = require('happypack');
-const _ = require("lodash");
+// const HappyPack = require('happypack');
+const _ = require('lodash');
 
 const { log } = require('../server/server.debug')('app:config:webpack');
 
@@ -16,23 +16,22 @@ const __PROD__ = project.globals.__PROD__;
 const __TEST__ = project.globals.__TEST__;
 
 const _RESOLVE_PATHS = {
-  coreStyles: "src/styles/core.scss",
-  assets:     "src/assets",
-  themes:     "src/styles/themes",
-  components: "src/components",
-  containers: "src/containers",
-  interfaces: "src/interfaces",
-  middleware: "src/middleware",
-  selectors:  "src/selectors",
-  store:      "src/store",
-  // "redux-orm": "src/redux-orm",
-  // "redux-auth": "src/redux-auth"
+  coreStyles: 'src/styles/core.scss',
+  assets:     'src/assets',
+  themes:     'src/styles/themes',
+  components: 'src/components',
+  containers: 'src/containers',
+  interfaces: 'src/interfaces',
+  middleware: 'src/middleware',
+  selectors:  'src/selectors',
+  store:      'src/store'
+  // 'redux-orm': 'src/redux-orm',
+  // 'redux-auth': 'src/redux-auth'
 };
 
 let resolvePaths = _.mapValues(_RESOLVE_PATHS, function (str) {
   return path.join(process.cwd(), str);
 });
-
 
 log('Creating configuration.');
 const webpackConfig = {
@@ -60,7 +59,8 @@ webpackConfig.entry = {
   vendor : project.compiler_vendors
 };
 
-// IE doesn't support eventsource, bitdefender in windows blocks eventsource events https://github.com/glenjamin/webpack-hot-middleware/issues/36
+// IE doesn't support eventsource, bitdefender in windows blocks eventsource events
+// https://github.com/glenjamin/webpack-hot-middleware/issues/36
 // for alternate solution use socket.io as transport for webpack-hmr https://github.com/lytc/webpack-hmr/
 webpackConfig.entry.app = webpackConfig.entry.app.concat('eventsource-polyfill');
 
@@ -155,7 +155,6 @@ if (!__TEST__) {
 // ------------------------------------
 webpackConfig.module.loaders = [];
 
-
 // happypack loader
 // webpackConfig.module.loaders.push({
 //   test    : /\.(js|jsx)$/,
@@ -185,9 +184,9 @@ webpackConfig.module.loaders.push({
 // We use cssnano with the postcss loader, so we tell
 // css-loader not to duplicate minimization.
 const BASE_CSS_LOADER = 'css?sourceMap&-minimize';
-// separate vendor files from css modules processing https://github.com/css-modules/css-modules/pull/65#issuecomment-214221200
+// separate vendor files from css modules processing
+// https://github.com/css-modules/css-modules/pull/65#issuecomment-214221200
 const BASE_CSS_MODULE_LOADER = 'css?sourceMap&modules&importLoaders=2&-minimize';
-
 
 // vendor global scss/css
 webpackConfig.module.loaders.push({

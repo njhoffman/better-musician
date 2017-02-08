@@ -2,7 +2,7 @@ import BaseModel from './BaseModel';
 
 class Instrument extends BaseModel {
   static reducer(action, Instrument, session) {
-    const { payload, type } = action;
+    const { type } = action;
     switch (type) {
       case 'SONGS_REQUEST':
         // remove all songs when fetching
