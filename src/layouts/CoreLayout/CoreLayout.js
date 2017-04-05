@@ -19,7 +19,7 @@ export class CoreLayout extends Component {
     theme: PropTypes.object.isRequired
   }
 
-  render() {
+  processTheme() {
     const theme = require('themes/' + this.props.theme).default;
     if (!theme.instrumental) {
       theme.instrumental = {};
@@ -27,6 +27,35 @@ export class CoreLayout extends Component {
     theme.instrumental.headerLinksColor = theme.instrumental.headerLinksColor || theme.palette.secondaryTextColor;
     theme.instrumental.footerFiller = theme.instrumental.footerFiller || theme.palette.canvasColor;
     theme.instrumental.fieldsViewLabel = theme.instrumental.fieldsViewLabel || theme.palette.accent1Color;
+    return theme;
+  }
+
+  humanMemorySize(bytes, si) {
+    const thresh = si ? 1000 : 1024;
+    if (Math.abs(bytes) < thresh) {
+      return bytes + ' B';
+    }
+    const units = si
+      ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+      : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+    let u = -1;
+    do {
+      bytes /= thresh;
+      ++u;
+    } while (Math.abs(bytes) >= thresh && u < units.length - 1);
+    return bytes.toFixed(1) + ' ' + units[u];
+  }
+
+  memoryStats() {
+    if (window.performance && window.performance.memory) {
+      console.info(`Total JS Heap Size:\t ${this.humanMemorySize(window.performance.memory.totalJSHeapSize, true)}`);
+      console.info(`Used JS Heap Size:\t ${this.humanMemorySize(window.performance.memory.usedJSHeapSize, true)}`);
+    }
+  }
+
+  render() {
+    const theme = this.processTheme();
+    this.memoryStats();
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
         <div className={css.appWrapper}>

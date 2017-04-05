@@ -49,7 +49,7 @@ RenderCustomSelect.propTypes = {
   labelStyle:   PropTypes.object,
   style:        PropTypes.object,
   label:        PropTypes.string,
-  optionValues: PropTypes.array
+  optionValues: PropTypes.object.isRequired
 };
 
 export default RenderCustomSelect;

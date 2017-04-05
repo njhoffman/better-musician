@@ -141,9 +141,9 @@ export const FieldsView = (props) => {
 
 FieldsView.propTypes = {
   muiTheme:     PropTypes.object.isRequired,
+  editingField: PropTypes.bool,
+  formValues:   PropTypes.object,
   updateField:  PropTypes.func.isRequired,
-  editingField: PropTypes.bool.isRequired,
-  formValues:   PropTypes.object.isRequired,
   addField:     PropTypes.func.isRequired
 };
 

@@ -7,7 +7,7 @@ import { signOut } from 'store/auth/actions/sign-out';
 class SignOutButton extends React.Component {
   static propTypes = {
     next:     PropTypes.func.isRequired,
-    endpoint: PropTypes.string.isRequired,
+    endpoint: PropTypes.string,
     children: PropTypes.node,
     icon:     PropTypes.func,
     dispatch: PropTypes.func.isRequired,

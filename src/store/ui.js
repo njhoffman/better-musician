@@ -16,29 +16,30 @@ export const MODAL_FILTER_SONGS = 'MODAL_FILTER_SONGS';
 // Action Creators
 // ------------------------------------
 
-export const uiHideDrawerMenu = () => (dispatch) => {
-  return dispatch({ type: UI_HIDE_DRAWER_MENU });
+export const uiHideDrawerMenu = () => {
+  return { type: UI_HIDE_DRAWER_MENU };
 };
 
-export const uiToggleDrawerMenu = () => (dispatch, getState) => {
-  return dispatch({ type: UI_TOGGLE_DRAWER_MENU });
+export const uiToggleDrawerMenu = () => {
+  return { type: UI_TOGGLE_DRAWER_MENU };
 };
 
-export const uiShowModal = (type, viewType) => (dispatch, getState) => {
+export const uiShowSnackbar = () => {
+  return { type: UI_SHOW_SNACKBAR };
+};
+
+export const uiHideSnackbar = () => {
+  return { type: UI_HIDE_SNACKBAR };
+};
+
+// TODO: get this integrated with redux auth's modals
+export const uiShowModal = (type, viewType) =>  {
   const view = typeof viewType === 'string' ? viewType : 'edit';
-  return dispatch({ type: UI_SHOW_MODAL, meta: { type, props: { view } } });
+  return { type: UI_SHOW_MODAL, meta: { type, props: { view } } };
 };
 
-export const uiHideModal = () => (dispatch, getState) => {
-  return dispatch({ type: UI_HIDE_MODAL });
-};
-
-export const uiShowSnackbar = () => (dispatch, getState) => {
-  return dispatch({ type: UI_SHOW_SNACKBAR });
-};
-
-export const uiHideSnackbar = () => (dispatch, getState) => {
-  return dispatch({ type: UI_HIDE_SNACKBAR });
+export const uiHideModal = () => {
+  return { type: UI_HIDE_MODAL };
 };
 
 // ------------------------------------
@@ -54,8 +55,13 @@ const showDrawerMenu = (state) =>
 const hideDrawerMenu = (state) =>
   ({ ...state, drawer: { ...state.drawer, isOpen: false } });
 
-const showSnackbar = (state, action) =>
-  ({ ...state, snackbar: { ...state.snackbar, isOpen: true, message: action.meta.message } });
+const showSnackbar = (state, action) => ({ ...state,
+    snackbar: {
+      ...state.snackbar,
+      isOpen: true,
+      message: (action.meta ? action.meta.message : null )
+    }
+});
 
 const hideSnackbar = (state) =>
   ({ ...state, snackbar: { ...state.snackbar, isOpen: false } });
@@ -64,7 +70,7 @@ const showModal = (state, action) =>
   ({ ...state, modal: { ...state.modal, type: action.meta.type, props: action.meta.props } });
 
 const hideModal = (state) =>
-  ({ ...state, modal: { ...state.modal, ...initialState.modal } });
+  ({ ...state, modal: { ...initialState.modal } });
 
 const ACTION_HANDLERS = {
   [UI_TOGGLE_DRAWER_MENU]: toggleDrawerMenu,
@@ -79,7 +85,8 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = {
+
+export const initialState = {
   snackbar: {
     isOpen: false,
     message: '',
@@ -97,5 +104,10 @@ const initialState = {
 
 export default function uiReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
+  if (action.type == 'UI_HIDE_MODAL') {
+    const retdata =  handler(state, action);
+    return retdata;
+  } else {
   return handler ? handler(state, action) : state;
+  }
 }

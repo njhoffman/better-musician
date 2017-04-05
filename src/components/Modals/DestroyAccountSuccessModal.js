@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Modal from './Modal';
 import { connect } from 'react-redux';
-import { hideDestroyAccountSuccessModal } from '../../../actions/ui';
+import { hideDestroyAccountSuccessModal } from 'store/auth/actions/ui';
 
 class DestroyAccountSuccessModal extends React.Component {
   static propTypes = {

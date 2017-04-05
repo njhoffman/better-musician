@@ -1,3 +1,4 @@
+import { songs as songsSelector } from 'routes/Songs/modules/selectors';
 import { LOCATION_CHANGE } from 'store/location';
 
 // ------------------------------------
@@ -15,11 +16,13 @@ export const SET_PAGINATION_CURRENT   = 'SET_PAGINATION_CURRENT';
 // Action Creators
 // ------------------------------------
 
-export const setCurrentSong = (songsCollection, selectedRow) => (dispatch, getState) => {
+export const setCurrentSong = (selectedRow) => (dispatch, getState) => {
   if (getState().ui.modal.type) {
     return;
   }
+  const songsCollection = songsSelector(getState());
   const currentSongId = selectedRow.length > 0 ? songsCollection[selectedRow[0] - 1].id : null;
+
   return dispatch({ type: SET_CURRENT_SONG, payload: currentSongId });
 };
 

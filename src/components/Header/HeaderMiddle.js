@@ -26,27 +26,27 @@ class HeaderMiddle extends Component {
 
   static propTypes = {
     showAddSongModal: PropTypes.func.isRequired,
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme:         PropTypes.object.isRequired,
     showFiltersModal: PropTypes.func.isRequired,
-    currentSong: PropTypes.string,
-    modal: PropTypes.object.isRequired,
-    currentView: PropTypes.string
+    currentSong:      PropTypes.string,
+    modal:            PropTypes.object.isRequired,
+    currentView:      PropTypes.string
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      searchPopoverOpen: false,
+      searchPopoverOpen:   false,
       searchPopoverAnchor: {},
-      songPopoverOpen: false,
-      songPopoverAnchor: {}
+      songPopoverOpen:     false,
+      songPopoverAnchor:   {}
     };
   };
 
   toggleSearchPopover(e) {
     e.preventDefault();
     this.setState({
-      searchPopoverOpen: !this.state.searchPopoverOpen,
+      searchPopoverOpen:   !this.state.searchPopoverOpen,
       searchPopoverAnchor: e.currentTarget.parentElement
     });
   }
@@ -54,7 +54,7 @@ class HeaderMiddle extends Component {
   toggleSongPopover(e) {
     e.preventDefault();
     this.setState({
-      songPopoverOpen: true,
+      songPopoverOpen:   true,
       songPopoverAnchor: e.currentTarget.parentElement
     });
   }
@@ -62,7 +62,7 @@ class HeaderMiddle extends Component {
   onRequestClose() {
     this.setState({
       searchPopoverOpen: false,
-      songPopoverOpen: false
+      songPopoverOpen:   false
     });
   }
 
@@ -91,7 +91,7 @@ class HeaderMiddle extends Component {
     return (
       <a
         className={css.headerLink}
-        onClick={this.showAddSongModal.bind(this)}>
+        onClick={this.showAddSongModal}>
         <span className={css.iconWrapper}>
           <AddIcon className={css.icon} />
           <span className={css.iconText}>Add Song</span>
@@ -108,20 +108,20 @@ class HeaderMiddle extends Component {
           <span className={css.iconText}>Edit Song</span>
           <ArrowDropDownIcon
             className={css.downArrow}
-            onTouchTap={this.toggleSongPopover.bind(this)} />
+            onTouchTap={this.toggleSongPopover} />
           <Popover
             open={this.state.songPopoverOpen}
             anchorEl={this.state.songPopoverAnchor}
             anchorOrigin={popoverStyle.anchor}
             targetOrigin={popoverStyle.target}
             className={css.menuPopover}
-            onRequestClose={this.onRequestClose.bind(this)} >
+            onRequestClose={this.onRequestClose} >
             <Row className={css.row}>
               <Column className={css.column} >
                 <a
                   style={{ color: this.props.muiTheme.instrumental.headerLinksColor }}
                   className={css.headerLink}
-                  onClick={this.showEditSongModal.bind(this)} >
+                  onClick={this.showEditSongModal} >
                   <span className={css.iconWrapper}>
                     <AddIcon style={{ margin: '0px 12px 0px -12px' }} className={css.icon} />
                     <span className={css.iconText}>Add Song</span>
@@ -174,7 +174,7 @@ class HeaderMiddle extends Component {
   renderSearchButton() {
     return (
       <a className={css.headerLink}
-        onTouchTap={this.toggleSearchPopover.bind(this)}>
+        onTouchTap={this.toggleSearchPopover}>
         <span className={css.iconWrapper}>
           <SearchIcon className={css.icon} />
           <span className={css.iconText}>Search</span>
@@ -183,7 +183,7 @@ class HeaderMiddle extends Component {
             anchorEl={this.state.searchPopoverAnchor}
             anchorOrigin={popoverStyle.anchor}
             targetOrigin={popoverStyle.target}
-            onRequestClose={this.onRequestClose.bind(this)} />
+            onRequestClose={this.onRequestClose} />
         </span>
       </a>
     );

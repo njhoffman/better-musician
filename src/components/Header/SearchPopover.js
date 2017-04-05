@@ -3,15 +3,15 @@ import { Popover, TextField } from 'material-ui';
 
 class SearchPopover extends Component {
   static propTypes = {
-    open: PropTypes.bool.isRquired,
-    anchorEl: PropTypes.element,
+    isOpen:         PropTypes.bool.isRequired,
+    anchorEl:       PropTypes.object,
     onRequestClose: PropTypes.func.isRequired
   }
 
   render() {
     return (
       <Popover
-        open={this.props.open}
+        open={this.props.isOpen}
         anchorEl={this.props.anchorEl}
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
         targetOrigin={{ horizontal: 'left', vertical: 'top' }}

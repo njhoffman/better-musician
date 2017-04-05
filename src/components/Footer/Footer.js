@@ -71,7 +71,9 @@ class Footer extends Component {
   }
 
   renderSongFooter(song, backgroundColor) {
-    const artistPicture = song.artist.picture ? 'artists/' + song.artist.picture : 'artists/unknown_artist.png';
+    const artistPicture = song.artist.pictures && song.artist.pictures[0]
+      ? 'artists/' + song.artist.pictures[0]
+      : 'artists/unknown_artist.png';
     return (
       <div
         style={{ backgroundColor }}

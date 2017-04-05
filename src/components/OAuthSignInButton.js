@@ -10,7 +10,7 @@ var oAuthSignIn = _oAuthSignIn;
 class OAuthSignInButton extends React.Component {
   static propTypes = {
     provider:     PropTypes.string.isRequired,
-    endpoint:     PropTypes.string.isRequired,
+    endpoint:     PropTypes.string,
     auth:         PropTypes.object.isRequired,
     className:    PropTypes.string,
     label:        PropTypes.string,

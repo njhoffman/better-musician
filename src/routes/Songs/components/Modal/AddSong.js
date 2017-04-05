@@ -61,13 +61,17 @@ export const AddSongModal = (props) => {
   const className = css.addSongModal + ' ' + css[modalView];
 
   lastActiveField = ['artist', 'instrument'].indexOf(props.activeField) !== -1 ? props.activeField : lastActiveField;
+
   const renderImage = (props) => {
+    const artistPicture = props.matchedArtist && props.matchedArtist.pictures && props.matchedArtist.pictures[0]
+      ? 'artists/' + props.matchedArtist.pictures[0]
+      : 'artists/unknown_artist.png';
     if (props.activeField === 'artist' || lastActiveField === 'artist') {
       if (props.matchedArtist) {
         return (
           <Row className={css.imageFrame}>
             <Column>
-              <img src={'/artists/' + props.matchedArtist.picture} />
+              <img src={artistPicture} />
               <div>{props.matchedArtist.fullName}</div>
               { !isView && <RaisedButton secondary label='Change Picture' /> }
             </Column>

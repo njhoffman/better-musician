@@ -1,22 +1,22 @@
 import React, { PropTypes } from 'react';
 import { MdExitToApp } from 'react-icons/lib/md/';
-import { Field, reduxForm } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { Row } from 'react-foundation';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
-import ButtonLoader from './ButtonLoader';
-import { RenderTextField } from 'components/Field';
+import ButtonLoader from 'components/ButtonLoader';
+import FormField from 'components/Field';
 import { emailSignIn } from 'store/auth/actions/email-sign-in';
 
 class EmailSignInForm extends React.Component {
   static propTypes = {
     auth:        PropTypes.object.isRequired,
-    loginForm:   PropTypes.object.isRequired,
     dispatch:    PropTypes.func.isRequired,
-    endpoint:    PropTypes.string.isRequired,
+    endpoint:    PropTypes.string,
     next:        PropTypes.func.isRequired,
     emailSignIn: PropTypes.func.isRequired,
+    loginForm:   PropTypes.object,
     inputProps:  PropTypes.shape({
       email:     PropTypes.object,
       password:  PropTypes.object,
@@ -67,8 +67,8 @@ class EmailSignInForm extends React.Component {
           )}
         </Row>
         <Row>
-          <Field
-            component={RenderTextField}
+          <FormField
+            type='text'
             floatingLabelText='Email'
             name='email-sign-in-email'
             className='email-sign-in-email'
@@ -77,9 +77,8 @@ class EmailSignInForm extends React.Component {
             {...this.props.inputProps.email} />
         </Row>
         <Row>
-          <Field
-            type='password'
-            component={RenderTextField}
+          <FormField
+            type='text'
             floatingLabelText='Password'
             name='email-sign-in-password'
             className='email-sign-in-password'

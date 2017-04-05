@@ -9,7 +9,7 @@ class BaseModal extends React.Component {
     show:           PropTypes.bool,
     dispatch:       PropTypes.func.isRequired,
     children:       PropTypes.array,
-    endpoint:       PropTypes.string.isRequired,
+    endpoint:       PropTypes.string,
     errorAddr:      PropTypes.array,
     closeBtnLabel:  PropTypes.string,
     actions:        PropTypes.array,

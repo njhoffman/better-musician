@@ -3,11 +3,11 @@ import { Slider } from 'redux-form-material-ui';
 
 class RenderSlider extends Component {
   static propTypes = {
-    input: PropTypes.node,
-    label: PropTypes.string,
-    textColor: PropTypes.string,
+    input:        PropTypes.object,
+    label:        PropTypes.string,
+    textColor:    PropTypes.string,
     valueDisplay: PropTypes.func,
-    viewType: PropTypes.string
+    viewType:     PropTypes.string
   };
 
   state = {
@@ -17,6 +17,7 @@ class RenderSlider extends Component {
   render() {
     const {
       input,
+      viewType,
       label,
       textColor,
       valueDisplay,

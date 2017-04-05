@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
-import { Table, TableBody, TableHeaderColumn, TableRow } from 'material-ui/Table';
+import { Table, TableBody, TableRow } from 'material-ui/Table';
 import muiThemeable from 'material-ui/styles/muiThemeable';
-import SortIcon from 'react-icons/lib/md/import-export';
 
+import SongsListHeader from './SongsListHeader';
 import Song from './SongContainer';
 import css from './SongList.scss';
 
@@ -14,7 +14,7 @@ const SongsList = ({
   currentSongId }) => (
     <Table
       selectable
-      onRowSelection={setCurrentSong.bind(undefined, songsCollection)}
+      onRowSelection={setCurrentSong}
       className={css.songsList}
       style={{ tableLayout: 'auto' }}>
       <TableBody
@@ -23,38 +23,10 @@ const SongsList = ({
         deselectOnClickaway
         displayRowCheckbox={false}>
         <TableRow>
-          <TableHeaderColumn style={{ textAlign: 'center' }}>
-            <a
-              style={{ color: muiTheme.palette.accent1Color }}
-              onClick={setSort.bind(undefined, 'title')}>
-              Title
-              <SortIcon />
-            </a>
-          </TableHeaderColumn>
-          <TableHeaderColumn style={{ textAlign: 'center' }}>
-            <a
-              style={{ color: muiTheme.palette.accent1Color }}
-              onClick={setSort.bind(undefined, 'artist')}>
-              Artist
-              <SortIcon />
-            </a>
-          </TableHeaderColumn>
-          <TableHeaderColumn style={{ textAlign: 'center' }}>
-            <a
-              style={{ color: muiTheme.palette.accent1Color }}
-              onClick={setSort.bind(undefined, 'progress')} >
-              Progress
-              <SortIcon />
-            </a>
-          </TableHeaderColumn>
-          <TableHeaderColumn style={{ textAlign: 'center' }}>
-            <a
-              style={{ color: muiTheme.palette.accent1Color }}
-              onClick={setSort.bind(undefined, 'difficulty')}>
-              Difficulty
-              <SortIcon />
-            </a>
-          </TableHeaderColumn>
+          <SongsListHeader setSort={setSort} name='title' displayName='Title' />
+          <SongsListHeader setSort={setSort} name='artist' displayName='Artist' />
+          <SongsListHeader setSort={setSort} name='progress' displayName='Progress' />
+          <SongsListHeader setSort={setSort} name='difficulty' displayName='Difficulty' />
         </TableRow>
         {songsCollection && songsCollection.map(song => {
           return (

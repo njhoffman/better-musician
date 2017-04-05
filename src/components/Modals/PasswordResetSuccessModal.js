@@ -4,13 +4,13 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ButtonLoader from '../ButtonLoader';
-import Input from '../Input';
+import Text from '../Field/Text';
 import { connect } from 'react-redux';
-import { hidePasswordResetSuccessModal } from '../../../actions/ui';
+import { hidePasswordResetSuccessModal } from 'store/auth/actions/ui';
 import {
   updatePasswordModal,
   updatePasswordModalFormUpdate
-} from '../../../actions/update-password-modal';
+} from 'store/auth/actions/update-password-modal';
 
 class PasswordResetSuccessModal extends React.Component {
   static propTypes = {
@@ -78,7 +78,7 @@ class PasswordResetSuccessModal extends React.Component {
           ]}
           title='Reset Your Password'>
           <form>
-            <Input
+            <Text
               type='password'
               label='Password'
               placeholder='Password'
@@ -89,7 +89,7 @@ class PasswordResetSuccessModal extends React.Component {
               onChange={this.handleInput.bind(this, 'password')}
               {...this.props.inputProps.password} />
 
-            <Input
+            <Text
               type='password'
               label='Password Confirmation'
               placeholder='Password Confirmation'

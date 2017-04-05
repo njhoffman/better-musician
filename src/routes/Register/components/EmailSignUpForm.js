@@ -20,7 +20,7 @@ class EmailSignUpForm extends React.Component {
     next:                   PropTypes.func.isRequired,
     emailSignUp:            PropTypes.func.isRequired,
     dispatch:               PropTypes.func.isRequired,
-    registerForm:           PropTypes.object.isRequired,
+    registerForm:           PropTypes.object,
     inputProps:             PropTypes.shape({
       email:                PropTypes.object,
       password:             PropTypes.object,

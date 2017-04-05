@@ -1,5 +1,5 @@
 import React from 'react';
-import { hideEmailSignInErrorModal } from '../../../actions/ui';
+import { hideEmailSignInErrorModal } from 'store/auth/actions/ui';
 import Modal from './Modal';
 
 class EmailSignInErrorModal extends React.Component {

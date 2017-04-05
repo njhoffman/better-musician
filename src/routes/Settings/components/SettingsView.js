@@ -29,6 +29,7 @@ class SettingsView extends Component {
     this.state = {
       fieldHint: 'Hover or select a field for additional information...'
     };
+
   };
 
   showHint(fieldName) {
@@ -168,7 +169,7 @@ class SettingsView extends Component {
 
 SettingsView.propTypes = {
   muiTheme:       React.PropTypes.object,
-  api:            React.PropTypes.api,
+  api:            React.PropTypes.object,
   setTheme:       React.PropTypes.func,
   updateSettings: React.PropTypes.func,
   resetSettings:  React.PropTypes.func

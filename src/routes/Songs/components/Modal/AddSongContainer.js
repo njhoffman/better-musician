@@ -7,14 +7,14 @@ import { MODAL_ADD_SONG, uiShowModal, uiHideModal } from 'store/ui';
 
 import {
   currentSong as currentSongSelector,
-  savedTabs as savedTabsSelector,
+  savedTabs   as savedTabsSelector,
 } from 'routes/Songs/modules/selectors';
 
 import {
-  artists as artistsSelector,
+  artists        as artistsSelector,
   artistsMatched as artistsMatchedSelector,
-  instruments as instrumentsSelector,
-  genres as genresSelector,
+  instruments    as instrumentsSelector,
+  genres         as genresSelector,
 } from 'selectors/songs';
 
 import { maxDifficulty as maxDifficultySelector } from 'selectors/users';

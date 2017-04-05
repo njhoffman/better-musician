@@ -1,9 +1,9 @@
 const argv = require('yargs').argv;
 const project = require('./project.config');
 const webpackConfig = require('./webpack.config');
-const debug = require('debug')('app:config:karma');
+const { log } = require('../server/debugger-256')('app:config:karma');
 
-debug('Creating configuration.');
+log('Creating karma configuration.');
 const karmaConfig = {
   basePath : '../', // project root in relation to bin/karma.js
   files    : [
@@ -18,20 +18,17 @@ const karmaConfig = {
   frameworks    : ['mocha'],
   reporters     : ['mocha'], // 'mocha', 'spec', 'json', 'progress', 'dots'
   specReporter: {
-    maxLogLines: 5,         // limit number of lines logged per test
+    maxLogLines:          5,         // limit number of lines logged per test
     suppressErrorSummary: true,  // do not print error summary
-    suppressFailed: false,  // do not print information about failed tests
-    suppressPassed: false,  // do not print information about passed tests
-    suppressSkipped: true,  // do not print information about skipped tests
-    showSpecTiming: false // print the time elapsed for each spec
+    suppressFailed:       false,  // do not print information about failed tests
+    suppressPassed:       false,  // do not print information about passed tests
+    suppressSkipped:      true,  // do not print information about skipped tests
+    showSpecTiming:       false // print the time elapsed for each spec
   },
   jsonReporter: {
     stdout: true
   },
   // plugins: ['karma-spec-reporter'],
-  preprocessors : {
-    [`${project.dir_test}/test-bundler.js`] : ['webpack']
-  },
   browsers : ['PhantomJS'],
   webpack  : {
     devtool : 'cheap-module-source-map',
@@ -61,6 +58,9 @@ const karmaConfig = {
       'react/lib/ReactContext'         : 'window'
     }),
     sassLoader : webpackConfig.sassLoader
+  },
+  preprocessors : {
+    [`${project.dir_test}/test-bundler.js`] : ['webpack']
   },
   webpackMiddleware : {
     noInfo : true

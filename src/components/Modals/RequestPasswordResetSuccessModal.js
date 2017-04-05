@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { hidePasswordResetRequestSuccessModal } from '../../../actions/ui';
+import { hidePasswordResetRequestSuccessModal } from 'store/auth/actions/ui';
 import Modal from './Modal';
 
 class RequestPasswordResetSuccessModal extends React.Component {

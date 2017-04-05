@@ -35,7 +35,7 @@ RenderCustomMultiSelect.propTypes = {
   preview:      PropTypes.bool,
   style:        PropTypes.object,
   label:        PropTypes.string,
-  optionValues: PropTypes.array
+  optionValues: PropTypes.object
 };
 
 export default RenderCustomMultiSelect;

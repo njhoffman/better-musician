@@ -8,6 +8,7 @@ const mapStateToProps = (state, action) => ({
   currentSongId:   state.songsView.currentSong
 });
 
+
 const mapActionCreators = ({
   setCurrentSong,
   setSort

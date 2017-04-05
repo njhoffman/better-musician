@@ -46,10 +46,10 @@ class RenderFormField extends Component {
 };
 
 RenderFormField.propTypes = {
-  type:          PropTypes.number.isRequired,
-  small:         PropTypes.bool,
-  medium:        PropTypes.bool,
-  large:         PropTypes.bool,
+  type:          PropTypes.string.isRequired,
+  small:         PropTypes.number,
+  medium:        PropTypes.number,
+  large:         PropTypes.number,
   centerOnSmall: PropTypes.bool
 };
 

@@ -10,7 +10,7 @@ class HeaderRight extends Component {
   static propTypes = {
     muiTheme: PropTypes.object.isRequired,
     user: PropTypes.object,
-    getUserPoints: PropTypes.func.isRequired,
+    getUserPoints: PropTypes.string,
     userDisplayName: PropTypes.string
   }
 

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { hideOAuthSignInSuccessModal } from '../../../actions/ui';
+import { hideOAuthSignInSuccessModal } from 'store/auth/actions/ui';
 import Modal from './Modal';
 
 class OAuthSignInSuccessModal extends React.Component {

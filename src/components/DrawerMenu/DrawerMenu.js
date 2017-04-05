@@ -195,9 +195,9 @@ class DrawerMenu extends Component {
     const isSignedIn = this.props.user && this.props.user.get('isSignedIn');
     linkStyle.color = this.props.muiTheme.instrumental.headerLinksColor;
     if (isSignedIn) {
-      return this.renderSignedIn;
+      return this.renderSignedIn();
     } else {
-      return this.renderSignedOut;
+      return this.renderSignedOut();
     }
   }
 }

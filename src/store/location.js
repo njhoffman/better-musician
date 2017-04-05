@@ -26,8 +26,8 @@ export const updateLocation = ({ dispatch }) => (nextLocation) => {
 // ------------------------------------
 
 const ACTION_HANDLERS = {
-  [LOCATION_CHANGE] : (state, action) => ({ ...state, ...action.payload }),
-  [INIT_VIEW] : (state, action) => ({ ...state, ...action.payload })
+  [LOCATION_CHANGE]: (state, action) => ({ ...action.payload }),
+  [INIT_VIEW]:       (state, action) => ({ ...state, ...action.payload })
 };
 
 // ------------------------------------

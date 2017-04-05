@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { Row, Column } from 'react-foundation';
 import { RaisedButton, TextField } from 'material-ui';
@@ -96,19 +96,19 @@ const SongsPagination = ({
 );
 
 SongsPagination.propTypes = {
-  paginationCurrent:      React.propTypes.number,
-  paginationPerPage:      React.propTypes.number,
-  paginationTotal:        React.propTypes.number,
-  paginationStart:        React.proptTypes.number,
-  paginationPages:        React.propTypes.number,
-  paginationEnd:          React.propTypes.number,
-  setPaginationCurrent:   React.propTypes.func,
-  setPaginationPerPage:   React.propTypes.func,
-  setPaginationIncrement: React.propTypes.func,
-  setPaginationDecrement: React.propTypes.func,
-  setPaginationStart:     React.propTypes.func,
-  setPaginationEnd:       React.propTypes.func,
-  muiTheme:               React.propTypes.object
+  paginationCurrent:      PropTypes.number,
+  paginationPerPage:      PropTypes.number,
+  paginationTotal:        PropTypes.number,
+  paginationStart:        PropTypes.number,
+  paginationPages:        PropTypes.number,
+  paginationEnd:          PropTypes.number,
+  setPaginationCurrent:   PropTypes.func,
+  setPaginationPerPage:   PropTypes.func,
+  setPaginationIncrement: PropTypes.func,
+  setPaginationDecrement: PropTypes.func,
+  setPaginationStart:     PropTypes.func,
+  setPaginationEnd:       PropTypes.func,
+  muiTheme:               PropTypes.object
 };
 
 export default muiThemeable()(SongsPagination);

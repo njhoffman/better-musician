@@ -82,7 +82,7 @@ RenderMultiSelect.propTypes = {
   labelStyle: PropTypes.object,
   inputStyle: PropTypes.object,
   label:      PropTypes.string,
-  dataSource: PropTypes.array.isRequired
+  dataSource: PropTypes.any.isRequired
 };
 
 export default RenderMultiSelect;

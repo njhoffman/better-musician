@@ -9,7 +9,7 @@ const project = require('./project.config');
 // const HappyPack = require('happypack');
 const _ = require('lodash');
 
-const { log } = require('../server/server.debug')('app:config:webpack');
+const { log, error } = require('../server/debugger-256')('app:config:webpack');
 
 const __DEV__ = project.globals.__DEV__;
 const __PROD__ = project.globals.__PROD__;
@@ -33,7 +33,7 @@ let resolvePaths = _.mapValues(_RESOLVE_PATHS, function (str) {
   return path.join(process.cwd(), str);
 });
 
-log('Creating configuration.');
+log('Creating webpack configuration.');
 const webpackConfig = {
   name    : 'client',
   profile : false,
@@ -109,6 +109,7 @@ if (__TEST__ && !argv.watch) {
       if (stats.compilation.errors.length) {
         // Pretend no assets were generated. This prevents the tests
         // from running making it clear that there were warnings.
+        console.log(stats.compilation.errors);
         throw new Error(
           stats.compilation.errors.map(err => err.message || err)
         );

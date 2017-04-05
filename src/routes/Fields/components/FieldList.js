@@ -20,7 +20,7 @@ class FieldList extends Component {
     deleteField:  PropTypes.func
   }
 
-  renderFieldItem(field) {
+  renderFieldItem = (field) => {
     const editingId = this.props.editingField ? this.props.editingField.id : null;
     return (
       <ListItem

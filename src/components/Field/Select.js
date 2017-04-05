@@ -34,7 +34,7 @@ const RenderSelect = ({
 RenderSelect.propTypes = {
   label:      PropTypes.string,
   viewType:   PropTypes.string,
-  dataSource: PropTypes.array.isRequired,
+  dataSource: PropTypes.any.isRequired,
   style:      PropTypes.object,
   meta:       PropTypes.object
 };
