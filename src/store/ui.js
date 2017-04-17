@@ -33,7 +33,7 @@ export const uiHideSnackbar = () => {
 };
 
 // TODO: get this integrated with redux auth's modals
-export const uiShowModal = (type, viewType) =>  {
+export const uiShowModal = (type, viewType) => {
   const view = typeof viewType === 'string' ? viewType : 'edit';
   return { type: UI_SHOW_MODAL, meta: { type, props: { view } } };
 };
@@ -56,11 +56,11 @@ const hideDrawerMenu = (state) =>
   ({ ...state, drawer: { ...state.drawer, isOpen: false } });
 
 const showSnackbar = (state, action) => ({ ...state,
-    snackbar: {
-      ...state.snackbar,
-      isOpen: true,
-      message: (action.meta ? action.meta.message : null )
-    }
+  snackbar: {
+    ...state.snackbar,
+    isOpen: true,
+    message: (action.meta ? action.meta.message : null)
+  }
 });
 
 const hideSnackbar = (state) =>
@@ -104,10 +104,5 @@ export const initialState = {
 
 export default function uiReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
-  if (action.type == 'UI_HIDE_MODAL') {
-    const retdata =  handler(state, action);
-    return retdata;
-  } else {
   return handler ? handler(state, action) : state;
-  }
 }

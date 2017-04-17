@@ -1,5 +1,5 @@
 import React from 'react';
-import { hideEmailSignUpErrorModal } from 'store/auth/actions/ui';
+import { hideEmailSignUpErrorModal } from 'redux-auth';
 import Modal from './Modal';
 
 class EmailSignUpErrorModal extends React.Component {

@@ -1,4 +1,4 @@
-import fetch from 'store/auth/utils/fetch';
+import { fetch } from 'redux-auth';
 
 // TODO: make api return nested data, implement normalizing here
 

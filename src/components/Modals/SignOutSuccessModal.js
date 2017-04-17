@@ -1,5 +1,5 @@
 import React from 'react';
-import { hideSignOutSuccessModal } from 'store/auth/actions/ui';
+import { hideSignOutSuccessModal } from 'redux-auth';
 import Modal from './Modal';
 
 class SignOutSuccessModal extends React.Component {

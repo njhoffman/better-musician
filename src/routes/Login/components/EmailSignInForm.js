@@ -7,7 +7,7 @@ import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import ButtonLoader from 'components/ButtonLoader';
 import FormField from 'components/Field';
-import { emailSignIn } from 'store/auth/actions/email-sign-in';
+import { emailSignIn } from 'redux-auth';
 
 class EmailSignInForm extends React.Component {
   static propTypes = {

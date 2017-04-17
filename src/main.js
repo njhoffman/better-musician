@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import createStore from './store/createStore';
 import AppContainer from 'components/AppContainer';
-import { configure as authConfigure } from './store/auth/actions/configure';
+import { configure as authConfigure } from 'redux-auth';
 
 // import 'material-design-lite/src/typography/_typography.scss';
 import injectTapEventPlugin from 'react-tap-event-plugin';

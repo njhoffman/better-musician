@@ -6,11 +6,11 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ButtonLoader from '../ButtonLoader';
 import Text from '../Field/Text';
 import { connect } from 'react-redux';
-import { hidePasswordResetSuccessModal } from 'store/auth/actions/ui';
+import { hidePasswordResetSuccessModal } from 'redux-auth';
 import {
   updatePasswordModal,
   updatePasswordModalFormUpdate
-} from 'store/auth/actions/update-password-modal';
+} from 'redux-auth';
 
 class PasswordResetSuccessModal extends React.Component {
   static propTypes = {

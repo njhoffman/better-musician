@@ -10,7 +10,7 @@ import { MdHelp as HelpIcon } from 'react-icons/lib/md';
 import { RaisedButton } from 'material-ui';
 import ButtonLoader from 'components/ButtonLoader';
 import FormField from 'components/Field';
-import { emailSignUp } from 'store/auth/actions/email-sign-up';
+import { emailSignUp } from 'redux-auth';
 import css from './EmailSignUpForm.scss';
 
 class EmailSignUpForm extends React.Component {

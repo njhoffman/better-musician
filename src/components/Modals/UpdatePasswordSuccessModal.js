@@ -1,5 +1,5 @@
 import React from 'react';
-import { hideUpdatePasswordSuccessModal } from 'store/auth/actions/ui';
+import { hideUpdatePasswordSuccessModal } from 'redux-auth';
 import Modal from './Modal';
 
 class UpdatePasswordSuccessModal extends React.Component {

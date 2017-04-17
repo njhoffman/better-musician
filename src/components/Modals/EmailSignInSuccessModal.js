@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Modal from './Modal';
 import { connect } from 'react-redux';
-import { hideEmailSignInSuccessModal } from 'store/auth/actions/ui';
+import { hideEmailSignInSuccessModal } from 'redux-auth';
 
 class EmailSignInSuccessModal extends React.Component {
   static propTypes = {

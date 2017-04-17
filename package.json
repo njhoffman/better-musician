@@ -167,6 +167,7 @@
     "express": "^4.14.0",
     "happypack": "^3.0.2",
     "heapdump": "^0.3.7",
+    "inject-loader": "^3.0.0",
     "karma": "^1.0.0",
     "karma-coverage": "^1.0.0",
     "karma-json-reporter": "^1.2.0",

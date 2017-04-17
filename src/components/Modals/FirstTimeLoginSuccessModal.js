@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { hideFirstTimeLoginSuccessModal } from 'store/auth/actions/ui';
+import { hideFirstTimeLoginSuccessModal } from 'redux-auth';
 import Modal from './Modal';
 
 class FirstTimeLoginSuccessModal extends React.Component {

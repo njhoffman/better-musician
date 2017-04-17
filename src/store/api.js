@@ -4,15 +4,18 @@ import { CALL_API } from 'middleware/api';
 // Constants
 // ------------------------------------
 
-export const FETCH_SONGS      = 'FETCH_SONGS';
-export const SONGS_REQUEST    = 'SONGS_REQUEST';
-export const SONGS_SUCCESS    = 'SONGS_SUCCESS';
-export const SONGS_FAILURE    = 'SONGS_FAILURE';
-export const LOAD_ARTISTS     = 'LOAD_ARTISTS';
-export const LOAD_INSTRUMENTS = 'LOAD_INSTRUMENTS';
-export const LOAD_GENRES      = 'LOAD_GENRES';
-export const LOAD_SONGS       = 'LOAD_SONGS';
-export const LOAD_FIELDS      = 'LOAD_FIELDS';
+export const FETCH_SONGS           = 'FETCH_SONGS';
+export const SONGS_REQUEST         = 'SONGS_REQUEST';
+export const SONGS_SUCCESS         = 'SONGS_SUCCESS';
+export const SONGS_FAILURE         = 'SONGS_FAILURE';
+export const LOAD_ARTISTS          = 'LOAD_ARTISTS';
+export const LOAD_INSTRUMENTS      = 'LOAD_INSTRUMENTS';
+export const LOAD_GENRES           = 'LOAD_GENRES';
+export const LOAD_SONGS            = 'LOAD_SONGS';
+export const LOAD_FIELDS           = 'LOAD_FIELDS';
+// redux-auth actions
+export const AUTHENTICATE_START    = 'AUTHENTICATE_START';
+export const AUTHENTICATE_COMPLETE = 'AUTHENTICATE_COMPLETE';
 
 export const UPDATE_USER  = 'USER_UPDATE';
 export const USER_SUCCESS = 'USER_SUCCESS';
@@ -68,7 +71,7 @@ export const userSuccess = (response) => (dispatch) => {
   dispatch({ type: USER_SUCCESS, user: response });
   dispatch({ type: 'UI_SHOW_SNACKBAR', meta: { message: 'Profile Updated' } });
   // reloads user attributes
-  dispatch({ type: 'AUTHENTICATE_COMPLETE', user: response });
+  dispatch({ type: AUTHENTICATE_COMPLETE, user: response });
 };
 
 // ------------------------------------
@@ -76,9 +79,9 @@ export const userSuccess = (response) => (dispatch) => {
 // ------------------------------------
 
 const ACTION_HANDLERS = {
-  ['AUTHENTICATE_START'] : (state) =>
+  [AUTHENTICATE_START] : (state) =>
     ({ ...state, isFetching: true }),
-  ['AUTHENTICATE_COMPLETE'] : (state) =>
+  [AUTHENTICATE_COMPLETE] : (state) =>
     ({ ...state,
       isFetching: false,
       initialized: state.initialized.indexOf('user') === -1 ? state.initialized.concat('user') : state.initialized
@@ -88,13 +91,14 @@ const ACTION_HANDLERS = {
     ({ ...state,
       isFetching: false,
       initialized: state.initialized.indexOf('songs') === -1 ? state.initialized.concat('songs') : state.initialized }),
-  [UPDATE_USER] : (state) => ({ ...state, isFetching: true })
+  [UPDATE_USER] : (state) => ({ ...state, isFetching: true }),
+  [USER_SUCCESS] : (state) => ({ ...state, isFetching: false })
 };
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = {
+export const initialState = {
   isFetching: false,
   initialized: []
 };

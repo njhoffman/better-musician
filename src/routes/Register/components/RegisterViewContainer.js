@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import RegisterView from './RegisterView';
-import { emailSignUpFormUpdate, emailSignUp } from 'store/auth/actions/email-sign-up';
+import { emailSignUpFormUpdate, emailSignUp } from 'redux-auth';
 import { handleRegisterSuccess } from '../modules/register';
 
 const mapActionCreators = {

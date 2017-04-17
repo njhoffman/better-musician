@@ -3,7 +3,6 @@ const project = require('./project.config');
 const webpackConfig = require('./webpack.config');
 const { log } = require('../server/debugger-256')('app:config:karma');
 
-log('Creating karma configuration.');
 const karmaConfig = {
   basePath : '../', // project root in relation to bin/karma.js
   files    : [
@@ -82,5 +81,9 @@ if (project.globals.__COVERAGE__) {
     })
   }];
 }
+
+log(`Creating karma configuration. Reporter: %${karmaConfig.reporters}%`, { color: 'bold' });
+log(`Test Framework: %${karmaConfig.frameworks}% Browsers: %${karmaConfig.browsers}%`,
+  { color: 'bold' }, { color: 'bold' });
 
 module.exports = (cfg) => cfg.set(karmaConfig);

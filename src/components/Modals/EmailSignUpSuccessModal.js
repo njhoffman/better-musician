@@ -1,5 +1,5 @@
 import React from 'react';
-import { hideEmailSignUpSuccessModal } from 'store/auth/actions/ui';
+import { hideEmailSignUpSuccessModal } from 'redux-auth';
 import { connect } from 'react-redux';
 import Modal from './Modal';
 

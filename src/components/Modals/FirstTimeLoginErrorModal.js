@@ -1,5 +1,5 @@
 import React from 'react';
-import { hideFirstTimeLoginErrorModal } from 'store/auth/actions/ui';
+import { hideFirstTimeLoginErrorModal } from 'redux-auth';
 import Modal from './Modal';
 
 class FirstTimeLoginErrorModal extends React.Component {

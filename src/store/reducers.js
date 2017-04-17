@@ -1,7 +1,7 @@
 // import { combineReducers } from 'redux-immutablejs';
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
-import { authStateReducer } from './auth';
+import { authStateReducer } from 'redux-auth';
 import locationReducer from './location';
 import uiReducer from './ui';
 import apiReducer from './api';
@@ -35,9 +35,8 @@ export const injectReducer = (store, { key, reducer, models }) => {
   if (Object.hasOwnProperty.call(store.asyncReducers, key)) {
     return;
   }
-
   store.asyncReducers[key] = reducer;
-  store.replaceReducer(makeRootReducer(store.asyncReducers, models));
+  store.replaceReducer(exports.makeRootReducer(store.asyncReducers, models));
 };
 
 export default makeRootReducer;

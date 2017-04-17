@@ -5,7 +5,7 @@ import {
   default as locationReducer
 } from 'store/location';
 
-describe('(Internal Module) Location', () => {
+describe('(Store) Location', () => {
   it('Should export a constant LOCATION_CHANGE.', () => {
     expect(LOCATION_CHANGE).to.equal('LOCATION_CHANGE');
   });

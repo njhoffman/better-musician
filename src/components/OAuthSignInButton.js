@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import ButtonLoader from './ButtonLoader';
 import ActionExitToApp from 'material-ui/svg-icons/action/exit-to-app';
-import { oAuthSignIn as _oAuthSignIn } from 'store/auth/actions/oauth-sign-in';
+import { oAuthSignIn as _oAuthSignIn } from 'redux-auth';
 
 // hook for rewire
 var oAuthSignIn = _oAuthSignIn;
