@@ -4,7 +4,7 @@ const project = require('../config/project.config');
 const requestOutput = require('./server.utils').proxyRequestOutput;
 const responseOutput = require('./server.utils').proxyResponseOutput;
 
-const { error } = require('./debugger-256')('app:response:proxy');
+const { error } = require('debugger-256')('app:response:proxy');
 
 module.exports = function (app) {
   // Proxy to API server

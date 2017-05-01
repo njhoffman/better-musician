@@ -117,9 +117,11 @@ describe('(Store) API', () => {
         }
       };
       const dispatchStub = sinon.spy();
+      const songsSuccessStub = sinon.stub().returns(dispatchStub);
 
 
       it('Should dispatch action SONGS_SUCCESS with the response as payload.', () => {
+        songsSuccess(songResponse);
         expect(dispatchStub).to.be.called.once;
       });
       it('Should dispatch action LOAD_ARTISTS with the artists as payload.', () => {

@@ -9,7 +9,7 @@ const project = require('./project.config');
 // const HappyPack = require('happypack');
 const _ = require('lodash');
 
-const { log, error } = require('../server/debugger-256')('app:config:webpack');
+const { log, error } = require('debugger-256')('app:config:webpack');
 
 const __DEV__ = project.globals.__DEV__;
 const __PROD__ = project.globals.__PROD__;

@@ -9,7 +9,7 @@ import { morganOutput, requestOutput, webpackLog } from './server.utils';
 import setupProxy from './proxy';
 import webpackConfig from '../config/webpack.config';
 import project from '../config/project.config';
-import configDebug from './debugger-256';
+import configDebug from 'debugger-256';
 import { humanMemorySize } from '../shared/util';
 
 // TODO: make logger for happypack

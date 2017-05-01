@@ -2,7 +2,7 @@ const _ = require('lodash');
 const StatsD = require('node-statsd');
 const memwatch = require('memwatch-next');
 const { humanMemorySize, isJson, padLeft, padRight } = require('../shared/util');
-const configDebug = require('./debugger-256');
+const configDebug = require('debugger-256');
 
 const sdc = new StatsD();
 

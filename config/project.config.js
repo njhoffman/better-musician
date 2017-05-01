@@ -2,7 +2,7 @@
 const path = require('path');
 const argv = require('yargs').argv;
 const ip = require('ip');
-const { log, info, warn } = require('../server/debugger-256')('app:config:project');
+const { log, info, warn } = require('debugger-256')('app:config:project');
 
 log('Creating project configuration.');
 // ========================================================
