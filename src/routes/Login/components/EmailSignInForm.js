@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { MdExitToApp } from 'react-icons/lib/md/';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import { Row } from 'react-foundation';
+import { Row, Column } from 'react-foundation';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import ButtonLoader from 'components/ButtonLoader';
@@ -62,9 +62,11 @@ class EmailSignInForm extends React.Component {
         style={{ clear: 'both', overflow: 'hidden' }}
         onSubmit={this.handleSubmit.bind(this)}>
         <Row>
-          { errors && errors.map(error =>
-            <p>{error}</p>
+          <Column>
+            {errors && errors.map(error =>
+              <p>{error}</p>
           )}
+          </Column>
         </Row>
         <Row>
           <FormField
@@ -87,16 +89,18 @@ class EmailSignInForm extends React.Component {
 
         </Row>
         <Row>
-          <ButtonLoader
-            loading={this.props.auth.getIn(['emailSignIn', 'loading'])}
-            type='submit'
-            icon={MdExitToApp}
-            className='email-sign-in-submit'
-            disabled={disabled}
-            label='Sign In'
-            onClick={this.handleSubmit.bind(this)}
-            primary
-            {...this.props.inputProps.submit} />
+          <Column centerOnSmall>
+            <ButtonLoader
+              loading={this.props.auth.getIn(['emailSignIn', 'loading'])}
+              type='submit'
+              icon={MdExitToApp}
+              className='email-sign-in-submit'
+              disabled={disabled}
+              label='Sign In'
+              onClick={this.handleSubmit.bind(this)}
+              primary
+              {...this.props.inputProps.submit} />
+          </Column>
         </Row>
       </form>
     );

@@ -1,12 +1,13 @@
 import { applyMiddleware, compose, createStore } from 'redux';
 import { browserHistory } from 'react-router';
-import makeRootReducer from './reducers';
-import { updateLocation } from './location';
-import apiMiddleware from 'middleware/api';
 import promiseMiddleware from 'redux-promise-middleware';
 import thunkMiddleware from 'redux-thunk';
 
-export default (initialState = {}) => {
+import makeRootReducer from './reducers';
+import { updateLocation } from './location';
+import apiMiddleware from 'middleware/api';
+
+export default (initialState = {}, history) => {
   // const middleware = [thunk, middlewareApi, createLogger()];
   const middleware = [apiMiddleware, thunkMiddleware, promiseMiddleware()];
 
@@ -29,8 +30,9 @@ export default (initialState = {}) => {
   );
   store.asyncReducers = {};
 
+
   // to unsubscribe, invoke `store.unsubscribeHistory()` anytime
-  store.unsubscribeHistory = browserHistory.listen(updateLocation(store));
+  store.unsubscribeHistory = history.listen(updateLocation(store));
 
   if (module.hot) {
     module.hot.accept('./reducers', () => {
