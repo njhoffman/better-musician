@@ -7,7 +7,7 @@ import { oAuthSignIn as _oAuthSignIn } from 'redux-auth';
 // hook for rewire
 var oAuthSignIn = _oAuthSignIn;
 
-class OAuthSignInButton extends React.Component {
+export class OAuthSignInButton extends React.Component {
   static propTypes = {
     provider:     PropTypes.string.isRequired,
     endpoint:     PropTypes.string,

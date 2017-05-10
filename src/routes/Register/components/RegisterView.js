@@ -26,10 +26,10 @@ const facebookIconComponent = () => {
 };
 
 export const RegisterView = (props) => (
-  <Column centerOnSmall small={8}>
+  <Column centerOnSmall small={12} medium={10} large={8}>
     <Paper zDepth={5}>
       <div className={css.registerContainer}>
-        <h3>Sign Up for Instrumental.com</h3>
+        <h3>Sign Up for instrumental.io</h3>
         <p>It's free. It's easy. It takes 5 seconds.</p>
         <div className={css.fieldWrapper}>
           <OAuthSignInButton
@@ -66,4 +66,4 @@ RegisterView.propTypes = {
   handleRegisterSuccess: PropTypes.func
 };
 
-export default muiThemeable()(RegisterView);
+export default (RegisterView);

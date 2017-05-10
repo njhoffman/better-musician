@@ -6,7 +6,7 @@ import css from './LoginView.scss';
 import EmailSignInForm from './EmailSignInForm';
 
 export const LoginView = (props) => (
-  <Column centerOnSmall small={8}>
+  <Column centerOnSmall small={12} medium={10} large={8}>
     <Paper zDepth={5}>
       <div className={css.loginContainer}>
         <h2>This is the Login Page</h2>

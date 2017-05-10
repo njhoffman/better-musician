@@ -13,7 +13,7 @@ import FormField from 'components/Field';
 import { emailSignUp } from 'redux-auth';
 import css from './EmailSignUpForm.scss';
 
-class EmailSignUpForm extends React.Component {
+export class EmailSignUpForm extends React.Component {
   static propTypes = {
     auth:                   PropTypes.object.isRequired,
     endpoint:               PropTypes.string,

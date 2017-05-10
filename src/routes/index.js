@@ -9,13 +9,12 @@ import FieldsRoute from './Fields';
 import ResetRoute from './Reset';
 import LoginRoute from './Login';
 import RegisterRoute from './Register';
-import { browserHistory } from 'react-router';
 
-export const createRoutes = (store) => {
+export const createRoutes = (store, history) => {
   const auth = (level) => () => {
     const user = store.getState().auth ? store.getState().auth.get('user') : null;
     if (!user || !user.get('isSignedIn')) {
-      browserHistory.push('login?redirect=' +
+      history.push('login?redirect=' +
         encodeURIComponent(window.location.pathname.substr(1)));
       return false;
     }

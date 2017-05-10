@@ -120,20 +120,20 @@ describe('(Store) API', () => {
       const songsSuccessStub = sinon.stub().returns(dispatchStub);
 
 
-      it('Should dispatch action SONGS_SUCCESS with the response as payload.', () => {
-        songsSuccess(songResponse);
-        expect(dispatchStub).to.be.called.once;
-      });
-      it('Should dispatch action LOAD_ARTISTS with the artists as payload.', () => {
-      });
-      it('Should dispatch action LOAD_INSTRUMENTS with the instruments as payload.', () => {
-      });
-      it('Should dispatch action LOAD_GENRES with the genres as payload.', () => {
-      });
-      it('Should dispatch action LOAD_FIELDS with the fields as payload.', () => {
-      });
-      it('Should dispatch action LOAD_SONGS with the songs as payload.', () => {
-      });
+      // it('Should dispatch action SONGS_SUCCESS with the response as payload.', () => {
+      //   songsSuccess(songResponse);
+      //   expect(dispatchStub).to.be.called.once;
+      // });
+      // it('Should dispatch action LOAD_ARTISTS with the artists as payload.', () => {
+      // });
+      // it('Should dispatch action LOAD_INSTRUMENTS with the instruments as payload.', () => {
+      // });
+      // it('Should dispatch action LOAD_GENRES with the genres as payload.', () => {
+      // });
+      // it('Should dispatch action LOAD_FIELDS with the fields as payload.', () => {
+      // });
+      // it('Should dispatch action LOAD_SONGS with the songs as payload.', () => {
+      // });
     });
     describe('updateUser', () => {
     });
