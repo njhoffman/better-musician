@@ -114,7 +114,7 @@
     "lodash": "^4.17.2",
     "material-design-lite": "^1.2.1",
     "material-ui": "^0.18.0",
-    "node-sass": "^3.13.1",
+    "node-sass": "^4.5.2",
     "node-statsd": "^0.1.1",
     "normalize.css": "^5.0.0",
     "postcss-loader": "^1.1.0",
