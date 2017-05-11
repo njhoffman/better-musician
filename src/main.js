@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import createHistory from 'history/createBrowserHistory';
 import createStore from './store/createStore';
 import AppContainer from 'components/AppContainer';
 import { configure as authConfigure } from 'redux-auth';
@@ -16,8 +15,7 @@ injectTapEventPlugin();
 // Store Instantiation
 // ========================================================
 const initialState = window.___INITIAL_STATE__;
-const history = createHistory();
-const store = createStore(initialState, history);
+const store = createStore(initialState);
 
 // ========================================================
 // Render Setup
@@ -25,7 +23,7 @@ const store = createStore(initialState, history);
 const MOUNT_NODE = document.getElementById('root');
 
 let render = () => {
-  const routes = require('./routes/index').default(store, history);
+  const routes = require('./routes/index').default(store);
 
   store.dispatch(authConfigure({
     apiUrl:                'http://localhost:3000/api',
@@ -48,7 +46,7 @@ let render = () => {
     // cleanSession:        true
   })).then(() => {
     ReactDOM.render(
-      <AppContainer store={store} routes={routes} history={history} />,
+      <AppContainer store={store} routes={routes} />,
       MOUNT_NODE
     );
   });

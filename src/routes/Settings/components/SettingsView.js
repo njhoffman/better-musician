@@ -13,7 +13,7 @@ import ButtonLoader from 'components/ButtonLoader';
 import FormField from 'components/Field';
 import css from './SettingsView.scss';
 
-class SettingsView extends Component {
+export class SettingsView extends Component {
 
   constructor(props) {
     super(props);
@@ -47,8 +47,8 @@ class SettingsView extends Component {
     const redirectProfile = () => browserHistory.push('/profile');
     const redirectStats = () => browserHistory.push('/stats');
     const redirectFields = () => browserHistory.push('/fields');
-    const textColor = this.props.muiTheme.palette.textColor;
-    let disabled = this.props.api.isFetching;
+    const textColor = this.props.muiTheme ? this.props.muiTheme.palette.textColor : 'black';
+    let disabled = this.props.api ? this.props.api.isFetching : false;
     return (
       <Column small={12} medium={10} centerOnSmall large={8}>
         <Paper zDepth={5}>
@@ -132,7 +132,7 @@ class SettingsView extends Component {
                         type='submit'
                         label='Reset'
                         secondary
-                        loading={this.props.api.isFetching}
+                        loading={disabled}
                         labelStyle={{ paddingRight: '5px' }}
                         style={{ width: '160px', marginRight: '15px' }}
                         onClick={this.props.resetSettings}
@@ -142,7 +142,7 @@ class SettingsView extends Component {
                       <ButtonLoader
                         type='submit'
                         label='Save'
-                        loading={this.props.api.isFetching}
+                        loading={disabled}
                         labelStyle={{ color: textColor, paddingRight: '5px' }}
                         style={{ width: '160px', marginRight: '15px' }}
                         onClick={this.props.updateSettings}

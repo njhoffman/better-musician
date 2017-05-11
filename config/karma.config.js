@@ -29,6 +29,11 @@ const karmaConfig = {
   },
   // plugins: ['karma-spec-reporter'],
   browsers : ['PhantomJS'],
+  browserConsoleLogOptions: {
+		level: 'log',
+		format: '%b %T: %m',
+		terminal: true
+  },
   webpack  : {
     devtool : 'cheap-module-source-map',
     resolve : Object.assign({}, webpackConfig.resolve, {
@@ -70,6 +75,9 @@ const karmaConfig = {
 };
 
 if (project.globals.__COVERAGE__) {
+  if (project.globals.__VERBOSE__) {
+    karmaConfig.coverageReporter.reporters.unshift({ type: 'text' });
+  }
   karmaConfig.reporters.push('coverage');
   karmaConfig.webpack.module.preLoaders = [{
     test    : /\.(js|jsx)$/,

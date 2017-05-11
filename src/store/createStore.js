@@ -7,7 +7,7 @@ import makeRootReducer from './reducers';
 import { updateLocation } from './location';
 import apiMiddleware from 'middleware/api';
 
-export default (initialState = {}, history) => {
+export default (initialState = {}) => {
   // const middleware = [thunk, middlewareApi, createLogger()];
   const middleware = [apiMiddleware, thunkMiddleware, promiseMiddleware()];
 
@@ -32,7 +32,7 @@ export default (initialState = {}, history) => {
 
 
   // to unsubscribe, invoke `store.unsubscribeHistory()` anytime
-  store.unsubscribeHistory = history.listen(updateLocation(store));
+  store.unsubscribeHistory = browserHistory.listen(updateLocation(store));
 
   if (module.hot) {
     module.hot.accept('./reducers', () => {

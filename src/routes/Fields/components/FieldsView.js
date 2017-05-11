@@ -22,7 +22,7 @@ export const FieldsView = (props) => {
   const redirectProfile = () => browserHistory.push('/profile');
   const redirectStats = () => browserHistory.push('/stats');
   const redirectSettings = () => browserHistory.push('/settings');
-  const textColor = props.muiTheme.palette.textColor;
+  const textColor = props.muiTheme ? props.muiTheme.palette.textColor : 'black';
 
   const fieldOptions = {
     0: 'Text Box',

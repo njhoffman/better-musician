@@ -1,4 +1,5 @@
 // We only need to import the modules necessary for initial render
+import { browserHistory } from 'react-router';
 import CoreLayout from '../layouts/CoreLayout/CoreLayout';
 import HomeRoute from './Home';
 import SongsRoute from './Songs';
@@ -10,11 +11,11 @@ import ResetRoute from './Reset';
 import LoginRoute from './Login';
 import RegisterRoute from './Register';
 
-export const createRoutes = (store, history) => {
+export const createRoutes = (store) => {
   const auth = (level) => () => {
     const user = store.getState().auth ? store.getState().auth.get('user') : null;
     if (!user || !user.get('isSignedIn')) {
-      history.push('login?redirect=' +
+      browserHistory.push('login?redirect=' +
         encodeURIComponent(window.location.pathname.substr(1)));
       return false;
     }

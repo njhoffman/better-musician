@@ -10,6 +10,7 @@ log('Creating project configuration.');
 // ========================================================
 const config = {
   env : process.env.NODE_ENV || 'development',
+  envFlag: process.env.NODE_ENV_FLAG || '',
 
   // ----------------------------------
   // Project Structure
@@ -96,6 +97,7 @@ config.globals = {
   '__PROD__'     : config.env === 'production',
   '__TEST__'     : config.env === 'test',
   '__COVERAGE__' : !argv.watch && config.env === 'test',
+  '__VERBOSE__'  : config.envFlag === 'verbose',
   '__BASENAME__' : JSON.stringify(process.env.BASENAME || '')
 };
 
