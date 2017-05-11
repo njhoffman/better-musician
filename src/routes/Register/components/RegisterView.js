@@ -3,7 +3,7 @@ import { Column } from 'react-foundation';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { Paper } from 'material-ui';
 import EmailSignUpForm from './EmailSignUpForm';
-import OAuthSignInButton from 'components/OAuthSignInButton';
+import { OAuthSignInButton } from 'redux-auth/material-ui-theme';
 
 import css from './RegisterView.scss';
 import facebookIcon from 'assets/fb-icon.png';

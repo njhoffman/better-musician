@@ -3,7 +3,7 @@ import { Drawer, Divider, MenuItem } from 'material-ui';
 import { Link, browserHistory } from 'react-router';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
-import OAuthSignInButton from 'components/OAuthSignInButton';
+import { OAuthSignInButton } from 'redux-auth/material-ui-theme';
 import SignOutButton from 'components/SignOutButton';
 import ButtonLoader from 'components/ButtonLoader';
 import facebookIcon from 'assets/fb-icon.png';

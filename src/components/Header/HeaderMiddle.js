@@ -101,6 +101,7 @@ class HeaderMiddle extends Component {
   }
 
   renderSongButtonView() {
+    const { muiTheme: { instrumental: { headerLinksColor } } } = props;
     return (
       <a className={css.headerLink}>
         <span className={css.iconWrapper}>
@@ -119,7 +120,7 @@ class HeaderMiddle extends Component {
             <Row className={css.row}>
               <Column className={css.column} >
                 <a
-                  style={{ color: this.props.muiTheme.instrumental.headerLinksColor }}
+                  style={{ color: headerLinksColor }}
                   className={css.headerLink}
                   onClick={this.showEditSongModal} >
                   <span className={css.iconWrapper}>
@@ -132,7 +133,7 @@ class HeaderMiddle extends Component {
             <Row className={css.row}>
               <Column className={css.column}>
                 <a
-                  style={{ color: this.props.muiTheme.instrumental.headerLinksColor }}
+                  style={{ color: headerLinksColor }}
                   className={css.headerLink}>
                   <span className={css.iconWrapper}>
                     <DeleteIcon className={css.icon} />
@@ -158,7 +159,7 @@ class HeaderMiddle extends Component {
   }
 
   renderFiltersButton() {
-    const isActive = this.props.modal.type === 'MODAL_FILTER_SONGS';
+    const isActive = this.props.modal && this.props.modal.type === 'MODAL_FILTER_SONGS';
     return (
       <a
         className={css.headerLink + ' ' + (isActive ? css.headerLinkActive : '')}

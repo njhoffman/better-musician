@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import RegisterViewConnected, { RegisterView } from 'routes/Register/components/RegisterView';
 import EmailSignUpForm from 'routes/Register/components/EmailSignUpForm';
-import OAuthSignInButton from 'components/OAuthSignInButton';
+import { OAuthSignInButton } from 'redux-auth/material-ui-theme';
 
 describe('Routes', () => {
   describe('Register', () => {
