@@ -5,7 +5,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import 'coreStyles';
 import css from './CoreLayout.scss';
-import AuthGlobals from 'components/AuthGlobals';
+import { AuthGlobals } from 'redux-auth/material-ui-theme';
 import Header from 'components/Header/HeaderContainer';
 import Footer from 'components/Footer/FooterContainer';
 import DrawerMenu from 'components/DrawerMenu/DrawerMenuContainer';
