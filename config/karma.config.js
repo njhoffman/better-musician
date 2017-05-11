@@ -5,20 +5,22 @@ const { log } = require('debugger-256')('app:config:karma');
 
 const karmaConfig = {
   basePath : '../', // project root in relation to bin/karma.js
-  files    : [
-    {
-      pattern  : `./${project.dir_test}/test-bundler.js`,
-      watched  : false,
-      served   : true,
-      included : true
-    }
-  ],
+  files    : [{
+    pattern  : `./${project.dir_test}/test-bundler.js`,
+    watched  : false,
+    served   : true,
+    included : true
+  }],
   singleRun     : !argv.watch,
+  colors: true,
+  client: {
+    captureConsole: true
+  },
   frameworks    : ['mocha'],
-  reporters     : ['mocha'], // 'mocha', 'spec', 'json', 'progress', 'dots'
+  reporters     : ['spec'], // 'mocha', 'spec', 'json', 'progress', 'dots'
   specReporter: {
     maxLogLines:          5,         // limit number of lines logged per test
-    suppressErrorSummary: true,  // do not print error summary
+    suppressErrorSummary: false,  // do not print error summary
     suppressFailed:       false,  // do not print information about failed tests
     suppressPassed:       false,  // do not print information about passed tests
     suppressSkipped:      true,  // do not print information about skipped tests
@@ -28,13 +30,31 @@ const karmaConfig = {
     stdout: true
   },
   // plugins: ['karma-spec-reporter'],
-  browsers : ['PhantomJS'],
+  browsers : ['PhantomJS_custom'],
   browserConsoleLogOptions: {
-		level: 'log',
-		format: '%b %T: %m',
-		terminal: true
+    level: 'log',
+    // format: '%b %T: %m',
+    format: '\t\t%m',
+    terminal: true
   },
-  webpack  : {
+	customLaunchers: {
+		'PhantomJS_custom': {
+			base: 'PhantomJS',
+			options: {
+				windowName: 'instrumental',
+				settings: {
+					webSecurityEnabled: false
+				},
+			},
+			flags: ['--load-images=true'],
+			debug: true
+		}
+	},
+	phantomjsLauncher: {
+		// Have phantomjs exit if a ResourceError is encountered (useful if karma exits without killing phantom)
+		exitOnResourceError: true
+	},
+   webpack  : {
     devtool : 'cheap-module-source-map',
     resolve : Object.assign({}, webpackConfig.resolve, {
       alias : Object.assign({}, webpackConfig.resolve.alias, {

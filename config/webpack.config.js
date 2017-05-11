@@ -24,7 +24,8 @@ const _RESOLVE_PATHS = {
   interfaces: 'src/interfaces',
   middleware: 'src/middleware',
   selectors:  'src/selectors',
-  store:      'src/store'
+  store:      'src/store',
+  tests:      'tests',
   // 'redux-orm': 'src/redux-orm',
   // 'redux-auth': 'src/redux-auth'
 };

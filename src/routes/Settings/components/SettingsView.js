@@ -171,8 +171,8 @@ SettingsView.propTypes = {
   muiTheme:       React.PropTypes.object,
   api:            React.PropTypes.object,
   setTheme:       React.PropTypes.func,
-  updateSettings: React.PropTypes.func,
-  resetSettings:  React.PropTypes.func
+  updateSettings: React.PropTypes.func.isRequired,
+  resetSettings:  React.PropTypes.func.isRequired
 };
 
 const updateSettingsForm = reduxForm({ form: 'updateSettingsForm' })(muiThemeable()(SettingsView));

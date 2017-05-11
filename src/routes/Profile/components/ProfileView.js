@@ -13,12 +13,13 @@ import {
 } from 'react-icons/lib/md';
 
 const renderImage = (props) => {
+  const { muiTheme: { palette: { primary1Color } } } = props;
   return (
     <Column>
       <Avatar
         icon={<AvatarIcon />}
         className={css.avatar}
-        backgroundColor={props.muiTheme.palette.primary1Color}
+        backgroundColor={primary1Color}
         size={100} />
       <div>No Picture</div>
       <RaisedButton
@@ -37,12 +38,15 @@ export const ProfileView = (props) => {
   //   this.props.auth.getIn(['user', 'isSignedIn']) ||
   //   this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'loading'])
   // );
-  let disabled = props.api.isFetching;
   const redirectSettings = () => browserHistory.push('/settings');
   const redirectFields = () => browserHistory.push('/fields');
   const redirectStats = () => browserHistory.push('/stats');
 
-  const textColor = props.muiTheme.palette.textColor;
+  const {
+    muiTheme: { palette: { textColor } },
+    api: { isFetching }
+  } = props;
+  const disabled = isFetching;
 
   return (
     <Column centerOnSmall small={12} medium={10} large={8}>
@@ -89,7 +93,7 @@ export const ProfileView = (props) => {
                     <ButtonLoader
                       type='submit'
                       label='Save'
-                      loading={props.api.isFetching}
+                      loading={isFetching}
                       labelStyle={{ color: textColor, paddingRight: '5px' }}
                       onClick={props.updateProfile}
                       icon={<SaveIcon style={{ marginTop: '-10px', color: textColor }} />}

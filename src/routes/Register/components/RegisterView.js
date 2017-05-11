@@ -63,7 +63,7 @@ export const RegisterView = (props) => (
 );
 
 RegisterView.propTypes = {
-  handleRegisterSuccess: PropTypes.func
+  handleRegisterSuccess: PropTypes.func.isRequired
 };
 
 export default (RegisterView);
