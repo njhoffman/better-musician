@@ -1,11 +1,11 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
-import Header from 'components/Header';
+import DrawerMenu from 'components/DrawerMenu';
 
 describe('Components', () => {
-  describe('Header', () => {
+  describe('DrawerMenu', () => {
     it('Should render shallow', () => {
-      const wrapper = shallow(<Header />);
+      const wrapper = shallow(<DrawerMenu />);
     });
   });
 });

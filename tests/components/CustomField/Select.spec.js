@@ -1,12 +1,12 @@
 import React from 'react';
 import { mount, shallow } from 'enzyme';
-import HeaderLeft from 'components/Header/HeaderLeft';
+import Select from 'components/CustomField/Select';
 
 describe('Components', () => {
-  describe('Header', () => {
-    describe('Left', () => {
+  describe('Custom Fields', () => {
+    describe('Select', () => {
       it('Should render shallow', () => {
-        const wrapper = shallow(<HeaderLeft />);
+        const wrapper = shallow(<Select />);
       });
     });
   });
