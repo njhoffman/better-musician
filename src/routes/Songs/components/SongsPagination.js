@@ -10,7 +10,7 @@ import {
 
 import css from './SongsPagination.scss';
 
-const SongsPagination = ({
+export const SongsPagination = ({
   paginationCurrent,
   paginationPerPage,
   paginationTotal,
@@ -109,7 +109,7 @@ SongsPagination.propTypes = {
   setPaginationDecrement: PropTypes.func,
   setPaginationStart:     PropTypes.func,
   setPaginationEnd:       PropTypes.func,
-  muiTheme:               PropTypes.object
+  muiTheme:               PropTypes.object.isRequired
 };
 
 export default muiThemeable()(SongsPagination);

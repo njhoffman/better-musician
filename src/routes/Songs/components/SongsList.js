@@ -7,7 +7,7 @@ import SongsListHeader from './SongsListHeader';
 import Song from './SongContainer';
 import css from './SongList.scss';
 
-const SongsList = ({
+export const SongsList = ({
   songsCollection,
   muiTheme,
   setCurrentSong,

@@ -8,7 +8,7 @@ import { Field } from 'redux-form';
 import { RaisedButton } from 'material-ui';
 import css from './FieldsView.scss';
 
-class FieldOptions extends Component {
+export class FieldOptions extends Component {
 
   static propTypes = {
     fields: PropTypes.array.isRequired

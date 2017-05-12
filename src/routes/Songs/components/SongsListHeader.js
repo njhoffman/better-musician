@@ -4,7 +4,7 @@ import { TableHeaderColumn } from 'material-ui/Table';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import SortIcon from 'react-icons/lib/md/import-export';
 
-class SongsListHeader extends Component {
+export class SongsListHeader extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     displayName: PropTypes.string.isRequired,

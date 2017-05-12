@@ -4,7 +4,8 @@ export const muiTheme = {
   },
   instrumental: {
     headerLinksColor: 'blue'
-  }
+  },
+  starColor: 'yellow'
 };
 
 export const api = {

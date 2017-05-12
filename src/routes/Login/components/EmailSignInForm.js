@@ -10,7 +10,7 @@ import ButtonLoader from 'components/ButtonLoader';
 import FormField from 'components/Field';
 import { emailSignIn } from 'redux-auth';
 
-class EmailSignInForm extends React.Component {
+export class EmailSignInForm extends React.Component {
   static propTypes = {
     auth:        PropTypes.object.isRequired,
     dispatch:    PropTypes.func.isRequired,

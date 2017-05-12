@@ -11,14 +11,14 @@ import {
 } from 'react-icons/lib/md';
 import css from './FieldsView.scss';
 
-class FieldList extends Component {
+export class FieldList extends Component {
   static propTypes = {
-    savedTabs:    PropTypes.array,
+    savedTabs:    PropTypes.array.isRequired,
     muiTheme:     PropTypes.object,
-    cancelEdit:   PropTypes.func,
+    cancelEdit:   PropTypes.func.isRequired,
     editingField: PropTypes.object,
-    editField:    PropTypes.func,
-    deleteField:  PropTypes.func
+    editField:    PropTypes.func.isRequired,
+    deleteField:  PropTypes.func.isRequired
   }
 
   renderFieldItem = (field) => {

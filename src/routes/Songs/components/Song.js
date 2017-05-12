@@ -5,7 +5,7 @@ import css from './Song.scss';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { RenderStars, RenderDifficulty } from 'components/Field';
 
-const Song = ({
+export const Song = ({
   songValues,
   showViewSongModal,
   maxDifficulty,
@@ -53,9 +53,9 @@ Song.propTypes = {
     title:     PropTypes.string.isRequired,
     progress:  PropTypes.number,
     difficulty: PropTypes.number
-  }),
+  }).isRequired,
   showViewSongModal: PropTypes.func,
-  maxDifficulty: PropTypes.number,
+  maxDifficulty: PropTypes.number.isRequired,
   muiTheme: PropTypes.object
 };
 

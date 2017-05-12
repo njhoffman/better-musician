@@ -1,22 +1,22 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { EmailSignUpForm } from 'routes/Register/components/EmailSignUpForm';
+import { EmailSignInForm } from 'routes/Login/components/EmailSignInForm';
 import configureStore from 'redux-mock-store';
 
 describe('Routes', () => {
-  describe('Register', () => {
-    describe('Component: EmailSignUpForm', () => {
-      const emailSignUp = sinon.stub();
+  describe('Login', () => {
+    describe('Component: EmailSignInForm', () => {
+      const emailSignIn = sinon.stub();
       const auth = { getIn: sinon.stub() };
       const mockStore = configureStore();
       const { dispatch } = mockStore();
       const props = {
-        emailSignUp,
+        emailSignIn,
         auth,
         dispatch
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<EmailSignUpForm {...props} />);
+        const wrapper = shallow(<EmailSignInForm {...props} />);
       });
     });
   });
