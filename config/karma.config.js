@@ -47,7 +47,7 @@ const karmaConfig = {
 				},
 			},
 			flags: ['--load-images=true'],
-			debug: true
+			debug: false
 		}
 	},
 	phantomjsLauncher: {
