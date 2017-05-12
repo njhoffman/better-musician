@@ -1,6 +1,7 @@
 
 describe('Store', () => {
   describe('Reducers', () => {
+    let sandbox;
     const inject = require('inject!store/reducers');
 
     describe('makeRootReducer', () => {
@@ -61,37 +62,42 @@ describe('Store', () => {
     });
 
     describe('injectReducer', () => {
-      const reducerStub = sinon.spy();
-      const makeRootReducerStub = sinon.stub().returns('combined_reducers');
-      const storeStub = sinon.stub();
-      const replaceReducerStub = sinon.spy();
-      storeStub.replaceReducer = replaceReducerStub;
+      let reducerStub, makeRootReducerStub, storeStub, replaceReducerStub;
 
-      const reducers = inject({});
-      reducers.makeRootReducer = makeRootReducerStub;
+      let reducers = require('store/reducers');
 
       beforeEach(() => {
-        storeStub.reset();
-        storeStub.asyncReducers = {};
-        replaceReducerStub.reset();
-        makeRootReducerStub.reset();
+        sandbox = sinon.sandbox.create();
+        reducerStub = sandbox.stub();
+        makeRootReducerStub = sandbox.stub().returns('combined_reducers');
+        replaceReducerStub = sandbox.stub();
+        storeStub = { asyncReducers: {}, replaceReducer: replaceReducerStub };
+      });
+
+      afterEach(() => {
+        sandbox.restore();
       });
 
       it('Should assign the reducer to asyncReducers property of store', () => {
         reducers.injectReducer(storeStub, { key: 'new_key_1', reducer: reducerStub });
         expect(storeStub.asyncReducers).to.deep.equal({ 'new_key_1' : reducerStub });
       });
+
       it('Should call makeRootReducer with store asyncReducers', () => {
+        reducers.makeRootReducer = makeRootReducerStub;
         reducers.injectReducer(storeStub, { key: 'new_key_1', reducer: reducerStub });
         expect(makeRootReducerStub).to.be.called.once;
         expect(makeRootReducerStub).to.be.calledWith({ 'new_key_1' : reducerStub }, undefined);
       });
+
       it('Should return combined reducers from makeRootReducer to store replaceReducer method', () => {
+        reducers.makeRootReducer = makeRootReducerStub;
         reducers.injectReducer(storeStub, { key: 'new_key_1', reducer: reducerStub });
         expect(makeRootReducerStub).to.be.called.once;
         expect(replaceReducerStub).to.be.called.once;
         expect(replaceReducerStub).to.be.calledWith('combined_reducers');
       });
+
       it('Should return without calling replaceReducer if store already contains reducer key.', () => {
         storeStub.asyncReducers = { 'existing_key_1' : () => {} };
         reducers.injectReducer(storeStub, { key: 'existing_key_1', reducer: null });
