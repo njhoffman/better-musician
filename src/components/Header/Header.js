@@ -7,7 +7,7 @@ import HeaderMiddle from './HeaderMiddleContainer';
 import HeaderRight from './HeaderRightContainer';
 import css from './Header.scss';
 
-class Header extends Component {
+export class Header extends Component {
   render() {
     const { ...props } = this.props;
     const signedIn = props.user.get('isSignedIn');

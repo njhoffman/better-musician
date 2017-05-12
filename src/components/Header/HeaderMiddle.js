@@ -180,7 +180,7 @@ class HeaderMiddle extends Component {
           <SearchIcon className={css.icon} />
           <span className={css.iconText}>Search</span>
           <SearchPopover
-            open={this.state.searchPopoverOpen}
+            isOpen={this.state.searchPopoverOpen}
             anchorEl={this.state.searchPopoverAnchor}
             anchorOrigin={popoverStyle.anchor}
             targetOrigin={popoverStyle.target}

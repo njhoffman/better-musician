@@ -24,7 +24,7 @@ RenderChip.propTypes = {
   viewType: PropTypes.string,
   meta:     PropTypes.object,
   style:    PropTypes.object,
-  input:    PropTypes.object
+  input:    PropTypes.object.isRequired
 };
 
 export default RenderChip;

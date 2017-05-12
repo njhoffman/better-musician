@@ -25,7 +25,7 @@ let linkStyle = {
   display: 'inline-block'
 };
 
-class DrawerMenu extends Component {
+export class DrawerMenu extends Component {
   static propTypes = {
     hideDrawerMenu: PropTypes.func.isRequired,
     isOpen:         PropTypes.bool.isRequired,

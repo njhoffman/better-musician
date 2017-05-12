@@ -16,8 +16,6 @@ global.sinon = sinon;
 global.expect = chai.expect;
 global.should = chai.should();
 
-const chalk = require('chalk');
-
 // ---------------------------------------
 // Require Tests
 // ---------------------------------------

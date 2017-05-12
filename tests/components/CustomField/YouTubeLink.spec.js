@@ -6,8 +6,10 @@ describe('Components', () => {
   describe('Custom Fields', () => {
     describe('YouTubeLink', () => {
       const field = { name: 'testing field name' };
+      const id = 'testid';
       const props = {
-        field
+        field,
+        id
       };
 
       it('Should render shallow', () => {
