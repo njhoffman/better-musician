@@ -1,4 +1,5 @@
-import React, { Component, PropTypes }  from 'react';
+import React, { Component }  from 'react';
+import PropTypes from 'prop-types';
 import { MdAccountCircle as AvatarIcon } from 'react-icons/lib/md';
 import { Avatar, RaisedButton } from 'material-ui';
 import { Link } from 'react-router';

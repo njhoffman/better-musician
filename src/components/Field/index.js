@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import RenderSelect from './Select';
 import RenderMultiSelect from './MultiSelect';
 import RenderText from './Text';

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Paper } from 'material-ui';
 import { Column } from 'react-foundation';
 import muiThemeable from 'material-ui/styles/muiThemeable';

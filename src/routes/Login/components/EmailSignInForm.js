@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { MdExitToApp } from 'react-icons/lib/md/';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';

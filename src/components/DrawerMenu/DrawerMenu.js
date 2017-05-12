@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Drawer, Divider, MenuItem } from 'material-ui';
 import { Link, browserHistory } from 'react-router';
 import muiThemeable from 'material-ui/styles/muiThemeable';

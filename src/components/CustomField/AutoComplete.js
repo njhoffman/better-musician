@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Column } from 'react-foundation';
 import { RenderAutoComplete } from '../Field';
 import { Field } from 'redux-form';

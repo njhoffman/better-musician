@@ -1,4 +1,5 @@
-import React, { Component, PropTypes }  from 'react';
+import React, { Component }  from 'react';
+import PropTypes from 'prop-types';
 import { MdMenu as MenuIcon } from 'react-icons/lib/md';
 import { IndexLink } from 'react-router';
 import css from './Header.scss';

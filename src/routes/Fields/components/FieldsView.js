@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React  from 'react';
+import PropTypes from 'prop-types';
 import { RaisedButton, Paper, Tabs, Tab } from 'material-ui';
 import { Row, Column } from 'react-foundation';
 import { FieldArray, reduxForm } from 'redux-form';

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Row, Column } from 'react-foundation';
 import { RenderText } from '../Field';
 import { Field } from 'redux-form';

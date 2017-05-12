@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Avatar, Paper, Tabs, Tab, RaisedButton } from 'material-ui';
 import { Row, Column } from 'react-foundation';
 import ButtonLoader from 'components/ButtonLoader';
