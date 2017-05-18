@@ -11,7 +11,7 @@ export default (store, auth) => ({
         return;
       }
       const importModules = Promise.all([
-        require('./components/SettingsViewContainer').default,
+        require('./components/SettingsView').default,
         require('./modules/settings').default
       ]);
       importModules.then(([container, reducer]) => {

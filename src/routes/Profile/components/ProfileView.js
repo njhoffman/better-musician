@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Avatar, Paper, Tabs, Tab, RaisedButton } from 'material-ui';
 import { Row, Column } from 'react-foundation';
@@ -6,6 +7,7 @@ import ButtonLoader from 'components/ButtonLoader';
 import { reduxForm } from 'redux-form';
 import { browserHistory } from 'react-router';
 import muiThemeable from 'material-ui/styles/muiThemeable';
+import { updateUser } from 'store/api';
 import FormField from 'components/Field';
 import css from './ProfileView.scss';
 import {
@@ -133,4 +135,18 @@ ProfileView.propTypes = {
   updateProfile: PropTypes.func.isRequired
 };
 
-export default reduxForm({ form: 'updateProfileForm' })(muiThemeable()(ProfileView));
+const profileForm = reduxForm({ form: 'updateProfileForm' })(muiThemeable()(ProfileView));
+
+const mapActionCreators = {
+  updateProfile : updateUser
+};
+
+const mapStateToProps = (state) => {
+  return ({
+    api: state.api,
+    user: state.auth ? state.auth.get('user') : null,
+    initialValues: state.auth ? state.auth.get('user').get('attributes').toJS() : null
+  });
+};
+
+export default connect(mapStateToProps, mapActionCreators)(profileForm);

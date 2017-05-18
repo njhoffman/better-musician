@@ -11,7 +11,7 @@ export default (store, auth) => ({
         return;
       }
       const importModules = Promise.all([
-        require('./components/SongsViewContainer').default,
+        require('./components/SongsView').default,
         require('./modules/songs').default
       ]);
       importModules.then(([container, reducer, models]) => {

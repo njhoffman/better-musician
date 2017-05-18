@@ -11,7 +11,7 @@ export default (store, auth) => ({
         return;
       }
       const importModules = Promise.all([
-        require('./components/ProfileViewContainer').default,
+        require('./components/ProfileView').default,
         require('./modules/profile').default
       ]);
       importModules.then(([container, reducer]) => {

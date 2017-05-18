@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Paper, Tabs, Tab } from 'material-ui';
 import { Column } from 'react-foundation';
 import { browserHistory } from 'react-router';
@@ -46,4 +47,12 @@ export const StatsView = (props) => {
     </Column>
   );
 };
-export default muiThemeable()(StatsView);
+
+const mapActionCreators = {};
+const mapStateToProps = (state) => {
+  return ({
+    api: state.api
+  });
+};
+
+export default connect(mapStateToProps, mapActionCreators)(muiThemeable()(StatsView));

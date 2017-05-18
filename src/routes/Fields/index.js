@@ -11,7 +11,7 @@ export default (store, auth) => ({
         return;
       }
       const importModules = Promise.all([
-        require('./components/FieldsViewContainer').default,
+        require('./components/FieldsView').default,
         require('./modules/fields').default
       ]);
       importModules.then(([container, reducer]) => {

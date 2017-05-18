@@ -1,8 +1,18 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { RaisedButton } from 'material-ui';
 import FormField, { RenderStars } from 'components/Field';
 import { Row, Column } from 'react-foundation';
 import PropTypes from 'prop-types';
+
+import {
+  artists as artistsSelector,
+  artistsMatched as artistsMatchedSelector,
+  instruments as instrumentsSelector,
+  genres as genresSelector
+} from 'selectors/songs';
+
+import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
 import css from './AddSong.scss';
 
 export const AddSongMainTab = (props) => {
@@ -14,6 +24,7 @@ export const AddSongMainTab = (props) => {
     modalView,
     muiTheme: { palette: { textColor } }
   } = props;
+  console.info(props);
 
   const renderImage = (props) => {
     const artistPicture = props.matchedArtist && props.matchedArtist.pictures && props.matchedArtist.pictures[0]
@@ -79,47 +90,47 @@ export const AddSongMainTab = (props) => {
         </Column>
       </Row>
       {isView &&
+        <Row>
+          <FormField
+            name='title'
+            type='text'
+            {...textProps}
+            label='Song Title' />
+          <FormField
+            name='artist.fullName'
+            type='autocomplete'
+            {...textProps}
+            dataSource={props.artists}
+            label='Song Artist' />
+        </Row>
+      }
+      {!isView &&
+        <div>
           <Row>
             <FormField
               name='title'
               type='text'
               {...textProps}
+              small={8}
+              centerOnSmall
+              style={{ ...textStyle, ...{ width: '100%' } }}
               label='Song Title' />
+          </Row>
+          <Row>
             <FormField
-              name='artist.fullName'
+              name='artist.lastName'
               type='autocomplete'
               {...textProps}
               dataSource={props.artists}
-              label='Song Artist' />
+              label='Last Name / Band' />
+            <FormField
+              name='artist.firstName'
+              type='autocomplete'
+              {...textProps}
+              dataSource={props.artists}
+              label='First Name' />
           </Row>
-      }
-      {!isView &&
-          <div>
-            <Row>
-              <FormField
-                name='title'
-                type='text'
-                {...textProps}
-                small={8}
-                centerOnSmall
-                style={{ ...textStyle, ...{ width: '100%' } }}
-                label='Song Title' />
-            </Row>
-            <Row>
-              <FormField
-                name='artist.lastName'
-                type='autocomplete'
-                {...textProps}
-                dataSource={props.artists}
-                label='Last Name / Band' />
-              <FormField
-                name='artist.firstName'
-                type='autocomplete'
-                {...textProps}
-                dataSource={props.artists}
-                label='First Name' />
-            </Row>
-          </div>
+        </div>
       }
       <Row>
         <FormField
@@ -165,6 +176,21 @@ export const AddSongMainTab = (props) => {
 };
 
 AddSongMainTab.propTypes = {
+  isView          : PropTypes.bool.isRequired,
+  lastActiveField : PropTypes.string.isRequired,
+  textStyle       : PropTypes.object.isRequired,
+  textInputStyle  : PropTypes.object.isRequired,
+  modalView       : PropTypes.object.isRequired,
+  muiTheme        : PropTypes.object.isRequired
 };
 
-export default AddSongMainTab;
+const mapStateToProps = (state) => ({
+  activeField:   state.form.addSongForm ? state.form.addSongForm.active : null,
+  matchedArtist: artistsMatchedSelector(state),
+  maxDifficulty: maxDifficultySelector(state),
+  genres:        genresSelector(state),
+  instruments:   instrumentsSelector(state),
+  artists:       artistsSelector(state)
+});
+
+export default connect(mapStateToProps)(AddSongMainTab);

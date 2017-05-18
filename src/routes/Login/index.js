@@ -10,7 +10,7 @@ export default (store, auth) => ({
         return;
       }
       const importModules = Promise.all([
-        require('./components/LoginViewContainer').default,
+        require('./components/LoginView').default,
         require('./modules/login').default
       ]);
       importModules.then(([container, reducer]) => {

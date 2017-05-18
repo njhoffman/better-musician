@@ -1,10 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Column } from 'react-foundation';
 import { Paper } from 'material-ui';
-import SongsPagination from './SongsPaginationContainer';
-import SongsList from './SongsListContainer';
-import FiltersModal from './Filters/FiltersModalContainer';
-import AddSongModal from './AddSong/AddSongModalContainer';
+import SongsPagination from './SongsPagination';
+import SongsList from './SongsList';
+import FiltersModal from './Filters/FiltersModal';
+import AddSongModal from './AddSong/AddSongModal';
 
 import css from './SongsView.scss';
 
@@ -21,4 +22,8 @@ export const SongsView = (props) => (
   </Column>
 );
 
-export default SongsView;
+
+const mapActionCreators = {};
+const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, mapActionCreators)(SongsView);

@@ -1,4 +1,5 @@
 import React  from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { RaisedButton, Paper, Tabs, Tab } from 'material-ui';
 import { Row, Column } from 'react-foundation';
@@ -8,13 +9,22 @@ import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import ButtonLoader from 'components/ButtonLoader';
 import FieldList from './FieldList';
+import FormField from 'components/Field';
 import FieldOptions from './FieldOptions';
 import {
   MdSave as SaveIcon,
   MdAdd as AddIcon
 } from 'react-icons/lib/md';
 
-import FormField from 'components/Field';
+import {
+  updateField,
+  addField,
+  editField,
+  deleteField,
+  cancelEdit
+} from '../modules/fields';
+import { savedTabs as savedTabsSelector } from '../modules/selectors';
+
 import css from './FieldsView.scss';
 
 export const FieldsView = (props) => {
@@ -149,4 +159,20 @@ FieldsView.propTypes = {
 };
 
 const updateFieldsForm = reduxForm({ form: 'updateFieldsForm', enableReinitialize: true })(muiThemeable()(FieldsView));
-export default updateFieldsForm;
+
+const mapActionCreators = {
+  addField,
+  updateField,
+  editField,
+  deleteField,
+  cancelEdit
+};
+
+const mapStateToProps = (state) => ({
+  initialValues: state.fieldsView.editingField,
+  editingField:  state.fieldsView.editingField,
+  savedTabs:     savedTabsSelector(state),
+  formValues:    state.form.updateFieldsForm ? state.form.updateFieldsForm.values : null
+});
+
+export default connect(mapStateToProps, mapActionCreators)(updateFieldsForm);

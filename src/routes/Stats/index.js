@@ -12,7 +12,7 @@ export default (store, auth) => ({
       }
 
       const importModules = Promise.all([
-        require('./components/StatsViewContainer').default,
+        require('./components/StatsView').default,
         require('./modules/stats').default
       ]);
 

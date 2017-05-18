@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Paper, Tabs, Tab } from 'material-ui';
 import { Row, Column } from 'react-foundation';
@@ -10,6 +11,7 @@ import {
 } from 'react-icons/lib/md';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
+import { updateUser } from 'store/api';
 import ButtonLoader from 'components/ButtonLoader';
 import FormField from 'components/Field';
 import css from './SettingsView.scss';
@@ -79,7 +81,7 @@ export class SettingsView extends Component {
                   <Row>
                     <FormField
                       name='visualTheme'
-                      onTouchTap={this.showHint.bind(this, 'visualTheme')}
+                      onTouchTap={() => this.showHint('visualTheme')}
                       style={{ width: '200px' }}
                       dataSource={{
                         'deepRed-dark': 'Deep Red (Dark)',
@@ -91,19 +93,19 @@ export class SettingsView extends Component {
                       label='Visual Theme' />
                     <FormField
                       name='normalizePoints'
-                      onTouchTap={this.showHint.bind(this, 'normalizePoints')}
+                      onTouchTap={() => this.showHint('normalizePoints')}
                       type='checkbox'
                       label='Normalize Points' />
                   </Row>
                   <Row>
                     <FormField
                       name='maxDifficulty'
-                      onTouchTap={this.showHint.bind(this, 'maxDifficulty')}
+                      onTouchTap={() => this.showHint('maxDifficulty')}
                       type='number'
                       label='Max Difficulty' />
                     <FormField
                       name='maxProgress'
-                      onTouchTap={this.showHint.bind(this, 'maxProgress')}
+                      onTouchTap={() => this.showHint(this, 'maxProgress')}
                       type='number'
                       label='Max Progress' />
                   </Row>
@@ -177,4 +179,26 @@ SettingsView.propTypes = {
 };
 
 const updateSettingsForm = reduxForm({ form: 'updateSettingsForm' })(muiThemeable()(SettingsView));
-export default updateSettingsForm;
+
+const setTheme = (theme) => (dispatch, getState) => {
+  const user = getState().auth.get('user');
+  if (user) {
+    const attrs = user.get('attributes').toJS();
+    attrs.visualTheme = theme;
+    dispatch({ type: 'AUTHENTICATE_COMPLETE', user: attrs });
+  }
+};
+
+const mapActionCreators = {
+  resetSettings : updateUser,
+  updateSettings : updateUser,
+  setTheme
+};
+
+const mapStateToProps = (state) => ({
+  api: state.api,
+  initialValues: state.auth.get('user').get('attributes').toJS(),
+  settings: state.auth.get('user').get('attributes')
+});
+
+export default connect(mapStateToProps, mapActionCreators)(SettingsView);

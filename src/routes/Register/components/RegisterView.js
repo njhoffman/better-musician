@@ -1,10 +1,13 @@
 import React  from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Column } from 'react-foundation';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { Paper } from 'material-ui';
-import EmailSignUpForm from './EmailSignUpForm';
 import { OAuthSignInButton } from 'redux-auth/material-ui-theme';
+import { emailSignUpFormUpdate, emailSignUp } from 'redux-auth';
+import EmailSignUpForm from './EmailSignUpForm';
+import { handleRegisterSuccess } from '../modules/register';
 
 import css from './RegisterView.scss';
 import facebookIcon from 'assets/fb-icon.png';
@@ -67,4 +70,14 @@ RegisterView.propTypes = {
   handleRegisterSuccess: PropTypes.func.isRequired
 };
 
-export default (RegisterView);
+const mapActionCreators = {
+  emailSignUp,
+  emailSignUpFormUpdate,
+  handleRegisterSuccess
+};
+
+const mapStateToProps = (state) => ({
+  settings: state.register
+});
+
+export default connect(mapStateToProps, mapActionCreators)(RegisterView);

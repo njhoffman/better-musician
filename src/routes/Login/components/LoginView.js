@@ -1,10 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Paper } from 'material-ui';
 import { Column } from 'react-foundation';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import css from './LoginView.scss';
 import EmailSignInForm from './EmailSignInForm';
+import { handleLoginSuccess } from '../modules/login';
 
 export const LoginView = (props) => (
   <Column className="loginView" centerOnSmall small={12} medium={10} large={8}>
@@ -21,4 +23,11 @@ LoginView.propTypes = {
   handleLoginSuccess: PropTypes.func.isRequired
 };
 
-export default muiThemeable()(LoginView);
+const mapActionCreators = {
+  handleLoginSuccess
+};
+const mapStateToProps = (state) => ({
+  settings: state.login
+});
+
+export default connect(mapStateToProps, mapActionCreators)(muiThemeable()(LoginView));

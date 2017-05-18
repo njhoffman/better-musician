@@ -1,10 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Table, TableBody, TableRow } from 'material-ui/Table';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
+import { setCurrentSong, setSort } from 'routes/Songs/modules/songs';
+import { songs as songsSelector } from 'routes/Songs/modules/selectors';
 import SongsListHeader from './SongsListHeader';
-import Song from './SongContainer';
+import Song from './Song';
 import css from './SongList.scss';
 
 export const SongsList = ({
@@ -55,4 +58,14 @@ SongsList.propTypes = {
   currentSongId: PropTypes.string
 };
 
-export default muiThemeable()(SongsList);
+const mapStateToProps = (state, action) => ({
+  songsCollection: songsSelector(state),
+  currentSongId:   state.songsView.currentSong
+});
+
+const mapActionCreators = ({
+  setCurrentSong,
+  setSort
+});
+
+export default connect( mapStateToProps, mapActionCreators)(muiThemeable()(SongsList));

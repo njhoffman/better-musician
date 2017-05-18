@@ -9,7 +9,7 @@ export default (store, auth) => ({
         return;
       }
       const importModules = Promise.all([
-        require('./components/HomeViewContainer').default
+        require('./components/HomeView').default
       ]);
       importModules.then(([container]) => {
         initView(store, 'homeView');

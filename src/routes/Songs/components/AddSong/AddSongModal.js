@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { chunk } from 'lodash';
 import { reduxForm } from 'redux-form';
@@ -7,8 +8,24 @@ import { Row, Column } from 'react-foundation';
 import { MdDelete as DeleteIcon } from 'react-icons/lib/md';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
+import { addSong } from '../../modules/songs';
+import { MODAL_ADD_SONG, uiShowModal, uiHideModal } from 'store/ui';
+import {
+  currentSong as currentSongSelector,
+  savedTabs as savedTabsSelector
+} from 'routes/Songs/modules/selectors';
+
+import {
+  artists as artistsSelector,
+  artistsMatched as artistsMatchedSelector,
+  instruments as instrumentsSelector,
+  genres as genresSelector
+} from 'selectors/songs';
+
+import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
+
 import CustomField from 'components/CustomField';
-import AddSongMainTab from './AddSongMainTabContainer';
+import AddSongMainTab from './AddSongMainTab';
 import css from './AddSong.scss';
 
 const validate = (values) => {
@@ -126,13 +143,49 @@ export const AddSongModal = (props) => {
 };
 
 AddSongModal.propTypes = {
-  addSong:       PropTypes.func,
-  uiHideModal:   PropTypes.func,
-  isOpen:        PropTypes.bool,
-  modal:         PropTypes.object,
-  savedTabs:     PropTypes.array,
-  muiTheme:      PropTypes.object,
-  editSong:      PropTypes.func
+  addSong:       PropTypes.func.isRequired,
+  uiHideModal:   PropTypes.func.isRequired,
+  isOpen:        PropTypes.bool.isRequired,
+  modal:         PropTypes.object.isRequired,
+  savedTabs:     PropTypes.array.isRequired,
+  muiTheme:      PropTypes.object.isRequired,
+  editSong:      PropTypes.func.isRequired
 };
 
-export default muiThemeable()(reduxForm({ form: 'addSongForm', enableReinitialize: true, validate })(AddSongModal));
+
+const showEditSongModal = () => uiShowModal(MODAL_ADD_SONG, 'edit');
+
+const mapDispatchToProps = {
+  uiHideModal,
+  addSong,
+  editSong : showEditSongModal
+};
+
+const initialValues = (song) => {
+  if (song) {
+    // return object for nested models, redux form tries to reset and breaks if not a plain object
+    const ivSong = Object.assign({}, song);
+    ivSong.artist = song.artist.ref;
+    ivSong.genre = song.genre.ref;
+    ivSong.instrument = song.instrument.ref;
+    return ivSong;
+  }
+  return song;
+};
+
+const mapStateToProps = (state) => ({
+  initialValues: initialValues(currentSongSelector(state)),
+  activeField:   state.form.addSongForm ? state.form.addSongForm.active : null,
+  formValues:    state.form.addSongForm ? state.form.addSongForm.values : null,
+  savedTabs:     savedTabsSelector(state),
+  matchedArtist: artistsMatchedSelector(state),
+  maxDifficulty: maxDifficultySelector(state),
+  genres:        genresSelector(state),
+  instruments:   instrumentsSelector(state),
+  artists:       artistsSelector(state),
+  modal:         state.ui.modal,
+  isOpen:        state.ui.modal.type === MODAL_ADD_SONG
+});
+
+const addSongForm = muiThemeable()(reduxForm({ form: 'addSongForm', enableReinitialize: true, validate })(AddSongModal));
+export default connect(mapStateToProps, mapDispatchToProps)(addSongForm);

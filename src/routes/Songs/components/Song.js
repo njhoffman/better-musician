@@ -1,9 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { TableRow, TableRowColumn } from 'material-ui/Table';
 import css from './Song.scss';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { RenderStars, RenderDifficulty } from 'components/Field';
+import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
+import { uiShowModal, MODAL_ADD_SONG } from 'store/ui';
 
 export const Song = ({
   songValues,
@@ -59,4 +62,14 @@ Song.propTypes = {
   muiTheme: PropTypes.object
 };
 
-export default muiThemeable()(Song);
+const showViewSongModal = () => uiShowModal(MODAL_ADD_SONG, 'view');
+
+const mapStateToProps = (state, action) => ({
+  maxDifficulty:   maxDifficultySelector(state)
+});
+
+const mapActionCreators = ({
+  showViewSongModal
+});
+
+export default connect( mapStateToProps, mapActionCreators)(muiThemeable()(Song));

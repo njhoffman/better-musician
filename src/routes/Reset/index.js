@@ -10,7 +10,7 @@ export default (store, auth) => ({
         return;
       }
       const importModules = Promise.all([
-        require('./components/ResetViewContainer').default,
+        require('./components/ResetView').default,
         require('./modules/reset').default
       ]);
       importModules.then(([container, reducer]) => {

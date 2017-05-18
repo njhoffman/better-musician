@@ -1,7 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
+import { uiHideModal } from 'store/ui';
 
 export const FiltersModal = (props) => {
   const actions = [
@@ -34,4 +36,13 @@ FiltersModal.propTypes = {
   isOpen:      PropTypes.bool
 };
 
-export default FiltersModal;
+const mapDispatchToProps = {
+  uiHideModal
+};
+
+const mapStateToProps = (state) => ({
+  modal:         state.ui.modal,
+  isOpen:        state.ui.modal.type === 'MODAL_FILTER_SONGS'
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(FiltersModal);

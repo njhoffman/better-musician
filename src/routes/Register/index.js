@@ -21,7 +21,7 @@ export default (store, auth) => ({
       log('Past auth', console, window.location);
       debug(window.location);
       const importModules = Promise.all([
-        require('./components/RegisterViewContainer').default,
+        require('./components/RegisterView').default,
         require('./modules/register').default
       ]);
       importModules.then(([container, reducer]) => {
