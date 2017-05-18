@@ -30,16 +30,15 @@ export const setSort = (sortField) => (dispatch, getState) => {
   return dispatch({ type: SET_SORT, payload: sortField });
 };
 
-const nextAvailableId = (songCollection) =>
-  songCollection
-    .map((song) => song.id)
-    .sort((a, b) => a - b)
-    .pop() + 1;
+// const nextAvailableId = (songCollection) =>
+//   songCollection
+//     .map((song) => song.id)
+//     .sort((a, b) => a - b)
+//     .pop() + 1;
 
 export const addSong = (values) => (dispatch, getState) => {
   const fieldValues = getState().form.addSongForm.values;
-  const availableId = nextAvailableId(getState().songs.collection);
-  return dispatch({ type: ADD_SONG, payload: { ...fieldValues, ...{ id: availableId } } });
+  return dispatch({ type: ADD_SONG, payload: { fieldValues } });
 };
 
 export const actions = {
@@ -82,4 +81,3 @@ export default function songsReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
   return handler ? handler(state, action) : state;
 }
-

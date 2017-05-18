@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import { muiTheme } from 'tests/fixtures';
 import HeaderRight from 'components/Header/HeaderRight';
 
@@ -10,7 +10,7 @@ describe('Components', () => {
         muiTheme
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<HeaderRight {...props} />);
+        shallow(<HeaderRight {...props} />);
       });
     });
   });

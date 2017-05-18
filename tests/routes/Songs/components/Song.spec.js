@@ -14,7 +14,7 @@ describe('Routes', () => {
         maxDifficulty
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<Song {...props} />);
+        shallow(<Song {...props} />);
       });
     });
   });

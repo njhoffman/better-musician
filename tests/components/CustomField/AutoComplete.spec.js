@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import AutoComplete from 'components/CustomField/AutoComplete';
 
 describe('Components', () => {
@@ -10,7 +10,7 @@ describe('Components', () => {
         field
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<AutoComplete {...props} />);
+        shallow(<AutoComplete {...props} />);
       });
     });
   });

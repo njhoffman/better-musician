@@ -30,7 +30,6 @@ export default (initialState = {}) => {
   );
   store.asyncReducers = {};
 
-
   // to unsubscribe, invoke `store.unsubscribeHistory()` anytime
   store.unsubscribeHistory = browserHistory.listen(updateLocation(store));
 

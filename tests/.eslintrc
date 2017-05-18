@@ -8,5 +8,9 @@
     "should" : false,
     "sinon"  : false,
     "jest"   : false
+  },
+  "rules" : {
+    "no-unused-expressions" : "off",
+    "import/no-webpack-loader-syntax" : "off"
   }
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import  { ResetView } from 'routes/Reset/components/ResetView';
+import { ResetView } from 'routes/Reset/components/ResetView';
 
 describe('Routes', () => {
   describe('Reset', () => {
@@ -10,7 +10,7 @@ describe('Routes', () => {
         onClick
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<ResetView {...props} />);
+        shallow(<ResetView {...props} />);
       });
 
       it('Should contain the proper content wrapping elements', () => {

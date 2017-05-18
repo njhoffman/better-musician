@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import FiltersModal from './Filters';
+import FiltersModal from './FiltersModal';
 import { uiHideModal } from 'store/ui';
 
 const mapDispatchToProps = {

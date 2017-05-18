@@ -39,6 +39,11 @@ export class EmailSignUpForm extends React.Component {
     }
   };
 
+  constructor() {
+    super();
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
   getEndpoint() {
     return (
       this.props.endpoint ||
@@ -68,11 +73,11 @@ export class EmailSignUpForm extends React.Component {
     return (
       <form className='redux-auth email-sign-up-form clearfix'
         style={{ clear: 'both', overflow: 'hidden' }}
-        onSubmit={this.handleSubmit.bind(this)}>
+        onSubmit={this.handleSubmit}>
         <Row>
           <Column>
             {errors && errors.map(error =>
-              <p>{error}</p>
+              <p className="error">{error}</p>
           )}
           </Column>
         </Row>

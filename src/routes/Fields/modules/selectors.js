@@ -35,4 +35,3 @@ export const savedTabs = createSelector(
   state => state.user,
   savedTabsSelector
 );
-

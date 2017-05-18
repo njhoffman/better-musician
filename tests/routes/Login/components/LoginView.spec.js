@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import  { LoginView } from 'routes/Login/components/LoginView';
+import { LoginView } from 'routes/Login/components/LoginView';
 
 describe('Routes', () => {
   describe('Login', () => {
@@ -10,7 +10,7 @@ describe('Routes', () => {
         handleLoginSuccess
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<LoginView {...props} />);
+        shallow(<LoginView {...props} />);
       });
 
       it('Should contain the proper content wrapping elements', () => {

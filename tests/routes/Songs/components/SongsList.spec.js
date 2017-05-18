@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import  { SongsList } from 'routes/Songs/components/SongsList';
+import { SongsList } from 'routes/Songs/components/SongsList';
 
 describe('Routes', () => {
   describe('Songs', () => {
@@ -10,7 +10,7 @@ describe('Routes', () => {
         setSort
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<SongsList {...props} />);
+        shallow(<SongsList {...props} />);
       });
     });
   });

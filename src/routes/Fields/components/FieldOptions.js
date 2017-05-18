@@ -9,7 +9,6 @@ import { RaisedButton } from 'material-ui';
 import css from './FieldsView.scss';
 
 export class FieldOptions extends Component {
-
   static propTypes = {
     fields: PropTypes.array.isRequired
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import AppContainer from 'components/AppContainer';
 import configureStore from 'redux-mock-store';
 
@@ -14,7 +14,7 @@ describe('Components', () => {
     };
 
     it('Should render shallow', () => {
-      const wrapper = shallow(<AppContainer {...props}  />);
+      shallow(<AppContainer {...props} />);
     });
   });
 });

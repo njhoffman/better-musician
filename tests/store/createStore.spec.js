@@ -7,7 +7,7 @@ describe('Store', () => {
     let store;
 
     before(() => {
-      store = createStore({}, { listen: () => { }});
+      store = createStore({}, { listen: () => { } });
     });
 
     it('should have an empty asyncReducers object', () => {

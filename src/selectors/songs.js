@@ -1,4 +1,5 @@
 import { orm } from 'store/reducers';
+import { get } from 'lodash';
 import { createSelector as ormCreateSelector } from 'redux-orm';
 import { createSelector } from 'reselect';
 
@@ -17,18 +18,16 @@ export const artists = createSelector(
   artistSelector
 );
 
-const artistMatchSelector = ormCreateSelector(orm, (session, addSongFormValues) => {
-  if (addSongFormValues && addSongFormValues.artist) {
-    return session.Artist.findByFullName(addSongFormValues.artist.fullName);
-  } else {
-    console.info('missingArtist', addSongFormValues);
+const artistMatchSelector = ormCreateSelector(orm, (session, artist) => {
+  if (artist) {
+    return session.Artist.findByFullName(artist.fullName);
   }
   return null;
 });
 
 export const artistsMatched = createSelector(
   ormSelector,
-  state => state.form.addSongForm ? state.form.addSongForm.values : null,
+  state =>  get(state, 'form.addSongForm.values.artist', null),
   artistMatchSelector
 );
 
@@ -57,4 +56,3 @@ export const instruments = createSelector(
   state => state,
   instrumentSelector
 );
-

@@ -16,6 +16,9 @@ global.sinon = sinon;
 global.expect = chai.expect;
 global.should = chai.should();
 
+// Polyfill webpack require.ensure for testing
+require('require-ensure-shim').shim(require);
+
 // ---------------------------------------
 // Require Tests
 // ---------------------------------------

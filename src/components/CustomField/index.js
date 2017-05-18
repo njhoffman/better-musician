@@ -24,7 +24,6 @@ const fieldOptions = {
 /* eslint-enable no-multi-spaces */
 
 class RenderCustomField extends Component {
-
   static propTypes = {
     field: PropTypes.object.isRequired
   }

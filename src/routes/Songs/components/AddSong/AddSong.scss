@@ -5,11 +5,9 @@
   &.edit { }
 
   form {
-
     input {
       margin: 0;
     }
-
 
     .imageFrame {
       text-align: center;
@@ -32,11 +30,13 @@
       flex: 0 0 250px;
       width: 250px;
     }
+
     .flexThree {
       margin-left: auto;
       margin-right: auto;
       width: 250px;
     }
+
     .selectOptions {
       margin-top: 10px;
       max-width: 550px;
@@ -46,6 +46,7 @@
       flex-wrap: wrap;
       justify-content: center;
     }
+
     .videoWrapper {
       margin-top: 10px;
       max-width: 450px;

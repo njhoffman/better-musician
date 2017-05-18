@@ -21,5 +21,4 @@ class Snackbar extends Component {
   }
 }
 
-
 export default Snackbar;

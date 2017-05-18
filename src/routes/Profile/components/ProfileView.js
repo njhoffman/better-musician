@@ -134,4 +134,3 @@ ProfileView.propTypes = {
 };
 
 export default reduxForm({ form: 'updateProfileForm' })(muiThemeable()(ProfileView));
-

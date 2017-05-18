@@ -9,10 +9,10 @@ const linkStyle = { display: 'table-cell', verticalAlign: 'middle', paddingRight
 
 class HeaderRight extends Component {
   static propTypes = {
-    muiTheme: PropTypes.object.isRequired,
-    user: PropTypes.object,
-    getUserPoints: PropTypes.string,
-    userDisplayName: PropTypes.string
+    muiTheme        : PropTypes.object.isRequired,
+    user            : PropTypes.object,
+    getUserPoints   : PropTypes.string,
+    userDisplayName : PropTypes.string
   }
 
   renderSignedIn() {

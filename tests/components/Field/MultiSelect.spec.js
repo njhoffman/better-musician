@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import MultiSelect from 'components/Field/MultiSelect';
 
 describe('Components', () => {
@@ -14,7 +14,7 @@ describe('Components', () => {
         dataSource
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<MultiSelect {...props} />);
+        shallow(<MultiSelect {...props} />);
       });
     });
   });

@@ -9,7 +9,7 @@ const project = require('./project.config');
 // const HappyPack = require('happypack');
 const _ = require('lodash');
 
-const { log, error } = require('debugger-256')('app:config:webpack');
+const { log } = require('debugger-256')('app:config:webpack');
 
 const __DEV__ = project.globals.__DEV__;
 const __PROD__ = project.globals.__PROD__;
@@ -25,7 +25,8 @@ const _RESOLVE_PATHS = {
   middleware: 'src/middleware',
   selectors:  'src/selectors',
   store:      'src/store',
-  tests:      'tests',
+  shared:     'shared',
+  tests:      'tests'
   // 'redux-orm': 'src/redux-orm',
   // 'redux-auth': 'src/redux-auth'
 };
@@ -41,6 +42,10 @@ const webpackConfig = {
   hints   : true,
   target  : 'web',
   devtool : project.compiler_devtool,
+  stats: {
+    chunks: false,
+    warnings: false // turn off webpack warnings (specifically require function is used in a way... only do this for tests?)
+  },
   resolve : {
     root       : project.paths.client(),
     extensions : ['', '.js', '.jsx', '.json'],

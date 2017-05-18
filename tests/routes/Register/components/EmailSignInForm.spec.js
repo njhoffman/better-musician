@@ -16,7 +16,7 @@ describe('Routes', () => {
         dispatch
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<EmailSignInForm {...props} />);
+        shallow(<EmailSignInForm {...props} />);
       });
     });
   });

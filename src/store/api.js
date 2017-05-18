@@ -17,9 +17,9 @@ export const LOAD_FIELDS           = 'LOAD_FIELDS';
 export const AUTHENTICATE_START    = 'AUTHENTICATE_START';
 export const AUTHENTICATE_COMPLETE = 'AUTHENTICATE_COMPLETE';
 
-export const UPDATE_USER  = 'USER_UPDATE';
-export const USER_SUCCESS = 'USER_SUCCESS';
-export const USER_FAILURE = 'USER_FAILURE';
+export const USER_UPDATE = 'USER_UPDATE';
+export const USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';
+export const USER_UPDATE_FAILURE = 'USER_UPDATE_FAILURE';
 
 // ------------------------------------
 // Action Creators
@@ -58,7 +58,7 @@ export const updateUser = () => (dispatch, getState) => {
 
   return dispatch({
     [CALL_API]: {
-      types:    [UPDATE_USER, userSuccess, USER_FAILURE],
+      types:    [USER_UPDATE, userUpdateSuccess, USER_UPDATE_FAILURE],
       method:   'POST',
       endpoint: '/users/update',
       payload:  { ...fieldValues }
@@ -66,9 +66,9 @@ export const updateUser = () => (dispatch, getState) => {
   });
 };
 
-export const userSuccess = (response) => (dispatch) => {
-  console.info('userSuccess');
-  dispatch({ type: USER_SUCCESS, user: response });
+export const userUpdateSuccess = (response) => (dispatch) => {
+  console.info('updateUserSuccess');
+  dispatch({ type: USER_UPDATE_SUCCESS, user: response });
   dispatch({ type: 'UI_SHOW_SNACKBAR', meta: { message: 'Profile Updated' } });
   // reloads user attributes
   dispatch({ type: AUTHENTICATE_COMPLETE, user: response });
@@ -91,8 +91,8 @@ const ACTION_HANDLERS = {
     ({ ...state,
       isFetching: false,
       initialized: state.initialized.indexOf('songs') === -1 ? state.initialized.concat('songs') : state.initialized }),
-  [UPDATE_USER] : (state) => ({ ...state, isFetching: true }),
-  [USER_SUCCESS] : (state) => ({ ...state, isFetching: false })
+  [USER_UPDATE] : (state) => ({ ...state, isFetching: true }),
+  [USER_UPDATE_SUCCESS] : (state) => ({ ...state, isFetching: false })
 };
 
 // ------------------------------------

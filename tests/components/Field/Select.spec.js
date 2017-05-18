@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import Select from 'components/Field/Select';
 
 describe('Components', () => {
@@ -8,7 +8,7 @@ describe('Components', () => {
       const dataSource = 'test_datSource';
       const props = { dataSource };
       it('Should render shallow', () => {
-        const wrapper = shallow(<Select {...props} />);
+        shallow(<Select {...props} />);
       });
     });
   });

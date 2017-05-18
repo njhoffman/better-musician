@@ -60,4 +60,3 @@ export default connect(
     mapStateToProps,
     mapActionCreators
 )(SongsPagination);
-

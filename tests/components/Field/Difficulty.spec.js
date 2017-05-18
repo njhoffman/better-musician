@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import Difficulty from 'components/Field/Difficulty';
 
 describe('Components', () => {
@@ -12,7 +12,7 @@ describe('Components', () => {
         maxDifficulty
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<Difficulty {...props} />);
+        shallow(<Difficulty {...props} />);
       });
     });
   });

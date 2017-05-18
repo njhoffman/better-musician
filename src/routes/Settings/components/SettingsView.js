@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Paper, Tabs, Tab } from 'material-ui';
 import { Row, Column } from 'react-foundation';
 import { reduxForm } from 'redux-form';
@@ -168,11 +169,11 @@ export class SettingsView extends Component {
 };
 
 SettingsView.propTypes = {
-  muiTheme:       React.PropTypes.object,
-  api:            React.PropTypes.object,
-  setTheme:       React.PropTypes.func,
-  updateSettings: React.PropTypes.func.isRequired,
-  resetSettings:  React.PropTypes.func.isRequired
+  muiTheme:       PropTypes.object,
+  api:            PropTypes.object,
+  setTheme:       PropTypes.func,
+  updateSettings: PropTypes.func.isRequired,
+  resetSettings:  PropTypes.func.isRequired
 };
 
 const updateSettingsForm = reduxForm({ form: 'updateSettingsForm' })(muiThemeable()(SettingsView));

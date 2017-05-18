@@ -3,15 +3,18 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import { Row } from 'react-foundation';
+import { AuthGlobals } from 'redux-auth/material-ui-theme';
 
 import 'coreStyles';
 import css from './CoreLayout.scss';
-import { AuthGlobals } from 'redux-auth/material-ui-theme';
 import Header from 'components/Header/HeaderContainer';
 import Footer from 'components/Footer/FooterContainer';
 import DrawerMenu from 'components/DrawerMenu/DrawerMenuContainer';
 import Snackbar from 'components/Snackbar/SnackbarContainer';
-import { Row } from 'react-foundation';
+import { init as initLog } from 'shared/logger';
+
+const { info, log } = initLog('coreLayout');
 
 // export const CoreLayout = ({ getState }) => ({ children }) => {
 
@@ -49,8 +52,8 @@ export class CoreLayout extends Component {
 
   memoryStats() {
     if (window.performance && window.performance.memory) {
-      console.info(`Total JS Heap Size:\t ${this.humanMemorySize(window.performance.memory.totalJSHeapSize, true)}`);
-      console.info(`Used JS Heap Size:\t ${this.humanMemorySize(window.performance.memory.usedJSHeapSize, true)}`);
+      info(`Total JS Heap Size:\t ${this.humanMemorySize(window.performance.memory.totalJSHeapSize, true)}`);
+      info(`Used JS Heap Size:\t ${this.humanMemorySize(window.performance.memory.usedJSHeapSize, true)}`);
     }
   }
 
@@ -86,7 +89,7 @@ const mapStateToProps = (state) => ({
 });
 
 CoreLayout.propTypes = {
-  children : React.PropTypes.element.isRequired
+  children : PropTypes.element.isRequired
 };
 
 export default connect(mapStateToProps)(CoreLayout);

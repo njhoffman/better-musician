@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import Slider from 'components/Field/Slider';
 
 describe('Components', () => {
@@ -8,7 +8,7 @@ describe('Components', () => {
       const input = { value: 'test_value' };
       const props = { input };
       it('Should render shallow', () => {
-        const wrapper = shallow(<Slider {...props} />);
+        shallow(<Slider {...props} />);
       });
     });
   });

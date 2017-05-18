@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import  { SettingsView } from 'routes/Settings/components/SettingsView';
+import { SettingsView } from 'routes/Settings/components/SettingsView';
 
 describe('Routes', () => {
   describe('Settings', () => {
@@ -12,7 +12,7 @@ describe('Routes', () => {
         updateSettings
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<SettingsView {...props} />);
+        shallow(<SettingsView {...props} />);
       });
 
       it('Should contain the proper content wrapping elements', () => {

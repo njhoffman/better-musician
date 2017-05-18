@@ -24,7 +24,6 @@ const popoverStyle = {
 };
 
 class HeaderMiddle extends Component {
-
   static propTypes = {
     showAddSongModal: PropTypes.func.isRequired,
     muiTheme:         PropTypes.object.isRequired,
@@ -92,7 +91,7 @@ class HeaderMiddle extends Component {
     return (
       <a
         className={css.headerLink}
-        onClick={this.showAddSongModal}>
+        onClick={() => this.showAddSongModal()}>
         <span className={css.iconWrapper}>
           <AddIcon className={css.icon} />
           <span className={css.iconText}>Add Song</span>
@@ -102,7 +101,7 @@ class HeaderMiddle extends Component {
   }
 
   renderSongButtonView() {
-    const { muiTheme: { instrumental: { headerLinksColor } } } = props;
+    const { instrumental: { headerLinksColor } } = this.props.muiTheme;
     return (
       <a className={css.headerLink}>
         <span className={css.iconWrapper}>
@@ -110,20 +109,20 @@ class HeaderMiddle extends Component {
           <span className={css.iconText}>Edit Song</span>
           <ArrowDropDownIcon
             className={css.downArrow}
-            onTouchTap={this.toggleSongPopover} />
+            onTouchTap={(e) => this.toggleSongPopover(e)} />
           <Popover
             open={this.state.songPopoverOpen}
             anchorEl={this.state.songPopoverAnchor}
             anchorOrigin={popoverStyle.anchor}
             targetOrigin={popoverStyle.target}
             className={css.menuPopover}
-            onRequestClose={this.onRequestClose} >
+            onRequestClose={() => this.onRequestClose()} >
             <Row className={css.row}>
               <Column className={css.column} >
                 <a
                   style={{ color: headerLinksColor }}
                   className={css.headerLink}
-                  onClick={this.showEditSongModal} >
+                  onClick={() => this.showEditSongModal()} >
                   <span className={css.iconWrapper}>
                     <AddIcon style={{ margin: '0px 12px 0px -12px' }} className={css.icon} />
                     <span className={css.iconText}>Add Song</span>
@@ -176,7 +175,7 @@ class HeaderMiddle extends Component {
   renderSearchButton() {
     return (
       <a className={css.headerLink}
-        onTouchTap={this.toggleSearchPopover}>
+        onTouchTap={(e) => this.toggleSearchPopover(e)}>
         <span className={css.iconWrapper}>
           <SearchIcon className={css.icon} />
           <span className={css.iconText}>Search</span>

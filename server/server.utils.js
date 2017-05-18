@@ -190,7 +190,7 @@ const webpackLog = (message) => {
       .filter(ho => parseInt(ho.size_bytes) > 102400)
       .sort((a, b) => (parseInt(b.size_bytes) - parseInt(a.size_bytes)));
 
-    let maxClassLength =  heapObjs.reduce((acc,curr) =>
+    let maxClassLength = heapObjs.reduce((acc, curr) =>
         curr.what.length > acc ? curr.what.length : acc, 0);
 
     heapObjs.forEach((diffItem, i) => {
@@ -218,4 +218,3 @@ module.exports = {
   webpackLog
 
 };
-

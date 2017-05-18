@@ -7,7 +7,6 @@ import muiThemeable from 'material-ui/styles/muiThemeable';
 import css from './Footer.scss';
 
 export class Footer extends Component {
-
   static propTypes = {
     song: PropTypes.object,
     muiTheme: PropTypes.object.isRequired,

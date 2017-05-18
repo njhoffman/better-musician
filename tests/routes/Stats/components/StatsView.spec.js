@@ -1,12 +1,12 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import  { StatsView } from 'routes/Stats/components/StatsView';
+import { StatsView } from 'routes/Stats/components/StatsView';
 
 describe('Routes', () => {
   describe('Stats', () => {
     describe('Component: StatsView', () => {
       it('Should render shallow', () => {
-        const wrapper = shallow(<StatsView />);
+        shallow(<StatsView />);
       });
 
       it('Should contain the proper content wrapping elements', () => {

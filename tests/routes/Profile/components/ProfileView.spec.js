@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import  { ProfileView } from 'routes/Profile/components/ProfileView';
+import { ProfileView } from 'routes/Profile/components/ProfileView';
 import { muiTheme, api } from 'tests/fixtures';
 
 describe('Routes', () => {
@@ -15,7 +15,7 @@ describe('Routes', () => {
 
       it('Should render shallow', () => {
         // const wrapper = shallow(<ProfileView muiTheme={muiTheme} api={api} updateProfile={updateProfile} />);
-        const wrapper = shallow(<ProfileView {...props} />);
+        shallow(<ProfileView {...props} />);
       });
 
       it('Should contain the proper content wrapping elements', () => {
@@ -24,6 +24,6 @@ describe('Routes', () => {
         expect(wrapper.childAt(0).name()).to.equal('Paper');
         expect(wrapper.at(0).props()).to.contain.all.keys('small', 'medium', 'large');
       });
-     });
+    });
   });
 });

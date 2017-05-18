@@ -27,7 +27,7 @@ const facebookIconComponent = () => {
 };
 
 export const RegisterView = (props) => (
-  <Column centerOnSmall small={12} medium={10} large={8}>
+  <Column className='registerView' centerOnSmall small={12} medium={10} large={8}>
     <Paper zDepth={5}>
       <div className={css.registerContainer}>
         <h3>Sign Up for instrumental.io</h3>

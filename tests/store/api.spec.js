@@ -1,22 +1,22 @@
 import {
-  songsSuccess,
-  updateUser,
-  userSuccess,
-  FETCH_SONGS,
+  // songsSuccess,
+  // updateUser,
+  // userSuccess,
+  // FETCH_SONGS,
   SONGS_REQUEST,
   SONGS_SUCCESS,
-  SONGS_FAILURE,
-  LOAD_ARTISTS,
-  LOAD_INSTRUMENTS,
-  LOAD_GENRES,
-  LOAD_SONGS,
-  LOAD_FIELDS,
+  // SONGS_FAILURE,
+  // LOAD_ARTISTS,
+  // LOAD_INSTRUMENTS,
+  // LOAD_GENRES,
+  // LOAD_SONGS,
+  // LOAD_FIELDS,
   AUTHENTICATE_START,
   AUTHENTICATE_COMPLETE,
 
-  UPDATE_USER,
-  USER_SUCCESS,
-  USER_FAILURE,
+  USER_UPDATE,
+  USER_UPDATE_SUCCESS,
+  // USER_FAILURE,
   initialState,
   default as apiReducer
 } from 'store/api';
@@ -31,7 +31,7 @@ describe('Store', () => {
       _initialState = cloneDeep(initialState);
     });
 
-    describe('(Reducer)', () => {
+    describe('Reducer', () => {
       it('Should be a function.', () => {
         expect(apiReducer).to.be.a('function');
       });
@@ -87,59 +87,59 @@ describe('Store', () => {
           expect(state).to.have.property('initialized').that.deep.equals(['songs']);
         });
       });
-      describe(UPDATE_USER, () => {
+      describe(USER_UPDATE, () => {
         it('Should return previous state with isFetching set to true.', () => {
-          const state = apiReducer(undefined, { type: UPDATE_USER });
+          const state = apiReducer(undefined, { type: USER_UPDATE });
           expect(omit(state, 'isFetching')).to.deep.equal(omit(_initialState, 'isFetching'));
           expect(state).to.have.property('isFetching').that.equals.true;
         });
       });
-      describe(USER_SUCCESS, () => {
+      describe(USER_UPDATE_SUCCESS, () => {
         it('Should return previous state with isFetching set to false.', () => {
-          const state = apiReducer(undefined, { type: USER_SUCCESS });
+          const state = apiReducer(undefined, { type: USER_UPDATE_SUCCESS });
           expect(omit(state, 'isFetching')).to.deep.equal(omit(_initialState, 'isFetching'));
           expect(state).to.have.property('isFetching').that.equals.false;
         });
       });
     });
 
-    describe('(Action Creators)', () => {
-      describe('fetchSongs', () => {
-
-      });
-      describe('songsSuccess', () => {
-        const songResponse = {
-          tables: {
-            artists: {},
-            instruments: {},
-            genres: {},
-            fields: {},
-            songs: {}
-          }
-        };
-        const dispatchStub = sinon.spy();
-        const songsSuccessStub = sinon.stub().returns(dispatchStub);
-
-
-        // it('Should dispatch action SONGS_SUCCESS with the response as payload.', () => {
-        //   songsSuccess(songResponse);
-        //   expect(dispatchStub).to.be.called.once;
-        // });
-        // it('Should dispatch action LOAD_ARTISTS with the artists as payload.', () => {
-        // });
-        // it('Should dispatch action LOAD_INSTRUMENTS with the instruments as payload.', () => {
-        // });
-        // it('Should dispatch action LOAD_GENRES with the genres as payload.', () => {
-        // });
-        // it('Should dispatch action LOAD_FIELDS with the fields as payload.', () => {
-        // });
-        // it('Should dispatch action LOAD_SONGS with the songs as payload.', () => {
-        // });
-      });
-      describe('updateUser', () => {
-      });
-      describe('userSuccess', () => {
-      });
-    });
+    // describe('(Action Creators)', () => {
+    //   describe('fetchSongs', () => {
+    //
+    //   });
+    //   describe('songsSuccess', () => {
+    //     const songResponse = {
+    //       tables: {
+    //         artists: {},
+    //         instruments: {},
+    //         genres: {},
+    //         fields: {},
+    //         songs: {}
+    //       }
+    //     };
+    //     const dispatchStub = sinon.spy();
+    //     const songsSuccessStub = sinon.stub().returns(dispatchStub);
+    //
+    //
+    //     // it('Should dispatch action SONGS_SUCCESS with the response as payload.', () => {
+    //     //   songsSuccess(songResponse);
+    //     //   expect(dispatchStub).to.be.called.once;
+    //     // });
+    //     // it('Should dispatch action LOAD_ARTISTS with the artists as payload.', () => {
+    //     // });
+    //     // it('Should dispatch action LOAD_INSTRUMENTS with the instruments as payload.', () => {
+    //     // });
+    //     // it('Should dispatch action LOAD_GENRES with the genres as payload.', () => {
+    //     // });
+    //     // it('Should dispatch action LOAD_FIELDS with the fields as payload.', () => {
+    //     // });
+    //     // it('Should dispatch action LOAD_SONGS with the songs as payload.', () => {
+    //     // });
+    //   });
+    //   describe('updateUser', () => {
+    //   });
+    //   describe('userSuccess', () => {
+    //   });
+    // });
   });
 });

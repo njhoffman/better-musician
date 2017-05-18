@@ -128,4 +128,3 @@ export const savedTabs = createSelector(
   state => state.songsView.currentSong,
   savedTabsSelector
 );
-

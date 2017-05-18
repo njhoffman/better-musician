@@ -8,7 +8,6 @@ const mapStateToProps = (state, action) => ({
   currentSongId:   state.songsView.currentSong
 });
 
-
 const mapActionCreators = ({
   setCurrentSong,
   setSort
@@ -18,4 +17,3 @@ export default connect(
     mapStateToProps,
     mapActionCreators
 )(SongsList);
-

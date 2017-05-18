@@ -16,7 +16,7 @@ describe('Routes', () => {
         deleteField
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<FieldList {...props} />);
+        shallow(<FieldList {...props} />);
       });
     });
   });

@@ -16,7 +16,7 @@ describe('Routes', () => {
         setSort
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<SongsListHeader {...props} />);
+        shallow(<SongsListHeader {...props} />);
       });
     });
   });

@@ -10,7 +10,7 @@ describe('Routes', () => {
         muiTheme
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<SongsPagination {...props} />);
+        shallow(<SongsPagination {...props} />);
       });
     });
   });

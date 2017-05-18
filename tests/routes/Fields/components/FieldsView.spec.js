@@ -16,7 +16,7 @@ describe('Routes', () => {
         muiTheme
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<FieldsView {...props} />);
+        shallow(<FieldsView {...props} />);
       });
     });
   });

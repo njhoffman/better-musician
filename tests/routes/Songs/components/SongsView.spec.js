@@ -6,7 +6,7 @@ describe('Routes', () => {
   describe('Songs', () => {
     describe('Component: SongsView', () => {
       it('Should render shallow', () => {
-        const wrapper = shallow(<SongsView />);
+        shallow(<SongsView />);
       });
     });
   });

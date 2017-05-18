@@ -24,4 +24,3 @@ export default (store, auth) => ({
     }, 'resetView');
   }
 });
-

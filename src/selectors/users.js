@@ -6,7 +6,7 @@ export const ormSelector = state => state.orm;
 
 const userPointsSelector = ormCreateSelector(orm, (session, user) => {
   const points = session.Song && session.Song.getPointTotal();
-  return isNaN(points) ? 0 : points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return isNaN(points) ? '0' : points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 });
 
 export const userPoints = createSelector(
@@ -55,4 +55,3 @@ export const visualTheme = createSelector(
   state => state.auth.get('user'),
   visualThemeSelector
 );
-

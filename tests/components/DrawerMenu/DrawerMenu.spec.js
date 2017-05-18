@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import { DrawerMenu } from 'components/DrawerMenu/DrawerMenu';
 import { muiTheme } from 'tests/fixtures';
 
@@ -15,7 +15,7 @@ describe('Components', () => {
       muiTheme
     };
     it('Should render shallow', () => {
-      const wrapper = shallow(<DrawerMenu {...props} />);
+      shallow(<DrawerMenu {...props} />);
     });
   });
 });

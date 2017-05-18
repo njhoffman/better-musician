@@ -8,7 +8,7 @@ describe('Routes', () => {
       const fields = [];
       const props = { fields };
       it('Should render shallow', () => {
-        const wrapper = shallow(<FieldOptions {...props} />);
+        shallow(<FieldOptions {...props} />);
       });
     });
   });

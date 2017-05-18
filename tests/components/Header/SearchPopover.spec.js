@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import SearchPopover from 'components/Header/SearchPopover';
 
 describe('Components', () => {
@@ -12,7 +12,7 @@ describe('Components', () => {
         isOpen
       };
       it('Should render shallow', () => {
-        const wrapper = shallow(<SearchPopover {...props} />);
+        shallow(<SearchPopover {...props} />);
       });
     });
   });

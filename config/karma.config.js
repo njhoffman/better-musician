@@ -1,7 +1,7 @@
 const argv = require('yargs').argv;
 const project = require('./project.config');
 const webpackConfig = require('./webpack.config');
-const { log } = require('debugger-256')('app:config:karma');
+const { info, trace } = require('debugger-256')('app:config:karma');
 
 const karmaConfig = {
   basePath : '../', // project root in relation to bin/karma.js
@@ -37,24 +37,24 @@ const karmaConfig = {
     format: '\t\t%m',
     terminal: true
   },
-	customLaunchers: {
-		'PhantomJS_custom': {
-			base: 'PhantomJS',
-			options: {
-				windowName: 'instrumental',
-				settings: {
-					webSecurityEnabled: false
-				},
-			},
-			flags: ['--load-images=true'],
-			debug: false
-		}
-	},
-	phantomjsLauncher: {
-		// Have phantomjs exit if a ResourceError is encountered (useful if karma exits without killing phantom)
-		exitOnResourceError: true
-	},
-   webpack  : {
+  customLaunchers: {
+    'PhantomJS_custom': {
+      base: 'PhantomJS',
+      options: {
+        windowName: 'instrumental',
+        settings: {
+          webSecurityEnabled: false
+        }
+      },
+      flags: ['--load-images=true'],
+      debug: false
+    }
+  },
+  phantomjsLauncher: {
+    // Have phantomjs exit if a ResourceError is encountered (useful if karma exits without killing phantom)
+    exitOnResourceError: true
+  },
+  webpack  : {
     devtool : 'cheap-module-source-map',
     resolve : Object.assign({}, webpackConfig.resolve, {
       alias : Object.assign({}, webpackConfig.resolve.alias, {
@@ -87,7 +87,15 @@ const karmaConfig = {
     [`${project.dir_test}/test-bundler.js`] : ['webpack']
   },
   webpackMiddleware : {
-    noInfo : true
+    noInfo : true,
+    stats: {
+      colors   : true,
+      chunks   : false,
+      warnings : false,
+      assets   : false,
+      modules  : false,
+      children : false
+    }
   },
   coverageReporter : {
     reporters : project.coverage_reporters
@@ -110,8 +118,11 @@ if (project.globals.__COVERAGE__) {
   }];
 }
 
-log(`Creating karma configuration. Reporter: %${karmaConfig.reporters}%`, { color: 'bold' });
-log(`Test Framework: %${karmaConfig.frameworks}% Browsers: %${karmaConfig.browsers}%`,
-  { color: 'bold' }, { color: 'bold' });
+info(`Creating karma configuration. \n` +
+  `Reporter: %${karmaConfig.reporters}%\n` +
+  `Test Framework: %${karmaConfig.frameworks}%\n` +
+  `Browsers: %${karmaConfig.browsers}%\n`,
+  { color: 'bold' }, { color: 'bold' }, { color: 'bold' });
+// trace('Created karma Configuration', karmaConfig, { _depth_ : 2 });
 
 module.exports = (cfg) => cfg.set(karmaConfig);

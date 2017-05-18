@@ -30,9 +30,9 @@ const mapActionCreators = {
 };
 
 const mapStateToProps = (state) => ({
-  searchIsOpen:    localState.searchIsOpen,
-  modal: state.ui.modal,
-  currentSong:     state.songsView ? state.songsView.currentSong : null
+  searchIsOpen : localState.searchIsOpen,
+  modal        : state.ui.modal,
+  currentSong  : state.songsView ? state.songsView.currentSong : null
 });
 
 export default connect(mapStateToProps, mapActionCreators)(HeaderMiddle);

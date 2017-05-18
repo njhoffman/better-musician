@@ -139,7 +139,7 @@ info(`Looking for environment overrides for NODE_ENV "${config.env}".`);
 const environments = require('./environments.config');
 const overrides = environments[config.env];
 if (overrides) {
-  info('Found overrides, applying to default configuration.');
+  info('Found overrides, applying to default configuration.', overrides);
   Object.assign(config, overrides(config));
 } else {
   info('No environment overrides found, defaults will be used.');

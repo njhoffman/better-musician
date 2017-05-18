@@ -1,14 +1,25 @@
 import { injectReducer } from 'store/reducers';
 import { initView } from 'store/view';
+import { init as initLog } from 'shared/logger';
+
+
+const { log, debug } = initLog('registerView');
 
 export default (store, auth) => ({
   path : 'register',
   getComponent(nextState, cb) {
+    log('top 1');
+
     require.ensure([], (require) => {
+      log('Past require.ensure', console, window.location);
       if (auth && (auth() === false)) {
-        console.info('authentication failed');
+        log('authentication failed');
         return;
       }
+
+      debug(console);
+      log('Past auth', console, window.location);
+      debug(window.location);
       const importModules = Promise.all([
         require('./components/RegisterViewContainer').default,
         require('./modules/register').default

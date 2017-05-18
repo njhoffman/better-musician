@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 
@@ -28,9 +29,9 @@ export const FiltersModal = (props) => {
 };
 
 FiltersModal.propTypes = {
-  addSong:     React.PropTypes.func,
-  uiHideModal: React.PropTypes.func,
-  isOpen:      React.PropTypes.bool
+  addSong:     PropTypes.func,
+  uiHideModal: PropTypes.func,
+  isOpen:      PropTypes.bool
 };
 
 export default FiltersModal;
