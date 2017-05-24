@@ -10,7 +10,7 @@ import css from './FieldsView.scss';
 
 export class FieldOptions extends Component {
   static propTypes = {
-    fields: PropTypes.array.isRequired
+    fields: PropTypes.any.isRequired
   }
 
   state = {
@@ -23,6 +23,7 @@ export class FieldOptions extends Component {
       optionText: ''
     });
   }
+
   render() {
     return (
       <div>
@@ -36,7 +37,7 @@ export class FieldOptions extends Component {
             name='optionText'
           />
           <RaisedButton
-            onTouchTap={this.addOption.bind(this, this.props.fields)}
+            onTouchTap={() => this.addOption(this.props.fields)}
             secondary
             style={{ display: 'inline-block', minWidth: '30%', marginLeft: '10px' }}
             label='Add' />

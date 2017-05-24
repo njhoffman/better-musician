@@ -21,6 +21,11 @@ export const USER_UPDATE = 'USER_UPDATE';
 export const USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';
 export const USER_UPDATE_FAILURE = 'USER_UPDATE_FAILURE';
 
+export const SONGS_ADD = 'SONGS_ADD';
+export const SONGS_ADD_SUCCESS = 'SONGS_ADD_SUCCESS';
+export const SONGS_ADD_FAILURE = 'SONGS_ADD_FAILURE';
+
+
 // ------------------------------------
 // Action Creators
 // ------------------------------------
@@ -67,11 +72,32 @@ export const updateUser = () => (dispatch, getState) => {
 };
 
 export const userUpdateSuccess = (response) => (dispatch) => {
-  console.info('updateUserSuccess');
+  console.info('updateUserSuccess', response);
   dispatch({ type: USER_UPDATE_SUCCESS, user: response });
   dispatch({ type: 'UI_SHOW_SNACKBAR', meta: { message: 'Profile Updated' } });
   // reloads user attributes
   dispatch({ type: AUTHENTICATE_COMPLETE, user: response });
+};
+
+export const addSong = () => (dispatch, getState) => {
+  debugger;
+  const fieldValues = getState().form.addSongForm.values;
+
+  return dispatch({
+    [CALL_API]: {
+      types:    [SONGS_ADD, songsAddSuccess, SONGS_ADD_FAILURE],
+      method:   'POST',
+      endpoint: '/songs/add',
+      payload:  { ...fieldValues }
+    }
+  });
+};
+
+export const songsAddSuccess = (response) => (dispatch) => {
+  console.info('addSongSuccess', response);
+  dispatch({ type: SONGS_ADD_SUCCESS, user: response });
+  dispatch({ type: 'UI_SHOW_SNACKBAR', meta: { message: 'Song Added' } });
+  debugger;
 };
 
 // ------------------------------------
@@ -92,7 +118,11 @@ const ACTION_HANDLERS = {
       isFetching: false,
       initialized: state.initialized.indexOf('songs') === -1 ? state.initialized.concat('songs') : state.initialized }),
   [USER_UPDATE] : (state) => ({ ...state, isFetching: true }),
-  [USER_UPDATE_SUCCESS] : (state) => ({ ...state, isFetching: false })
+  [USER_UPDATE_SUCCESS] : (state) => ({ ...state, isFetching: false }),
+  [USER_UPDATE_FAILURE] : (state) => ({ ...state, isFetching: false }),
+  [SONGS_ADD] : (state) => ({ ...state, isFetching: true }),
+  [SONGS_ADD_SUCCESS] : (state) => ({ ...state, isFetching: false }),
+  [SONGS_ADD_FAILURE] : (state) => ({ ...state, isFetching: false })
 };
 
 // ------------------------------------

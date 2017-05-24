@@ -17,6 +17,11 @@ const apiFetch = (endpoint, options) => {
         options.body[key].forEach(item => {
           formData.append(key, item);
         });
+      } else if (typeof options.body[key] === 'object') {
+        // supported up to 1 level nested object depth for now
+        Object.keys(options.body[key]).forEach(ok => {
+          formData.set(key + '.' + ok, options.body[key][ok]);
+        });
       } else {
         formData.set(key, options.body[key]);
       }

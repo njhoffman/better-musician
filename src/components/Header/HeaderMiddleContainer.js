@@ -12,7 +12,7 @@ const localState = {
   searchIsOpen: false
 };
 
-export const showAddSongModal = () => uiShowModal(MODAL_ADD_SONG);
+export const showAddSongModal = () => uiShowModal(MODAL_ADD_SONG, 'add');
 export const showFiltersModal = () => uiShowModal(MODAL_FILTER_SONGS);
 
 export const searchClose = () => {

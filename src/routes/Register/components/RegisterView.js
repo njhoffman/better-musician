@@ -4,29 +4,23 @@ import PropTypes from 'prop-types';
 import { Column } from 'react-foundation';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { Paper } from 'material-ui';
-import { OAuthSignInButton } from 'redux-auth/material-ui-theme';
+import OAuthSignInButton from 'components/OAuthSignInButton';
 import { emailSignUpFormUpdate, emailSignUp } from 'redux-auth';
+
 import EmailSignUpForm from './EmailSignUpForm';
 import { handleRegisterSuccess } from '../modules/register';
-
+import SocialIcon from 'components/SocialIcon';
 import css from './RegisterView.scss';
-import facebookIcon from 'assets/fb-icon.png';
-import googleIcon from 'assets/google-icon.png';
 
-const googleIconComponent = () => {
-  return (
-    <img
-      src={googleIcon}
-      style={{ marginTop: '-10px', maxWidth: '30px', width: '30px', height: '30px' }} />
-  );
-};
-
-const facebookIconComponent = () => {
-  return (
-    <img
-      src={facebookIcon}
-      style={{ marginTop: '-10px', width: '20px', maxWidth: '20px' }} />
-  );
+const so = {
+  facebookButton: {
+    backgroundColor: '#4c69ba',
+    labelColor: '#ffffff'
+  },
+  googleButton: {
+    backgroundColor: '#4285f4',
+    labelColor: '#ffffff'
+  }
 };
 
 export const RegisterView = (props) => (
@@ -37,20 +31,18 @@ export const RegisterView = (props) => (
         <p>It's free. It's easy. It takes 5 seconds.</p>
         <div className={css.fieldWrapper}>
           <OAuthSignInButton
-            style={{ width: '225px', marginBottom: '10px' }}
-            backgroundColor={'#4c69ba'}
-            labelColor={'#ffffff'}
-            icon={facebookIconComponent}
+            className={css.facebookButton}
+            {...so.facebookButton}
+            icon={<SocialIcon name='facebook' className={css.facebookIcon} />}
             provider='facebook'>
             Sign Up with Facebook
           </OAuthSignInButton>
         </div>
         <div className={css.fieldWrapper}>
           <OAuthSignInButton
-            style={{ width: '225px' }}
-            backgroundColor={'#4285f4'}
-            labelColor={'#ffffff'}
-            icon={googleIconComponent}
+            className={css.googleButton}
+            {...so.googleButton}
+            icon={<SocialIcon name='google' className={css.googleIcon} />}
             provider='google'>
             Sign Up With Google
           </OAuthSignInButton>

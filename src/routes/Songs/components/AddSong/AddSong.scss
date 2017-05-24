@@ -55,6 +55,16 @@
       flex-wrap: wrap;
       justify-content: center;
     }
+
+    .viewField {
+      input[type="text"] {
+        text-overflow: ellipsis;
+      }
+    }
+    .addField {
+    }
+    .editField {
+    }
   }
 }
 

@@ -4,6 +4,7 @@ import { Row, Column } from 'react-foundation';
 import { Link } from 'react-router';
 import { Popover }  from 'material-ui';
 import SearchPopover from './SearchPopover';
+
 /* eslint-disable no-multi-spaces */
 import {
   MdFilterList    as FilterIcon,

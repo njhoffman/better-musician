@@ -34,8 +34,7 @@ export const uiHideSnackbar = () => {
 
 // TODO: get this integrated with redux auth's modals
 export const uiShowModal = (type, viewType) => {
-  const view = typeof viewType === 'string' ? viewType : 'edit';
-  return { type: UI_SHOW_MODAL, meta: { type, props: { view } } };
+  return { type: UI_SHOW_MODAL, meta: { type, props: { action: viewType } } };
 };
 
 export const uiHideModal = () => {

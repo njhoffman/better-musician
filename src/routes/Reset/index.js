@@ -1,5 +1,9 @@
+import { Promise as ES6Promise } from 'es6-promise';
 import { injectReducer } from 'store/reducers';
 import { initView } from 'store/view';
+import { init as initLog } from 'shared/logger';
+
+const { log, error } = initLog('resetView');
 
 export default (store, auth) => ({
   path : 'reset',
@@ -9,7 +13,7 @@ export default (store, auth) => ({
         console.info('authentication failed');
         return;
       }
-      const importModules = Promise.all([
+      const importModules = ES6Promise.all([
         require('./components/ResetView').default,
         require('./modules/reset').default
       ]);

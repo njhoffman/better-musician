@@ -1,91 +1,47 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { chunk } from 'lodash';
+import { chunk, get } from 'lodash';
 import { reduxForm } from 'redux-form';
-import { Dialog, FlatButton, RaisedButton, Tabs, Tab } from 'material-ui';
-import { Row, Column } from 'react-foundation';
-import { MdDelete as DeleteIcon } from 'react-icons/lib/md';
+import { Dialog, Tabs, Tab } from 'material-ui';
+import { Row } from 'react-foundation';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
-import { addSong } from '../../modules/songs';
-import { MODAL_ADD_SONG, uiShowModal, uiHideModal } from 'store/ui';
+import { uiHideModal, MODAL_ADD_SONG } from 'store/ui';
 import {
   currentSong as currentSongSelector,
   savedTabs as savedTabsSelector
 } from 'routes/Songs/modules/selectors';
 
-import {
-  artists as artistsSelector,
-  artistsMatched as artistsMatchedSelector,
-  instruments as instrumentsSelector,
-  genres as genresSelector
-} from 'selectors/songs';
-
-import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
-
-import CustomField from 'components/CustomField';
 import AddSongMainTab from './AddSongMainTab';
+import AddSongButtons from './AddSongButtons';
+import CustomField from 'components/CustomField';
 import css from './AddSong.scss';
-
-const validate = (values) => {
-  const errors = {};
-  const requiredFields = [ 'title', 'artist', 'instrument', 'progress' ];
-  requiredFields.forEach(field => {
-    if (!values[ field ]) {
-      errors[ field ] = 'Required';
-    }
-  });
-  return errors;
-};
 
 let lastActiveField = 'artist';
 
 export const AddSongModal = (props) => {
-  const { addSong, editSong, modal, muiTheme } = props;
-  const modalView = modal.props.view;
-  const isView = modalView === 'view';
+  const { modal, muiTheme } = props;
+  const modalView = {
+    isView : () =>  modal.props.action === 'view',
+    isEdit : () =>  modal.props.action === 'edit',
+    isAdd : () =>  modal.props.action === 'add',
+    getName: () => modal.props.action
+  };
 
-  const buttonLabel = isView
-    ? 'Edit'
-    : modalView === 'edit'
-    ? 'Save'
-    : 'Add';
-
-  const actionButtons = [
-    <FlatButton
-      label='Cancel'
-      primary
-      onTouchTap={props.uiHideModal}
-    />,
-    <RaisedButton
-      label={buttonLabel}
-      primary
-      onTouchTap={isView ? editSong : addSong}
-    />
-  ];
-
-  if (modalView !== 'add') {
-    actionButtons.unshift(
-      <FlatButton
-        label='Delete'
-        icon={<DeleteIcon />}
-        style={{ float: 'left', color: '#ff8888' }}
-        onTouchTap={addSong}
-      />
-    );
-  }
-
-  const className = css.addSongModal + ' ' + css[modalView];
+  const className = css.addSongModal + ' ' + css[props.modal.action];
 
   lastActiveField = ['artist', 'instrument'].indexOf(props.activeField) !== -1 ? props.activeField : lastActiveField;
 
-  const dialogStyle = { maxWidth: '650px', width: 'initial' };
-  const dialogBodyStyle = { padding: '5px' };
-  const tabContainerStyle = { paddingTop: '20px' };
-  const labelStyle = isView ? { textAlign: 'center', width: '100%' } : {};
-  const textInputStyle = isView ? { color: 'white', cursor: 'text', textOverflow: 'ellipsis' } : {};
-  const textStyle = isView ? { cursor: 'default' } : {};
+  const labelStyle     = modalView.isView() ? { textAlign: 'center', width: '100%' } : { };
+  const textInputStyle = modalView.isView() ? { color: muiTheme.palette.textColor } : { };
+  const textStyle      = modalView.isView() ? { cursor: 'default' } : {};
+
+  const styleObj = {
+    dialog       : { maxWidth: '650px', width: 'initial' },
+    dialogBody   : { padding: '5px', overflowY: 'auto' },
+    tabContainer : { paddingTop: '20px' }
+  };
 
   const mainTabProps = {
     lastActiveField,
@@ -96,20 +52,21 @@ export const AddSongModal = (props) => {
     modalView
   };
 
+  console.info('savedTabs', props.savedTabs);
   return (
     <Dialog
       modal={false}
-      actions={actionButtons}
+      actions={<AddSongButtons modalView={modalView} />}
       open={props.isOpen}
       onRequestClose={props.uiHideModal}
-      bodyStyle={dialogBodyStyle}
+      bodyStyle={styleObj.dialogBody}
       repositionOnUpdate={false}
       className={className}
-      contentStyle={dialogStyle}>
-      <form onSubmit={addSong}>
-        <Tabs contentContainerStyle={tabContainerStyle}>
+      contentStyle={styleObj.dialog}>
+      <form>
+        <Tabs contentContainerStyle={styleObj.tabContainer}>
           <Tab value='main' label='Main Fields'>
-            <AddSongMainTab {...mainTabProps} isView={isView} />
+            <AddSongMainTab {...mainTabProps} />
           </Tab>
           {props.savedTabs.map((tab, tabIdx) =>
             <Tab
@@ -124,10 +81,11 @@ export const AddSongModal = (props) => {
                       key={field.idx}
                       style={textStyle}
                       labelStyle={labelStyle}
-                      disabled={isView}
-                      underlineShow={!isView}
+                      disabled={modalView.isView()}
+                      underlineShow={!modalView.isView()}
                       inputStyle={textInputStyle}
                       field={field}
+                      initialValues={props.initialValues}
                       centerOnSmall
                       small={fields.length === 1 ? 12 : 6}
                     />
@@ -143,26 +101,28 @@ export const AddSongModal = (props) => {
 };
 
 AddSongModal.propTypes = {
-  addSong:       PropTypes.func.isRequired,
   uiHideModal:   PropTypes.func.isRequired,
   isOpen:        PropTypes.bool.isRequired,
   modal:         PropTypes.object.isRequired,
   savedTabs:     PropTypes.array.isRequired,
-  muiTheme:      PropTypes.object.isRequired,
-  editSong:      PropTypes.func.isRequired
+  muiTheme:      PropTypes.object.isRequired
 };
 
-
-const showEditSongModal = () => uiShowModal(MODAL_ADD_SONG, 'edit');
-
-const mapDispatchToProps = {
-  uiHideModal,
-  addSong,
-  editSong : showEditSongModal
+const validate = (values) => {
+  const errors = {};
+  // TODO: figure out why autocomplete meta doesnt get errors or touched assigned
+  const requiredFields = [ 'title', 'artist.lastName', 'instrument.name' ];
+  requiredFields.forEach(field => {
+    if (!get(values,  field) ) {
+      errors[ field ] = 'Required';
+    }
+  });
+  console.info('errors', errors);
+  return errors;
 };
 
-const initialValues = (song) => {
-  if (song) {
+const initialValues = (song, modalAction) => {
+  if (song && modalAction !== 'add') {
     // return object for nested models, redux form tries to reset and breaks if not a plain object
     const ivSong = Object.assign({}, song);
     ivSong.artist = song.artist.ref;
@@ -170,19 +130,15 @@ const initialValues = (song) => {
     ivSong.instrument = song.instrument.ref;
     return ivSong;
   }
-  return song;
 };
 
+const mapDispatchToProps = { uiHideModal };
+
 const mapStateToProps = (state) => ({
-  initialValues: initialValues(currentSongSelector(state)),
+  initialValues: initialValues(currentSongSelector(state), state.ui.modal.props.action),
   activeField:   state.form.addSongForm ? state.form.addSongForm.active : null,
   formValues:    state.form.addSongForm ? state.form.addSongForm.values : null,
   savedTabs:     savedTabsSelector(state),
-  matchedArtist: artistsMatchedSelector(state),
-  maxDifficulty: maxDifficultySelector(state),
-  genres:        genresSelector(state),
-  instruments:   instrumentsSelector(state),
-  artists:       artistsSelector(state),
   modal:         state.ui.modal,
   isOpen:        state.ui.modal.type === MODAL_ADD_SONG
 });

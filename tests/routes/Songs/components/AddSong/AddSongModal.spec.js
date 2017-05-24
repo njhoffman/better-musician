@@ -3,7 +3,6 @@ import { shallow } from 'enzyme';
 import { muiTheme } from 'tests/fixtures';
 import  { AddSongModal } from 'routes/Songs/components/AddSong/AddSongModal';
 
-console.log("\n\n\nIM RUNNING\n\n");
 describe('Routes', () => {
   describe('Songs', () => {
     describe('Component: AddSongModal', () => {

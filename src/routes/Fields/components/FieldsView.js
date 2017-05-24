@@ -114,20 +114,26 @@ export const FieldsView = (props) => {
                 <h3>Build Your Custom Fields</h3>
                 <Row className={css.fieldAdd}>
                   <FormField
-                    small={4}
+                    large={4}
+                    medium={6}
+                    small={12}
                     label='Field Type'
                     name='type'
                     type='select'
                     dataSource={fieldOptions}
                   />
                   <FormField
-                    small={4}
+                    large={4}
+                    medium={6}
+                    small={12}
                     label='Field Label'
                     name='label'
                     type='text'
                   />
                   <FormField
-                    small={4}
+                    large={4}
+                    medium={12}
+                    small={12}
                     label='Tab Name'
                     name='tabName'
                     type='text'

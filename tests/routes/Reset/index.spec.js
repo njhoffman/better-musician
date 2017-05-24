@@ -2,10 +2,10 @@ import configureStore from 'redux-mock-store';
 import { Promise as ES6Promise } from 'es6-promise';
 
 describe('Routes', () => {
-  describe('Register', () => {
+  describe('Reset', () => {
     describe('Routing', () => {
       let sandbox, initViewStub, injectReducerStub, registerRoute, allStub, errorStub;
-      const inject = require('inject!routes/Register');
+      const inject = require('inject!routes/Reset');
       const mockStore = configureStore();
       const store = mockStore();
       const cbStub = sinon.stub();
@@ -15,7 +15,7 @@ describe('Routes', () => {
         sandbox = sinon.sandbox.create();
         initViewStub = sandbox.stub();
         injectReducerStub = sandbox.stub();
-        errorStub = sandbox.stub(console, 'error');
+        errorStub = sandbox.stub(console, 'error')
         allStub = sandbox.stub(ES6Promise, 'all').returns(Promise.resolve('success'));
         registerRoute = inject({
           'store/reducers' : { injectReducer: injectReducerStub },
@@ -39,10 +39,10 @@ describe('Routes', () => {
         expect(cbStub).to.not.be.called;
       });
 
-      it('Should require relevant files in a promise chain', () => {
-        registerRoute(store).getComponent(nextStateStub, cbStub);
-        expect(allStub).to.be.called.once;
-      });
+      // it('Should require relevant files in a promise chain', () => {
+      //   registerRoute(store).getComponent(nextStateStub, cbStub);
+      //   expect(allStub).to.be.called.once;
+      // });
 
       it('Should inject reducer, initialize view and invoke callback after importing modules', () => {
         registerRoute(store).getComponent(nextStateStub, cbStub);

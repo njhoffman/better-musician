@@ -106,16 +106,9 @@ export class EmailSignUpForm extends React.Component {
             {...this.props.inputProps.passwordConfirmation} />
         </Row>
         <Row className={css.buttonWrapper}>
-          <Column centerOnSmall small={7}>
-            <RaisedButton
-              label='Reset Password'
-              secondary
-              style={{ marginRight: '10px' }}
-              icon={<HelpIcon />}
-            />
-          </Column>
-          <Column centerOnSmall small={5}>
+          <Column centerOnSmall small={12} medium={5} pushOnMedium={7}>
             <ButtonLoader
+              className={css.signupButton}
               loading={this.props.auth.getIn(['emailSignUp', this.getEndpoint(), 'loading'])}
               type='submit'
               name='email-sign-up-submit'
@@ -126,6 +119,14 @@ export class EmailSignUpForm extends React.Component {
               {...this.props.inputProps.submit}>
               Sign Up
             </ButtonLoader>
+          </Column>
+          <Column centerOnSmall small={12} medium={7} pullOnMedium={5}>
+            <RaisedButton
+              label='Reset Password'
+              className={css.resetButton}
+              secondary
+              icon={<HelpIcon />}
+            />
           </Column>
         </Row>
       </form>

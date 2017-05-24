@@ -8,7 +8,6 @@ import { LOCATION_CHANGE } from 'store/location';
 export const INIT_SONG_VIEW           = 'INIT_SONG_VIEW';
 export const SET_CURRENT_SONG         = 'SET_CURRENT_SONG';
 export const SET_SORT                 = 'SET_SORT';
-export const ADD_SONG                 = 'ADD_SONG';
 export const SET_PAGINATION_PER_PAGE  = 'SET_PAGINATION_PER_PAGE';
 export const SET_PAGINATION_CURRENT   = 'SET_PAGINATION_CURRENT';
 
@@ -36,13 +35,8 @@ export const setSort = (sortField) => (dispatch, getState) => {
 //     .sort((a, b) => a - b)
 //     .pop() + 1;
 
-export const addSong = (values) => (dispatch, getState) => {
-  const fieldValues = getState().form.addSongForm.values;
-  return dispatch({ type: ADD_SONG, payload: { fieldValues } });
-};
-
 export const actions = {
-  addSong, setSort, setCurrentSong
+  setSort, setCurrentSong
 };
 
 // ------------------------------------

@@ -1,33 +1,35 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { get } from 'lodash';
 import { Row, Column } from 'react-foundation';
 import { RenderText } from '../Field';
-import { Field } from 'redux-form';
+import { Field, formValueSelector } from 'redux-form';
 
 const youtubeRE = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&(amp;)?[\w?=]*)?/;
 
 class RenderCustomYouTubeLink extends Component {
   static propTypes = {
-    disabled:   PropTypes.bool,
-    preview:    PropTypes.string,
-    id:         PropTypes.string.isRequired,
-    field:      PropTypes.object.isRequired,
-    inputStyle: PropTypes.object,
-    labelStyle: PropTypes.object,
-    style:      PropTypes.object
+    disabled      : PropTypes.bool,
+    preview       : PropTypes.string,
+    initialValues : PropTypes.object,
+    field         : PropTypes.object.isRequired,
+    inputStyle    : PropTypes.object,
+    labelStyle    : PropTypes.object,
+    style         : PropTypes.object
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      videoId: ''
+      videoId: this.parseUrl(get(this.props.initialValues, this.props.field.name))
     };
+
   }
 
   parseUrl(val) {
-    const videoId = youtubeRE.test(val) ? val.match(youtubeRE)[1] : '';
+    const videoId = youtubeRE.test(val) ? val.match(youtubeRE)[1] : val;
     this.setState({ videoId });
-    return val;
+    return videoId;
   }
 
   render() {
@@ -48,7 +50,6 @@ class RenderCustomYouTubeLink extends Component {
                 style={{ ...this.props.style, ...{ width: '100%', textAlign: 'center', verticalAlign: 'middle' } }}
                 name={this.props.field.name}
                 onChange={(e, val) => this.parseUrl(val)}
-                ref='youtubeLink'
                 inputStyle={this.props.inputStyle}
                 disabled={this.props.disabled}
                 underlineShow={!this.props.disabled}

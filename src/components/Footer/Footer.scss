@@ -10,26 +10,63 @@
 .footerSong {
   width: 95%;
 
+  .leftColumn,
+  .middleColumn,
+  .middleTop,
+  .middleBottom,
+  .rightColumn {
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .leftColumn {
+    @media (max-width: 500px) {
+      padding: 0px;
+    }
+  }
   .artistPicture,
   .instrumentPicture {
     height: 75px;
+    min-width: 75px;
     display: inline-block;
   }
   .artistPicture {
     margin-left: 20px;
+    @media (max-width: 800px) {
+      margin-left: 0px;
+    }
   }
+
+  .instrumentPicture {
+    @media (max-width: 800px) {
+      display: none;
+    }
+  }
+
   .artistName {
     font-size: 0.8em;
     display: inline-block;
-    width: 80%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .genreName {
+    float: right;
     font-variant: small-caps;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     display: inline-block;
+    @media (max-width: 650px) {
+      display: none;
+    }
   }
   .songTitle {
     margin-top: 10px;
     font-size: 1.2em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .rightColumn {

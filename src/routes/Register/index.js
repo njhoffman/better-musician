@@ -1,26 +1,20 @@
 import { injectReducer } from 'store/reducers';
 import { initView } from 'store/view';
 import { init as initLog } from 'shared/logger';
+import { Promise as ES6Promise } from 'es6-promise';
 
-
-const { log, debug } = initLog('registerView');
+const { log, error } = initLog('registerView');
 
 export default (store, auth) => ({
   path : 'register',
   getComponent(nextState, cb) {
-    log('top 1');
 
     require.ensure([], (require) => {
-      log('Past require.ensure', console, window.location);
       if (auth && (auth() === false)) {
         log('authentication failed');
         return;
       }
-
-      debug(console);
-      log('Past auth', console, window.location);
-      debug(window.location);
-      const importModules = Promise.all([
+      const importModules = ES6Promise.all([
         require('./components/RegisterView').default,
         require('./modules/register').default
       ]);
@@ -30,7 +24,7 @@ export default (store, auth) => ({
         cb(null, container);
       });
       importModules.catch(error => {
-        console.error('Error importing dynamic modules', error);
+        error('Error importing dynamic modules', error);
       });
     }, 'registerView');
   }

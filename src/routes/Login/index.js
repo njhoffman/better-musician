@@ -1,15 +1,19 @@
+import { Promise as ES6Promise } from 'es6-promise';
+import { init as initLog } from 'shared/logger';
 import { injectReducer } from 'store/reducers';
 import { initView } from 'store/view';
+
+const { log, error } = initLog('loginView');
 
 export default (store, auth) => ({
   path : 'login',
   getComponent(nextState, cb) {
     require.ensure([], (require) => {
       if (auth && (auth() === false)) {
-        console.info('authentication failed');
+        log('authentication failed');
         return;
       }
-      const importModules = Promise.all([
+      const importModules = ES6Promise.all([
         require('./components/LoginView').default,
         require('./modules/login').default
       ]);
@@ -19,7 +23,7 @@ export default (store, auth) => ({
         cb(null, container);
       });
       importModules.catch(error => {
-        console.error('Error importing dynamic modules', error);
+        error('Error importing dynamic modules', error);
       });
     }, 'loginView');
   }

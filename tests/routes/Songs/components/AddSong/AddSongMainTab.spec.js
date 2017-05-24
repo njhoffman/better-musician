@@ -10,7 +10,12 @@ describe('Routes', () => {
       const lastActiveField = '';
       const textStyle = { };
       const textInputStyle = {};
-      const modalView = { props: { view: 'add' } };
+      const modalView = {
+        isView : () =>  false,
+        isEdit : () => false,
+        isAdd : () =>  true,
+        getName: () => 'add'
+      };
       const props = {
         isView,
         lastActiveField,
@@ -19,7 +24,6 @@ describe('Routes', () => {
         modalView,
         muiTheme
       };
-      console.log(props.muiTheme);
       it('Should render shallow', () => {
         shallow(<AddSongMainTab {...props} />);
       });

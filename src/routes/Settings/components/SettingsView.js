@@ -201,4 +201,4 @@ const mapStateToProps = (state) => ({
   settings: state.auth.get('user').get('attributes')
 });
 
-export default connect(mapStateToProps, mapActionCreators)(SettingsView);
+export default connect(mapStateToProps, mapActionCreators)(updateSettingsForm);

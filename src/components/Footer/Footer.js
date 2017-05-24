@@ -92,14 +92,14 @@ export class Footer extends Component {
           <Column
             small={7}
             className={css.middleColumn}>
-            <Row>
+            <Row className={css.middleTop}>
               <Column>
                 <div className={css.songTitle}>
                   { song.title }
                 </div>
               </Column>
             </Row>
-            <Row>
+            <Row className={css.middleBottom}>
               <Column>
                 <div className={css.artistName}>
                   { song.artist.fullName }

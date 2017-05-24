@@ -1,4 +1,5 @@
 import { CALL_API } from 'middleware/api';
+import { reset } from 'redux-form';
 
 // ------------------------------------
 // Constants
@@ -39,8 +40,9 @@ export const addField = () => (dispatch, getState) => {
   });
 };
 
-export const fieldsSuccess = (data) => (dispatch) => {
+export const fieldsSuccess = (data) => (dispatch, getState) => {
   console.info('response', data);
+  dispatch(reset('updateFieldsForm'));
   dispatch({ type: 'ADD_FIELD', payload: data.fields });
 };
 

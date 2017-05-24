@@ -5,6 +5,10 @@ import { Row, Column } from 'react-foundation';
 import { Field } from 'redux-form';
 import { RenderChip, RenderSelect } from 'components/Field';
 
+const addOption = (fields) => {
+  fields.push('testing');
+};
+
 const RenderMultiSelect = ({
   fields,
   label,
@@ -36,6 +40,7 @@ const RenderMultiSelect = ({
             <Column centerOnSmall small={disabled ? 0 : 4}>
               {!disabled &&
                 <RaisedButton
+                  onTouchTap={() => addOption(fields)}
                   secondary
                   label='Add' />
               }
@@ -77,8 +82,8 @@ const RenderMultiSelect = ({
 };
 
 RenderMultiSelect.propTypes = {
-  fields:     PropTypes.array.isRequired,
-  name:       PropTypes.string.isRequired,
+  fields:     PropTypes.any.isRequired,
+  name:       PropTypes.string,
   disabled:   PropTypes.bool,
   labelStyle: PropTypes.object,
   inputStyle: PropTypes.object,

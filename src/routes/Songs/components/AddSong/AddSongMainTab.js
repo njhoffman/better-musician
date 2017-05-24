@@ -6,10 +6,11 @@ import { Row, Column } from 'react-foundation';
 import PropTypes from 'prop-types';
 
 import {
-  artists as artistsSelector,
-  artistsMatched as artistsMatchedSelector,
-  instruments as instrumentsSelector,
-  genres as genresSelector
+  artistLastNames  as artistLastNamesSelector,
+  artistFirstNames as artistFirstNamesSelector,
+  artistsMatched   as artistsMatchedSelector,
+  instruments      as instrumentsSelector,
+  genres           as genresSelector
 } from 'selectors/songs';
 
 import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
@@ -17,14 +18,12 @@ import css from './AddSong.scss';
 
 export const AddSongMainTab = (props) => {
   const {
-    isView,
     lastActiveField,
     textStyle,
     textInputStyle,
     modalView,
     muiTheme: { palette: { textColor } }
   } = props;
-  console.info(props);
 
   const renderImage = (props) => {
     const artistPicture = props.matchedArtist && props.matchedArtist.pictures && props.matchedArtist.pictures[0]
@@ -37,7 +36,7 @@ export const AddSongMainTab = (props) => {
             <Column>
               <img src={artistPicture} />
               <div>{props.matchedArtist.fullName}</div>
-              { !isView && <RaisedButton secondary label='Change Picture' /> }
+              { !modalView.isView() && <RaisedButton secondary label='Change Picture' /> }
             </Column>
           </Row>
         );
@@ -47,7 +46,7 @@ export const AddSongMainTab = (props) => {
             <Column>
               <img src='/artists/unknown_artist.png' />
               <div>Unknown Artist</div>
-              { !isView && <RaisedButton secondary label='Add Picture' /> }
+              { !modalView.isView() && <RaisedButton secondary label='Add Picture' /> }
             </Column>
           </Row>
         );
@@ -58,7 +57,7 @@ export const AddSongMainTab = (props) => {
           <Column>
             <img src='/instruments/unknown_instrument.png' />
             <div>Unknown Instrument</div>
-            { !isView && <RaisedButton secondary label='Add Picture' /> }
+            { !modalView.isView() && <RaisedButton secondary label='Add Picture' /> }
           </Column>
         </Row>
       );
@@ -75,12 +74,13 @@ export const AddSongMainTab = (props) => {
   };
 
   const textProps = {
-    disabled       : isView,
-    underlineShow  : !isView,
+    disabled       : modalView.isView(),
+    underlineShow  : !modalView.isView(),
     style          : textStyle,
-    inputStyle     : textInputStyle,
-    viewType       : modalView
+    inputStyle     : textInputStyle
   };
+
+  const className = css[modalView.getName() + 'Field'];
 
   return (
     <div>
@@ -89,27 +89,29 @@ export const AddSongMainTab = (props) => {
           { renderImage(props) }
         </Column>
       </Row>
-      {isView &&
+      {modalView.isView() &&
         <Row>
           <FormField
             name='title'
             type='text'
+            className={className}
             {...textProps}
             label='Song Title' />
           <FormField
             name='artist.fullName'
-            type='autocomplete'
+            type='text'
+            className={className}
             {...textProps}
-            dataSource={props.artists}
             label='Song Artist' />
         </Row>
       }
-      {!isView &&
+      {!modalView.isView() &&
         <div>
           <Row>
             <FormField
               name='title'
               type='text'
+              className={className}
               {...textProps}
               small={8}
               centerOnSmall
@@ -120,14 +122,15 @@ export const AddSongMainTab = (props) => {
             <FormField
               name='artist.lastName'
               type='autocomplete'
+              className={className}
               {...textProps}
-              dataSource={props.artists}
+              dataSource={props.artistLastNames}
               label='Last Name / Band' />
             <FormField
               name='artist.firstName'
               type='autocomplete'
               {...textProps}
-              dataSource={props.artists}
+              dataSource={props.artistFirstNames}
               label='First Name' />
           </Row>
         </div>
@@ -137,11 +140,13 @@ export const AddSongMainTab = (props) => {
           name='genre.name'
           type='autocomplete'
           label='Song Genre'
+          className={className}
           {...textProps}
           dataSource={props.genres} />
         <FormField
           name='instrument.name'
           type='autocomplete'
+          className={className}
           {...textProps}
           dataSource={props.instruments}
           label='Instrument' />
@@ -153,9 +158,8 @@ export const AddSongMainTab = (props) => {
           min={1}
           max={props.maxDifficulty}
           step={1}
-          viewType={modalView}
           className={css.difficulty}
-          disabled={isView}
+          disabled={modalView.isView()}
           textColor={textColor}
           label='Difficulty' />
         <FormField
@@ -164,10 +168,9 @@ export const AddSongMainTab = (props) => {
           min={0}
           max={4}
           step={1}
-          viewType={modalView}
           className={css.progress}
           valueDisplay={renderStars}
-          disabled={isView}
+          disabled={modalView.isView()}
           textColor={textColor}
           label='Progress' />
       </Row>
@@ -176,7 +179,6 @@ export const AddSongMainTab = (props) => {
 };
 
 AddSongMainTab.propTypes = {
-  isView          : PropTypes.bool.isRequired,
   lastActiveField : PropTypes.string.isRequired,
   textStyle       : PropTypes.object.isRequired,
   textInputStyle  : PropTypes.object.isRequired,
@@ -185,12 +187,13 @@ AddSongMainTab.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  activeField:   state.form.addSongForm ? state.form.addSongForm.active : null,
-  matchedArtist: artistsMatchedSelector(state),
-  maxDifficulty: maxDifficultySelector(state),
-  genres:        genresSelector(state),
-  instruments:   instrumentsSelector(state),
-  artists:       artistsSelector(state)
+  activeField      : state.form.addSongForm ? state.form.addSongForm.active : null,
+  matchedArtist    : artistsMatchedSelector(state),
+  maxDifficulty    : maxDifficultySelector(state),
+  genres           : genresSelector(state),
+  instruments      : instrumentsSelector(state),
+  artistFirstNames : artistFirstNamesSelector(state),
+  artistLastNames  : artistLastNamesSelector(state)
 });
 
 export default connect(mapStateToProps)(AddSongMainTab);

@@ -1,16 +1,20 @@
+import { Promise as ES6Promise } from 'es6-promise';
 import { injectReducer } from 'store/reducers';
 import { initView } from 'store/view';
+import { init as initLog } from 'shared/logger';
 import { fetchSongs } from 'store/api';
+
+const { log, error } = initLog('songsView');
 
 export default (store, auth) => ({
   path : 'songs',
   getComponent(nextState, cb) {
     require.ensure([], (require) => {
       if (auth && (auth() === false)) {
-        console.info('authentication failed');
+        log('authentication failed');
         return;
       }
-      const importModules = Promise.all([
+      const importModules = ES6Promise.all([
         require('./components/SongsView').default,
         require('./modules/songs').default
       ]);
@@ -20,8 +24,8 @@ export default (store, auth) => ({
         fetchSongs(store);
         cb(null, container);
       });
-      importModules.catch(error => {
-        console.error('Error importing dynamic modules', error);
+      importModules.catch(err => {
+        error('Error importing dynamic modules', err);
       });
     }, 'songsView');
   }

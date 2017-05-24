@@ -17,6 +17,9 @@ import {
 
 import css from './SongsPagination.scss';
 
+const styleObj = {
+  buttons: { height: '25px', minWidth: '25px', fontSize: '1.4em', margin: '0px 5px' }
+};
 export const SongsPagination = ({
   paginationCurrent,
   paginationPerPage,
@@ -36,15 +39,15 @@ export const SongsPagination = ({
     <Column small={3} >
       <div className={css.paginationText}>
         <span>
-          <strong>{paginationStart}</strong> - <strong>{paginationEnd}</strong> of
-          <strong>{paginationTotal}</strong> Songs
-          </span>
+          <strong>{paginationStart}</strong> - <strong>
+            {paginationEnd}</strong> of <strong>{paginationTotal}</strong> Songs </span>
       </div>
     </Column>
     <Column small={6} >
       <div className={css.buttonWrapper}>
         <RaisedButton
-          style={{ minWidth: '50px', fontSize: '1.4em', margin: '0px 5px' }}
+          style={styleObj.buttons}
+          className={css.beginning}
           secondary
           onTouchTap={setPaginationStart}
           icon={
@@ -55,10 +58,11 @@ export const SongsPagination = ({
           }
         />
         <RaisedButton
-          style={{ minWidth: '50px', fontSize: '1.4em', margin: '0px 5px' }}
+          style={styleObj.buttons}
+          className={css.prev}
           onTouchTap={setPaginationDecrement}
           secondary
-          icon={<BeforeIcon />}
+          icon={<span style={{ color: muiTheme.palette.textColor }}><BeforeIcon /></span>}
         />
         <TextField
           type='number'
@@ -67,16 +71,18 @@ export const SongsPagination = ({
           onChange={setPaginationCurrent}
           underlineShow={false}
           inputStyle={{ textAlign: 'center', boxShadow: 'none' }}
-          style={{ width: '50px' }} />
-        <span className={css.centerPageTotal}> / &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {paginationPages} </span>
+          style={{ width: '40px' }} />
+        <span className={css.centerPageTotal}> / &nbsp;&nbsp;&nbsp;&nbsp; {paginationPages} </span>
         <RaisedButton
-          style={{ minWidth: '50px', fontSize: '1.4em', margin: '0px 5px' }}
+          style={styleObj.buttons}
+          className={css.next}
           secondary
           onTouchTap={setPaginationIncrement}
-          icon={<NextIcon />}
+          icon={<span style={{ color: muiTheme.palette.textColor }}><NextIcon /></span>}
         />
         <RaisedButton
-          style={{ minWidth: '50px', fontSize: '1.4em', margin: '0px 5px' }}
+          style={styleObj.buttons}
+          className={css.end}
           secondary
           onTouchTap={setPaginationEnd}
           icon={
@@ -120,11 +126,11 @@ SongsPagination.propTypes = {
 };
 
 const setPaginationCurrent = (e, val) => (dispatch) => {
-  dispatch({ type: 'SET_PAGINATION_CURRENT', payload: val });
+  dispatch({ type: 'SET_PAGINATION_CURRENT', payload: parseInt(val) });
 };
 
 const setPaginationPerPage = (e, val) => (dispatch) => {
-  dispatch({ type: 'SET_PAGINATION_PER_PAGE', payload: val });
+  dispatch({ type: 'SET_PAGINATION_PER_PAGE', payload: parseInt(val) });
 };
 
 const setPaginationIncrement = () => (dispatch, getState) => {

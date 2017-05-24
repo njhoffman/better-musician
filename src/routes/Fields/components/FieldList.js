@@ -11,18 +11,10 @@ import {
 } from 'react-icons/lib/md';
 import css from './FieldsView.scss';
 
-export class FieldList extends Component {
-  static propTypes = {
-    savedTabs:    PropTypes.array.isRequired,
-    muiTheme:     PropTypes.object,
-    cancelEdit:   PropTypes.func.isRequired,
-    editingField: PropTypes.object,
-    editField:    PropTypes.func.isRequired,
-    deleteField:  PropTypes.func.isRequired
-  }
+export const FieldList = (props) => {
 
-  renderFieldItem = (field) => {
-    const editingId = this.props.editingField ? this.props.editingField.id : null;
+  const renderFieldItem = (field) => {
+    const editingId = props.editingField ? props.editingField.id : null;
     return (
       <ListItem
         key={field.id}
@@ -33,19 +25,22 @@ export class FieldList extends Component {
             <Row>
               <Column
                 small={4}
-                style={{ color: this.props.muiTheme.instrumental.fieldsViewLabelColor }}
-                className={css.fieldLabel}>Label:
+                style={{ color: props.muiTheme.instrumental.fieldsViewLabelColor }}
+                className={css.fieldLabel}>
+                Label:
               </Column>
               <Column
                 small={8}
-                className={css.fieldValue}>{field.label}
+                className={css.fieldValue}>
+                {field.label}
               </Column>
             </Row>
             <Row>
               <Column
                 small={4}
-                style={{ color: this.props.muiTheme.instrumental.fieldsViewLabelColor }}
-                className={css.fieldLabel}>Type:
+                style={{ color: props.muiTheme.instrumental.fieldsViewLabelColor }}
+                className={css.fieldLabel}>
+                Type:
               </Column>
               <Column
                 small={8}
@@ -56,8 +51,9 @@ export class FieldList extends Component {
           <Column centerOnSmall small={4}>
             <Row>
               <Column
-                style={{ color: this.props.muiTheme.instrumental.fieldsViewLabelColor }}
-                className={css.fieldPreviewLabel}>Field Preview
+                style={{ color: props.muiTheme.instrumental.fieldsViewLabelColor }}
+                className={css.fieldPreviewLabel}>
+                Field Preview
               </Column>
             </Row>
             <Row>
@@ -67,16 +63,15 @@ export class FieldList extends Component {
           <Column centerOnSmall small={1}>
             <Row>
               <FlatButton
-                onTouchTap={field.id === editingId
-                  ? this.props.cancelEdit : this.props.editField.bind(undefined, field)}
+                onTouchTap={field.id === editingId ? props.cancelEdit : () => props.editField(field)}
                 style={{ minWidth: '35px', width: '35px', float: 'right', color: '#bbbbff' }}
-                icon={field.id === editingId ? <CancelIcon onTouchTap={this.props.cancelEdit} /> : <EditIcon />}
+                icon={field.id === editingId ? <CancelIcon onTouchTap={props.cancelEdit} /> : <EditIcon />}
               />
             </Row>
             <Row>
               {!(field.id === editingId) &&
                 <FlatButton
-                  onTouchTap={this.props.deleteField.bind(undefined, field.id)}
+                  onTouchTap={props.deleteField.bind(undefined, field.id)}
                   style={{ minWidth: '35px', width: '35px', float: 'right', color: '#FFBBBB' }}
                   icon={<DeleteIcon />}
                 />
@@ -86,34 +81,40 @@ export class FieldList extends Component {
         </Row>
       </ListItem>
     );
-  }
+  };
 
-  render() {
-    return (
-      <List className={css.fieldList}>
-        {this.props.savedTabs.map((tab, i) =>
-          <ListItem
-            key={i}
-            primaryText={
-              <div>
-                <span className={css.tabNumber}>Tab {i + 1}</span>
-                <span className={css.tabName}>{tab.name}</span>
-                <span className={css.tabCount}>{tab.fields.length + ' Fields'}</span>
-              </div>
-            }
-            hoverColor='rgba(0, 151, 167, 0.4'
-            innerDivStyle={{
-              backgroundColor: this.props.muiTheme.palette.primary3Color
-            }}
-            style={{ marginTop: '5px' }}
-            initiallyOpen={i === 0}
-            primaryTogglesNestedList
-            nestedItems={tab.fields.map(this.renderFieldItem)}
-          />
-        )}
-      </List>
-    );
-  }
+  return (
+    <List className={css.fieldList}>
+      {props.savedTabs.map((tab, i) =>
+        <ListItem
+          key={i}
+          primaryText={
+            <div>
+              <span className={css.tabNumber}>Tab {i + 1}</span>
+              <span className={css.tabName}>{tab.name}</span>
+              <span className={css.tabCount}>{tab.fields.length + ' Fields'}</span>
+            </div>
+          }
+          hoverColor='rgba(0, 151, 167, 0.4'
+          innerDivStyle={{
+            backgroundColor: props.muiTheme.palette.primary3Color
+          }}
+          style={{ marginTop: '5px' }}
+          initiallyOpen={i === 0}
+          primaryTogglesNestedList
+          nestedItems={tab.fields.map(renderFieldItem)}
+        />
+      )}
+    </List>
+  );
 }
+FieldList.PropTypes = {
+    savedTabs:    PropTypes.array.isRequired,
+    muiTheme:     PropTypes.object,
+    cancelEdit:   PropTypes.func.isRequired,
+    editingField: PropTypes.object,
+    editField:    PropTypes.func.isRequired,
+    deleteField:  PropTypes.func.isRequired
+};
 
 export default muiThemeable()(FieldList);

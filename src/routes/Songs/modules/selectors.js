@@ -112,6 +112,7 @@ const savedTabsSelector = ormCreateSelector(orm, (Session, currentSong) => {
   let tabs = {};
   Session.CustomField.all().toModelArray().forEach((field, idx) => {
     field.idx = idx;
+    const _currentSong = currentSong;
     if (tabs[field.tabName]) {
       tabs[field.tabName].push(field);
     } else {

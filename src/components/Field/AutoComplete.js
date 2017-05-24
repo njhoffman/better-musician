@@ -4,17 +4,16 @@ import { AutoComplete } from 'redux-form-material-ui';
 
 const RenderAutoComplete = ({
   label,
-  viewType,
-  meta,
+  inputStyle,
   ...custom }) => {
+  let metaTouched = false;
   return (
     <AutoComplete
+      onClick={() => metaTouched = true}
       floatingLabelText={label}
-      openOnFocus
-      inputStyle={{ boxShadow: 'none', maxWidth: '100%', marginTop: '8px' }}
-      textFieldStyle={{ boxShadow: 'none', maxWidth: '100%', height: '60px' }}
-      style={{ maxWidth: '100%', height: '60px' }}
-      errorText={meta && meta.touched && meta.error}
+      inputStyle={{ ...inputStyle, ...{ boxShadow: 'none'} }}
+      errorText={metaTouched && meta.error}
+      textFieldStyle={{ maxWidth: '100%' }}
       {...custom}
     />
   );

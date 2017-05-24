@@ -5,22 +5,35 @@ import { createSelector } from 'reselect';
 
 export const ormSelector = state => state.orm;
 
-const artistSelector = ormCreateSelector(orm, session => {
+const lastNameSelector = ormCreateSelector(orm, session => {
   const artists = session.Artist ? session.Artist.all().toModelArray() : [];
   return artists.map(artist => {
-    return artist.fullName;
+    return artist.lastName;
   });
 });
 
-export const artists = createSelector(
+export const artistLastNames = createSelector(
   ormSelector,
   state => state,
-  artistSelector
+  lastNameSelector
+);
+
+const firstNameSelector = ormCreateSelector(orm, session => {
+  const artists = session.Artist ? session.Artist.all().toModelArray() : [];
+  return artists.map(artist => {
+    return artist.firstName;
+  });
+});
+
+export const artistFirstNames = createSelector(
+  ormSelector,
+  state => state,
+  firstNameSelector
 );
 
 const artistMatchSelector = ormCreateSelector(orm, (session, artist) => {
   if (artist) {
-    return session.Artist.findByFullName(artist.fullName);
+    return session.Artist.findByFullName(artist.lastName + ', ' + artist.firstName);
   }
   return null;
 });

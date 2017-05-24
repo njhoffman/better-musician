@@ -7,6 +7,7 @@ import muiThemeable from 'material-ui/styles/muiThemeable';
 import { RenderStars, RenderDifficulty } from 'components/Field';
 import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
 import { uiShowModal, MODAL_ADD_SONG } from 'store/ui';
+import Tappable from 'react-tappable';
 
 export const Song = ({
   songValues,
@@ -20,32 +21,32 @@ export const Song = ({
       onDoubleClick={showViewSongModal}
       displayBorder
       {...custom}>
-      <TableRowColumn
-        style={{ textAlign: 'center' }}
-        data-rowId={songValues.id}
-        className={css.title}>
-        { songValues.title }
-      </TableRowColumn>
-      <TableRowColumn
-        style={{ textAlign: 'center' }}
-        data-rowId={songValues.id}
-        className={css.artist}>
-        { songValues.artist.fullName }
-      </TableRowColumn>
-      <TableRowColumn
-        style={{ textAlign: 'center' }}
-        data-rowId={songValues.id}
-        className={css.progress}>
-        <RenderStars number={songValues.progress} starColor={muiTheme.starColor} />
-      </TableRowColumn>
-      <TableRowColumn
-        style={{ textAlign: 'center' }}
-        data-rowId={songValues.id}
-        className={css.difficulty}>
-        <RenderDifficulty
-          difficulty={songValues.difficulty}
-          maxDifficulty={maxDifficulty} />
-      </TableRowColumn>
+        <TableRowColumn
+          style={{ textAlign: 'center' }}
+          data-rowId={songValues.id}
+          className={css.title}>
+          { songValues.title }
+        </TableRowColumn>
+        <TableRowColumn
+          style={{ textAlign: 'center' }}
+          data-rowId={songValues.id}
+          className={css.artist}>
+          { songValues.artist.fullName }
+        </TableRowColumn>
+        <TableRowColumn
+          style={{ textAlign: 'center' }}
+          data-rowId={songValues.id}
+          className={css.progress}>
+          <RenderStars number={songValues.progress} starColor={muiTheme.starColor} />
+        </TableRowColumn>
+        <TableRowColumn
+          style={{ textAlign: 'center' }}
+          data-rowId={songValues.id}
+          className={css.difficulty}>
+          <RenderDifficulty
+            difficulty={songValues.difficulty}
+            maxDifficulty={maxDifficulty} />
+        </TableRowColumn>
     </TableRow>
   );
 };

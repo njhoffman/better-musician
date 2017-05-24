@@ -20,8 +20,9 @@ class RenderFormField extends Component {
       small,
       medium,
       large,
+      style,
       centerOnSmall,
-      ...other } = this.props;
+      ...props } = this.props;
 
     const renderType = type === 'select'
       ? RenderSelect
@@ -39,7 +40,8 @@ class RenderFormField extends Component {
       <Column centerOnSmall={centerOnSmall} small={small} medium={medium} large={large} style={{ minWidth: '200px' }} >
         <Field
           component={renderType}
-          {...other}
+          style={{ ...style, ...{ maxWidth: '100%' } }}
+          {...props}
         />
       </Column>
     );
