@@ -14,7 +14,7 @@ export default (initialState = {}) => {
   const enhancers = [];
   let composeEnhancers = compose;
 
-  if (__DEV__) {
+  if (__DEV__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
     const composeWithDevToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
       name: 'instrumental',
       actionsBlacklist: ['@@redux-form/REGISTER_FIELD', '@@redux-form/UNREGISTER_FIELD']

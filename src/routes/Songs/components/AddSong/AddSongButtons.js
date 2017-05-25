@@ -41,7 +41,7 @@ export const AddSongButtons = (props) => {
 AddSongButtons.propTypes = {
   addSong   : PropTypes.func.isRequired,
   editSong  : PropTypes.func.isRequired,
-  modalView : PropTypes.func.isRequired,
+  modalView : PropTypes.object.isRequired,
   hideModal : PropTypes.func.isRequired
 };
 

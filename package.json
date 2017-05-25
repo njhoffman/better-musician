@@ -38,8 +38,7 @@
       "command": "nodemon --config ./server/nodemon.json bin/dev-server",
       "env": {
         "NODE_ENV": "development",
-        "DEBUG": "app:*",
-        "DEBUG_VERBOSITY": 1
+        "DEBUG": "app:*"
       }
     },
     "deploy": {

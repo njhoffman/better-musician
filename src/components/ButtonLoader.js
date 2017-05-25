@@ -132,7 +132,7 @@ class ButtonLoader extends React.Component {
       return (
         <RaisedButton
           {...raisedProps}
-          onClick={() => this.handleClick()}>
+          onClick={(e) => this.handleClick(e)}>
           {this.renderIcon()}
         </RaisedButton>
       );
@@ -140,7 +140,7 @@ class ButtonLoader extends React.Component {
       return (
         <FlatButton
           {...props}
-          onClick={() => this.handleClick.bind()}>
+          onClick={(e) => this.handleClick(e)}>
           {this.renderIcon()}
         </FlatButton>
       );

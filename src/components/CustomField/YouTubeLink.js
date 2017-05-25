@@ -10,7 +10,7 @@ const youtubeRE = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([
 class RenderCustomYouTubeLink extends Component {
   static propTypes = {
     disabled      : PropTypes.bool,
-    preview       : PropTypes.string,
+    preview       : PropTypes.bool,
     initialValues : PropTypes.object,
     field         : PropTypes.object.isRequired,
     inputStyle    : PropTypes.object,
