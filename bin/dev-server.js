@@ -6,4 +6,4 @@ const { log } = require('debugger-256')('app:bin:dev-server');
 
 server.listen(project.server_port);
 log(`Server is now running at http://${project.server_host}:${project.server_port}.`);
-log(`Proxy connected to API at http://localhost:3001.`);
+log(`Proxy connected to API at http://${project.api_host}:${project.api_port}`);

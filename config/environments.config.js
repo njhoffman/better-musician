@@ -17,6 +17,8 @@ module.exports = {
   // Overrides when NODE_ENV === 'production'
   // ======================================================
   production : (config) => ({
+    server_port: 4000,
+    api_port : 4001,
     compiler_public_path     : '/',
     compiler_fail_on_warning : false,
     compiler_hash_type       : 'chunkhash',
