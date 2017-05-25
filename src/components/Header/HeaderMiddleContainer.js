@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 
 import {
   uiShowModal,
-  MODAL_ADD_SONG,
   MODAL_FILTER_SONGS
 } from 'store/ui';
 
@@ -12,21 +11,10 @@ const localState = {
   searchIsOpen: false
 };
 
-export const showAddSongModal = () => uiShowModal(MODAL_ADD_SONG, 'add');
 export const showFiltersModal = () => uiShowModal(MODAL_FILTER_SONGS);
 
-export const searchClose = () => {
-};
-
-export const toggleSearchPopover = () => {
-  return (localState.searchIsOpen = !localState.searchIsOpen);
-};
-
 const mapActionCreators = {
-  showFiltersModal,
-  searchClose,
-  toggleSearchPopover,
-  showAddSongModal
+  showFiltersModal
 };
 
 const mapStateToProps = (state) => ({

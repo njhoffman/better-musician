@@ -22,8 +22,8 @@ export default (store, auth) => ({
         initView(store, 'loginView');
         cb(null, container);
       });
-      importModules.catch(error => {
-        error('Error importing dynamic modules', error);
+      importModules.catch(err => {
+        error('Error importing dynamic modules', err);
       });
     }, 'loginView');
   }

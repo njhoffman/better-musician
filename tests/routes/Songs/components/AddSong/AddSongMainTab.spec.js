@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { muiTheme } from 'tests/fixtures';
-import  { AddSongMainTab } from 'routes/Songs/components/AddSong/AddSongMainTab';
+import { AddSongMainTab } from 'routes/Songs/components/AddSong/AddSongMainTab';
 
 describe('Routes', () => {
   describe('Songs', () => {
@@ -11,10 +11,10 @@ describe('Routes', () => {
       const textStyle = { };
       const textInputStyle = {};
       const modalView = {
-        isView : () =>  false,
-        isEdit : () => false,
-        isAdd : () =>  true,
-        getName: () => 'add'
+        isView  : () => false,
+        isEdit  : () => false,
+        isAdd   : () => true,
+        getName : () => 'add'
       };
       const props = {
         isView,

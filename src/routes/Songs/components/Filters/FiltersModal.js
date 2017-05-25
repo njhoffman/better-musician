@@ -31,7 +31,6 @@ export const FiltersModal = (props) => {
 };
 
 FiltersModal.propTypes = {
-  addSong:     PropTypes.func,
   uiHideModal: PropTypes.func,
   isOpen:      PropTypes.bool
 };

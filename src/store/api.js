@@ -25,7 +25,6 @@ export const SONGS_ADD = 'SONGS_ADD';
 export const SONGS_ADD_SUCCESS = 'SONGS_ADD_SUCCESS';
 export const SONGS_ADD_FAILURE = 'SONGS_ADD_FAILURE';
 
-
 // ------------------------------------
 // Action Creators
 // ------------------------------------
@@ -80,7 +79,6 @@ export const userUpdateSuccess = (response) => (dispatch) => {
 };
 
 export const addSong = () => (dispatch, getState) => {
-  debugger;
   const fieldValues = getState().form.addSongForm.values;
 
   return dispatch({
@@ -97,7 +95,6 @@ export const songsAddSuccess = (response) => (dispatch) => {
   console.info('addSongSuccess', response);
   dispatch({ type: SONGS_ADD_SUCCESS, user: response });
   dispatch({ type: 'UI_SHOW_SNACKBAR', meta: { message: 'Song Added' } });
-  debugger;
 };
 
 // ------------------------------------

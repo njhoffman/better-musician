@@ -4,18 +4,17 @@ import { Snackbar as MdSnackbar } from 'material-ui';
 
 class Snackbar extends Component {
   static propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    message: PropTypes.string.isRequired,
-    uiHideSnackbar: PropTypes.func.isRequired
+    isOpen         : PropTypes.bool.isRequired,
+    message        : PropTypes.string.isRequired,
+    uiHideSnackbar : PropTypes.func.isRequired
   };
 
   render() {
-    const { props } = this;
     return (
       <MdSnackbar
-        open={props.isOpen}
-        message={props.message}
-        onRequestClose={props.uiHideSnackbar}
+        open={this.props.isOpen}
+        message={this.props.message}
+        onRequestClose={this.props.uiHideSnackbar}
         autoHideDuration={4000} />
     );
   }

@@ -12,7 +12,7 @@ const RenderText = ({
     <TextField
       floatingLabelText={label}
       errorText={meta && meta.touched && meta.error}
-      inputStyle={{ ...inputStyle, ...{ boxShadow: 'none'} }}
+      inputStyle={{ ...inputStyle, ...{ boxShadow: 'none' } }}
       style={{ ...style, ...{ maxWidth: '100%' } }}
       {...custom}
     />
@@ -20,10 +20,11 @@ const RenderText = ({
 };
 
 RenderText.propTypes = {
-  label:    PropTypes.string,
-  meta:     PropTypes.object,
-  style:    PropTypes.object,
-  width:    PropTypes.number
+  inputStyle : PropTypes.object,
+  label      : PropTypes.string,
+  meta       : PropTypes.object,
+  style      : PropTypes.object,
+  width      : PropTypes.number
 };
 
 export default RenderText;

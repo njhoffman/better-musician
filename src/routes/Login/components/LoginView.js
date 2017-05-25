@@ -9,7 +9,7 @@ import EmailSignInForm from './EmailSignInForm';
 import { handleLoginSuccess } from '../modules/login';
 
 export const LoginView = (props) => (
-  <Column className="loginView" centerOnSmall small={12} medium={10} large={8}>
+  <Column className='loginView' centerOnSmall small={12} medium={10} large={8}>
     <Paper zDepth={5}>
       <div className={css.loginContainer}>
         <h2>This is the Login Page</h2>

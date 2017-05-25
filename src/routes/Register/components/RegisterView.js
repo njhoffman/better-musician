@@ -2,7 +2,6 @@ import React  from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Column } from 'react-foundation';
-import muiThemeable from 'material-ui/styles/muiThemeable';
 import { Paper } from 'material-ui';
 import OAuthSignInButton from 'components/OAuthSignInButton';
 import { emailSignUpFormUpdate, emailSignUp } from 'redux-auth';

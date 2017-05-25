@@ -22,7 +22,6 @@ export const SongsView = (props) => (
   </Column>
 );
 
-
 const mapActionCreators = {};
 const mapStateToProps = (state) => ({});
 

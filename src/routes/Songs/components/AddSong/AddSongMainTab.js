@@ -5,6 +5,7 @@ import FormField, { RenderStars } from 'components/Field';
 import { Row, Column } from 'react-foundation';
 import PropTypes from 'prop-types';
 
+/* eslint-disable no-multi-spaces */
 import {
   artistLastNames  as artistLastNamesSelector,
   artistFirstNames as artistFirstNamesSelector,
@@ -12,6 +13,7 @@ import {
   instruments      as instrumentsSelector,
   genres           as genresSelector
 } from 'selectors/songs';
+/* eslint-enable no-multi-spaces */
 
 import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
 import css from './AddSong.scss';
@@ -22,20 +24,22 @@ export const AddSongMainTab = (props) => {
     textStyle,
     textInputStyle,
     modalView,
+    matchedArtist,
+    activeField,
     muiTheme: { palette: { textColor } }
   } = props;
 
-  const renderImage = (props) => {
-    const artistPicture = props.matchedArtist && props.matchedArtist.pictures && props.matchedArtist.pictures[0]
-      ? 'artists/' + props.matchedArtist.pictures[0]
+  const renderImage = () => {
+    const artistPicture = matchedArtist && matchedArtist.pictures && matchedArtist.pictures[0]
+      ? 'artists/' + matchedArtist.pictures[0]
       : 'artists/unknown_artist.png';
-    if (props.activeField === 'artist' || lastActiveField === 'artist') {
-      if (props.matchedArtist) {
+    if (activeField === 'artist' || lastActiveField === 'artist') {
+      if (matchedArtist) {
         return (
           <Row className={css.imageFrame}>
             <Column>
               <img src={artistPicture} />
-              <div>{props.matchedArtist.fullName}</div>
+              <div>{matchedArtist.fullName}</div>
               { !modalView.isView() && <RaisedButton secondary label='Change Picture' /> }
             </Column>
           </Row>
@@ -51,7 +55,7 @@ export const AddSongMainTab = (props) => {
           </Row>
         );
       }
-    } else if (props.activeField === 'instrument' || lastActiveField === 'instrument') {
+    } else if (activeField === 'instrument' || lastActiveField === 'instrument') {
       return (
         <Row className={css.imageFrame}>
           <Column>
@@ -86,7 +90,7 @@ export const AddSongMainTab = (props) => {
     <div>
       <Row>
         <Column>
-          { renderImage(props) }
+          { renderImage() }
         </Column>
       </Row>
       {modalView.isView() &&
@@ -183,7 +187,14 @@ AddSongMainTab.propTypes = {
   textStyle       : PropTypes.object.isRequired,
   textInputStyle  : PropTypes.object.isRequired,
   modalView       : PropTypes.object.isRequired,
-  muiTheme        : PropTypes.object.isRequired
+  muiTheme        : PropTypes.object.isRequired,
+  matchedArtist   : PropTypes.object,
+  activeField     : PropTypes.string,
+  artistLastNames : PropTypes.any.isRequired,
+  artistFirstNames: PropTypes.any.isRequired,
+  genres          : PropTypes.any.isRequired,
+  instruments     : PropTypes.any.isRequired,
+  maxDifficulty   : PropTypes.number
 };
 
 const mapStateToProps = (state) => ({

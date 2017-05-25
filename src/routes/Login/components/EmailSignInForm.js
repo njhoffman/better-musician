@@ -50,7 +50,7 @@ export class EmailSignInForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     let formData = this.props.loginForm.values;
-    this.props.dispatch(emailSignIn(formData, this.getEndpoint()))
+    this.props.dispatch(this.props.emailSignIn(formData, this.getEndpoint()))
       .then(this.props.next)
       .catch(() => {});
   }
@@ -70,7 +70,7 @@ export class EmailSignInForm extends React.Component {
         <Row>
           <Column>
             {errors && [].concat(errors).map(error =>
-              <p className="error">{error}</p>
+              <p className='error'>{error}</p>
           )}
           </Column>
         </Row>

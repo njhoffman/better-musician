@@ -38,11 +38,11 @@ export const SongsList = ({
           </TableRow>
           {songsCollection && songsCollection.map(song => {
             return (
-                <Song
-                  key={song.id}
-                  songValues={song}
-                  selectable={song.id !== currentSongId}
-                />
+              <Song
+                key={song.id}
+                songValues={song}
+                selectable={song.id !== currentSongId}
+              />
             );
           }
           )}
@@ -60,12 +60,13 @@ SongsList.propTypes = {
   setSort: PropTypes.func.isRequired,
   muiTheme: PropTypes.object,
   setCurrentSong: PropTypes.func,
+  showViewSongModal: PropTypes.func,
   currentSongId: PropTypes.string
 };
 
 const showViewSongModal = () => {
   return uiShowModal(MODAL_ADD_SONG, 'view');
-}
+};
 
 const mapStateToProps = (state, action) => ({
   songsCollection: songsSelector(state),
@@ -78,4 +79,4 @@ const mapActionCreators = ({
   setSort
 });
 
-export default connect( mapStateToProps, mapActionCreators)(muiThemeable()(SongsList));
+export default connect(mapStateToProps, mapActionCreators)(muiThemeable()(SongsList));

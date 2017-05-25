@@ -8,7 +8,6 @@ const { log, error } = initLog('registerView');
 export default (store, auth) => ({
   path : 'register',
   getComponent(nextState, cb) {
-
     require.ensure([], (require) => {
       if (auth && (auth() === false)) {
         log('authentication failed');
@@ -23,8 +22,8 @@ export default (store, auth) => ({
         initView(store, 'registerView');
         cb(null, container);
       });
-      importModules.catch(error => {
-        error('Error importing dynamic modules', error);
+      importModules.catch(err => {
+        error('Error importing dynamic modules', err);
       });
     }, 'registerView');
   }

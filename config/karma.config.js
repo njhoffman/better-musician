@@ -1,7 +1,7 @@
 const argv = require('yargs').argv;
 const project = require('./project.config');
 const webpackConfig = require('./webpack.config');
-const { info, trace } = require('debugger-256')('app:config:karma');
+const { info } = require('debugger-256')('app:config:karma');
 
 const karmaConfig = {
   basePath : '../', // project root in relation to bin/karma.js

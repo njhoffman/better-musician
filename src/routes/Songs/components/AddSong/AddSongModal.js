@@ -23,10 +23,10 @@ let lastActiveField = 'artist';
 export const AddSongModal = (props) => {
   const { modal, muiTheme } = props;
   const modalView = {
-    isView : () =>  modal.props.action === 'view',
-    isEdit : () =>  modal.props.action === 'edit',
-    isAdd : () =>  modal.props.action === 'add',
-    getName: () => modal.props.action
+    isView  : () => modal.props.action === 'view',
+    isEdit  : () => modal.props.action === 'edit',
+    isAdd   : () => modal.props.action === 'add',
+    getName : () => modal.props.action
   };
 
   const className = css.addSongModal + ' ' + css[props.modal.action];
@@ -105,6 +105,7 @@ AddSongModal.propTypes = {
   isOpen:        PropTypes.bool.isRequired,
   modal:         PropTypes.object.isRequired,
   savedTabs:     PropTypes.array.isRequired,
+  activeField:   PropTypes.string,
   muiTheme:      PropTypes.object.isRequired
 };
 
@@ -113,11 +114,10 @@ const validate = (values) => {
   // TODO: figure out why autocomplete meta doesnt get errors or touched assigned
   const requiredFields = [ 'title', 'artist.lastName', 'instrument.name' ];
   requiredFields.forEach(field => {
-    if (!get(values,  field) ) {
+    if (!get(values, field)) {
       errors[ field ] = 'Required';
     }
   });
-  console.info('errors', errors);
   return errors;
 };
 
@@ -143,5 +143,10 @@ const mapStateToProps = (state) => ({
   isOpen:        state.ui.modal.type === MODAL_ADD_SONG
 });
 
-const addSongForm = muiThemeable()(reduxForm({ form: 'addSongForm', enableReinitialize: true, validate })(AddSongModal));
+const addSongForm = muiThemeable()(reduxForm({
+  form: 'addSongForm',
+  enableReinitialize: true,
+  validate
+})(AddSongModal));
+
 export default connect(mapStateToProps, mapDispatchToProps)(addSongForm);

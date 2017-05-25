@@ -121,7 +121,10 @@
   }
 }
 .menuPopover {
-  width: 120px;
+  width: 18%;
+  @media (max-width: 640px) {
+    width: 33%;
+  }
   .row {
     height: 45px;
     .column {

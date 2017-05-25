@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import { FlatButton, List, ListItem } from 'material-ui';
@@ -12,9 +12,17 @@ import {
 import css from './FieldsView.scss';
 
 export const FieldList = (props) => {
+  const {
+    editingField,
+    editField,
+    cancelEdit,
+    muiTheme,
+    deleteField,
+    savedTabs
+  } = props;
 
   const renderFieldItem = (field) => {
-    const editingId = props.editingField ? props.editingField.id : null;
+    const editingId = editingField ? editingField.id : null;
     return (
       <ListItem
         key={field.id}
@@ -25,7 +33,7 @@ export const FieldList = (props) => {
             <Row>
               <Column
                 small={4}
-                style={{ color: props.muiTheme.instrumental.fieldsViewLabelColor }}
+                style={{ color: muiTheme.instrumental.fieldsViewLabelColor }}
                 className={css.fieldLabel}>
                 Label:
               </Column>
@@ -38,7 +46,7 @@ export const FieldList = (props) => {
             <Row>
               <Column
                 small={4}
-                style={{ color: props.muiTheme.instrumental.fieldsViewLabelColor }}
+                style={{ color: muiTheme.instrumental.fieldsViewLabelColor }}
                 className={css.fieldLabel}>
                 Type:
               </Column>
@@ -51,7 +59,7 @@ export const FieldList = (props) => {
           <Column centerOnSmall small={4}>
             <Row>
               <Column
-                style={{ color: props.muiTheme.instrumental.fieldsViewLabelColor }}
+                style={{ color: muiTheme.instrumental.fieldsViewLabelColor }}
                 className={css.fieldPreviewLabel}>
                 Field Preview
               </Column>
@@ -63,15 +71,15 @@ export const FieldList = (props) => {
           <Column centerOnSmall small={1}>
             <Row>
               <FlatButton
-                onTouchTap={field.id === editingId ? props.cancelEdit : () => props.editField(field)}
+                onTouchTap={field.id === editingId ? cancelEdit : () => editField(field)}
                 style={{ minWidth: '35px', width: '35px', float: 'right', color: '#bbbbff' }}
-                icon={field.id === editingId ? <CancelIcon onTouchTap={props.cancelEdit} /> : <EditIcon />}
+                icon={field.id === editingId ? <CancelIcon onTouchTap={cancelEdit} /> : <EditIcon />}
               />
             </Row>
             <Row>
               {!(field.id === editingId) &&
                 <FlatButton
-                  onTouchTap={props.deleteField.bind(undefined, field.id)}
+                  onTouchTap={() => deleteField(field.id)}
                   style={{ minWidth: '35px', width: '35px', float: 'right', color: '#FFBBBB' }}
                   icon={<DeleteIcon />}
                 />
@@ -85,7 +93,7 @@ export const FieldList = (props) => {
 
   return (
     <List className={css.fieldList}>
-      {props.savedTabs.map((tab, i) =>
+      {savedTabs.map((tab, i) =>
         <ListItem
           key={i}
           primaryText={
@@ -97,7 +105,7 @@ export const FieldList = (props) => {
           }
           hoverColor='rgba(0, 151, 167, 0.4'
           innerDivStyle={{
-            backgroundColor: props.muiTheme.palette.primary3Color
+            backgroundColor: muiTheme.palette.primary3Color
           }}
           style={{ marginTop: '5px' }}
           initiallyOpen={i === 0}
@@ -107,14 +115,15 @@ export const FieldList = (props) => {
       )}
     </List>
   );
-}
-FieldList.PropTypes = {
-    savedTabs:    PropTypes.array.isRequired,
-    muiTheme:     PropTypes.object,
-    cancelEdit:   PropTypes.func.isRequired,
-    editingField: PropTypes.object,
-    editField:    PropTypes.func.isRequired,
-    deleteField:  PropTypes.func.isRequired
+};
+
+FieldList.propTypes = {
+  savedTabs    : PropTypes.array.isRequired,
+  muiTheme     : PropTypes.object,
+  cancelEdit   : PropTypes.func.isRequired,
+  editingField : PropTypes.object,
+  editField    : PropTypes.func.isRequired,
+  deleteField  : PropTypes.func.isRequired
 };
 
 export default muiThemeable()(FieldList);

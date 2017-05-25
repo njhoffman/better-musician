@@ -77,7 +77,7 @@ export class EmailSignUpForm extends React.Component {
         <Row>
           <Column>
             {errors && errors.map(error =>
-              <p className="error">{error}</p>
+              <p className='error'>{error}</p>
           )}
           </Column>
         </Row>
@@ -115,7 +115,7 @@ export class EmailSignUpForm extends React.Component {
               primary
               icon={ContentSend}
               disabled={disabled}
-              onClick={this.handleSubmit.bind(this)}
+              onClick={() => this.handleSubmit()}
               {...this.props.inputProps.submit}>
               Sign Up
             </ButtonLoader>

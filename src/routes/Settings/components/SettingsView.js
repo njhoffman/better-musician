@@ -17,7 +17,6 @@ import FormField from 'components/Field';
 import css from './SettingsView.scss';
 
 export class SettingsView extends Component {
-
   constructor(props) {
     super(props);
     this.hintMap = {
@@ -32,7 +31,6 @@ export class SettingsView extends Component {
     this.state = {
       fieldHint: 'Hover or select a field for additional information...'
     };
-
   };
 
   showHint(fieldName) {

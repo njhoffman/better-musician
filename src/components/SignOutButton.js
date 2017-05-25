@@ -9,7 +9,6 @@ export class SignOutButton extends React.Component {
   static propTypes = {
     next:     PropTypes.func.isRequired,
     endpoint: PropTypes.string,
-    children: PropTypes.node,
     icon:     PropTypes.func,
     dispatch: PropTypes.func.isRequired,
     auth:     PropTypes.object.isRequired
@@ -44,7 +43,7 @@ export class SignOutButton extends React.Component {
         disabled={disabled}
         primary
         className='sign-out-submit'
-        onClick={this.handleClick.bind(this)}
+        onClick={() => this.handleClick()}
         {...this.props} />
     );
   }

@@ -15,14 +15,13 @@ describe('Routes', () => {
         sandbox = sinon.sandbox.create();
         initViewStub = sandbox.stub();
         injectReducerStub = sandbox.stub();
-        errorStub = sandbox.stub(console, 'error')
+        errorStub = sandbox.stub(console, 'error');
         allStub = sandbox.stub(ES6Promise, 'all').returns(Promise.resolve('success'));
         registerRoute = inject({
           'store/reducers' : { injectReducer: injectReducerStub },
           'store/view' : { initView : initViewStub },
           'es6-promise' : { Promise: { all: allStub } }
         }).default;
-
       });
 
       afterEach(() => {
@@ -54,7 +53,7 @@ describe('Routes', () => {
       });
 
       it('Should catch and log an error if it occurs', () => {
-        allStub = sinon.stub().returns(Promise.reject('error'));
+        allStub = sinon.stub().returns(Promise.reject(new Error('testing')));
         registerRoute = inject({
           'store/reducers' : { injectReducer: injectReducerStub },
           'store/view' : { initView : initViewStub },
@@ -62,7 +61,7 @@ describe('Routes', () => {
         }).default;
         registerRoute(store).getComponent(nextStateStub, cbStub);
         allStub().then(() => {
-          expect(erorStub).to.be.called.once;
+          expect(errorStub).to.be.called.once;
           errorStub.restore();
         });
       });

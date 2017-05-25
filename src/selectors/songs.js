@@ -40,7 +40,7 @@ const artistMatchSelector = ormCreateSelector(orm, (session, artist) => {
 
 export const artistsMatched = createSelector(
   ormSelector,
-  state =>  get(state, 'form.addSongForm.values.artist', null),
+  state => get(state, 'form.addSongForm.values.artist', null),
   artistMatchSelector
 );
 

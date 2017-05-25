@@ -10,17 +10,19 @@ import RenderCustomMultiSelect from './MultiSelect';
 import RenderCustomYouTubeLink from './YouTubeLink';
 
 /* eslint-disable no-multi-spaces */
+/* eslint-disable standard/object-curly-even-spacing */
 const fieldOptions = {
   0: { name: 'Text Box',          component: RenderCustomText },
   1: { name: 'AutoComplete Box',  component: RenderCustomAutoComplete },
   2: { name: 'Select Menu',       component: RenderCustomSelect },
   3: { name: 'Multi-Select Menu', component: RenderCustomMultiSelect },
-  4: { name: 'Checkbox'           /* component:  RenderCheckbox */ },
-  5: { name: 'Radio Buttons'      /* component:  RenderRadioButtons */ },
-  6: { name: 'Date'               /* component:  RenderDate */ },
+  4: { name: 'Checkbox'        /* component: RenderCheckbox */ },
+  5: { name: 'Radio Buttons'   /* component: RenderRadioButtons */ },
+  6: { name: 'Date'            /* component: RenderDate */ },
   7: { name: 'YouTube Link',      component: (props) => <RenderCustomYouTubeLink {...props} /> },
-  8: { name: 'PDF Link'           /* component:  RenderPdfLink */ }
+  8: { name: 'PDF Link'        /* component: RenderPdfLink */ }
 };
+/* eslint-enable standard/object-curly-even-spacing */
 /* eslint-enable no-multi-spaces */
 
 class RenderCustomField extends Component {

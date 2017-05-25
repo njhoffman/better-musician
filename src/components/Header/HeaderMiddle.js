@@ -1,19 +1,13 @@
 import React, { Component }  from 'react';
 import PropTypes from 'prop-types';
 import { Row, Column } from 'react-foundation';
-import { Link } from 'react-router';
-import { Popover }  from 'material-ui';
 import SearchPopover from './SearchPopover';
+import SongPopover from './SongPopover';
 
 /* eslint-disable no-multi-spaces */
 import {
   MdFilterList    as FilterIcon,
-  MdSearch        as SearchIcon,
-  MdLibraryAdd    as AddIcon,
-  MdModeEdit      as EditIcon,
-  MdDelete        as DeleteIcon,
-  MdDashboard     as ViewIcon,
-  MdArrowDropDown as ArrowDropDownIcon
+  MdSearch        as SearchIcon
 } from 'react-icons/lib/md';
 /* eslint-enable no-multi-spaces */
 
@@ -26,12 +20,9 @@ const popoverStyle = {
 
 class HeaderMiddle extends Component {
   static propTypes = {
-    showAddSongModal: PropTypes.func.isRequired,
-    muiTheme:         PropTypes.object.isRequired,
     showFiltersModal: PropTypes.func.isRequired,
     currentSong:      PropTypes.string,
-    modal:            PropTypes.object.isRequired,
-    currentView:      PropTypes.string
+    modal:            PropTypes.object.isRequired
   }
 
   constructor(props) {
@@ -42,6 +33,9 @@ class HeaderMiddle extends Component {
       songPopoverOpen:     false,
       songPopoverAnchor:   {}
     };
+    this.toggleSongPopover = this.toggleSongPopover.bind(this);
+    this.toggleSearchPopover = this.toggleSearchPopover.bind(this);
+    this.onRequestClose = this.onRequestClose.bind(this);
   };
 
   toggleSearchPopover(e) {
@@ -54,6 +48,7 @@ class HeaderMiddle extends Component {
 
   toggleSongPopover(e) {
     e.preventDefault();
+    e.stopPropagation();
     this.setState({
       songPopoverOpen:   true,
       songPopoverAnchor: e.currentTarget.parentElement
@@ -65,98 +60,6 @@ class HeaderMiddle extends Component {
       searchPopoverOpen: false,
       songPopoverOpen:   false
     });
-  }
-
-  showEditSongModal() {
-    this.onRequestClose();
-    this.props.showAddSongModal('edit');
-  };
-
-  showAddSongModal() {
-    this.onRequestClose();
-    this.props.showAddSongModal('add');
-  };
-
-  renderSongButtonOther() {
-    return (
-      <Link className={css.headerLink} to='/songs'>
-        <span className={css.iconWrapper}>
-          <ViewIcon className={css.icon} />
-          <span className={css.iconText}>View Songs</span>
-        </span>
-      </Link>
-    );
-  }
-
-  renderSongButtonAdd() {
-    return (
-      <a
-        className={css.headerLink}
-        onClick={() => this.showAddSongModal()}>
-        <span className={css.iconWrapper}>
-          <AddIcon className={css.icon} />
-          <span className={css.iconText}>Add Song</span>
-        </span>
-      </a>
-    );
-  }
-
-  renderSongButtonView() {
-    const { instrumental: { headerLinksColor } } = this.props.muiTheme;
-    return (
-      <a className={css.headerLink}>
-        <span className={css.iconWrapper}>
-          <EditIcon className={css.icon} />
-          <span className={css.iconText}>Edit Song</span>
-          <ArrowDropDownIcon
-            className={css.downArrow}
-            onTouchTap={(e) => this.toggleSongPopover(e)} />
-          <Popover
-            open={this.state.songPopoverOpen}
-            anchorEl={this.state.songPopoverAnchor}
-            anchorOrigin={popoverStyle.anchor}
-            targetOrigin={popoverStyle.target}
-            className={css.menuPopover}
-            onRequestClose={() => this.onRequestClose()} >
-            <Row className={css.row}>
-              <Column className={css.column} >
-                <a
-                  style={{ color: headerLinksColor }}
-                  className={css.headerLink}
-                  onClick={() => this.showEditSongModal()} >
-                  <span className={css.iconWrapper}>
-                    <AddIcon style={{ margin: '0px 12px 0px -12px' }} className={css.icon} />
-                    <span className={css.iconText}>Add Song</span>
-                  </span>
-                </a>
-              </Column>
-            </Row>
-            <Row className={css.row}>
-              <Column className={css.column}>
-                <a
-                  style={{ color: headerLinksColor }}
-                  className={css.headerLink}>
-                  <span className={css.iconWrapper}>
-                    <DeleteIcon className={css.icon} />
-                    <span className={css.iconText}>Delete Song</span>
-                  </span>
-                </a>
-              </Column>
-            </Row>
-          </Popover>
-        </span>
-      </a>
-    );
-  }
-
-  renderSongButton() {
-    if (this.props.currentView === 'songsView') {
-      if (this.props.currentSong) {
-        return this.renderSongButtonView();
-      }
-      return this.renderSongButtonAdd();
-    }
-    return this.renderSongButtonOther();
   }
 
   renderFiltersButton() {
@@ -195,7 +98,12 @@ class HeaderMiddle extends Component {
     return (
       <Row className={css.wrapper}>
         <Column style={{ padding: '0px', height: '100%' }}>
-          { this.renderSongButton() }
+          <SongPopover
+            songPopoverOpen={this.state.songPopoverOpen}
+            songPopoverAnchor={this.state.songPopoverAnchor}
+            onRequestClose={this.onRequestClose}
+            currentSong={this.props.currentSong}
+            toggleSongPopover={this.toggleSongPopover} />
         </Column>
         <Column style={{ padding: '0px', height: '100%' }}>
           { this.renderFiltersButton() }

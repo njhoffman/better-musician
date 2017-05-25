@@ -10,7 +10,7 @@ export default (store, auth) => ({
   getComponent(nextState, cb) {
     require.ensure([], (require) => {
       if (auth && (auth() === false)) {
-        console.info('authentication failed');
+        log('authentication failed');
         return;
       }
       const importModules = ES6Promise.all([
@@ -22,8 +22,8 @@ export default (store, auth) => ({
         initView(store, 'resetView');
         cb(null, container);
       });
-      importModules.catch(error => {
-        console.error('Error importing dynamic modules', error);
+      importModules.catch(err => {
+        error('Error importing dynamic modules', err);
       });
     }, 'resetView');
   }

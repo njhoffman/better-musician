@@ -173,4 +173,4 @@ const mapActionCreators = ({
   setPaginationEnd
 });
 
-export default connect( mapStateToProps, mapActionCreators)(muiThemeable()(SongsPagination));
+export default connect(mapStateToProps, mapActionCreators)(muiThemeable()(SongsPagination));

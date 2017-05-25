@@ -15,7 +15,6 @@ class ButtonLoader extends React.Component {
     spinColorLight:          PropTypes.string,
     spinColorDisabled:       PropTypes.string,
     children:                PropTypes.node,
-    flat:                    PropTypes.bool,
     onClick:                 PropTypes.func.isRequired,
     style:                   PropTypes.object,
     disabled:                PropTypes.bool,
@@ -44,7 +43,7 @@ class ButtonLoader extends React.Component {
       width: 2,
       radius: 3
     },
-    flat: false,
+    flatButton: false,
     spinColorDark: Colors.darkBlack,
     spinColorLight: Colors.darkWhite,
     spinColorDisabled: Colors.minBlack,
@@ -133,7 +132,7 @@ class ButtonLoader extends React.Component {
       return (
         <RaisedButton
           {...raisedProps}
-          onClick={this.handleClick.bind(this)}>
+          onClick={() => this.handleClick()}>
           {this.renderIcon()}
         </RaisedButton>
       );
@@ -141,7 +140,7 @@ class ButtonLoader extends React.Component {
       return (
         <FlatButton
           {...props}
-          onClick={this.handleClick.bind(this)}>
+          onClick={() => this.handleClick.bind()}>
           {this.renderIcon()}
         </FlatButton>
       );

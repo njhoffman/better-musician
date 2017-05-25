@@ -44,7 +44,8 @@ const webpackConfig = {
   devtool : project.compiler_devtool,
   stats: {
     chunks: false,
-    warnings: false // turn off webpack warnings (specifically require function is used in a way... only do this for tests?)
+    // turn off webpack warnings (specifically require function is used in a way... only do this for tests?)
+    warnings: false
   },
   resolve : {
     root       : project.paths.client(),

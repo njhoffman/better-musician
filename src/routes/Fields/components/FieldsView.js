@@ -35,6 +35,13 @@ export const FieldsView = (props) => {
   const redirectSettings = () => browserHistory.push('/settings');
   const textColor = props.muiTheme ? props.muiTheme.palette.textColor : 'black';
 
+  const {
+    updateField,
+    addField,
+    editingField,
+    formValues
+  } = props;
+
   const fieldOptions = {
     0: 'Text Box',
     1: 'AutoComplete Box',
@@ -56,14 +63,14 @@ export const FieldsView = (props) => {
     }
   };
 
-  const renderEditButtons = (props) => (
+  const renderEditButtons = () => (
     <div>
       <ButtonLoader
         type='submit'
         label='Update'
         labelStyle={{ color: textColor, paddingRight: '5px' }}
         style={{ width: '100px', marginRight: '15px' }}
-        onClick={props.updateField}
+        onClick={updateField}
         primary
         icon={<SaveIcon style={{ marginTop: '-10px', color: textColor }} />}
         className='update-fields-submit'
@@ -72,20 +79,19 @@ export const FieldsView = (props) => {
     </div>
   );
 
-  const renderAddButtons = (props) => (
+  const renderAddButtons = () => (
     <ButtonLoader
       type='submit'
       label='Add Field'
       labelStyle={{ color: textColor, paddingRight: '5px' }}
       style={{ width: '160px', marginRight: '15px' }}
-      onClick={props.addField}
+      onClick={addField}
       primary
       icon={<AddIcon style={{ marginTop: '-10px', color: textColor }} />}
       className='update-fields-submit'
       disabled={disabled} />
   );
 
-  const { editingField } = props;
   return (
     <Column centerOnSmall small={12} medium={10} large={8}>
       <Paper zDepth={5}>
@@ -140,11 +146,11 @@ export const FieldsView = (props) => {
                   />
                 </Row>
                 <div className={css.extraFields}>
-                  {props.formValues && renderExtraFields(props.formValues)}
+                  {formValues && renderExtraFields(formValues)}
                 </div>
                 <div className={css.buttons}>
-                  {editingField && renderEditButtons(props)}
-                  {!editingField && renderAddButtons(props)}
+                  {editingField && renderEditButtons()}
+                  {!editingField && renderAddButtons()}
                 </div>
                 <FieldList {...props} />
               </form>

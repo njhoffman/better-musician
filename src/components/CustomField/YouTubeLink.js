@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { get } from 'lodash';
 import { Row, Column } from 'react-foundation';
 import { RenderText } from '../Field';
-import { Field, formValueSelector } from 'redux-form';
+import { Field } from 'redux-form';
 
 const youtubeRE = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&(amp;)?[\w?=]*)?/;
 
@@ -15,7 +15,8 @@ class RenderCustomYouTubeLink extends Component {
     field         : PropTypes.object.isRequired,
     inputStyle    : PropTypes.object,
     labelStyle    : PropTypes.object,
-    style         : PropTypes.object
+    style         : PropTypes.object,
+    id            : PropTypes.string
   }
 
   constructor(props) {
@@ -23,7 +24,6 @@ class RenderCustomYouTubeLink extends Component {
     this.state = {
       videoId: this.parseUrl(get(this.props.initialValues, this.props.field.name))
     };
-
   }
 
   parseUrl(val) {

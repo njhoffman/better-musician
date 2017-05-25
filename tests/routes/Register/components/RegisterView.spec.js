@@ -42,7 +42,6 @@ describe('Routes', () => {
         const wrapper = shallow(<OAuthSignInButton store={store} />);
         console.log(wrapper.props().icon);
       });
-
     });
   });
 });

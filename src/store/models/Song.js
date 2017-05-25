@@ -36,8 +36,6 @@ class Song extends BaseModel {
   static getStats() {
     const songs = this.all().toModelArray();
     const artists = uniq(songs.map(song => {
-      if (!song.artist)
-        debugger;
       return song.artist.fullName;
     }));
     const genres = uniq(songs.map(song => {

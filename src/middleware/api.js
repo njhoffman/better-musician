@@ -1,7 +1,7 @@
 import { fetch } from 'redux-auth';
 import { init as initLog } from 'shared/logger';
 
-const { error, log, debug, trace } = initLog('middlewareApi');
+const { error, log, debug } = initLog('middlewareApi');
 
 // TODO: make api return nested data, implement normalizing here
 

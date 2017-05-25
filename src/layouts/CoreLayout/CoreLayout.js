@@ -14,7 +14,7 @@ import DrawerMenu from 'components/DrawerMenu/DrawerMenuContainer';
 import Snackbar from 'components/Snackbar/SnackbarContainer';
 import { init as initLog } from 'shared/logger';
 
-const { info, log } = initLog('coreLayout');
+const { info } = initLog('coreLayout');
 
 // export const CoreLayout = ({ getState }) => ({ children }) => {
 
