@@ -1,5 +1,6 @@
 import { fetch } from 'redux-auth';
 import { init as initLog } from 'shared/logger';
+import webpackVariables from 'webpackVariables';
 
 const { error, log, debug } = initLog('middlewareApi');
 
@@ -7,10 +8,12 @@ const { error, log, debug } = initLog('middlewareApi');
 
 // Action key that carries API call info interpreted by this Redux middleware.
 export const CALL_API = Symbol('Call API');
+console.info('webpackVariables', webpackVariables);
 
 const apiFetch = (endpoint, options) => {
-  endpoint = 'http://localhost:3000/api' + endpoint;
   if (options.body) {
+
+    // endpoint = webpackVariables.apiPath + endPoint;
     let formData = new FormData();
     Object.keys(options.body).forEach(key => {
       if (Array.isArray(options.body[key])) {

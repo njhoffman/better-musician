@@ -83,24 +83,6 @@ Edit at Your Own Risk
 
 -------------------------------------------------
 ************************************************/
-
-// ------------------------------------
-// Environment
-// ------------------------------------
-// N.B.: globals added here must _also_ be added to .eslintrc
-config.globals = {
-  'process.env'  : {
-    'NODE_ENV' : JSON.stringify(config.env)
-  },
-  'NODE_ENV'     : config.env,
-  '__DEV__'      : config.env === 'development',
-  '__PROD__'     : config.env === 'production',
-  '__TEST__'     : config.env === 'test',
-  '__COVERAGE__' : !argv.watch && config.env === 'test',
-  '__VERBOSE__'  : config.envFlag === 'verbose',
-  '__BASENAME__' : JSON.stringify(process.env.BASENAME || '')
-};
-
 // ------------------------------------
 // Validate Vendor Dependencies
 // ------------------------------------
@@ -144,5 +126,23 @@ if (overrides) {
 } else {
   info('No environment overrides found, defaults will be used.');
 }
+
+// ------------------------------------
+// Environment
+// ------------------------------------
+// N.B.: globals added here must _also_ be added to .eslintrc
+config.globals = {
+  'process.env'  : {
+    'NODE_ENV' : JSON.stringify(config.env)
+  },
+  'NODE_ENV'     : config.env,
+  '__DEV__'      : config.env === 'development',
+  '__PROD__'     : config.env === 'production',
+  '__TEST__'     : config.env === 'test',
+  '__COVERAGE__' : !argv.watch && config.env === 'test',
+  '__VERBOSE__'  : config.envFlag === 'verbose',
+  '__API_PATH__' : `http://${config.api_host}:${config.api_port}/api`,
+  '__BASENAME__' : JSON.stringify(process.env.BASENAME || '')
+};
 
 module.exports = config;

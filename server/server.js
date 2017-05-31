@@ -89,8 +89,6 @@ if (project.env === 'development') {
     heartbeat: 3 * 1000
   }));
 
-  console.log(project.paths.public());
-  console.log(project);
   // Serve static assets from ~/public since Webpack is unaware of
   // these files. This middleware doesn't need to be enabled outside
   // of development since this directory will be copied into ~/dist

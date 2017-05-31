@@ -19,6 +19,7 @@ module.exports = {
   production : (config) => ({
     server_port: 4000,
     api_port : 4001,
+    api_host : '45.56.1231.208',
     compiler_public_path     : '/',
     compiler_fail_on_warning : false,
     compiler_hash_type       : 'chunkhash',
