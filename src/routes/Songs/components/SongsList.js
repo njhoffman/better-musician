@@ -24,17 +24,33 @@ export const SongsList = ({
         selectable
         onRowSelection={setCurrentSong}
         className={css.songsList}
-        style={{ tableLayout: 'auto' }}>
+        style={{ tableLayout: 'fixed' }}>
         <TableBody
           showRowHover
           stripedRows
           deselectOnClickaway
           displayRowCheckbox={false}>
           <TableRow>
-            <SongsListHeader setSort={setSort} name='title' displayName='Title' />
-            <SongsListHeader setSort={setSort} name='artist' displayName='Artist' />
-            <SongsListHeader setSort={setSort} name='progress' displayName='Progress' />
-            <SongsListHeader setSort={setSort} name='difficulty' displayName='Difficulty' />
+            <SongsListHeader
+              className={css.title}
+              setSort={setSort}
+              name='title'
+              displayName='Title' />
+            <SongsListHeader
+              className={css.artist}
+              setSort={setSort}
+              name='artist'
+              displayName='Artist' />
+            <SongsListHeader
+              className={css.progress}
+              setSort={setSort}
+              name='progress'
+              displayName='Progress' />
+            <SongsListHeader
+              className={css.difficulty}
+              setSort={setSort}
+              name='difficulty'
+              displayName='Difficulty' />
           </TableRow>
           {songsCollection && songsCollection.map(song => {
             return (

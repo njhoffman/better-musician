@@ -4,7 +4,10 @@ import { initView } from 'store/view';
 import { init as initLog } from 'shared/logger';
 import { fetchSongs } from 'store/api';
 
-const { log, error } = initLog('registerView');
+const { log, error } = initLog('profileView');
+
+// Polyfill webpack require.ensure for testing
+if (__TEST__) { require('require-ensure-shim').shim(require); }
 
 export default (store, auth) => ({
   path: 'profile',
@@ -19,12 +22,12 @@ export default (store, auth) => ({
         require('./modules/profile').default
       ]);
       importModules.then(([container, reducer]) => {
+        log('modules imported, initializing view');
         injectReducer(store, { key: 'profileView', reducer: reducer });
         initView(store, 'profileView');
         fetchSongs(store);
         cb(null, container);
-      });
-      importModules.catch(err => {
+      }).catch(err => {
         error('Error importing dynamic modules', err);
       });
     }, 'profileView');

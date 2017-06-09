@@ -1,7 +1,23 @@
 .songsList {
   width: 100%;
+  table-layout: fixed;
   th a {
     font-size: 1.2em;
   }
+  @media (max-width: 450px) {
+    .progress {
+      display: none !important;
+    }
+    .title {
+      width: 50%;
+    }
+    .artist {
+      width: 40%;
+    }
+    .difficulty {
+      width: 20%;
+    }
+  }
 }
+
 

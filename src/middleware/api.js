@@ -2,18 +2,16 @@ import { fetch } from 'redux-auth';
 import { init as initLog } from 'shared/logger';
 import webpackVariables from 'webpackVariables';
 
-const { error, log, debug } = initLog('middlewareApi');
+const { error, log, trace } = initLog('middlewareApi');
 
 // TODO: make api return nested data, implement normalizing here
 
 // Action key that carries API call info interpreted by this Redux middleware.
 export const CALL_API = Symbol('Call API');
-console.info('webpackVariables', webpackVariables);
 
 const apiFetch = (endpoint, options) => {
+  endpoint = webpackVariables.apiUrl + endpoint;
   if (options.body) {
-
-    // endpoint = webpackVariables.apiPath + endPoint;
     let formData = new FormData();
     Object.keys(options.body).forEach(key => {
       if (Array.isArray(options.body[key])) {
@@ -32,7 +30,7 @@ const apiFetch = (endpoint, options) => {
     options.body = formData;
   }
   log(`Fetching: ${endpoint}`);
-  // trace(options.headers);
+  trace('Options', options);
   return fetch(endpoint, options)
     .then(response =>
         response.json()
@@ -44,17 +42,17 @@ const apiFetch = (endpoint, options) => {
         })
     );
 };
-// trace(testObj1);
 
 export default (store) => next => action => {
   const callApi = action[CALL_API];
   if (typeof callApi === 'undefined') {
     return next(action);
   }
-  log('Call to API');
 
   let { endpoint, method = 'GET' } = callApi;
   const { types, payload } = callApi;
+
+  log(`Call to API: ${types[0]}`);
 
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState());
@@ -80,9 +78,8 @@ export default (store) => next => action => {
   next(actionWith({ type: requestType }));
 
   const responseSuccess = (response) => {
-    log('Fetch Success:');
+    log(`Fetch Success: ${JSON.stringify(response).length} characters returned`);
     // trace(response);
-    // trace(window.location);
     if (typeof successType === 'function') {
       return next(
         successType(response)
@@ -97,8 +94,7 @@ export default (store) => next => action => {
   };
 
   const responseFailure = (err) => {
-    error(`Fetch Failure: ${err.message}`);
-    debug(err);
+    error(`Fetch Failure: ${err.name}: ${err.message}`);
     return next(
       actionWith({
         type: failureType,

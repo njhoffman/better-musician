@@ -14,7 +14,7 @@ const { log } = require('debugger-256')('app:config:webpack');
 const __DEV__ = project.globals.__DEV__;
 const __PROD__ = project.globals.__PROD__;
 const __TEST__ = project.globals.__TEST__;
-const __API_PATH__ = project.globals.__API_PATH__;
+const __API_URL__ = project.globals.__API_URL__;
 
 const _RESOLVE_PATHS = {
   coreStyles: 'src/styles/core.scss',
@@ -27,7 +27,7 @@ const _RESOLVE_PATHS = {
   selectors:  'src/selectors',
   store:      'src/store',
   shared:     'shared',
-  tests:      'tests'
+  tests:      'tests/unit'
   // 'redux-orm': 'src/redux-orm',
   // 'redux-auth': 'src/redux-auth'
 };
@@ -37,7 +37,7 @@ let resolvePaths = _.mapValues(_RESOLVE_PATHS, function (str) {
 });
 
 log('Creating webpack configuration.');
-log(`API Path Global: ${__API_PATH__}`);
+log(`API Path Global: ${__API_URL__}`);
 const webpackConfig = {
   name    : 'client',
   profile : false,
@@ -89,7 +89,7 @@ webpackConfig.externals = {};
 webpackConfig.externals['react/lib/ExecutionEnvironment'] = true;
 webpackConfig.externals['react/lib/ReactContext'] = true;
 webpackConfig.externals['react/addons'] = true;
-webpackConfig.externals['webpackVariables'] = `{ apiPath: '${__API_PATH__}' }`;
+webpackConfig.externals['webpackVariables'] = `{ apiUrl: '${__API_URL__}' }`;
 
 // ------------------------------------
 // Plugins

@@ -4,27 +4,31 @@ import { init as initLog } from 'shared/logger';
 import { initView } from 'store/view';
 import { fetchSongs } from 'store/api';
 
-const { info, error } = initLog('settingsView');
+const { log, error } = initLog('settingsView');
+
+// Polyfill webpack require.ensure for testing
+if (__TEST__) { require('require-ensure-shim').shim(require); }
 
 export default (store, auth) => ({
   path : 'settings',
   getComponent(nextState, cb) {
     require.ensure([], (require) => {
       if (auth && (auth() === false)) {
-        info('authentication failed');
+        log('authentication failed');
         return;
       }
       const importModules = ES6Promise.all([
         require('./components/SettingsView').default,
         require('./modules/settings').default
       ]);
+
       importModules.then(([container, reducer]) => {
+        log('modules imported, initializing view');
         injectReducer(store, { key: 'settingsView', reducer: reducer });
         initView(store, 'settingsView');
         fetchSongs(store);
         cb(null, container);
-      });
-      importModules.catch(err => {
+      }).catch(err => {
         error('Error importing dynamic modules', err);
       });
     }, 'settingsView');

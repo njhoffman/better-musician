@@ -1,3 +1,5 @@
+// TODO: implement media queries outside of css with redux-responsive
+
 ul li {
   white-space: nowrap;
 }
@@ -6,13 +8,27 @@ ul li span {
   overflow: hidden;
 }
 
-.title {
-}
-
-.artist {
-}
-
-.icons {
+@media (max-width: 450px) {
+  tr {
+    height: 25px !important;
+    td {
+      height: 25px !important;
+      padding-left: 5px !important;
+      padding-right: 5px !important;
+    }
+    .title {
+      width: 50%;
+    }
+    .artist {
+      width: 40%;
+    }
+    .difficulty {
+      width: 20%;
+    }
+    .progress {
+      display: none;
+    }
+  }
 }
 
 .progress {

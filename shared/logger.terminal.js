@@ -14,6 +14,8 @@ export const warn = () => {};
 export const error = () => {};
 
 export const log = (...messages) => {
+  if (__TEST__) return;
+
   if (messages.length > 1) {
     messages = messages.map((msg) => {
       let rendMsg = pjson.render(msg, 5);

@@ -27,7 +27,7 @@ let render = () => {
   const routes = require('./routes/index').default(store);
 
   store.dispatch(authConfigure({
-    apiUrl                : `${webpackVariables.apiPath}`,
+    apiUrl                : `${webpackVariables.apiUrl}`,
     signOutPath           : '/users/logout',
     emailSignInPath       : '/users/login',
     emailRegistrationPath : '/users/register',

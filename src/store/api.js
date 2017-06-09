@@ -1,4 +1,7 @@
 import { CALL_API } from 'middleware/api';
+import { init as initLog } from 'shared/logger';
+
+const { log } = initLog('api');
 
 // ------------------------------------
 // Constants
@@ -44,6 +47,8 @@ export const fetchSongs = ({ dispatch, getState, nextLocation }) => {
 
 export const songsSuccess = (response) => (dispatch) => {
   const tables = response.tables;
+  log('fetchSongsSuccess', response);
+
 
   /* eslint-disable no-multi-spaces */
   dispatch({ type: SONGS_SUCCESS,    payload: response });
@@ -71,7 +76,7 @@ export const updateUser = () => (dispatch, getState) => {
 };
 
 export const userUpdateSuccess = (response) => (dispatch) => {
-  console.info('updateUserSuccess', response);
+  log('updateUserSuccess', response);
   dispatch({ type: USER_UPDATE_SUCCESS, user: response });
   dispatch({ type: 'UI_SHOW_SNACKBAR', meta: { message: 'Profile Updated' } });
   // reloads user attributes

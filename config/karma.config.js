@@ -6,11 +6,13 @@ const { info } = require('debugger-256')('app:config:karma');
 const karmaConfig = {
   basePath : '../', // project root in relation to bin/karma.js
   files    : [{
-    pattern  : `./${project.dir_test}/test-bundler.js`,
+    pattern  : `./${project.dir_test}/unit/test-bundler.js`,
     watched  : false,
     served   : true,
     included : true
-  }],
+  },
+    './node_modules/promise-polyfill/promise.js'
+  ],
   singleRun     : !argv.watch,
   colors: true,
   client: {
@@ -84,7 +86,7 @@ const karmaConfig = {
     sassLoader : webpackConfig.sassLoader
   },
   preprocessors : {
-    [`${project.dir_test}/test-bundler.js`] : ['webpack']
+    [`${project.dir_test}/unit/test-bundler.js`] : ['webpack']
   },
   webpackMiddleware : {
     noInfo : true,

@@ -52,8 +52,8 @@ export class CoreLayout extends Component {
 
   memoryStats() {
     if (window.performance && window.performance.memory) {
-      info(`Total JS Heap Size:\t ${this.humanMemorySize(window.performance.memory.totalJSHeapSize, true)}`);
-      info(`Used JS Heap Size:\t ${this.humanMemorySize(window.performance.memory.usedJSHeapSize, true)}`);
+      info(`Total JS Heap Size:  ${this.humanMemorySize(window.performance.memory.totalJSHeapSize, true)}`);
+      info(`Used JS Heap Size:   ${this.humanMemorySize(window.performance.memory.usedJSHeapSize, true)}`);
     }
   }
 

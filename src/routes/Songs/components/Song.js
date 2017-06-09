@@ -8,6 +8,10 @@ import { RenderStars, RenderDifficulty } from 'components/Field';
 import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
 import { uiShowModal, MODAL_ADD_SONG } from 'store/ui';
 
+const rowStyle = { };
+const colStyle = {
+  textAlign: 'center'
+};
 export const Song = ({
   songValues,
   showViewSongModal,
@@ -18,28 +22,29 @@ export const Song = ({
     <TableRow
       hoverable
       onDoubleClick={showViewSongModal}
+      style={rowStyle}
       displayBorder
       {...custom}>
       <TableRowColumn
-        style={{ textAlign: 'center' }}
+        style={colStyle}
         data-rowId={songValues.id}
         className={css.title}>
         { songValues.title }
       </TableRowColumn>
       <TableRowColumn
-        style={{ textAlign: 'center' }}
+        style={colStyle}
         data-rowId={songValues.id}
         className={css.artist}>
         { songValues.artist.fullName }
       </TableRowColumn>
       <TableRowColumn
-        style={{ textAlign: 'center' }}
+        style={colStyle}
         data-rowId={songValues.id}
         className={css.progress}>
         <RenderStars number={songValues.progress} starColor={muiTheme.starColor} />
       </TableRowColumn>
       <TableRowColumn
-        style={{ textAlign: 'center' }}
+        style={colStyle}
         data-rowId={songValues.id}
         className={css.difficulty}>
         <RenderDifficulty

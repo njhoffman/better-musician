@@ -5,6 +5,9 @@ import { init as initLog } from 'shared/logger';
 
 const { log, error } = initLog('resetView');
 
+// Polyfill webpack require.ensure for testing
+if (__TEST__) { require('require-ensure-shim').shim(require); }
+
 export default (store, auth) => ({
   path : 'reset',
   getComponent(nextState, cb) {
@@ -18,6 +21,7 @@ export default (store, auth) => ({
         require('./modules/reset').default
       ]);
       importModules.then(([container, reducer]) => {
+        log('modules imported, initializing view');
         injectReducer(store, { key: 'resetView', reducer: reducer });
         initView(store, 'resetView');
         cb(null, container);

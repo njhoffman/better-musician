@@ -1,9 +1,10 @@
 const pjson = require('prettyjson-256');
-const { isArray, flattenDepth } = require('lodash');
+const { isArray, flattenDepth, zip } = require('lodash');
 
 pjson.init({ browser: true });
 
 //  console.log('%cBlue! %cRed!', 'color: blue;', 'color: red;');
+
 
 export const init = (subsystem) => {
   return {
@@ -17,62 +18,36 @@ export const init = (subsystem) => {
   };
 };
 
-export const trace = (subsystem, ...inputs) => {
-  inputs = inputs.map((input, i) => {
-    const startIndent = (i > 0 || typeof input === 'object' ? 4 : 0);
-    return pjson.render(input, startIndent);
-  });
-  inputs.forEach(input => {
-    //TODO: Hack but this is a pain in the ass to figure out
-    let parsedMessage = '';
-    let parseTmp = '';
-    input[0].forEach(msgItem => {
-      if (/^\s+(\-|.+:)\s+/.test(msgItem)) {
-        parsedMessage += '\n' + parseTmp;
-        parseTmp = msgItem;
-      } else {
-        parseTmp += msgItem;
+const parse = (subsystem, style, messages) => {
+  messages.forEach((msg, i) => {
+    let rendMsg = pjson.render(msg, 5 + (i * 3));
+    rendMsg = zip(rendMsg[0], rendMsg[1]);
+    if (i === 0) {
+      if (messages.length > 1) {
+        subsystem += "\n";
       }
-    });
-    console.log('%c ' + subsystem + parsedMessage, 'color: #44ddbb',   ...input[1]);
-  });
-};
+      rendMsg.unshift(['%c ' + subsystem, style]);
+    }
+    let msgOut = '';
+    let colors = [];
+    rendMsg.forEach((line, n) => {
+      colors.push(line[1]);
+      msgOut += line[0].replace(/%i$/, '');
 
-export const debug = (subsystem, ...messages) => {
-  messages.forEach((msg) => {
-    let rendMsg = pjson.render(msg, 5);
-    rendMsg.unshift('%c ' + subsystem + ',color: #66CCEE');
-    rendMsg.forEach(line => {
-      var colorRE = /\s*%c.*?(,color: #\w{6})/g;
-      if (colorRE.test(line)) {
-        let beginning = [];
-        let end = [];
-        if (!line.match) debugger;
-        line.match(colorRE).forEach(match => {
-          beginning.push(match.split(',')[0]);
-          end.push(match.split(',')[1]);
-        });
-        console.log(beginning.join(''), ...end);
-      } else {
-        console.log(...line);
+      const nextLine = (n + 1) < rendMsg.length ? rendMsg[n + 1] : false;
+      if (!nextLine || !/%i$/.test(nextLine[0]) && rendMsg.length > 2) {
+        console.log(msgOut, ...colors);
+        msgOut = '';
+        colors = [];
       }
     });
   });
 };
 
-export const info = (subsystem, messages) => {
-  console.log('%c ' + subsystem, 'color: #88bbdd',  messages);
-};
-
-export const log = (subsystem, messages) => {
-  console.log('%c ' + subsystem, 'color: #44ddbb',  messages);
-};
-
-export const warn = () => {};
-
-export const error = () => {};
-
-export const fatal = () => {};
-
-
-
+export const trace = (subsystem, ...inputs) => parse(subsystem, 'color: #aaffff', inputs);
+export const debug = (subsystem, ...inputs) => parse(subsystem, 'color: #88ffee', inputs);
+export const info  = (subsystem, ...inputs) => parse(subsystem, 'color: #88eedd', inputs);
+export const log   = (subsystem, ...inputs) => parse(subsystem, 'color: #44ddbb', inputs);
+export const warn  = (subsystem, ...inputs) => parse(subsystem, 'color: #aa6622', inputs);
+export const error = (subsystem, ...inputs) => parse(subsystem, 'color: #ff0000', inputs);
+export const fatal = (subsystem, ...inputs) => parse(subsystem, 'color: #ff0000', inputs);

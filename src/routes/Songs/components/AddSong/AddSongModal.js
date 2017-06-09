@@ -52,7 +52,6 @@ export const AddSongModal = (props) => {
     modalView
   };
 
-  console.info('savedTabs', props.savedTabs);
   return (
     <Dialog
       modal={false}

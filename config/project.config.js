@@ -41,7 +41,7 @@ const config = {
     plugins        : ['transform-runtime'],
     presets        : ['es2015', 'react', 'stage-0']
   },
-  compiler_devtool         : process.env.NODE_ENV === 'development' ? 'cheap-source-map' : 'source-map',
+  compiler_devtool         : process.env.NODE_ENV === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
   // source maps in order of speed <--> performance, dev compiles sourcemap into original js
   // (dev) eval => cheap-eval-source-map => cheap-module-eval-source-map => eval-source-map
   // (prod) cheap-source-map => cheap-module-source-map => source-map => hidden-source-map
@@ -141,7 +141,7 @@ config.globals = {
   '__TEST__'     : config.env === 'test',
   '__COVERAGE__' : !argv.watch && config.env === 'test',
   '__VERBOSE__'  : config.envFlag === 'verbose',
-  '__API_PATH__' : `http://${config.api_host}:${config.api_port}/api`,
+  '__API_URL__' : `http://${config.server_host}:${config.server_port}/api`,
   '__BASENAME__' : JSON.stringify(process.env.BASENAME || '')
 };
 

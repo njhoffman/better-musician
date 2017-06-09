@@ -6,6 +6,9 @@ import { fetchSongs } from 'store/api';
 
 const { log, error } = initLog('songsView');
 
+// Polyfill webpack require.ensure for testing
+if (__TEST__) { require('require-ensure-shim').shim(require); }
+
 export default (store, auth) => ({
   path : 'songs',
   getComponent(nextState, cb) {
@@ -18,13 +21,14 @@ export default (store, auth) => ({
         require('./components/SongsView').default,
         require('./modules/songs').default
       ]);
-      importModules.then(([container, reducer, models]) => {
-        injectReducer(store, { key: 'songsView', reducer: reducer, models: models });
+
+      importModules.then(([container, reducer]) => {
+        log('modules imported, initializing view');
+        injectReducer(store, { key: 'songsView', reducer: reducer });
         initView(store, 'songsView');
         fetchSongs(store);
         cb(null, container);
-      });
-      importModules.catch(err => {
+      }).catch(err => {
         error('Error importing dynamic modules', err);
       });
     }, 'songsView');

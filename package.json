@@ -39,7 +39,7 @@
       "command": "node bin/compile",
       "env": {
         "DEBUG": "app:*",
-        "NODE_ENV" : "production"
+        "NODE_ENV": "production"
       }
     },
     "dev": {
@@ -73,8 +73,8 @@
       "command": "node bin/dev-server",
       "env": {
         "NODE_ENV": "production",
-        "PORT" : 4000,
-        "API_PORT" : 4001,
+        "PORT": 4000,
+        "API_PORT": 4001,
         "DEBUG": "app:*"
       }
     },
@@ -224,6 +224,7 @@
     "phantomjs-prebuilt": "^2.1.13",
     "plato": "^1.7.0",
     "prettyjson-256": "^1.4.1",
+    "promise-polyfill": "^6.0.2",
     "react-addons-test-utils": "^15.0.0",
     "react-test-renderer": "^15.5.4",
     "react-transform-catch-errors": "^1.0.2",

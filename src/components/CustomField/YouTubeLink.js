@@ -28,7 +28,9 @@ class RenderCustomYouTubeLink extends Component {
 
   parseUrl(val) {
     const videoId = youtubeRE.test(val) ? val.match(youtubeRE)[1] : val;
-    this.setState({ videoId });
+    if (this.state) {
+      this.setState({ videoId });
+    }
     return videoId;
   }
 

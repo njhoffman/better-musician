@@ -18,7 +18,7 @@ export class SongsListHeader extends Component {
 
   render() {
     return (
-      <TableHeaderColumn style={{ textAlign: 'center' }}>
+      <TableHeaderColumn style={{ textAlign: 'center' }} className={this.props.className}>
         <a
           style={{ color: this.props.muiTheme.palette.accent1Color }}
           onClick={this.setSort}>
