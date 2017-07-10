@@ -18,6 +18,19 @@ const getStatusTag = (status) =>
     ? 'Warn' : status >= 300
     ? 'Info' : 'Ok';
 
+const logBody = ({ info, debug, trace }, body) => {
+  if (! _.isObject(body) && isJson(body)) {
+    body = JSON.parse(body);
+  }
+  if (_.isObject(body) && Object.keys(body).length > 0) {
+      info(`--Body:  ${Object.keys(body).length} keys`, { filterMax: 4 });
+      debug('--Body ', body, { filterMax: 5, pjsonOptions: { depth: 3 } });
+      trace('--Body', body);
+  } else if (body && body.length > 0) {
+      info('--Body (non-Json) Request', body);
+  }
+};
+
 const requestDebug  = configDebug('app:request');
 const requestOutput = (req, res, next) => {
   const { log, info, trace } = requestDebug;
@@ -31,92 +44,16 @@ const requestOutput = (req, res, next) => {
     { color: methodColorTag },
     { color: 'requestUrl' });
 
-  trace('Headers', _.omit(req.headers, 'cookie'));
+  trace('--Headers', _.omit(req.headers, 'cookie'));
   if (req.session) { trace('Session', req.sesion); }
   if (req.cookies) { trace('Cookies', req.cookies); }
   if (req.locals) { trace('Locals ', req.locals); }
   if (Object.keys(query).length > 0) { info('Query', query); }
 
-  if (Object.keys(body).length > 0) {
-    if (isJson(body)) {
-      info('Body', JSON.parse(body));
-    } else {
-      info('Body', body);
-    }
-  }
+  logBody(requestDebug, body);
+
   sdc.increment('app_request');
   if (next) { next(); }
-};
-
-const proxyRequestDebug  = configDebug('app:proxy:request');
-const proxyRequestOutput = (req, res, next) => {
-  const { log, info, trace } = proxyRequestDebug;
-  const method = '>>> ' + req.method;
-  const methodColorTag = 'request' + getMethodTag(req.method);
-  const url = req.path;
-  const body = req.body || {};
-  const query = req.body || {};
-
-  log(padRight('%' + method + '% %' + url + '%', 50),
-    { color: methodColorTag },
-    { color: 'requestUrl' });
-
-  trace('Headers', _.omit(req.headers, 'cookie'));
-  if (req.session) { trace('Session', req.sesion); }
-  if (req.cookies) { trace('Cookies', req.cookies); }
-  if (req.locals) { trace('Locals ', req.locals); }
-  if (Object.keys(query).length > 0) { info('Query', query); }
-
-  if (Object.keys(body).length > 0) {
-    if (isJson(body)) {
-      info('Body', JSON.parse(body));
-    } else {
-      info('Body', body);
-    }
-  }
-  sdc.increment('app_proxy_request');
-  if (next) { next(); }
-};
-
-const proxyResponseDebug  = configDebug('app:proxy:response');
-const proxyResponseOutput = (req, proxyRes, res) => {
-  const { log, info, trace } = proxyResponseDebug;
-  const status = proxyRes.statusCode;
-  const statusColorTag = 'requestStatus' + getStatusTag(status);
-  const method = '<<< ' + req.method;
-  const methodColorTag = 'response' + getMethodTag(req.method);
-
-  let body = [];
-  proxyRes.on('data', (chunk) => {
-    body += chunk;
-  });
-  proxyRes.on('end', (chunk) => {
-    if (chunk) {
-      body += chunk;
-    }
-    if (isJson(body)) {
-      info('Proxy Body Response', JSON.parse(body));
-    } else {
-      // trace('Proxy non-Json Response', body);
-    }
-  });
-
-  const contentLength =  proxyRes['_contentLength'] ? proxyRes['_contentLength'] + ' Bytes' : '-';
-  const responseTime = '';
-  const url = req.path;
-
-  log(
-    padRight('%' + method + '% %' + url, 50) + '%' +
-    ' %' + status + '% ' +
-    padLeft(responseTime + ' ms', 8) +
-    ' - ' + contentLength,
-    { color: methodColorTag },
-    { color: 'requestUrl' },
-    { color: statusColorTag }
-  );
-
-  trace('Headers', _.omit((proxyRes.headers ? proxyRes.headers : req.headers), 'cookie'));
-  if (proxyRes.locals) { trace(proxyRes.locals); }
 };
 
 const responseDebug = configDebug('app:response');
@@ -126,9 +63,12 @@ const morganOutput = (tokens, req, res, next) => {
   let body = [];
   res.on('data', (chunk) => {
     body += chunk;
-    if (isJson(body)) {
-      info('Body', JSON.parse(body));
+  });
+  res.on('end', (chunk) => {
+    if (chunk) {
+      body += chunk;
     }
+    logBody(responseDebug, body);
   });
 
   const status = tokens.status(req, res);
@@ -149,9 +89,70 @@ const morganOutput = (tokens, req, res, next) => {
     { color: 'requestUrl' },
     { color: statusColorTag }
   );
-  trace('Headers', _.omit((res.headers ? res.headers : req.headers), 'cookie'));
+  trace('--Headers', _.omit((res.headers ? res.headers : req.headers), 'cookie'));
   if (req.session) { trace('Session', req.session); }
   if (res.locals && Object.keys(res.locals).length > 0) { trace(res.locals); }
+};
+
+const proxyRequestDebug  = configDebug('app:proxy:request');
+const proxyRequestOutput = (req, res, next) => {
+  const { log, info, trace } = proxyRequestDebug;
+  const method = '>>> ' + req.method;
+  const methodColorTag = 'request' + getMethodTag(req.method);
+  const url = req.path;
+  const body = req.body || {};
+  const query = req.body || {};
+
+  log(padRight('%' + method + '% %' + url + '%', 50),
+    { color: methodColorTag },
+    { color: 'requestUrl' });
+
+  trace('--Headers', _.omit(req.headers, 'cookie'));
+  if (req.session) { trace('Session', req.sesion); }
+  if (req.cookies) { trace('Cookies', req.cookies); }
+  if (req.locals) { trace('Locals ', req.locals); }
+  if (Object.keys(query).length > 0) { info('Query', query); }
+
+  logBody(proxyRequestDebug, body);
+  sdc.increment('app_proxy_request');
+  if (next) { next(); }
+};
+
+const proxyResponseDebug  = configDebug('app:proxy:response');
+const proxyResponseOutput = (req, proxyRes, res) => {
+  const { log, debug, info, trace } = proxyResponseDebug;
+  const status = proxyRes.statusCode;
+  const statusColorTag = 'requestStatus' + getStatusTag(status);
+  const method = '<<< ' + req.method;
+  const methodColorTag = 'response' + getMethodTag(req.method);
+
+  let body = [];
+  proxyRes.on('data', (chunk) => {
+    body += chunk;
+  });
+  proxyRes.on('end', (chunk) => {
+    if (chunk) {
+      body += chunk;
+    }
+    logBody(proxyResponseDebug, body);
+  });
+
+  const contentLength =  proxyRes['_contentLength'] ? proxyRes['_contentLength'] + ' Bytes' : '-';
+  const responseTime = '';
+  const url = req.path;
+
+  log(
+    padRight('%' + method + '% %' + url, 50) + '%' +
+    ' %' + status + '% ' +
+    padLeft(responseTime + ' ms', 8) +
+    ' - ' + contentLength,
+    { color: methodColorTag },
+    { color: 'requestUrl' },
+    { color: statusColorTag }
+  );
+
+  trace('--Headers', _.omit((proxyRes.headers ? proxyRes.headers : req.headers), 'cookie'));
+  if (proxyRes.locals) { trace(proxyRes.locals); }
 };
 
 let initialBuild = true;
@@ -216,5 +217,4 @@ module.exports = {
   requestOutput,
   morganOutput,
   webpackLog
-
 };

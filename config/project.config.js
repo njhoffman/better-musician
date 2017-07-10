@@ -41,7 +41,7 @@ const config = {
     plugins        : ['transform-runtime'],
     presets        : ['es2015', 'react', 'stage-0']
   },
-  compiler_devtool         : process.env.NODE_ENV === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
+  compiler_devtool         : process.env.NODE_ENV === 'production' ? 'source-map' : 'eval-source-map',
   // source maps in order of speed <--> performance, dev compiles sourcemap into original js
   // (dev) eval => cheap-eval-source-map => cheap-module-eval-source-map => eval-source-map
   // (prod) cheap-source-map => cheap-module-source-map => source-map => hidden-source-map

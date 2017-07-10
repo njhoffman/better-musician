@@ -32,7 +32,7 @@ export const SONGS_ADD_FAILURE = 'SONGS_ADD_FAILURE';
 // Action Creators
 // ------------------------------------
 
-export const fetchSongs = ({ dispatch, getState, nextLocation }) => {
+export const fetchSongs = ({ dispatch, getState }) => {
   const state = getState();
   if (state.api.initialized.indexOf('songs') !== -1) {
     return false;
@@ -86,9 +86,11 @@ export const userUpdateSuccess = (response) => (dispatch) => {
 export const addSong = () => (dispatch, getState) => {
   const fieldValues = getState().form.addSongForm.values;
 
+  debugger;
+
   return dispatch({
     [CALL_API]: {
-      types:    [SONGS_ADD, songsAddSuccess, SONGS_ADD_FAILURE],
+      types:    [SONGS_ADD, songsAddSuccess, songsAddFailure],
       method:   'POST',
       endpoint: '/songs/add',
       payload:  { ...fieldValues }
@@ -97,9 +99,16 @@ export const addSong = () => (dispatch, getState) => {
 };
 
 export const songsAddSuccess = (response) => (dispatch) => {
-  console.info('addSongSuccess', response);
   dispatch({ type: SONGS_ADD_SUCCESS, user: response });
   dispatch({ type: 'UI_SHOW_SNACKBAR', meta: { message: 'Song Added' } });
+};
+
+export const songsAddFailure = (response) => (dispatch) => {
+  debugger;
+  dispatch({ type: SONGS_ADD_FAILURE, user: response });
+  dispatch({ type: 'UI_SHOW_SNACKBAR', meta: { message: 'Validation Error: Song Not Added' } });
+  dispatch({ type: 'UI_UPDATE_MODAL', meta: { type: 'MODAL_ADD_SONG',  props: { errors: response.errors } } });
+
 };
 
 // ------------------------------------

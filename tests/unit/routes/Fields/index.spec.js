@@ -4,14 +4,13 @@ import { Promise as ES6Promise } from 'es6-promise';
 describe('Routes', () => {
   describe('Fields', () => {
     describe('Routing', () => {
-      let sandbox, injectReducerStub, fieldsRoute, allStub, catchStub, cbStub, nextStateStub, fetchSongsStub;
+      let sandbox, injectReducerStub, fieldsRoute, allStub, catchStub, cbStub, nextStateStub;
       const inject = require('inject!routes/Fields');
       const mockStore = configureStore();
       const store = mockStore();
 
       beforeEach(() => {
         sandbox = sinon.sandbox.create();
-        fetchSongsStub = sandbox.stub();
         cbStub = sandbox.stub();
         nextStateStub = sandbox.stub();
         injectReducerStub = sandbox.stub();
@@ -20,8 +19,7 @@ describe('Routes', () => {
         allStub = sandbox.stub().resolves('test_container', 'test_reducer');
         fieldsRoute = inject({
           'store/reducers' : { injectReducer: injectReducerStub },
-          'es6-promise' : { Promise: { all: allStub, catch: catchStub } },
-          'store/api' : { fetchSongs: fetchSongsStub }
+          'es6-promise' : { Promise: { all: allStub, catch: catchStub } }
         }).default;
       });
 

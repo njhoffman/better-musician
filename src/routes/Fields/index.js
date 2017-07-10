@@ -1,7 +1,6 @@
 import { Promise as ES6Promise } from 'es6-promise';
 import { injectReducer } from 'store/reducers';
 import { initView } from 'store/view';
-import { fetchSongs } from 'store/api';
 import { init as initLog } from 'shared/logger';
 
 const { log, error } = initLog('fieldsView');
@@ -26,7 +25,6 @@ export default (store, auth) => ({
         log('modules imported, initializing view');
         injectReducer(store, { key: 'fieldsView', reducer: reducer });
         initView(store, 'fieldsView');
-        fetchSongs(store);
         cb(null, container);
       }).catch(err => {
         error('Error importing dynamic modules', err);

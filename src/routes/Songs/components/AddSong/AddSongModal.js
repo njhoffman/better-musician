@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { chunk, get } from 'lodash';
 import { reduxForm } from 'redux-form';
 import { Dialog, Tabs, Tab } from 'material-ui';
-import { Row } from 'react-foundation';
+import { Row, Column } from 'react-foundation';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 
 import { uiHideModal, MODAL_ADD_SONG } from 'store/ui';
@@ -71,6 +71,13 @@ export const AddSongModal = (props) => {
             <Tab
               key={tabIdx}
               label={tab.name}>
+              <Row>
+                <Column>
+                  {modal.props.errors && [].concat(modal.props.errors).map((error, i) =>
+                    <p key={i} className='error'>{error}</p>
+                )}
+                </Column>
+              </Row>
               {chunk(tab.fields, 2).map((fields, fieldIdx) =>
                 <Row
                   style={{ textAlign: 'center' }}
@@ -110,13 +117,16 @@ AddSongModal.propTypes = {
 
 const validate = (values) => {
   const errors = {};
-  // TODO: figure out why autocomplete meta doesnt get errors or touched assigned
+  //  TODO: figure out why autocomplete meta doesnt get errors or touched assigned
+  // addressed in pr: https://github.com/erikras/redux-form-material-ui/pull/159/commits/55b9225a2d9a22664458eb13f5a7d67f9e659db1
+	// this breaks material-ui Dialog ref to dialogContent
   const requiredFields = [ 'title', 'artist.lastName', 'instrument.name' ];
   requiredFields.forEach(field => {
     if (!get(values, field)) {
       errors[ field ] = 'Required';
     }
   });
+  console.log('validate', errors);
   return errors;
 };
 
@@ -124,9 +134,9 @@ const initialValues = (song, modalAction) => {
   if (song && modalAction !== 'add') {
     // return object for nested models, redux form tries to reset and breaks if not a plain object
     const ivSong = Object.assign({}, song);
-    ivSong.artist = song.artist.ref;
-    ivSong.genre = song.genre.ref;
-    ivSong.instrument = song.instrument.ref;
+    // ivSong.artist = song.artist.ref;
+    // ivSong.genre = song.genre.ref;
+    // ivSong.instrument = song.instrument.ref;
     return ivSong;
   }
 };

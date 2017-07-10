@@ -69,8 +69,8 @@ export class EmailSignInForm extends React.Component {
         onSubmit={this.handleSubmit}>
         <Row>
           <Column>
-            {errors && [].concat(errors).map(error =>
-              <p className='error'>{error}</p>
+            {errors && [].concat(errors).map((error, i) =>
+              <p key={i} className='error'>{error}</p>
           )}
           </Column>
         </Row>

@@ -2,7 +2,6 @@ import { Promise as ES6Promise } from 'es6-promise';
 import { injectReducer } from 'store/reducers';
 import { initView } from 'store/view';
 import { init as initLog } from 'shared/logger';
-import { fetchSongs } from 'store/api';
 
 const { log, error } = initLog('statsView');
 

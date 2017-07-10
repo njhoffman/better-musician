@@ -4,7 +4,7 @@ import { Promise as ES6Promise } from 'es6-promise';
 describe('Routes', () => {
   describe('Profile', () => {
     describe('Routing', () => {
-      let sandbox, injectReducerStub, profileRoute, allStub, catchStub, fetchSongsStub, cbStub, nextStateStub;
+      let sandbox, injectReducerStub, profileRoute, allStub, catchStub, cbStub, nextStateStub;
       const inject = require('inject!routes/Profile');
       const mockStore = configureStore();
       const store = mockStore();
@@ -14,14 +14,12 @@ describe('Routes', () => {
         cbStub = sandbox.stub();
         nextStateStub = sandbox.stub();
         injectReducerStub = sandbox.stub();
-        fetchSongsStub = sandbox.stub();
         catchStub = sandbox.stub();
         // allStub = sandbox.stub().returns(Promise.resolve('success'));
         allStub = sandbox.stub().resolves('test_container', 'test_reducer');
         profileRoute = inject({
           'store/reducers' : { injectReducer: injectReducerStub },
           'es6-promise' : { Promise: { all: allStub, catch: catchStub } },
-          'store/api' : { fetchSongs: fetchSongsStub }
         }).default;
       });
 

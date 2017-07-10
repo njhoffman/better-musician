@@ -2,35 +2,37 @@ import { fetch } from 'redux-auth';
 import { init as initLog } from 'shared/logger';
 import webpackVariables from 'webpackVariables';
 
-const { error, log, trace } = initLog('middlewareApi');
+const { error, warn, log, trace } = initLog('middlewareApi');
 
 // TODO: make api return nested data, implement normalizing here
 
 // Action key that carries API call info interpreted by this Redux middleware.
 export const CALL_API = Symbol('Call API');
 
-const apiFetch = (endpoint, options) => {
-  endpoint = webpackVariables.apiUrl + endpoint;
-  if (options.body) {
-    let formData = new FormData();
-    Object.keys(options.body).forEach(key => {
-      if (Array.isArray(options.body[key])) {
-        options.body[key].forEach(item => {
-          formData.append(key, item);
-        });
-      } else if (typeof options.body[key] === 'object') {
-        // supported up to 1 level nested object depth for now
-        Object.keys(options.body[key]).forEach(ok => {
-          formData.set(key + '.' + ok, options.body[key][ok]);
-        });
+const makeFormData = (FormData, data, name = '') => {
+  if (typeof data === 'object') {
+    Object.keys(data).forEach(key => {
+      let val = data[key];
+      if (name === '') {
+        makeFormData(FormData, val, key);
       } else {
-        formData.set(key, options.body[key]);
+        makeFormData(FormData, val, `${name}[${key}]`);
       }
     });
-    options.body = formData;
+  } else {
+    FormData.append(name, data);
   }
+}
+
+const apiFetch = (endpoint, options) => {
+  endpoint = webpackVariables.apiUrl + endpoint;
   log(`Fetching: ${endpoint}`);
   trace('Options', options);
+  if (typeof options.body === 'object' && Object.keys(options.body).length > 0) {
+    let formData = new FormData();
+    makeFormData(formData, options.body);
+    options.body = formData;
+  }
   return fetch(endpoint, options)
     .then(response =>
         response.json()
@@ -80,21 +82,42 @@ export default (store) => next => action => {
   const responseSuccess = (response) => {
     log(`Fetch Success: ${JSON.stringify(response).length} characters returned`);
     // trace(response);
-    if (typeof successType === 'function') {
-      return next(
-        successType(response)
-      );
+    if (response.errors && response.errors.length > 0) {
+      // successful fetch but validation errors returned
+      debugger;
+      return responseFailure({ name: 'ValidationError', message: response.errors.join('\n') });
     } else {
-      return next(
-        actionWith({
-          payload: response,
-          type: successType
-        }));
+      if (typeof successType === 'function') {
+        return next(
+          successType(response)
+        );
+      } else {
+        return next(
+          actionWith({
+            payload: response,
+            type: successType
+          }));
+      }
     }
   };
 
   const responseFailure = (err) => {
-    error(`Fetch Failure: ${err.name}: ${err.message}`);
+    if (err.name  === 'ValidationError') {
+      warn(`Validation Failure: ${err.message}`);
+    } else {
+      warn(`Fetch Failure: ${err.name} - ${err.message}`);
+    }
+      if (typeof failureType === 'function') {
+        return next(
+          failureType(err.message)
+        );
+      } else {
+        return next(
+          actionWith({
+            payload: response,
+            type: failureType
+          }));
+      }
     return next(
       actionWith({
         type: failureType,

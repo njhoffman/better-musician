@@ -1,12 +1,14 @@
  {
    "app" : {
      "*" : 6,
-     "response" : 6,
-     "request" : 6
+     "response" : 5,
+     "request" : 5,
+     "proxy" : 5
    },
    "_debugger-256" : {
       "customColors" : {
         "responseGet":              { "fg": [1, 4, 3] },
+        "responseDelete":           { "fg": [4, 1, 1] },
         "responsePost":             { "fg": [1, 2, 4] },
         "requestGet":               { "fg": [1, 4, 3] },
         "requestDelete":            { "fg": [4, 1, 1] },

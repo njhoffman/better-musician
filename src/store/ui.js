@@ -8,6 +8,7 @@ export const UI_SHOW_DRAWER_MENU   = 'UI_SHOW_DRAWER_MENU';
 export const UI_HIDE_DRAWER_MENU   = 'UI_HIDE_DRAWER_MENU';
 export const UI_SHOW_MODAL         = 'UI_SHOW_MODAL';
 export const UI_HIDE_MODAL         = 'UI_HIDE_MODAL';
+export const UI_UPDATE_MODAL       = 'UI_UPDATE_MODAL';
 
 export const MODAL_ADD_SONG     = 'MODAL_ADD_SONG';
 export const MODAL_FILTER_SONGS = 'MODAL_FILTER_SONGS';
@@ -62,6 +63,9 @@ const showSnackbar = (state, action) => ({ ...state,
   }
 });
 
+const updateModal = (state, action) =>
+  ({ ...state, modal: { ...state.modal, type: action.meta.type, props: action.meta.props } });
+
 const hideSnackbar = (state) =>
   ({ ...state, snackbar: { ...state.snackbar, isOpen: false } });
 
@@ -78,7 +82,8 @@ const ACTION_HANDLERS = {
   [UI_SHOW_SNACKBAR]:      showSnackbar,
   [UI_HIDE_SNACKBAR]:      hideSnackbar,
   [UI_SHOW_MODAL]:         showModal,
-  [UI_HIDE_MODAL]:         hideModal
+  [UI_HIDE_MODAL]:         hideModal,
+  [UI_UPDATE_MODAL]:       updateModal
 };
 
 // ------------------------------------
