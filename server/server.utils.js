@@ -52,7 +52,8 @@ const requestOutput = (req, res, next) => {
     console.log('Query', query);
   }
 
-  logBody(requestDebug, body);
+  // logBody(requestDebug, body);
+  logBody({}, body);
 
   sdc.increment('app_request');
   if (next) { next(); }
@@ -69,7 +70,8 @@ const morganOutput = (tokens, req, res, next) => {
     if (chunk) {
       body += chunk;
     }
-    logBody(responseDebug, body);
+    // logBody(responseDebug, body);
+    logBody({}, body);
   });
 
   const status = tokens.status(req, res);
@@ -116,7 +118,8 @@ const proxyRequestOutput = (req, res, next) => {
     console.log('Query', query);
   }
 
-  logBody(proxyRequestDebug, body);
+  // logBody(proxyRequestDebug, body);
+  logBody({}, body);
   sdc.increment('app_proxy_request');
   if (next) { next(); }
 };
@@ -137,7 +140,8 @@ const proxyResponseOutput = (req, proxyRes, res) => {
     if (chunk) {
       body += chunk;
     }
-    logBody(proxyResponseDebug, body);
+    logBody({}, body);
+    // logBody(proxyResponseDebug, body);
   });
 
   const contentLength =  proxyRes['_contentLength'] ? proxyRes['_contentLength'] + ' Bytes' : '-';

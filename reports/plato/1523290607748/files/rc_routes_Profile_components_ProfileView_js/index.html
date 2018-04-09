@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/routes/Profile/components/ProfileView.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/routes/Profile/components/ProfileView.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">73.47</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">152</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">12.80</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">0.79</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import React from &#039;react&#039;;
+import { connect } from &#039;react-redux&#039;;
+import PropTypes from &#039;prop-types&#039;;
+import { Avatar, Paper, Tabs, Tab, RaisedButton } from &#039;material-ui&#039;;
+import { Row, Column } from &#039;react-foundation&#039;;
+import ButtonLoader from &#039;components/ButtonLoader&#039;;
+import { reduxForm } from &#039;redux-form&#039;;
+import { browserHistory } from &#039;react-router&#039;;
+import muiThemeable from &#039;material-ui/styles/muiThemeable&#039;;
+import { updateUser } from &#039;store/api&#039;;
+import FormField from &#039;components/Field&#039;;
+import css from &#039;./ProfileView.scss&#039;;
+import {
+  MdAccountCircle as AvatarIcon,
+  MdSave as SaveIcon
+} from &#039;react-icons/lib/md&#039;;
+
+const renderImage = (props) =&gt; {
+  const { muiTheme: { palette: { primary1Color } } } = props;
+  return (
+    &lt;Column&gt;
+      &lt;Avatar
+        icon={&lt;AvatarIcon /&gt;}
+        className={css.avatar}
+        backgroundColor={primary1Color}
+        size={100} /&gt;
+      &lt;div&gt;No Picture&lt;/div&gt;
+      &lt;RaisedButton
+        secondary
+        label=&#039;Add Picture&#039;
+      /&gt;
+    &lt;/Column&gt;
+  );
+};
+renderImage.propTypes = {
+  muiTheme: PropTypes.object.isRequired
+};
+
+export const ProfileView = (props) =&gt; {
+  // (
+  //   this.props.auth.getIn([&#039;user&#039;, &#039;isSignedIn&#039;]) ||
+  //   this.props.auth.getIn([&#039;emailSignIn&#039;, this.getEndpoint(), &#039;loading&#039;])
+  // );
+  const redirectSettings = () =&gt; browserHistory.push(&#039;/settings&#039;);
+  const redirectFields = () =&gt; browserHistory.push(&#039;/fields&#039;);
+  const redirectStats = () =&gt; browserHistory.push(&#039;/stats&#039;);
+
+  const {
+    muiTheme: { palette: { textColor } },
+    api: { isFetching }
+  } = props;
+  const disabled = isFetching;
+
+  return (
+    &lt;Column centerOnSmall small={12} medium={10} large={8}&gt;
+      &lt;Paper zDepth={5}&gt;
+        &lt;div className={css.profileContainer}&gt;
+          &lt;Tabs&gt;
+            &lt;Tab
+              value=&#039;profile&#039;
+              data-route=&#039;/profile&#039;
+              label=&#039;Profile&#039;&gt;
+              &lt;form
+                className={css.profileForm}&gt;
+                &lt;h3&gt;Update Your Profile&lt;/h3&gt;
+                &lt;Row&gt;
+                  { renderImage(props) }
+                &lt;/Row&gt;
+                &lt;Row&gt;
+                  &lt;FormField
+                    name=&#039;email&#039;
+                    disabled
+                    type=&#039;text&#039;
+                    label=&#039;User Name&#039; /&gt;
+                &lt;/Row&gt;
+                &lt;Row&gt;
+                  &lt;FormField
+                    name=&#039;firstName&#039;
+                    type=&#039;text&#039;
+                    label=&#039;First Name&#039; /&gt;
+                &lt;/Row&gt;
+                &lt;Row&gt;
+                  &lt;FormField
+                    name=&#039;lastName&#039;
+                    type=&#039;text&#039;
+                    label=&#039;Last Name&#039; /&gt;
+                &lt;/Row&gt;
+                &lt;Row&gt;
+                  &lt;FormField
+                    name=&#039;notificationsEmail&#039;
+                    type=&#039;text&#039;
+                    label=&#039;Notifications Email&#039; /&gt;
+                &lt;/Row&gt;
+                &lt;Row className={css.buttons}&gt;
+                  &lt;Column&gt;
+                    &lt;ButtonLoader
+                      type=&#039;submit&#039;
+                      label=&#039;Save&#039;
+                      loading={isFetching}
+                      labelStyle={{ color: textColor, paddingRight: &#039;5px&#039; }}
+                      onClick={props.updateProfile}
+                      icon={&lt;SaveIcon style={{ marginTop: &#039;-10px&#039;, color: textColor }} /&gt;}
+                      className=&#039;update-profile-submit&#039;
+                      primary
+                      disabled={disabled} /&gt;
+                  &lt;/Column&gt;
+                &lt;/Row&gt;
+              &lt;/form&gt;
+            &lt;/Tab&gt;
+            &lt;Tab
+              data-route=&#039;/stats&#039;
+              value=&#039;stats&#039;
+              onActive={redirectStats}
+              label=&#039;Stats&#039; /&gt;
+            &lt;Tab
+              data-route=&#039;/settings&#039;
+              onActive={redirectSettings}
+              value=&#039;settings&#039;
+              label=&#039;Settings&#039; /&gt;
+            &lt;Tab
+              data-route=&#039;/fields&#039;
+              value=&#039;fields&#039;
+              onActive={redirectFields}
+              label=&#039;Fields&#039; /&gt;
+          &lt;/Tabs&gt;
+        &lt;/div&gt;
+      &lt;/Paper&gt;
+    &lt;/Column&gt;
+  );
+};
+
+ProfileView.propTypes = {
+  muiTheme:      PropTypes.object.isRequired,
+  api:           PropTypes.object.isRequired,
+  updateProfile: PropTypes.func.isRequired
+};
+
+const profileForm = reduxForm({ form: &#039;updateProfileForm&#039; })(muiThemeable()(ProfileView));
+
+const mapActionCreators = {
+  updateProfile : updateUser
+};
+
+const mapStateToProps = (state) =&gt; {
+  return ({
+    api: state.api,
+    user: state.auth ? state.auth.get(&#039;user&#039;) : null,
+    initialValues: state.auth ? state.auth.get(&#039;user&#039;).get(&#039;attributes&#039;).toJS() : null
+  });
+};
+
+export default connect(mapStateToProps, mapActionCreators)(profileForm);</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules",
+    "**/tmp"
+  ],
+  "verbose": true,
+  "watch": [
+    "index.js",
+    "config",
+    "lib",
+    "server"
+  ],
+  "env": {
+    "NODE_ENV": "local"
+  },
+  "ext": "js json"
+}
