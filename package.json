@@ -27,6 +27,7 @@
     "deploy:prod": "better-npm-run deploy:prod",
     "coveralls": "cat coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "stats": "webpack --env development --profile --json > stats.json",
+    "gitstats": "gitstats ./.git ./reports/gitstats",
     "e2e-setup": "./node_modules/selenium-standalone/bin/selenium-standalone install"
   },
   "betterScripts": {
