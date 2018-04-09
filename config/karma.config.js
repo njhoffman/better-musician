@@ -1,17 +1,19 @@
 const argv = require('yargs').argv;
 const project = require('./project.config');
 const webpackConfig = require('./webpack.config');
-const { info } = require('debugger-256')('app:config:karma');
+// const { info } = require('debugger-256')('app:config:karma');
 
 const karmaConfig = {
   basePath : '../', // project root in relation to bin/karma.js
-  files    : [{
-    pattern  : `./${project.dir_test}/unit/test-bundler.js`,
-    watched  : false,
-    served   : true,
-    included : true
-  },
-    './node_modules/promise-polyfill/promise.js'
+  files    : [
+    './node_modules/babel-polyfill/dist/polyfill.js',
+    './node_modules/promise-polyfill/promise.js',
+    {
+      pattern  : `./${project.dir_test}/unit/test-bundler.js`,
+      watched  : false,
+      served   : true,
+      included : true
+    }
   ],
   singleRun     : !argv.watch,
   colors: true,
@@ -120,11 +122,12 @@ if (project.globals.__COVERAGE__) {
   }];
 }
 
-info(`Creating karma configuration. \n` +
+console.log(`Creating karma configuration. \n` +
   `Reporter: %${karmaConfig.reporters}%\n` +
   `Test Framework: %${karmaConfig.frameworks}%\n` +
   `Browsers: %${karmaConfig.browsers}%\n`,
   { color: 'bold' }, { color: 'bold' }, { color: 'bold' });
-// trace('Created karma Configuration', karmaConfig, { _depth_ : 2 });
+
+console.info('Created karma Configuration', karmaConfig, { _depth_ : 2 });
 
 module.exports = (cfg) => cfg.set(karmaConfig);

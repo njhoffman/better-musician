@@ -71,6 +71,7 @@ webpackConfig.entry = {
 // IE doesn't support eventsource, bitdefender in windows blocks eventsource events
 // https://github.com/glenjamin/webpack-hot-middleware/issues/36
 // for alternate solution use socket.io as transport for webpack-hmr https://github.com/lytc/webpack-hmr/
+webpackConfig.entry.app = ['babel-polyfill'].concat(webpackConfig.entry.app);
 webpackConfig.entry.app = webpackConfig.entry.app.concat('eventsource-polyfill');
 
 // ------------------------------------
@@ -119,7 +120,7 @@ if (__TEST__ && !argv.watch) {
       if (stats.compilation.errors.length) {
         // Pretend no assets were generated. This prevents the tests
         // from running making it clear that there were warnings.
-        console.log(stats.compilation.errors);
+        console.lerror(stats.compilation.errors);
         throw new Error(
           stats.compilation.errors.map(err => err.message || err)
         );
