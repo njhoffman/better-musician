@@ -49,7 +49,6 @@ export const songsSuccess = (response) => (dispatch) => {
   const tables = response.tables;
   log('fetchSongsSuccess', response);
 
-
   /* eslint-disable no-multi-spaces */
   dispatch({ type: SONGS_SUCCESS,    payload: response });
   dispatch({ type: LOAD_ARTISTS,     payload: tables.artists });
@@ -86,8 +85,6 @@ export const userUpdateSuccess = (response) => (dispatch) => {
 export const addSong = () => (dispatch, getState) => {
   const fieldValues = getState().form.addSongForm.values;
 
-  debugger;
-
   return dispatch({
     [CALL_API]: {
       types:    [SONGS_ADD, songsAddSuccess, songsAddFailure],
@@ -104,11 +101,9 @@ export const songsAddSuccess = (response) => (dispatch) => {
 };
 
 export const songsAddFailure = (response) => (dispatch) => {
-  debugger;
   dispatch({ type: SONGS_ADD_FAILURE, user: response });
   dispatch({ type: 'UI_SHOW_SNACKBAR', meta: { message: 'Validation Error: Song Not Added' } });
-  dispatch({ type: 'UI_UPDATE_MODAL', meta: { type: 'MODAL_ADD_SONG',  props: { errors: response.errors } } });
-
+  dispatch({ type: 'UI_UPDATE_MODAL', meta: { type: 'MODAL_ADD_SONG', props: { errors: response.errors } } });
 };
 
 // ------------------------------------

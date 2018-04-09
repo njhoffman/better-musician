@@ -117,9 +117,11 @@ AddSongModal.propTypes = {
 
 const validate = (values) => {
   const errors = {};
-  //  TODO: figure out why autocomplete meta doesnt get errors or touched assigned
-  // addressed in pr: https://github.com/erikras/redux-form-material-ui/pull/159/commits/55b9225a2d9a22664458eb13f5a7d67f9e659db1
-	// this breaks material-ui Dialog ref to dialogContent
+  // TODO: figure out why autocomplete meta doesnt get errors or touched assigned
+  /* eslint-disable max-len  */
+  // addressed: https://github.com/erikras/redux-form-material-ui/pull/159/commits/55b9225a2d9a22664458eb13f5a7d67f9e659db1
+  // this breaks material-ui Dialog ref to dialogContent
+  /* eslint-enable max-len  */
   const requiredFields = [ 'title', 'artist.lastName', 'instrument.name' ];
   requiredFields.forEach(field => {
     if (!get(values, field)) {

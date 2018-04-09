@@ -2,7 +2,12 @@ import { fetch } from 'redux-auth';
 import { init as initLog } from 'shared/logger';
 import webpackVariables from 'webpackVariables';
 
-const { error, warn, log, trace } = initLog('middlewareApi');
+const {
+  /* error,  */
+  warn,
+  log,
+  trace
+} = initLog('middlewareApi');
 
 // TODO: make api return nested data, implement normalizing here
 
@@ -22,7 +27,7 @@ const makeFormData = (FormData, data, name = '') => {
   } else {
     FormData.append(name, data);
   }
-}
+};
 
 const apiFetch = (endpoint, options) => {
   endpoint = webpackVariables.apiUrl + endpoint;
@@ -84,7 +89,6 @@ export default (store) => next => action => {
     // trace(response);
     if (response.errors && response.errors.length > 0) {
       // successful fetch but validation errors returned
-      debugger;
       return responseFailure({ name: 'ValidationError', message: response.errors.join('\n') });
     } else {
       if (typeof successType === 'function') {
@@ -102,27 +106,22 @@ export default (store) => next => action => {
   };
 
   const responseFailure = (err) => {
-    if (err.name  === 'ValidationError') {
+    if (err.name === 'ValidationError') {
       warn(`Validation Failure: ${err.message}`);
     } else {
       warn(`Fetch Failure: ${err.name} - ${err.message}`);
     }
-      if (typeof failureType === 'function') {
-        return next(
+    if (typeof failureType === 'function') {
+      return next(
           failureType(err.message)
         );
-      } else {
-        return next(
+    } else {
+      return next(
           actionWith({
-            payload: response,
+            payload: err,
             type: failureType
           }));
-      }
-    return next(
-      actionWith({
-        type: failureType,
-        error: err.message || 'Something bad happened'
-      }));
+    }
   };
 
   const options = {

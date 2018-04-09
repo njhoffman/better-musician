@@ -1,5 +1,5 @@
 import configureStore from 'redux-mock-store';
-import { Promise as ES6Promise } from 'es6-promise';
+// import { Promise as ES6Promise } from 'es6-promise';
 
 describe('Routes', () => {
   describe('Fields', () => {

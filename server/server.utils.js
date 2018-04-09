@@ -19,15 +19,15 @@ const getStatusTag = (status) =>
     ? 'Info' : 'Ok';
 
 const logBody = ({ info, debug, trace }, body) => {
-  if (! _.isObject(body) && isJson(body)) {
+  if (!_.isObject(body) && isJson(body)) {
     body = JSON.parse(body);
   }
   if (_.isObject(body) && Object.keys(body).length > 0) {
-      console.log(`--Body:  ${Object.keys(body).length} keys`, { filterMax: 4 });
-      console.log('--Body ', body, { filterMax: 5, pjsonOptions: { depth: 3 } });
-      console.log('--Body', body);
+    console.log(`--Body:  ${Object.keys(body).length} keys`, { filterMax: 4 });
+    console.log('--Body ', body, { filterMax: 5, pjsonOptions: { depth: 3 } });
+    console.log('--Body', body);
   } else if (body && body.length > 0) {
-      console.log('--Body (non-Json) Request', body);
+    console.log('--Body (non-Json) Request', body);
   }
 };
 
@@ -61,7 +61,6 @@ const requestOutput = (req, res, next) => {
 
 // const responseDebug = configDebug('app:response');
 const morganOutput = (tokens, req, res, next) => {
-
   let body = [];
   res.on('data', (chunk) => {
     body += chunk;
@@ -106,7 +105,7 @@ const proxyRequestOutput = (req, res, next) => {
   const body = req.body || {};
   const query = req.body || {};
 
-  log(padRight('%' + method + '% %' + url + '%', 50),
+  console.log(padRight('%' + method + '% %' + url + '%', 50),
     { color: methodColorTag },
     { color: 'requestUrl' });
 
@@ -148,7 +147,7 @@ const proxyResponseOutput = (req, proxyRes, res) => {
   const responseTime = '';
   const url = req.path;
 
-  log(
+  console.log(
     padRight('%' + method + '% %' + url, 50) + '%' +
     ' %' + status + '% ' +
     padLeft(responseTime + ' ms', 8) +

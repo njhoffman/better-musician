@@ -5,7 +5,12 @@ import morgan from 'morgan';
 import StatsD from 'node-statsd';
 import memwatch from 'memwatch-next';
 
-import { morganOutput, requestOutput, webpackLog } from './server.utils';
+import {
+  morganOutput,
+  requestOutput
+/* , webpackLog  */
+} from './server.utils';
+
 import setupProxy from './proxy';
 import webpackConfig from '../config/webpack.config';
 import project from '../config/project.config';

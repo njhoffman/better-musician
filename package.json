@@ -12,9 +12,10 @@
     "clean": "rimraf dist",
     "compile": "better-npm-run compile",
     "compile:prod": "better-npm-run compile:prod",
-    "lint": "esw bin config server src tests --color",
+    "lint": "./node_modules/.bin/esw bin config server src tests --color",
     "lint:fix": "npm run lint -- --fix",
-    "lint:watch": "npm run lint -- --watch",
+    "lint:watch": "npm run lint -- --watch --clear",
+    "lint:watch:changed": "npm run lint -- --changed --watch --clear",
     "start": "better-npm-run start",
     "dev": "better-npm-run dev",
     "test": "better-npm-run test",
@@ -28,6 +29,7 @@
     "coveralls": "cat coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "stats": "webpack --env development --profile --json > stats.json",
     "gitstats": "gitstats ./.git ./reports/gitstats",
+    "notes": "notes config/ server/ src/",
     "e2e-setup": "./node_modules/selenium-standalone/bin/selenium-standalone install"
   },
   "betterScripts": {
@@ -224,6 +226,7 @@
     "morgan": "^1.7.0",
     "nightwatch": "^0.9.15",
     "nodemon": "^1.10.2",
+    "notes": "0.0.4",
     "phantomjs-prebuilt": "^2.1.13",
     "plato": "^1.7.0",
     "prettyjson-256": "^1.4.1",

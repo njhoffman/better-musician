@@ -1,5 +1,5 @@
 import configureStore from 'redux-mock-store';
-import { Promise as ES6Promise } from 'es6-promise';
+// import { Promise as ES6Promise } from 'es6-promise';
 
 describe('Routes', () => {
   describe('Stats', () => {
@@ -19,7 +19,7 @@ describe('Routes', () => {
         allStub = sandbox.stub().resolves('test_container', 'test_reducer');
         statsRoute = inject({
           'store/reducers' : { injectReducer: injectReducerStub },
-          'es6-promise' : { Promise: { all: allStub, catch: catchStub } },
+          'es6-promise' : { Promise: { all: allStub, catch: catchStub } }
         }).default;
       });
 

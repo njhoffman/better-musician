@@ -5,7 +5,7 @@ const loginCommands = {
       .setValue('@emailInput', email)
       .setValue('@passInput', pass)
       .waitForElementVisible('@loginButton')
-      .click('@loginButton')
+      .click('@loginButton');
   }
 };
 

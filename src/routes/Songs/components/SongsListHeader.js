@@ -9,6 +9,7 @@ export class SongsListHeader extends Component {
     name: PropTypes.string.isRequired,
     displayName: PropTypes.string.isRequired,
     muiTheme: PropTypes.object.isRequired,
+    className: PropTypes.func.isRequired,
     setSort: PropTypes.func.isRequired
   }
 
@@ -18,7 +19,9 @@ export class SongsListHeader extends Component {
 
   render() {
     return (
-      <TableHeaderColumn style={{ textAlign: 'center' }} className={this.props.className}>
+      <TableHeaderColumn
+        style={{ textAlign: 'center' }}
+        className={this.props.className}>
         <a
           style={{ color: this.props.muiTheme.palette.accent1Color }}
           onClick={this.setSort}>

@@ -92,7 +92,7 @@ config.compiler_vendors = config.compiler_vendors
   .filter((dep) => {
     if (pkg.dependencies[dep]) return true;
 
-    warn(
+    console.warn(
       `Package "${dep}" was not found as an npm dependency in package.json; ` +
       `it won't be included in the webpack vendor bundle.
        Consider removing it from \`compiler_vendors\` in ~/config/index.js`

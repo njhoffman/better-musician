@@ -10,7 +10,7 @@ export default {
 
   'Login failure': (client) => {
     const loginPage = client.page.loginPage();
-    const songsPage = client.page.songsPage();
+    // const songsPage = client.page.songsPage();
 
     loginPage.navigate().login('badname', 'badpassword');
     loginPage.expect.element('@errorMessage').to.be.present;

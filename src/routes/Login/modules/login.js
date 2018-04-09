@@ -1,5 +1,5 @@
 import { browserHistory } from 'react-router';
-import { fetchSongs } from 'store/api';
+// import { fetchSongs } from 'store/api';
 // ------------------------------------
 // Constants
 // ------------------------------------

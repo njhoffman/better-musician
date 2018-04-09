@@ -7,8 +7,7 @@ export default {
     loginPage.navigate().login('testuser@example.com', 'shouldntmatter');
     songsPage.expect.element('@songList').to.be.present;
     client.saveScreenshot(imgpath(client, 'Songs View'));
-  },
-
+  }
   // can open edit song, view song, select song shows footer, pagination works
   // need a testGlobalAuth, testGlobalNoAuth
 };
