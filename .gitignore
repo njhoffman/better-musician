@@ -9,4 +9,5 @@ rethinkdb_data
 dist
 coverage
 
+tmp/
 .idea/

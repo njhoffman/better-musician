@@ -4,3 +4,6 @@ https://www.npmjs.com/package/webpack-bundle-analyzer
 https://www.npmjs.com/package/stats-webpack-plugin
 https://alexkuz.github.io/stellar-webpack/
 https://alexkuz.github.io/webpack-chart/
+
+# good site layout examples
+http://www.redsmin.com/

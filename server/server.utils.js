@@ -2,7 +2,7 @@ const _ = require('lodash');
 const StatsD = require('node-statsd');
 const memwatch = require('memwatch-next');
 const { humanMemorySize, isJson, padLeft, padRight } = require('../shared/util');
-const configDebug = require('debugger-256');
+// const configDebug = require('debugger-256');
 
 const sdc = new StatsD();
 
@@ -23,32 +23,34 @@ const logBody = ({ info, debug, trace }, body) => {
     body = JSON.parse(body);
   }
   if (_.isObject(body) && Object.keys(body).length > 0) {
-      info(`--Body:  ${Object.keys(body).length} keys`, { filterMax: 4 });
-      debug('--Body ', body, { filterMax: 5, pjsonOptions: { depth: 3 } });
-      trace('--Body', body);
+      console.log(`--Body:  ${Object.keys(body).length} keys`, { filterMax: 4 });
+      console.log('--Body ', body, { filterMax: 5, pjsonOptions: { depth: 3 } });
+      console.log('--Body', body);
   } else if (body && body.length > 0) {
-      info('--Body (non-Json) Request', body);
+      console.log('--Body (non-Json) Request', body);
   }
 };
 
-const requestDebug  = configDebug('app:request');
+// const requestDebug  = configDebug('app:request');
 const requestOutput = (req, res, next) => {
-  const { log, info, trace } = requestDebug;
+  // const { log, info, trace } = requestDebug;
   const method = '>>> ' + req.method;
   const methodColorTag = 'request' + getMethodTag(req.method);
   const url = req.path;
   const body = req.body || {};
   const query = req.body || {};
 
-  log(padRight('%' + method + '% %' + url + '%', 50),
+  console.log(padRight('%' + method + '% %' + url + '%', 50),
     { color: methodColorTag },
     { color: 'requestUrl' });
 
-  trace('--Headers', _.omit(req.headers, 'cookie'));
-  if (req.session) { trace('Session', req.sesion); }
-  if (req.cookies) { trace('Cookies', req.cookies); }
-  if (req.locals) { trace('Locals ', req.locals); }
-  if (Object.keys(query).length > 0) { info('Query', query); }
+  console.trace('--Headers', _.omit(req.headers, 'cookie'));
+  if (req.session) { console.log('Session', req.sesion); }
+  if (req.cookies) { console.log('Cookies', req.cookies); }
+  if (req.locals) { console.log('Locals ', req.locals); }
+  if (Object.keys(query).length > 0) {
+    console.log('Query', query);
+  }
 
   logBody(requestDebug, body);
 
@@ -56,9 +58,8 @@ const requestOutput = (req, res, next) => {
   if (next) { next(); }
 };
 
-const responseDebug = configDebug('app:response');
+// const responseDebug = configDebug('app:response');
 const morganOutput = (tokens, req, res, next) => {
-  const { log, info, trace } = responseDebug;
 
   let body = [];
   res.on('data', (chunk) => {
@@ -80,7 +81,7 @@ const morganOutput = (tokens, req, res, next) => {
   const responseTime = tokens['response-time'](req, res);
   const url = req.path;
 
-  log(
+  console.log(
     padRight('%' + method + '% %' + url, 50) + '%' +
     ' %' + status + '% ' +
     padLeft(responseTime + ' ms', 8) +
@@ -89,14 +90,14 @@ const morganOutput = (tokens, req, res, next) => {
     { color: 'requestUrl' },
     { color: statusColorTag }
   );
-  trace('--Headers', _.omit((res.headers ? res.headers : req.headers), 'cookie'));
-  if (req.session) { trace('Session', req.session); }
-  if (res.locals && Object.keys(res.locals).length > 0) { trace(res.locals); }
+  console.log('--Headers', _.omit((res.headers ? res.headers : req.headers), 'cookie'));
+  if (req.session) { console.log('Session', req.session); }
+  if (res.locals && Object.keys(res.locals).length > 0) { console.log(res.locals); }
 };
 
-const proxyRequestDebug  = configDebug('app:proxy:request');
+// const proxyRequestDebug  = configDebug('app:proxy:request');
 const proxyRequestOutput = (req, res, next) => {
-  const { log, info, trace } = proxyRequestDebug;
+  // const { log, info, trace } = proxyRequestDebug;
   const method = '>>> ' + req.method;
   const methodColorTag = 'request' + getMethodTag(req.method);
   const url = req.path;
@@ -107,20 +108,22 @@ const proxyRequestOutput = (req, res, next) => {
     { color: methodColorTag },
     { color: 'requestUrl' });
 
-  trace('--Headers', _.omit(req.headers, 'cookie'));
-  if (req.session) { trace('Session', req.sesion); }
-  if (req.cookies) { trace('Cookies', req.cookies); }
-  if (req.locals) { trace('Locals ', req.locals); }
-  if (Object.keys(query).length > 0) { info('Query', query); }
+  console.log('--Headers', _.omit(req.headers, 'cookie'));
+  if (req.session) { console.log('Session', req.sesion); }
+  if (req.cookies) { console.log('Cookies', req.cookies); }
+  if (req.locals) { console.log('Locals ', req.locals); }
+  if (Object.keys(query).length > 0) {
+    console.log('Query', query);
+  }
 
   logBody(proxyRequestDebug, body);
   sdc.increment('app_proxy_request');
   if (next) { next(); }
 };
 
-const proxyResponseDebug  = configDebug('app:proxy:response');
+// const proxyResponseDebug  = configDebug('app:proxy:response');
 const proxyResponseOutput = (req, proxyRes, res) => {
-  const { log, debug, info, trace } = proxyResponseDebug;
+  // const { log, debug, info, trace } = proxyResponseDebug;
   const status = proxyRes.statusCode;
   const statusColorTag = 'requestStatus' + getStatusTag(status);
   const method = '<<< ' + req.method;
@@ -151,15 +154,15 @@ const proxyResponseOutput = (req, proxyRes, res) => {
     { color: statusColorTag }
   );
 
-  trace('--Headers', _.omit((proxyRes.headers ? proxyRes.headers : req.headers), 'cookie'));
-  if (proxyRes.locals) { trace(proxyRes.locals); }
+  console.log('--Headers', _.omit((proxyRes.headers ? proxyRes.headers : req.headers), 'cookie'));
+  if (proxyRes.locals) { console.log(proxyRes.locals); }
 };
 
 let initialBuild = true;
 let hd = new memwatch.HeapDiff();
-const webpackDebug = configDebug('app:webpack');
+// const webpackDebug = configDebug('app:webpack');
 const webpackLog = (message) => {
-  webpackDebug.info(message);
+  console.log(message);
   if (/Compiled successfully/.test(message)) {
     const memoryMap = {
       heapTotal: 'Heap Total:',
@@ -171,7 +174,7 @@ const webpackLog = (message) => {
       const memoryAmount = process.memoryUsage()[memoryKey]
         ? humanMemorySize(process.memoryUsage()[memoryKey], true) : false;
       if (memoryAmount) {
-        webpackDebug.info(`%${memoryMap[memoryKey]}%\t% ${memoryAmount} %`,
+        console.log(`%${memoryMap[memoryKey]}%\t% ${memoryAmount} %`,
           { color: 'webpackMemoryLabel' },
           { color: 'webpackMemoryValue' });
         sdc.gauge(`app_memory_${memoryKey}`, memoryAmount);
@@ -180,7 +183,7 @@ const webpackLog = (message) => {
 
     // heapDiff
     const heapDiff = hd.end();
-    webpackDebug.info(`%Heap Diff:%\t %${heapDiff.change.size}%   ` +
+    console.log(`%Heap Diff:%\t %${heapDiff.change.size}%   ` +
       `(${heapDiff.before.size} - ${heapDiff.after.size})   ` +
       `(Nodes Added: ${parseInt(heapDiff.change.allocated_nodes) - parseInt(heapDiff.change.freed_nodes)})`,
       { color: 'webpackMemoryLabel' },
@@ -197,7 +200,7 @@ const webpackLog = (message) => {
     heapObjs.forEach((diffItem, i) => {
       // what, size_bytes, size, +, -
       const spaces = Array(maxClassLength + 1 - diffItem.what.length).join(' ');
-      webpackDebug.trace(`\t   ${diffItem.what} ${spaces} %${diffItem.size}%`,
+      console.log(`\t   ${diffItem.what} ${spaces} %${diffItem.size}%`,
          { color: 'webpackDetailMemoryValue' });
     });
     hd = new memwatch.HeapDiff();

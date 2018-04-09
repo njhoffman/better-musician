@@ -2,9 +2,9 @@
 const path = require('path');
 const argv = require('yargs').argv;
 const ip = require('ip');
-const { log, info, warn } = require('debugger-256')('app:config:project');
+// const { log, info, warn } = require('debugger-256')('app:config:project');
 
-log('Creating project configuration.');
+console.log('Creating project configuration.');
 // ========================================================
 // Default Configuration
 // ========================================================
@@ -117,14 +117,14 @@ config.paths = {
 // ========================================================
 // Environment Configuration
 // ========================================================
-info(`Looking for environment overrides for NODE_ENV "${config.env}".`);
+console.log(`Looking for environment overrides for NODE_ENV "${config.env}".`);
 const environments = require('./environments.config');
 const overrides = environments[config.env];
 if (overrides) {
-  info('Found overrides, applying to default configuration.', overrides);
+  console.log('Found overrides, applying to default configuration.', overrides);
   Object.assign(config, overrides(config));
 } else {
-  info('No environment overrides found, defaults will be used.');
+  console.log('No environment overrides found, defaults will be used.');
 }
 
 // ------------------------------------

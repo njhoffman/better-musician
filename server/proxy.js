@@ -4,7 +4,7 @@ const project = require('../config/project.config');
 const requestOutput = require('./server.utils').proxyRequestOutput;
 const responseOutput = require('./server.utils').proxyResponseOutput;
 
-const { error } = require('debugger-256')('app:response:proxy');
+// const { error } = require('debugger-256')('app:response:proxy');
 
 module.exports = function (app) {
   // Proxy to API server
@@ -38,8 +38,8 @@ module.exports = function (app) {
   proxy.on('error', (err, req, res) => {
     const json = { error: 'proxy_error', reason: err.message };
     if (err.code !== 'ECONNRESET') {
-      error('PROXY ERROR');
-      error(err);
+      console.error('PROXY ERROR');
+      console.error(err);
     }
     if (!res.headersSent) {
       res.writeHead(500, { 'content-type': 'application/json' });
