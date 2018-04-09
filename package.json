@@ -8,6 +8,7 @@
     "npm": "^3.0.0"
   },
   "scripts": {
+    "postinstall": "./bin/init-hooks",
     "clean": "rimraf dist",
     "compile": "better-npm-run compile",
     "compile:prod": "better-npm-run compile:prod",
@@ -239,6 +240,7 @@
     "sinon": "^2.2.0",
     "sinon-chai": "^2.8.0",
     "stats-webpack-plugin": "^0.6.0",
+    "webpack-bundle-analyzer": "^2.11.1",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hmr": "^1.0.2",
     "webpack-hot-middleware": "^2.12.2"
