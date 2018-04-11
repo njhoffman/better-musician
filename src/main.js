@@ -6,7 +6,7 @@ import { configure as authConfigure } from 'redux-auth';
 import webpackVariables from 'webpackVariables';
 
 // import 'material-design-lite/src/typography/_typography.scss';
-import injectTapEventPlugin from 'react-tap-event-plugin';
+import injectTapEventPlugin from 'react-fastclick';
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941

@@ -14,44 +14,44 @@ import {
 import setupProxy from './proxy';
 import webpackConfig from '../config/webpack.config';
 import project from '../config/project.config';
-// import configDebug from 'debugger-256';
 import { humanMemorySize } from '../shared/util';
 
 // TODO: make logger for happypack
 
-// const { info, log, warn, error } = configDebug('app:server');
+const configDebug = require('../shared/logger');
+const { info, warn, error } = configDebug('app:server');
 
 const sdc = new StatsD();
 sdc.increment('app_start');
 
 process.on('uncaughtException', (err) => {
   sdc.increment('app_uncaught_exception');
-  console.error('\n\n');
-  console.error('*** UNCAUGHT EXCEPTION ***');
-  console.error(err);
-  console.error('*** UNCAUGHT EXCEPTION ***');
-  console.error('\n\n');
+  error('\n\n');
+  error('*** UNCAUGHT EXCEPTION ***');
+  error(err);
+  error('*** UNCAUGHT EXCEPTION ***');
+  error('\n\n');
 });
 
 process.on('unhandledRejection', (err) => {
   sdc.increment('app_unhandled_rejection');
-  console.error('\n\n');
-  console.error('*** UNHANDLED REJECTION ***');
-  console.error(err);
-  console.error('*** UNHANDLED REJECTION ***');
-  console.error('\n\n');
+  error('\n\n');
+  error('*** UNHANDLED REJECTION ***');
+  error(err);
+  error('*** UNHANDLED REJECTION ***');
+  error('\n\n');
 });
 
 memwatch.on('stats', (stats) => {
   // current_base, num_full_gc, num_inc_gc, heap_compactions, estimated_base, current_base, min, max, usage_trend
-  console.log(`GC (#${stats.num_full_gc}/${stats.num_inc_gc}): \
+  info(`GC (#${stats.num_full_gc}/${stats.num_inc_gc}): \
       ${humanMemorySize(stats.current_base, true)} (Current) \
       ${humanMemorySize(stats.estimated_base, true)} (Estimated) \
       Usage: ${stats.usage_trend}`);
 });
 
 memwatch.on('leak', (info) => {
-  console.warn('Memory Leak', info);
+  warn('Memory Leak', info);
 });
 
 const app = express();
@@ -74,13 +74,9 @@ if (project.env === 'development') {
   app.use(requestOutput);
   app.use(morgan(morganOutput));
 
-  console.info('Enabling webpack dev and HMR middleware');
+  info('Enabling webpack dev and HMR middleware');
   app.use(require('webpack-dev-middleware')(compiler, {
     publicPath  : webpackConfig.output.publicPath,
-    contentBase : project.paths.client(),
-    hot         : true,
-    quiet       : project.compiler_quiet,
-    noInfo      : project.compiler_quiet,
     lazy        : false,
     // log         : process.stdout.write, // webpackLog,
     stats       : project.compiler_stats,
@@ -91,6 +87,7 @@ if (project.env === 'development') {
   }));
   app.use(require('webpack-hot-middleware')(compiler, {
     // log: process.stdout.write, // webpackLog
+    reload: true,
     heartbeat: 3 * 1000
   }));
 
@@ -100,7 +97,7 @@ if (project.env === 'development') {
   // when the application is compiled.
   app.use(express.static(project.paths.public()));
 } else {
-  console.info(
+  info(
     'Server is being run outside of live development mode, meaning it will ' +
     'only serve the compiled application bundle in ~/dist. Generally you ' +
     'do not need an application server for this and can instead use a web ' +
@@ -120,9 +117,9 @@ if (project.env === 'development') {
 // error handling
 app.use(function (err, req, res, next) {
   sdc.increment('app_error');
-  console.error('\n\n*** ERROR ***');
-  console.error(err);
-  console.error('*** ERROR ***\n\n');
+  error('\n\n*** ERROR ***');
+  error(err);
+  error('*** ERROR ***\n\n');
   res.status(err.status ? err.status : 500).send(err.message);
 });
 

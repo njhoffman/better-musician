@@ -38,8 +38,7 @@ const config = {
   // ----------------------------------
   compiler_babel : {
     cacheDirectory : true,
-    plugins        : ['transform-runtime'],
-    presets        : ['es2015', 'react', 'stage-0']
+    presets        : ['es2015', 'react', 'stage-2']
   },
   compiler_devtool         : process.env.NODE_ENV === 'production' ? 'source-map' : 'eval-source-map',
   // source maps in order of speed <--> performance, dev compiles sourcemap into original js
@@ -54,7 +53,8 @@ const config = {
     chunkModules: false,
     colors:       true
   },
-  compiler_vendors : [
+  vendors : [
+		'lodash',
     'react',
     'react-dom',
     'react-redux',
@@ -88,7 +88,7 @@ Edit at Your Own Risk
 // ------------------------------------
 const pkg = require('../package.json');
 
-config.compiler_vendors = config.compiler_vendors
+config.vendors = config.vendors
   .filter((dep) => {
     if (pkg.dependencies[dep]) return true;
 
@@ -121,7 +121,7 @@ console.log(`Looking for environment overrides for NODE_ENV "${config.env}".`);
 const environments = require('./environments.config');
 const overrides = environments[config.env];
 if (overrides) {
-  console.log('Found overrides, applying to default configuration.', overrides);
+  console.log('Found overrides, applying to default configuration.', overrides(config));
   Object.assign(config, overrides(config));
 } else {
   console.log('No environment overrides found, defaults will be used.');
@@ -144,5 +144,7 @@ config.globals = {
   '__API_URL__' : `http://${config.server_host}:${config.server_port}/api`,
   '__BASENAME__' : JSON.stringify(process.env.BASENAME || '')
 };
+
+config.mode = config.env;
 
 module.exports = config;

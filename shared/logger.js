@@ -1,6 +1,6 @@
-const browser = process.env.NODE_ENV === 'test' ? false : true;
+const isTest = process.env.NODE_ENV === 'test';
 
-if (browser) {
+if (isTest) {
   module.exports = exports = require('./logger.browser');
 } else {
   module.exports = exports = require('./logger.terminal');

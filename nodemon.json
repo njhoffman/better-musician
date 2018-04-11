@@ -3,17 +3,22 @@
   "ignore": [
     ".git",
     "node_modules/**/node_modules",
-    "**/tmp"
+    "**/tmp",
+    "coverage",
+    "test",
+    "src",
+    "rethinkdb_data",
+    "dist"
   ],
   "verbose": true,
   "watch": [
-    "index.js",
+    "bin",
+    "server",
     "config",
-    "lib",
-    "server"
+    "shared"
   ],
   "env": {
-    "NODE_ENV": "local"
+    "NODE_ENV": "development"
   },
   "ext": "js json"
 }
