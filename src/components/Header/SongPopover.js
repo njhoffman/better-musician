@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Row, Column } from 'react-foundation';
 import { Popover } from 'material-ui';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from 'material-ui/styles/withTheme';
 
 /* eslint-disable no-multi-spaces */
 import {
@@ -36,7 +36,7 @@ export const SongPopover = (props) => {
     songPopoverOpen,
     songPopoverAnchor,
     toggleSongPopover,
-    muiTheme,
+    theme,
     currentSong
   } = props;
 
@@ -75,7 +75,7 @@ export const SongPopover = (props) => {
   };
 
   const renderSongButtonView = () => {
-    const { instrumental: { headerLinksColor } } = muiTheme;
+    const { instrumental: { headerLinksColor } } = theme;
     return (
       <a
         onTouchTap={() => showEdit()}
@@ -134,10 +134,10 @@ export const SongPopover = (props) => {
 };
 
 SongPopover.propTypes = {
-  muiTheme          : PropTypes.object.isRequired,
-  currentSong       : PropTypes.string,
-  songPopoverOpen   : PropTypes.bool.isRequired,
-  songPopoverAnchor : PropTypes.object.isRequired
+  theme:             PropTypes.object.isRequired,
+  currentSong:       PropTypes.string,
+  songPopoverOpen:   PropTypes.bool.isRequired,
+  songPopoverAnchor: PropTypes.object.isRequired
 };
 
 const showAddSongModal = (actionType) => uiShowModal(MODAL_ADD_SONG, actionType);
@@ -148,4 +148,4 @@ const mapStateToProps = (state) => ({
   currentView:     state.location ? state.location.currentView : null
 });
 
-export default connect(mapStateToProps, mapActionCreators)(muiThemeable()(SongPopover));
+export default connect(mapStateToProps, mapActionCreators)(withTheme()(SongPopover));

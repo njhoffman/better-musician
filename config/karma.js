@@ -23,11 +23,11 @@ const karmaConfig = {
   frameworks    : ['mocha'],
   reporters     : ['spec'], // 'mocha', 'spec', 'json', 'progress', 'dots'
   specReporter: {
-    maxLogLines:          5,         // limit number of lines logged per test
-    suppressErrorSummary: false,  // do not print error summary
-    suppressFailed:       false,  // do not print information about failed tests
-    suppressPassed:       false,  // do not print information about passed tests
-    suppressSkipped:      true,  // do not print information about skipped tests
+    maxLogLines:          5, // limit number of lines logged per test
+    suppressErrorSummary: false, // do not print error summary
+    suppressFailed:       false, // do not print information about failed tests
+    suppressPassed:       false, // do not print information about passed tests
+    suppressSkipped:      true, // do not print information about skipped tests
     showSpecTiming:       false // print the time elapsed for each spec
   },
   jsonReporter: {
@@ -126,7 +126,7 @@ console.log(`Creating karma configuration. \n` +
   `Reporter: %${karmaConfig.reporters}%\n` +
   `Test Framework: %${karmaConfig.frameworks}%\n` +
   `Browsers: %${karmaConfig.browsers}%\n`,
-  { color: 'bold' }, { color: 'bold' }, { color: 'bold' });
+{ color: 'bold' }, { color: 'bold' }, { color: 'bold' });
 
 console.info('Created karma Configuration', karmaConfig, { _depth_ : 2 });
 

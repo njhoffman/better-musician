@@ -6,11 +6,11 @@ const RenderCheckbox = ({
   viewType,
   meta: { touched, error },
   ...custom }) => (
-    <Checkbox
-      style={{ textAlign: 'left', marginLeft: 'auto', marginRight: 'auto', width: 'initial' }}
-      labelStyle={{ width: '100%' }}
-      {...custom}
-    />
+  <Checkbox
+    style={{ textAlign: 'left', marginLeft: 'auto', marginRight: 'auto', width: 'initial' }}
+    labelStyle={{ width: '100%' }}
+    {...custom}
+  />
 );
 
 RenderCheckbox.propTypes = {

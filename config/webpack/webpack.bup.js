@@ -184,10 +184,10 @@ webpackConfig.module.rules = [];
 webpackConfig.module.rules.push({
   test    : /\.(js|jsx)$/,
   exclude : /node_modules/,
-  use: [
+  use: [{
     loader: 'babel-loader',
     options : project.compiler_babel
-  ]
+  }]
 });
 
 // ------------------------------------
@@ -195,10 +195,10 @@ webpackConfig.module.rules.push({
 // ------------------------------------
 // We use cssnano with the postcss loader, so we tell
 // css-loader not to duplicate minimization.
-const BASE_CSS_LOADER = 'css?sourceMap&-minimize';
+// const BASE_CSS_LOADER = 'css?sourceMap&-minimize';
 // separate vendor files from css modules processing
 // https://github.com/css-modules/css-modules/pull/65#issuecomment-214221200
-const BASE_CSS_MODULE_LOADER = 'css?sourceMap&modules&importLoaders=2&-minimize';
+// const BASE_CSS_MODULE_LOADER = 'css?sourceMap&modules&importLoaders=2&-minimize';
 // vendor global scss/css
 // webpackConfig.module.rules.push({
 //   test    : /\.scss$/,

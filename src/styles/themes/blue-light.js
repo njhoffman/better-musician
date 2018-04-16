@@ -6,8 +6,8 @@ import {
   lightBlack,
   purpleA200,
   white
-} from 'material-ui/styles/colors';
-import { fade } from 'material-ui/utils/colorManipulator';
+} from 'material-ui/colors';
+import { fade } from 'material-ui/styles/colorManipulator';
 
 export default {
   themeName: 'Blue (Light)',

@@ -1,9 +1,9 @@
 import React  from 'react';
 import PropTypes from 'prop-types';
 import ButtonLoader from './ButtonLoader';
-import ActionLock from 'material-ui/svg-icons/action/lock';
+import ActionLock from 'material-ui-icons/Lock';
 import { connect } from 'react-redux';
-import { signOut } from 'redux-auth';
+// import { signOut } from 'redux-auth';
 
 export class SignOutButton extends React.Component {
   static propTypes = {
@@ -29,9 +29,9 @@ export class SignOutButton extends React.Component {
   }
 
   handleClick() {
-    this.props.dispatch(signOut(this.getEndpoint()))
-      .then(this.props.next)
-      .catch(() => {});
+    // this.props.dispatch(signOut(this.getEndpoint()))
+    //   .then(this.props.next)
+    //   .catch(() => {});
   }
 
   render() {

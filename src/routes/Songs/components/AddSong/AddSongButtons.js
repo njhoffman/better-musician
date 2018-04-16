@@ -11,8 +11,8 @@ export const AddSongButtons = (props) => {
   const buttonLabel = props.modalView.isView()
     ? 'Edit'
     : props.modalView.isEdit()
-    ? 'Save'
-    : 'Add';
+      ? 'Save'
+      : 'Add';
 
   return (
     <div>

@@ -1,9 +1,9 @@
 require('../server/server.babel'); // babel registration (runtime transpilation for node)
 
-const project = require('../config/project.config');
+const config = require('../config/');
 const server = require('../server');
-// const { log } = require('debugger-256')('app:bin:dev-server');
+const { info } = require('../shared/logger')('app:dev-server');
 
-server.listen(project.server_port);
-console.log(`Server is now running at http://${project.server_host}:${project.server_port}.`);
-console.log(`Proxy connected to API at http://${project.api_host}:${project.api_port}`);
+server.listen(config.server.port);
+info(`Server is now running at http://${config.server.host}:${config.server.port}.`);
+info(`Proxy connected to API at http://${config.api.host}:${config.api.port}`);

@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
-import ActionFavorite from 'material-ui/svg-icons/action/favorite';
-import * as Colors from 'material-ui/styles/colors';
+import Button from 'material-ui/Button';
+import ActionFavorite from 'material-ui-icons/Favorite';
+import * as Colors from 'material-ui/colors';
 import Spinner from 'react-loader';
 
 class ButtonLoader extends React.Component {
@@ -130,19 +129,21 @@ class ButtonLoader extends React.Component {
       };
 
       return (
-        <RaisedButton
+        <Button
           {...raisedProps}
+          variant="raised"
           onClick={(e) => this.handleClick(e)}>
           {this.renderIcon()}
-        </RaisedButton>
+        </Button>
       );
     } else {
       return (
-        <FlatButton
+        <Button
           {...props}
+          variant="flat"
           onClick={(e) => this.handleClick(e)}>
           {this.renderIcon()}
-        </FlatButton>
+        </Button>
       );
     }
   }

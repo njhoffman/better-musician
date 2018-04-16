@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { TableRow, TableRowColumn } from 'material-ui/Table';
 import css from './Song.scss';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from 'material-ui/styles/withTheme';
 import { RenderStars, RenderDifficulty } from 'components/Field';
 import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
 import { uiShowModal, MODAL_ADD_SONG } from 'store/ui';
@@ -77,4 +77,4 @@ const mapActionCreators = ({
   showViewSongModal
 });
 
-export default connect(mapStateToProps, mapActionCreators)(muiThemeable()(Song));
+export default connect(mapStateToProps, mapActionCreators)(withTheme()(Song));

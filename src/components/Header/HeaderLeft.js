@@ -1,7 +1,7 @@
 import React, { Component }  from 'react';
 import PropTypes from 'prop-types';
 import { MdMenu as MenuIcon } from 'react-icons/lib/md';
-import { IndexLink } from 'react-router';
+import { Link } from 'react-router-dom';
 import css from './Header.scss';
 
 class HeaderLeft extends Component {
@@ -16,9 +16,9 @@ class HeaderLeft extends Component {
           <a className={css.menuIcon} onClick={this.props.toggleDrawerMenu}>
             <MenuIcon />
           </a>
-          <IndexLink className={css.homeLink} to='/'>
+          <Link className={css.homeLink} to='/'>
             instrumental.io
-          </IndexLink>
+          </Link>
         </span>
       </span>
     );

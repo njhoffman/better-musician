@@ -3,43 +3,10 @@ const uuid = require('node-uuid');
 const _ = require('lodash');
 const { serializers } = require('./logger.utils');
 
-// const pjson = require('prettyjson-256');
-// let subsystem = 'default';
-// export const init = (ss) => {
-//   subsystem = ss;
-//   return {
-//     debug, info, warn, error, log
-//   };
-// };
-//
-// export const debug = () => {};
-// export const info = () => {};
-// export const warn = () => {};
-// export const error = () => {};
-//
-// export const log = (...messages) => {
-//   if (__TEST__) return;
-//
-//   if (messages.length > 1) {
-//     messages = messages.map((msg) => {
-//       let rendMsg = pjson.render(msg, 5);
-//       if (rendMsg.indexOf('\n') !== -1) {
-//         rendMsg = `\n${rendMsg}\n`;
-//       }
-//       return rendMsg;
-//     }).join('\n');
-//     messages = `\n${messages}\n`;
-//   } else {
-//     messages = messages[0];
-//   }
-//   console.log(`${messages}`);
-// };
-//
 let loggerInstance, logParent;
 
-
 const isTestEnv = process.env.NODE_ENV === 'test';
-const logName = process.env['_APP_NAME_'] ? process.env['_APP_NAME_'] : 'Instrumental';
+const logName = process.env['_APP_NAME_'] ? process.env['_APP_NAME_'] : 'instrumental';
 const logConfig = {
   name: logName,
   streams: [{
@@ -49,8 +16,11 @@ const logConfig = {
   serializers: bunyan.stdSerializers
 };
 
-const preprocess = (log, level, ...msg) => {
+const preprocess = (log, level, ...message) => {
   // add global properties
+
+  const msg = _.cloneDeep(message);
+  const logId = uuid.v4();
   if (_.isObjectLike(msg[0])) {
     msg[0]._logId = uuid.v4();
   } else {
@@ -69,6 +39,7 @@ const preprocess = (log, level, ...msg) => {
     error : 2,
     fatal : 1
   };
+
   _.keys(logLevels).forEach(key => {
     if (_.has(msg[0], `_${key}`)) {
       const msgObj = _.cloneDeep(msg[0][`_${key}`]);
@@ -79,17 +50,43 @@ const preprocess = (log, level, ...msg) => {
   });
 
   // apply serializers
-  _.each(_.keys(msg[0]), (key) => {
-    const obj = _.cloneDeep(msg[0][key]);
-    if (_.has(serializers, key)) {
-      delete msg[0][key];
-      _.merge(msg[0], serializers[key](obj));
-    }
-  });
+  if (_.isObjectLike(msg[0])) {
+    _.each(_.keys(msg[0]), (key) => {
+      if (_.has(serializers, key)) {
+        const obj = _.cloneDeep(msg[0][key]);
+        _.merge(msg[0], serializers[key](obj));
+      }
+    });
+  }
 
   if (!isTestEnv) {
     log[level](...msg);
   }
+};
+
+const timers = {};
+const timerStart = (name, desc) => {
+  if (!name) {
+    loggerInstance.warn('need to initialize timer with a name/id');
+    return;
+  }
+  timers[name] = { desc: desc || name, start: new Date().getTime() };
+};
+
+const timerEnd = (name) => {
+  timerShow(name);
+  delete timers[name];
+};
+
+
+const timerShow = (name) => {
+  if (! _.has(timers, name)) {
+    loggerInstance.warn(`timer: ${name} not found`);
+    return;
+  }
+  let fmtTime = new Date().getTime() - timers[name].start;
+  fmtTime = fmtTime > 1000 ? `${(fmtTime / 1000).toFixed(1)}s` : `${fmtTime}ms`;
+  loggerInstance.info({ color: 'logTimer' }, `%${name}: ${fmtTime}%`);
 };
 
 const createInstance = (log) => {
@@ -103,7 +100,10 @@ const createInstance = (log) => {
     error:   preprocess.bind(undefined, log, 'error'),
     fatal:   preprocess.bind(undefined, log, 'fatal'),
     streams: log.streams,
-    parent:  log
+    parent:  log,
+    timerStart,
+    timerEnd,
+    timerShow
   };
 };
 
@@ -111,7 +111,8 @@ const logger = (subsystem, extra = {}) => {
   const childParams = _.merge(extra, { subsystem });
   if (loggerInstance) {
     loggerInstance = createInstance(loggerInstance.parent.child(childParams));
-    loggerInstance.child = (args) => logger(config, args.subsystem || subsystem, _.merge(extra, args));
+    // loggerInstance.child = (args) => logger(config, args.subsystem || subsystem, _.merge(extra, args));
+    loggerInstance.child = (args) => logger(args.subsystem || subsystem, _.merge(extra, args));
     return loggerInstance;
   }
   //
@@ -137,3 +138,4 @@ const logger = (subsystem, extra = {}) => {
 };
 
 module.exports = logger;
+module.exports.init = (ss) => logger(ss);

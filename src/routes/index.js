@@ -1,6 +1,6 @@
 // We only need to import the modules necessary for initial render
 import { browserHistory } from 'react-router';
-import CoreLayout from '../layouts/CoreLayout/CoreLayout';
+// import CoreLayout from '../layouts/CoreLayout/CoreLayout';
 import HomeRoute from './Home';
 import SongsRoute from './Songs';
 import SettingsRoute from './Settings';
@@ -24,7 +24,7 @@ export const createRoutes = (store) => {
 
   return ({
     path        : '/',
-    component   : CoreLayout,
+    // component   : CoreLayout,
     indexRoute  : HomeRoute(store),
     childRoutes : [
       LoginRoute(store),

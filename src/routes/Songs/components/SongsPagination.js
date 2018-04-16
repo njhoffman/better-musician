@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from 'material-ui/styles/withTheme';
 import { Row, Column } from 'react-foundation';
 import { RaisedButton, TextField } from 'material-ui';
 import {
@@ -173,4 +173,4 @@ const mapActionCreators = ({
   setPaginationEnd
 });
 
-export default connect(mapStateToProps, mapActionCreators)(muiThemeable()(SongsPagination));
+export default connect(mapStateToProps, mapActionCreators)(withTheme()(SongsPagination));

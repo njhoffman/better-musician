@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Paper } from 'material-ui';
 import { Column } from 'react-foundation';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from 'material-ui/styles/withTheme';
 import css from './LoginView.scss';
 import EmailSignInForm from './EmailSignInForm';
 import { handleLoginSuccess } from '../modules/login';
@@ -30,4 +30,4 @@ const mapStateToProps = (state) => ({
   settings: state.login
 });
 
-export default connect(mapStateToProps, mapActionCreators)(muiThemeable()(LoginView));
+export default connect(mapStateToProps, mapActionCreators)(withTheme()(LoginView));

@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ButtonLoader from './ButtonLoader';
-import ActionExitToApp from 'material-ui/svg-icons/action/exit-to-app';
-import { oAuthSignIn as _oAuthSignIn } from 'redux-auth';
+import ActionExitToApp from 'material-ui-icons/ExitToApp';
+// import { oAuthSignIn as _oAuthSignIn } from 'redux-auth';
 
 // hook for rewire
 var oAuthSignIn = _oAuthSignIn;
@@ -35,13 +35,13 @@ class OAuthSignInButton extends React.Component {
   }
 
   handleClick() {
-    this.props.dispatch(oAuthSignIn({
-      provider: this.props.provider,
-      params: this.props.signInParams,
-      endpointKey: this.getEndpoint()
-    }))
-      .then(this.props.next)
-      .catch(() => {});
+    // this.props.dispatch(oAuthSignIn({
+    //   provider: this.props.provider,
+    //   params: this.props.signInParams,
+    //   endpointKey: this.getEndpoint()
+    // }))
+    //   .then(this.props.next)
+    //   .catch(() => {});
   }
 
   render() {

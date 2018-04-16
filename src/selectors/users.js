@@ -31,7 +31,7 @@ const userDisplaySelector = ormCreateSelector(orm, (session, user) => {
 
 export const userDisplay = createSelector(
   ormSelector,
-  state => state.auth.get('user'),
+  state => state.auth ? state.auth.get('user') : false,
   userDisplaySelector
 );
 
@@ -52,6 +52,6 @@ const visualThemeSelector = ormCreateSelector(orm, (session, user) => {
 
 export const visualTheme = createSelector(
   ormSelector,
-  state => state.auth.get('user'),
+  state => state.auth ? state.auth.get('user') : false,
   visualThemeSelector
 );

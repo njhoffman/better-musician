@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from 'material-ui/styles/withTheme';
 import { FlatButton, List, ListItem } from 'material-ui';
 import { Row, Column } from 'react-foundation';
 import CustomField from 'components/CustomField';
@@ -126,4 +126,4 @@ FieldList.propTypes = {
   deleteField  : PropTypes.func.isRequired
 };
 
-export default muiThemeable()(FieldList);
+export default withTheme()(FieldList);

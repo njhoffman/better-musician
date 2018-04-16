@@ -5,7 +5,7 @@ import Header from './Header';
 const mapActionCreators = { };
 
 const mapStateToProps = (state) => ({
-  user:            state.auth.get('user'),
+  user:            state.auth ? state.auth.get('user') : null,
   visualTheme:     visualThemeSelector(state),
   currentView:     state.location ? state.location.currentView : null
 });

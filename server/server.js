@@ -1,126 +1,77 @@
-import express from 'express';
-import webpack from 'webpack';
-// import compress from 'compression';
-import morgan from 'morgan';
-import StatsD from 'node-statsd';
-import memwatch from 'memwatch-next';
-
-import {
-  morganOutput,
-  requestOutput
-/* , webpackLog  */
-} from './server.utils';
-
-import setupProxy from './proxy';
-import webpackConfig from '../config/webpack.config';
-import project from '../config/project.config';
-import { humanMemorySize } from '../shared/util';
-
+const _ = require('lodash');
+const webpack = require('webpack');
 // TODO: make logger for happypack
+// import compress from 'compression';
+const StatsD = require('node-statsd');
+const memwatch = require('memwatch-next');
 
-const configDebug = require('../shared/logger');
-const { info, warn, error } = configDebug('app:server');
-
-const sdc = new StatsD();
-sdc.increment('app_start');
-
-process.on('uncaughtException', (err) => {
-  sdc.increment('app_uncaught_exception');
-  error('\n\n');
-  error('*** UNCAUGHT EXCEPTION ***');
-  error(err);
-  error('*** UNCAUGHT EXCEPTION ***');
-  error('\n\n');
-});
-
-process.on('unhandledRejection', (err) => {
-  sdc.increment('app_unhandled_rejection');
-  error('\n\n');
-  error('*** UNHANDLED REJECTION ***');
-  error(err);
-  error('*** UNHANDLED REJECTION ***');
-  error('\n\n');
-});
-
-memwatch.on('stats', (stats) => {
-  // current_base, num_full_gc, num_inc_gc, heap_compactions, estimated_base, current_base, min, max, usage_trend
-  info(`GC (#${stats.num_full_gc}/${stats.num_inc_gc}): \
-      ${humanMemorySize(stats.current_base, true)} (Current) \
-      ${humanMemorySize(stats.estimated_base, true)} (Estimated) \
-      Usage: ${stats.usage_trend}`);
-});
-
-memwatch.on('leak', (info) => {
-  warn('Memory Leak', info);
-});
+const express = require('express');
+const responseTime = require('response-time');
+const addRequestId = require('express-request-id')();
+const userAgent = require('express-useragent');
 
 const app = express();
-setupProxy(app);
+const sdc = new StatsD();
+const config = require('../config');
+const sharedUtils = require('../shared/util');
+const setupProxy = require('./proxy');
+const logger = require('../shared/logger')('app:server');
+const serverUtils = require('./utils')({ config, logger, sdc, sharedUtils });
+
+process.on('uncaughtException', (err) => serverUtils.appErrorLog('exception', err));
+process.on('unhandledRejection', (err) => serverUtils.appErrorLog('rejection', err));
+
+memwatch.on('stats', serverUtils.memwatchStatsLog);
+memwatch.on('leak', serverUtils.memwatchLeakLog);
+
+app.use(addRequestId);
+app.use(userAgent.express());
+app.use(responseTime(serverUtils.responseLog));
+app.use(serverUtils.requestLog);
+setupProxy({ config, logger, app, requestLog: serverUtils.requestLog });
 
 // Rewrites all routes requests to the root /index.html file (ignoring file requests).
 // Remove this middleware if universal rendering is desired
 app.use(require('connect-history-api-fallback')());
 
-// Apply gzip compression
-// turned off as it squashes eventsource messages
+// Apply gzip compression (turned off as it squashes eventsource messages)
 // app.use(compress());
 
-// ------------------------------------
-// Apply Webpack HMR Middleware
-// ------------------------------------
-if (project.env === 'development') {
-  const compiler = webpack(webpackConfig);
+if (config.env === 'development') {
+  logger.info('Enabling webpack dev and HMR middleware for development environment');
+  const compiler = webpack(config.webpack);
+  const webpackLogger = logger.child({ subsystem: 'app:webpack' });
 
-  app.use(requestOutput);
-  app.use(morgan(morganOutput));
+  const devConfig = _.merge(config.middleware.dev, {
+    path        : config.webpack.output.path,
+    publicPath  : config.webpack.output.publicPath,
+    reporter    : serverUtils.webpackReporter,
+    logger      : webpackLogger
+  });
 
-  info('Enabling webpack dev and HMR middleware');
-  app.use(require('webpack-dev-middleware')(compiler, {
-    publicPath  : webpackConfig.output.publicPath,
-    lazy        : false,
-    // log         : process.stdout.write, // webpackLog,
-    stats       : project.compiler_stats,
-    watchOptions : {
-      aggregateTimeout: 300,
-      poll: 300
-    }
-  }));
-  app.use(require('webpack-hot-middleware')(compiler, {
-    // log: process.stdout.write, // webpackLog
-    reload: true,
-    heartbeat: 3 * 1000
-  }));
+  // config.middleware.hot.log: process.stdout.write, // webpackLog
+  app.use(require('webpack-dev-middleware')(compiler, devConfig));
+  app.use(require('webpack-hot-middleware')(compiler, config.middleware.hot));
 
-  // Serve static assets from ~/public since Webpack is unaware of
-  // these files. This middleware doesn't need to be enabled outside
-  // of development since this directory will be copied into ~/dist
-  // when the application is compiled.
-  app.use(express.static(project.paths.public()));
+  // static assets from /public
+  app.use(express.static(config.paths.public()));
 } else {
-  info(
+  logger.info(
     'Server is being run outside of live development mode, meaning it will ' +
     'only serve the compiled application bundle in ~/dist. Generally you ' +
     'do not need an application server for this and can instead use a web ' +
     'server such as nginx to serve your static files. See the "deployment" ' +
     'section in the README for more information on deployment strategies.'
   );
-
-  // Serving ~/dist by default. Ideally these files should be served by
-  // the web server and not the app server, but this helps to demo the
-  // server in production.
-
-  app.use(requestOutput);
-  app.use(morgan(morganOutput));
-  app.use(express.static(project.paths.dist()));
+  app.use(express.static(config.paths.dist()));
 }
 
 // error handling
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   sdc.increment('app_error');
-  error('\n\n*** ERROR ***');
-  error(err);
-  error('*** ERROR ***\n\n');
+  logger.error(err);
   res.status(err.status ? err.status : 500).send(err.message);
 });
 
+sdc.increment('app_start');
 module.exports = app;

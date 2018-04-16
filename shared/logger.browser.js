@@ -5,7 +5,6 @@ pjson.init({ browser: true });
 
 //  console.log('%cBlue! %cRed!', 'color: blue;', 'color: red;');
 
-
 export const init = (subsystem) => {
   return {
     trace : trace.bind(this, subsystem),

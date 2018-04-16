@@ -5,7 +5,7 @@ import { RaisedButton, Paper, Tabs, Tab } from 'material-ui';
 import { Row, Column } from 'react-foundation';
 import { FieldArray, reduxForm } from 'redux-form';
 import { browserHistory } from 'react-router';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from 'material-ui/styles/withTheme';
 
 import ButtonLoader from 'components/ButtonLoader';
 import FieldList from './FieldList';
@@ -170,7 +170,7 @@ FieldsView.propTypes = {
   addField:     PropTypes.func.isRequired
 };
 
-const updateFieldsForm = reduxForm({ form: 'updateFieldsForm', enableReinitialize: true })(muiThemeable()(FieldsView));
+const updateFieldsForm = reduxForm({ form: 'updateFieldsForm', enableReinitialize: true })(withTheme()(FieldsView));
 
 const mapActionCreators = {
   addField,

@@ -6,7 +6,7 @@ const SCREENSHOT_PATH = './screenshots/' + PKG.version + '/';
 
 const config = { // we use a nightwatch.conf.js file so we can include comments and helper functions
   'src_folders': [
-    './integration/tests'     // we use '/test' as the name of our test directory by default. So 'test/e2e' for 'e2e'.
+    './integration/tests' // we use '/test' as the name of our test directory by default. So 'test/e2e' for 'e2e'.
   ],
   'output_folder': './reports/nightwatch', // reports (test outcome) output by Nightwatch
   'page_objects_path': './integration/pages',
@@ -35,7 +35,7 @@ const config = { // we use a nightwatch.conf.js file so we can include comments 
       // 'access_key' : `${SAUCE_ACCESS_KEY}`, // export your environment variables (see readme)
       'globals': {
         'env' : 'default',
-        'waitForConditionTimeout': 10000    // wait for content on the page before continuing
+        'waitForConditionTimeout': 10000 // wait for content on the page before continuing
       }
     },
     'local': {

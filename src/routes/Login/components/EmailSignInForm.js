@@ -4,11 +4,11 @@ import { MdExitToApp } from 'react-icons/lib/md/';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { Row, Column } from 'react-foundation';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from 'material-ui/styles/withTheme';
 
 import ButtonLoader from 'components/ButtonLoader';
 import FormField from 'components/Field';
-import { emailSignIn } from 'redux-auth';
+// import { emailSignIn } from 'redux-auth';
 
 export class EmailSignInForm extends React.Component {
   static propTypes = {
@@ -16,7 +16,7 @@ export class EmailSignInForm extends React.Component {
     dispatch:    PropTypes.func.isRequired,
     endpoint:    PropTypes.string,
     next:        PropTypes.func.isRequired,
-    emailSignIn: PropTypes.func.isRequired,
+    // emailSignIn: PropTypes.func.isRequired,
     loginForm:   PropTypes.object,
     inputProps:  PropTypes.shape({
       email:     PropTypes.object,
@@ -71,7 +71,7 @@ export class EmailSignInForm extends React.Component {
           <Column>
             {errors && [].concat(errors).map((error, i) =>
               <p key={i} className='error'>{error}</p>
-          )}
+            )}
           </Column>
         </Row>
         <Row>
@@ -116,9 +116,9 @@ export class EmailSignInForm extends React.Component {
 const mapStateToProps = (state) => {
   return {
     auth:        state.auth,
-    loginForm:   state.form.login,
-    emailSignIn: emailSignIn
+    loginForm:   state.form.login
+    // emailSignIn: emailSignIn
   };
 };
 
-export default connect(mapStateToProps)(muiThemeable()(reduxForm({ form: 'login' })(EmailSignInForm)));
+export default connect(mapStateToProps)(withTheme()(reduxForm({ form: 'login' })(EmailSignInForm)));

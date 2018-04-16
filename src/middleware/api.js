@@ -1,4 +1,4 @@
-import { fetch } from 'redux-auth';
+// import { fetch } from 'redux-auth';
 import { init as initLog } from 'shared/logger';
 import webpackVariables from 'webpackVariables';
 
@@ -38,16 +38,16 @@ const apiFetch = (endpoint, options) => {
     makeFormData(formData, options.body);
     options.body = formData;
   }
-  return fetch(endpoint, options)
-    .then(response =>
-        response.json()
-        .then(json => {
-          if (!response.ok) {
-            return Promise.reject(json);
-          }
-          return json.data;
-        })
-    );
+  // return fetch(endpoint, options)
+  //   .then(response =>
+  //     response.json()
+  //     .then(json => {
+  //       if (!response.ok) {
+  //         return Promise.reject(json);
+  //       }
+  //       return json.data;
+  //     })
+  //   );
 };
 
 export default (store) => next => action => {
@@ -113,14 +113,14 @@ export default (store) => next => action => {
     }
     if (typeof failureType === 'function') {
       return next(
-          failureType(err.message)
-        );
+        failureType(err.message)
+      );
     } else {
       return next(
-          actionWith({
-            payload: err,
-            type: failureType
-          }));
+        actionWith({
+          payload: err,
+          type: failureType
+        }));
     }
   };
 

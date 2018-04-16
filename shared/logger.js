@@ -1,8 +1,8 @@
-const isTest = process.env.NODE_ENV === 'test';
+const isNodeJS = process.env.NODE;
 
-if (isTest) {
-  module.exports = exports = require('./logger.browser');
-} else {
+if (isNodeJS) {
   module.exports = exports = require('./logger.terminal');
+} else {
+  module.exports = exports = require('./logger.browser');
 }
 

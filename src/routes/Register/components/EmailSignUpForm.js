@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ContentSend from 'material-ui/svg-icons/content/send';
+import ContentSend from 'material-ui-icons/Send';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from 'material-ui/styles/withTheme';
 import { Row, Column } from 'react-foundation';
 
 import { MdHelp as HelpIcon } from 'react-icons/lib/md';
@@ -11,7 +11,7 @@ import { MdHelp as HelpIcon } from 'react-icons/lib/md';
 import { RaisedButton } from 'material-ui';
 import ButtonLoader from 'components/ButtonLoader';
 import FormField from 'components/Field';
-import { emailSignUp } from 'redux-auth';
+// import { emailSignUp } from 'redux-auth';
 import css from './EmailSignUpForm.scss';
 
 export class EmailSignUpForm extends React.Component {
@@ -19,7 +19,7 @@ export class EmailSignUpForm extends React.Component {
     auth:                   PropTypes.object.isRequired,
     endpoint:               PropTypes.string,
     next:                   PropTypes.func.isRequired,
-    emailSignUp:            PropTypes.func.isRequired,
+    // emailSignUp:            PropTypes.func.isRequired,
     dispatch:               PropTypes.func.isRequired,
     registerForm:           PropTypes.object,
     inputProps:             PropTypes.shape({
@@ -78,7 +78,7 @@ export class EmailSignUpForm extends React.Component {
           <Column>
             {errors && errors.map(error =>
               <p className='error'>{error}</p>
-          )}
+            )}
           </Column>
         </Row>
         <Row>
@@ -137,9 +137,9 @@ export class EmailSignUpForm extends React.Component {
 const mapStateToProps = (state) => {
   return {
     auth:         state.auth,
-    registerForm: state.form.register,
-    emailSignUp:  emailSignUp
+    registerForm: state.form.register
+    // emailSignUp:  emailSignUp
   };
 };
 
-export default connect(mapStateToProps)(muiThemeable()(reduxForm({ form: 'register' })(EmailSignUpForm)));
+export default connect(mapStateToProps)(withTheme()(reduxForm({ form: 'register' })(EmailSignUpForm)));

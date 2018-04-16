@@ -2,8 +2,7 @@ const _ = require('lodash');
 const cookie = require('cookie');
 module.exports = {
   serializers : {
-    _req: (_req) => {
-      // console.log(Object.keys(_req));
+    _request: (_req) => {
       let parsedCookie = _req.headers && _req.headers.cookie ? cookie.parse(_req.headers.cookie) : {};
       _.each(_.keys(parsedCookie), key => {
         try {
@@ -12,6 +11,11 @@ module.exports = {
       });
       return {
         req: _.merge(_req, { headers: { cookie: parsedCookie } })
+      };
+    },
+    _response: (_res) => {
+      return {
+        _res
       };
     }
   }

@@ -9,7 +9,7 @@ import {
   MdClose as ResetIcon,
   MdSave as SaveIcon
 } from 'react-icons/lib/md';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from 'material-ui/styles/withTheme';
 
 import { updateUser } from 'store/api';
 import ButtonLoader from 'components/ButtonLoader';
@@ -176,7 +176,7 @@ SettingsView.propTypes = {
   resetSettings:  PropTypes.func.isRequired
 };
 
-const updateSettingsForm = reduxForm({ form: 'updateSettingsForm' })(muiThemeable()(SettingsView));
+const updateSettingsForm = reduxForm({ form: 'updateSettingsForm' })(withTheme()(SettingsView));
 
 const setTheme = (theme) => (dispatch, getState) => {
   const user = getState().auth.get('user');

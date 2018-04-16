@@ -5,7 +5,7 @@ import { chunk, get } from 'lodash';
 import { reduxForm } from 'redux-form';
 import { Dialog, Tabs, Tab } from 'material-ui';
 import { Row, Column } from 'react-foundation';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from 'material-ui/styles/withTheme';
 
 import { uiHideModal, MODAL_ADD_SONG } from 'store/ui';
 import {
@@ -75,7 +75,7 @@ export const AddSongModal = (props) => {
                 <Column>
                   {modal.props.errors && [].concat(modal.props.errors).map((error, i) =>
                     <p key={i} className='error'>{error}</p>
-                )}
+                  )}
                 </Column>
               </Row>
               {chunk(tab.fields, 2).map((fields, fieldIdx) =>
@@ -99,7 +99,7 @@ export const AddSongModal = (props) => {
                 </Row>
               )}
             </Tab>
-            )}
+          )}
         </Tabs>
       </form>
     </Dialog>
@@ -154,7 +154,7 @@ const mapStateToProps = (state) => ({
   isOpen:        state.ui.modal.type === MODAL_ADD_SONG
 });
 
-const addSongForm = muiThemeable()(reduxForm({
+const addSongForm = withTheme()(reduxForm({
   form: 'addSongForm',
   enableReinitialize: true,
   validate

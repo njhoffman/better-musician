@@ -1,15 +1,15 @@
 import React, { Component }  from 'react';
 import PropTypes from 'prop-types';
 import { MdAccountCircle as AvatarIcon } from 'react-icons/lib/md';
-import { Avatar, RaisedButton } from 'material-ui';
-import { Link } from 'react-router';
+import { Avatar, Button } from 'material-ui';
+import { Link } from 'react-router-dom';
 import css from './Header.scss';
 
 const linkStyle = { display: 'table-cell', verticalAlign: 'middle', paddingRight: '5px' };
 
 class HeaderRight extends Component {
   static propTypes = {
-    muiTheme        : PropTypes.object.isRequired,
+    theme           : PropTypes.object.isRequired,
     user            : PropTypes.object,
     getUserPoints   : PropTypes.string,
     userDisplayName : PropTypes.string
@@ -34,7 +34,7 @@ class HeaderRight extends Component {
             to='/profile'>
             <Avatar
               icon={<AvatarIcon />}
-              backgroundColor={this.props.muiTheme.palette.primary1Color}
+              backgroundColor={this.props.theme.palette.primary1Color}
               size={35} />
           </Link>
         </div>
@@ -50,8 +50,9 @@ class HeaderRight extends Component {
         <div style={{ display: 'table', height: '100%' }}>
           <Link to='/login'
             style={linkStyle}>
-            <RaisedButton
+            <Button
               style={buttonStyle}
+              variant="raised"
               labelStyle={buttonLabelStyle}
               className={css.loginButton}
               primary
@@ -60,9 +61,10 @@ class HeaderRight extends Component {
           <Link
             to='/register'
             style={linkStyle}>
-            <RaisedButton
+            <Button
               style={buttonStyle}
               secondary
+              variant="raised"
               labelStyle={buttonLabelStyle}
               className={css.registerButton}
               label='REGISTER' />

@@ -4,8 +4,8 @@ import {
   red900, red800, red600, red100,
   yellowA200,
   fullWhite
-} from 'material-ui/styles/colors';
-import { fade, darken, lighten } from 'material-ui/utils/colorManipulator';
+} from 'material-ui/colors';
+import { fade, darken, lighten } from 'material-ui/styles/colorManipulator';
 import spacing from 'material-ui/styles/spacing';
 
 export default {

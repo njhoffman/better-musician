@@ -74,11 +74,11 @@ if (__DEV__) {
     };
 
     // Setup hot module replacement
-    module.hot.accept('./routes/index', () =>
-      setImmediate(() => {
-        ReactDOM.unmountComponentAtNode(MOUNT_NODE);
-        render();
-      })
+    module.hot.accept(['./components/AppContainer'], () =>
+      // setImmediate(() => {
+      ReactDOM.unmountComponentAtNode(MOUNT_NODE);
+      render();
+      // })
     );
   }
 }

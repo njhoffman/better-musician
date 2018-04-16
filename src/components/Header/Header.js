@@ -1,6 +1,6 @@
 import React, { Component }  from 'react';
 import { Row, Column, Breakpoints } from 'react-foundation';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from 'material-ui/styles/withTheme';
 
 import HeaderLeft from './HeaderLeftContainer';
 import HeaderMiddle from './HeaderMiddleContainer';
@@ -10,13 +10,13 @@ import css from './Header.scss';
 export class Header extends Component {
   render() {
     const { ...props } = this.props;
-    const signedIn = props.user.get('isSignedIn');
+    const signedIn = props.user && props.user.get ? props.user.get('isSignedIn') : false;
     if (signedIn) {
       return (
         <div
           style={{
-            backgroundColor: props.muiTheme.palette.canvasColor,
-            color: props.muiTheme.instrumental.headerLinksColor
+            backgroundColor: props.theme.palette.canvasColor,
+            color: props.theme.instrumental.headerLinksColor
           }}
           className={css.header}>
           <Row className={css.wrapper}>
@@ -41,8 +41,8 @@ export class Header extends Component {
       return (
         <div
           style={{
-            backgroundColor: props.muiTheme.palette.canvasColor,
-            color: props.muiTheme.instrumental.headerLinksColor
+            backgroundColor: props.theme.palette.canvasColor,
+            color: props.theme.instrumental.headerLinksColor
           }}
           className={css.header}>
           <Row className={css.wrapper}>
@@ -59,4 +59,4 @@ export class Header extends Component {
   }
 };
 
-export default muiThemeable()(Header);
+export default withTheme()(Header);

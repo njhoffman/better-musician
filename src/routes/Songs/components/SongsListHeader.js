@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TableHeaderColumn } from 'material-ui/Table';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from 'material-ui/styles/withTheme';
 import SortIcon from 'react-icons/lib/md/import-export';
 
 export class SongsListHeader extends Component {
@@ -33,4 +33,4 @@ export class SongsListHeader extends Component {
   }
 }
 
-export default muiThemeable()(SongsListHeader);
+export default withTheme()(SongsListHeader);

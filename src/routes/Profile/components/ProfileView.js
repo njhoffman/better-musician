@@ -6,7 +6,7 @@ import { Row, Column } from 'react-foundation';
 import ButtonLoader from 'components/ButtonLoader';
 import { reduxForm } from 'redux-form';
 import { browserHistory } from 'react-router';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from 'material-ui/styles/withTheme';
 import { updateUser } from 'store/api';
 import FormField from 'components/Field';
 import css from './ProfileView.scss';
@@ -135,7 +135,7 @@ ProfileView.propTypes = {
   updateProfile: PropTypes.func.isRequired
 };
 
-const profileForm = reduxForm({ form: 'updateProfileForm' })(muiThemeable()(ProfileView));
+const profileForm = reduxForm({ form: 'updateProfileForm' })(withTheme()(ProfileView));
 
 const mapActionCreators = {
   updateProfile : updateUser

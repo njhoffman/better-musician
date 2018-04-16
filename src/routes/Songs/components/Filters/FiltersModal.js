@@ -1,19 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import FlatButton from 'material-ui/FlatButton';
+import Button from 'material-ui/Button';
 import Dialog from 'material-ui/Dialog';
 import { uiHideModal } from 'store/ui';
 
 export const FiltersModal = (props) => {
   const actions = [
-    <FlatButton
+    <Button
       label='Cancel'
+      variant="flat"
       primary
       onTouchTap={props.uiHideModal}
     />,
-    <FlatButton
+    <Button
       label='Submit'
+      variant="flat"
       primary
       keyboardFocused
       onTouchTap={props.uiHideModal}

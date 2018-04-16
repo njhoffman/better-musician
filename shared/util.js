@@ -1,12 +1,13 @@
 export const humanMemorySize = (bytes, si) => {
-  var thresh = si ? 1000 : 1024;
+  bytes = Number(bytes);
+  const thresh = si ? 1000 : 1024;
   if (Math.abs(bytes) < thresh) {
     return bytes + ' B';
   }
-  var units = si
+  const units = si
     ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
     : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-  var u = -1;
+  let u = -1;
   do {
     bytes /= thresh;
     ++u;
@@ -15,17 +16,23 @@ export const humanMemorySize = (bytes, si) => {
 }
 
 
-export const padLeft = (str, len) => {
+export const padLeft = (input, len) => {
+  const str = input.toString() || '';
   return len > str.length
     ? (new Array(len - str.length + 1)).join(' ') + str
     : str;
 };
 
-export const padRight = (str, len) => {
+export const padRight = (input, len) => {
+  const str = input.toString() || '';
   return len > str.length
     ? str + (new Array(len - str.length + 1)).join(' ')
     : str;
 };
+
+export const padZeros = (num, numZeros) => (Array(numZeros).join('0') + num).slice(-numZeros);
+
+export const numCommas = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
 export const isJson = (str) => {
   try {

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Paper, Tabs, Tab } from 'material-ui';
 import { Column } from 'react-foundation';
 import { browserHistory } from 'react-router';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from 'material-ui/styles/withTheme';
 import css from './StatsView.scss';
 
 export const StatsView = (props) => {
@@ -55,4 +55,4 @@ const mapStateToProps = (state) => {
   });
 };
 
-export default connect(mapStateToProps, mapActionCreators)(muiThemeable()(StatsView));
+export default connect(mapStateToProps, mapActionCreators)(withTheme()(StatsView));

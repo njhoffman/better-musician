@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Column } from 'react-foundation';
 import { Paper } from 'material-ui';
 import OAuthSignInButton from 'components/OAuthSignInButton';
-import { emailSignUpFormUpdate, emailSignUp } from 'redux-auth';
+// import { emailSignUpFormUpdate, emailSignUp } from 'redux-auth';
 
 import EmailSignUpForm from './EmailSignUpForm';
 import { handleRegisterSuccess } from '../modules/register';
@@ -38,20 +38,20 @@ export const RegisterView = (props) => (
           </OAuthSignInButton>
         </div>
         <div className={css.fieldWrapper}>
-          <OAuthSignInButton
-            className={css.googleButton}
-            {...so.googleButton}
-            icon={<SocialIcon name='google' className={css.googleIcon} />}
-            provider='google'>
-            Sign Up With Google
-          </OAuthSignInButton>
+          {/* <OAuthSignInButton */}
+          {/*   className={css.googleButton} */}
+          {/*   {...so.googleButton} */}
+          {/*   icon={<SocialIcon name='google' className={css.googleIcon} />} */}
+          {/*   provider='google'> */}
+          {/*   Sign Up With Google */}
+          {/* </OAuthSignInButton> */}
         </div>
         <div className={css.divider}>
           <span>or, sign up with email</span>
         </div>
-        <EmailSignUpForm
-          next={props.handleRegisterSuccess}
-        />
+        {/* <EmailSignUpForm */}
+        {/*   next={props.handleRegisterSuccess} */}
+        {/* /> */}
       </div>
     </Paper>
   </Column>
@@ -62,8 +62,8 @@ RegisterView.propTypes = {
 };
 
 const mapActionCreators = {
-  emailSignUp,
-  emailSignUpFormUpdate,
+  // emailSignUp,
+  // emailSignUpFormUpdate,
   handleRegisterSuccess
 };
 
