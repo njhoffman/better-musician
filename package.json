@@ -1,6 +1,6 @@
 {
   "name": "instrumental",
-  "version": "1.0.23",
+  "version": "1.0.26",
   "description": "Instrumental App",
   "main": "index.js",
   "engines": {
