@@ -1,30 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import createStore from './store/createStore';
-import AppContainer from 'components/AppContainer';
 import webpackVariables from 'webpackVariables';
 import { Provider } from 'react-redux';
 
-// import 'material-design-lite/src/typography/_typography.scss';
-import injectTapEventPlugin from 'react-fastclick';
+import ErrorBoundary from 'components/ErrorBoundaries/Main';
+import DevTools from 'components/DevTools';
+import AppContainer from 'components/AppContainer';
+import createStore from './store/createStore';
+import { init as initLog } from 'shared/logger';
 
-// Needed for onTouchTap
+// needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
+import injectTapEventPlugin from 'react-fastclick';
 injectTapEventPlugin();
 
-// ========================================================
-// Store Instantiation
-// ========================================================
+const { info } = initLog('app');
+
 const initialState = window.___INITIAL_STATE__;
 const store = createStore(initialState);
 
-// ========================================================
-// Render Setup
-// ========================================================
 const MOUNT_NODE = document.getElementById('root');
-
-import { init as initLog } from 'shared/logger';
-const { info } = initLog('app');
 
 const hmSize = (bytes, si) => {
   const thresh = si ? 1000 : 1024;
@@ -49,69 +44,48 @@ const memoryStats = () => {
   }
 };
 
-
-let render = () => {
+const render = () => {
   memoryStats();
-  // const routes = require('./routes/index').default(store);
-
-  // store.dispatch(authConfigure({
-  //   apiUrl                : `${webpackVariables.apiUrl}`,
-  //   signOutPath           : '/users/logout',
-  //   emailSignInPath       : '/users/login',
-  //   emailRegistrationPath : '/users/register',
-  //   accountUpdatePath     : '/users/update',
-  //   accountDeletePath     : '/users/delete',
-  //   passwordResetPath     : '/users/password_reset',
-  //   passwordUpdatePath    : '/users/password_update',
-  //   tokenValidationPath   : '/users/validate_token',
-  //   authProviderPaths     : {
-  //     github   : '/users/login/github',
-  //     facebook : '/users/login/facebook',
-  //     google   : '/users/login/google_oauth2'
-  //   }
-  // }, {
-  //   serverSideRendering : false,
-  //   clientOnly          : true
-  //   // cleanSession:        true
-  // })).then(() => {
   ReactDOM.render(
     <Provider store={store}>
-      <AppContainer />
+      <ErrorBoundary onError={onError}>
+        <AppContainer />
+        <DevTools />
+      </ErrorBoundary>
     </Provider>,
     MOUNT_NODE
   );
-  // });
 };
 
+const onError = (error, errorInfo, props) => {
+  console.warn('App.onError:', error, errorInfo, props);
+}
+
 const RedBox = require('redbox-react').default;
+const renderError = (error) => {
+  ReactDOM.render(<RedBox error={error} />, MOUNT_NODE);
+};
+
+const renderDev = () => {
+  try {
+    render();
+  } catch (error) {
+    renderError(error);
+  }
+};
 
 // This code is excluded from production bundle
 if (__DEV__) {
   if (module.hot) {
-    // Development render functions
-    const renderApp = render;
-    const renderError = (error) => {
-      ReactDOM.render(<RedBox error={error} />, MOUNT_NODE);
-    };
-
-    // Wrap render in try/catch
-    const rerender = () => {
-      try {
-        info('rerendering');
-        ReactDOM.unmountComponentAtNode(MOUNT_NODE);
-        renderApp();
-      } catch (error) {
-        renderError(error);
-      }
-    };
-
-    // module.hot.accept('components/AppContainer', rerender);
-    module.hot.accept(rerender);
-
+    // module.hot.accept(['components/AppContainer'], () => {
+    module.hot.accept(() => {
+      info('HMR reloading ...');
+      ReactDOM.unmountComponentAtNode(MOUNT_NODE);
+      renderDev();
+    });
   }
+  renderDev();
+} else {
+  render();
 }
 
-// ========================================================
-// Go!
-// ========================================================
-render();

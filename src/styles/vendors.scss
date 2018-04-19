@@ -1,12 +1,8 @@
-
-@import "../../node_modules/foundation-sites/scss/util/util";
-@import "../../node_modules/foundation-sites/scss/global";
-@import "../../node_modules/foundation-sites/scss/grid/grid";
-@import "../../node_modules/foundation-sites/scss/components/flex";
+//
+// foundation-everything will load foundation-grid if flex, foundation-flex-classes if not flex
+//
 
 @import "../../node_modules/foundation-sites/scss/foundation";
-
-// foundation-everything will load foundation-grid if flex, foundation-flex-classes if not flex
 
 $body-background: none;
 $breakpoints: (
@@ -17,6 +13,8 @@ $breakpoints: (
   xxlarge: 1440px,
 );
 
+@include foundation-global-styles;
 @include foundation-flex-grid;
+// @include foundation-grid;
 @include foundation-flex-classes;
-@include foundation-everything;
+// @include foundation-everything;

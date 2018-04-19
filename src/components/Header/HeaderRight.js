@@ -53,21 +53,19 @@ class HeaderRight extends Component {
             <Button
               style={buttonStyle}
               variant="raised"
-              labelStyle={buttonLabelStyle}
-              className={css.loginButton}
-              primary
-              label='LOGIN' />
+              className={css.loginButton}>
+              LOGIN
+            </Button>
           </Link>
           <Link
             to='/register'
             style={linkStyle}>
             <Button
               style={buttonStyle}
-              secondary
               variant="raised"
-              labelStyle={buttonLabelStyle}
-              className={css.registerButton}
-              label='REGISTER' />
+              className={css.registerButton}>
+              REGISTER
+            </Button>
           </Link>
         </div>
       </div>

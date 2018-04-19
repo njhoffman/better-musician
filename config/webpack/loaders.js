@@ -21,12 +21,31 @@ module.exports = (config) => [{
     }
   }]
 }, {
-  // Preprocess our own .scss files
+  // css modules on for components
   test: /\.scss$/,
-  exclude: /node_modules/,
-  use: ['style-loader', 'css-loader', 'sass-loader']
+  include: /src/,
+  exclude: [/node_modules/, /styles/],
+  use: [
+    'style-loader',
+    {
+      loader: 'css-loader',
+      options: { modules: true }
+    },
+    'sass-loader'
+  ]
+}, {
+  // css modules off for vendors
+  test: /\.scss$/,
+  include: /styles/,
+  exclude: [/node_modules/],
+  use: [
+    'style-loader',
+    'css-loader',
+    'sass-loader'
+  ]
 }, {
   test: /\.css$/,
+  exclude: /node_modules/,
   use: [
     MiniCssExtractPlugin.loader,
     'css-loader'

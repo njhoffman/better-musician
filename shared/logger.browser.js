@@ -1,5 +1,5 @@
 const pjson = require('prettyjson-256');
-const { isArray, flattenDepth, zip } = require('lodash');
+const { isArray, flattenDepth, zip, pickBy, isUndefined, isString } = require('lodash');
 
 pjson.init({ browser: true });
 
@@ -18,13 +18,15 @@ export const init = (subsystem) => {
 };
 
 const parse = (subsystem, style, messages) => {
-  messages.forEach((msg, i) => {
-    let rendMsg = pjson.render(msg, 5 + (i * 3));
+  // TODO: fix problems rendering 'undefined'
+  const filtered = Array.isArray(messages) ? messages.filter(msg => !isUndefined(msg)) : messages;
+  filtered.forEach((msg, i) => {
+    let rendMsg = pjson.render((!isString(msg) ? pickBy(msg) : msg), 5 + (i * 3));
     rendMsg = zip(rendMsg[0], rendMsg[1]);
     if (i === 0) {
-      if (messages.length > 1) {
-        subsystem += "\n";
-      }
+      // if (messages.length > 1) {
+      //   subsystem += "\n";
+      // }
       rendMsg.unshift(['%c ' + subsystem, style]);
     }
     let msgOut = '';
@@ -44,8 +46,8 @@ const parse = (subsystem, style, messages) => {
 };
 
 export const trace = (subsystem, ...inputs) => parse(subsystem, 'color: #aaffff', inputs);
-export const debug = (subsystem, ...inputs) => parse(subsystem, 'color: #88ffee', inputs);
-export const info  = (subsystem, ...inputs) => parse(subsystem, 'color: #88eedd', inputs);
+export const debug = (subsystem, ...inputs) => parse(subsystem, 'color: #aaffee', inputs);
+export const info  = (subsystem, ...inputs) => parse(subsystem, 'color: #44ddbb', inputs);
 export const log   = (subsystem, ...inputs) => parse(subsystem, 'color: #44ddbb', inputs);
 export const warn  = (subsystem, ...inputs) => parse(subsystem, 'color: #aa6622', inputs);
 export const error = (subsystem, ...inputs) => parse(subsystem, 'color: #ff0000', inputs);

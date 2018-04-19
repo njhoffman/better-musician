@@ -1,27 +1,30 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Paper } from 'material-ui';
+import { Paper, Typography } from 'material-ui';
+import withTheme from 'material-ui/styles/withTheme';
 import { Column } from 'react-foundation';
 import css from './HomeView.scss';
 
 export const HomeView = (props) => (
   <Column centerOnSmall small={12} medium={10} large={8}>
     <Paper elevation={5}>
-      <div className={css.homeContainer}>
-        <h2>This is the home screen</h2>
-        {/* <Link to='/songs' activeClassName='route--active'> Songs</Link> */}
-        {/* <br /> */}
-        {/* <Link to='/profile' activeClassName='route--active'> Profile</Link> */}
-        {/* <br /> */}
-        {/* <Link to='/login' activeClassName='route--active'> Login</Link> */}
-        {/* <br /> */}
-        {/* <Link to='/register' activeClassName='route--active'> Register</Link> */}
-        {/* <br /> */}
-        <Link to='/reset'> Reset</Link>
-        <br />
-        {/* <Link to='/settings' activeClassName='route--active'> Settings</Link> */}
-      </div>
+        <div className={css.homeContainer}>
+          <Typography variant="display2">
+            This is the home screen
+          </Typography>
+          <Link to='/songs'>Songs</Link>
+          <br />
+          <Link to='/profile'>Profile</Link>
+          <br />
+          <Link to='/login'>Login</Link>
+          <br />
+          <Link to='/register'>Register</Link>
+          <br />
+          <Link to='/reset'>Reset</Link>
+          <br />
+          <Link to='/settings'> Settings</Link>
+        </div>
     </Paper>
   </Column>
 );
@@ -31,4 +34,4 @@ const mapStateToProps = (state) => ({
   songs: state.home && state.home.songs ? state.home.songs : []
 });
 
-export default connect(mapStateToProps)(HomeView);
+export default connect(mapStateToProps)(withTheme()(HomeView));

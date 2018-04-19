@@ -23,8 +23,8 @@ const so = {
 };
 
 export const RegisterView = (props) => (
-  <Column className='registerView' centerOnSmall small={12} medium={10} large={8}>
-    <Paper zDepth={5}>
+  <Column className='registerView' small={12} medium={10} large={8}>
+    <Paper elevation={5}>
       <div className={css.registerContainer}>
         <h3>Sign Up for instrumental.io</h3>
         <p>It's free. It's easy. It takes 5 seconds.</p>

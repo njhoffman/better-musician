@@ -7,6 +7,9 @@ import uiReducer from './ui';
 import apiReducer from './api';
 import { routerReducer } from 'react-router-redux';
 
+import { init as initLog } from 'shared/logger';
+const { info } = initLog('reducers');
+
 // selectors need access to ORM
 // TODO: put orm in own module
 import { ORM, createReducer } from 'redux-orm';
@@ -19,9 +22,7 @@ export const makeRootReducer = (asyncReducers, injectedModels = []) => {
   if (injectedModels.length > 0) {
     orm.register(...injectedModels);
   }
-  console.info('Combining reducers');
-
-  return combineReducers({
+  const reducers = {
     orm:            ormReducer,
     location:       locationReducer,
     router:         routerReducer,
@@ -31,7 +32,10 @@ export const makeRootReducer = (asyncReducers, injectedModels = []) => {
     // auth reducer is immutable js so must be mapped in containers correctly
     // auth:           authStateReducer,
     ...asyncReducers
-  });
+  };
+  info(`Combining reducers: ${Object.keys(reducers)}`);
+
+  return combineReducers(reducers);
 };
 
 export const injectReducer = (store, { key, reducer, models }) => {

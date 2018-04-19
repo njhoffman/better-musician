@@ -51,7 +51,8 @@ module.exports = {
       'redux',
       'redux-thunk',
       'redux-orm',
-      'material-ui'
+      'material-ui',
+      '@material-ui'
     ]
   },
   externals: {

@@ -23,30 +23,31 @@ const facebookIconComponent = () =>
 
 let linkStyle = {
   width: '100%',
-  display: 'inline-block'
+  display: 'inline-block',
+  textAlign: 'center',
+  textTransform: 'uppercase',
+  textDecoration: 'none'
 };
 
 export class DrawerMenu extends Component {
   static propTypes = {
     hideDrawerMenu: PropTypes.func.isRequired,
     isOpen:         PropTypes.bool.isRequired,
-    user:           PropTypes.object.isRequired,
+    user:           PropTypes.object,
     theme:          PropTypes.object.isRequired
   };
 
   renderSignedIn() {
     return (
-      <div className={css.drawerMenuContainer}>
+      <div className={css.drawerMenuContainer} >
         <Drawer
           open={this.props.isOpen}
-          docked={false}
-          onRequestChange={this.props.hideDrawerMenu}>
+          onClose={this.props.hideDrawerMenu}>
           <MenuItem>
             <Link
               to='/'
               onClick={this.props.hideDrawerMenu}
-              style={linkStyle}
-              activeClassName='active'>
+              style={linkStyle}>
               Home
             </Link>
           </MenuItem>
@@ -54,8 +55,7 @@ export class DrawerMenu extends Component {
             <Link
               to='/songs'
               onClick={this.props.hideDrawerMenu}
-              style={linkStyle}
-              activeClassName='active'>
+              style={linkStyle}>
               Song List
             </Link>
           </MenuItem>
@@ -63,8 +63,7 @@ export class DrawerMenu extends Component {
             <Link
               to='/profile'
               onClick={this.props.hideDrawerMenu}
-              style={linkStyle}
-              activeClassName='active'>
+              style={linkStyle}>
               Profile
             </Link>
           </MenuItem>
@@ -72,8 +71,7 @@ export class DrawerMenu extends Component {
             <Link
               to='/stats'
               onClick={this.props.hideDrawerMenu}
-              style={linkStyle}
-              activeClassName='active'>
+              style={linkStyle}>
               Statistics
             </Link>
           </MenuItem>
@@ -81,8 +79,7 @@ export class DrawerMenu extends Component {
             <Link
               to='/settings'
               onClick={this.props.hideDrawerMenu}
-              style={linkStyle}
-              activeClassName='active'>
+              style={linkStyle}>
               Settings
             </Link>
           </MenuItem>
@@ -90,8 +87,7 @@ export class DrawerMenu extends Component {
             <Link
               to='/fields'
               onClick={this.props.hideDrawerMenu}
-              style={linkStyle}
-              activeClassName='active'>
+              style={linkStyle}>
               Field Builder
             </Link>
           </MenuItem>
@@ -114,17 +110,15 @@ export class DrawerMenu extends Component {
 
   renderSignedOut() {
     return (
-      <div>
+      <div className={css.drawerMenuContainer} >
         <Drawer
           open={this.props.isOpen}
-          docked={false}
-          onRequestChange={this.props.hideDrawerMenu}>
+          onClose={this.props.hideDrawerMenu}>
           <MenuItem>
             <Link
               to='/'
               style={linkStyle}
-              onClick={this.props.hideDrawerMenu}
-              activeClassName='active'>
+              onClick={this.props.hideDrawerMenu}>
               Home
             </Link>
           </MenuItem>
@@ -132,8 +126,7 @@ export class DrawerMenu extends Component {
             <Link
               to='/register'
               onClick={this.props.hideDrawerMenu}
-              style={linkStyle}
-              activeClassName='active'>
+              style={linkStyle}>
               Register
             </Link>
           </MenuItem>
@@ -141,8 +134,7 @@ export class DrawerMenu extends Component {
             <Link
               to='/reset'
               onClick={this.props.hideDrawerMenu}
-              style={linkStyle}
-              activeClassName='active'>
+              style={linkStyle}>
               Reset Password
             </Link>
           </MenuItem>
@@ -150,8 +142,7 @@ export class DrawerMenu extends Component {
             <Link
               to='/contact'
               onClick={this.props.hideDrawerMenu}
-              style={linkStyle}
-              activeClassName='active'>
+              style={linkStyle}>
               Contact Support
             </Link>
           </MenuItem>
@@ -172,21 +163,13 @@ export class DrawerMenu extends Component {
           {/*   provider='google'> */}
           {/*   Sign In With Google */}
           {/* </OAuthSignInButton> */}
-          <Link
-            to='/profile'
-            activeClassName='active'>
-            <ButtonLoader
-              icon={googleIconComponent}
-              onClick={() => {
-                this.props.hideDrawerMenu();
-                browserHistory.push('/login');
-              }}
-              backgroundColor={'#ffffff'}
-              labelColor={'#000000'}
-              style={{ width: '245px', margin: '0px 0px 5px 5px' }}>
-              Sign In With Email
-            </ButtonLoader>
-          </Link>
+
+          {/* icon={googleIconComponent} */}
+        <Link to='/profile'>
+          <ButtonLoader
+            onClick={() => { this.props.hideDrawerMenu(); }}
+            label="Sign In With Email" />
+        </Link>
         </Drawer>
       </div>
     );
@@ -194,7 +177,7 @@ export class DrawerMenu extends Component {
 
   render() {
     const isSignedIn = this.props.user && this.props.user.get('isSignedIn');
-    linkStyle.color = this.props.theme.instrumental.headerLinksColor;
+    linkStyle = { ...linkStyle, ...{ color: this.props.theme.instrumental.headerLinksColor } };
     if (isSignedIn) {
       return this.renderSignedIn();
     } else {

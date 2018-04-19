@@ -28,7 +28,8 @@ module.exports = {
           chunks: false
         },
         lazy : false,
-        // logLevel  : 'silent',
+        logLevel  : 'debug',
+        clientLogLevel: 'debug',
         watchOptions : {
           aggregateTimeout: 300,
           poll: 1000,
@@ -37,8 +38,11 @@ module.exports = {
         }
       },
       hot: {
-        // reload: true,
-        // heartbeat: 3 * 1000
+        logLevel: 'debug',
+        noInfo: false,
+        quiet: false,
+        reload: true,
+        heartbeat: 3 * 1000
         // noInfo: true,
         // quiet: true
       }

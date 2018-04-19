@@ -1,30 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { ConnectedRouter } from 'react-router-redux';
-import createHistory from 'history/createBrowserHistory';
-
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { createMuiTheme } from 'material-ui/styles';
+import { ConnectedRouter } from 'react-router-redux';
+
 import { Row } from 'react-foundation';
 
 import 'coreStyles';
-import css from 'styles/layout.scss';
+import css from './AppContainer.scss';
 import Header from 'components/Header/HeaderContainer';
-// import Footer from 'components/Footer/FooterContainer';
+import Footer from 'components/Footer/FooterContainer';
 import DrawerMenu from 'components/DrawerMenu/DrawerMenuContainer';
-// import Snackbar from 'components/Snackbar/SnackbarContainer';
-
-import HomeView from 'routes/Home';
-import ResetView from 'routes/Reset';
+import Snackbar from 'components/Snackbar/SnackbarContainer';
+import Routes from 'routes'
+import processTheme from 'styles/themes';
 
 import { init as initLog } from 'shared/logger';
 const { info } = initLog('AppContainer');
 
+import createHistory from 'history/createBrowserHistory';
 const history = createHistory();
 
-const steelTheme = require('themes/steelBlue-dark').default;
+const theme = processTheme();
 
 class AppContainer extends Component {
 
@@ -32,42 +29,21 @@ class AppContainer extends Component {
     return false;
   }
 
-  processTheme() {
-    console.info('Theme', this.props.theme);
-    // const theme = require('themes/' + this.props.theme).default;
-    const theme = steelTheme;
-    if (!theme.instrumental) {
-      theme.instrumental = {};
-    }
-    theme.instrumental.headerLinksColor = theme.instrumental.headerLinksColor || theme.palette.secondaryTextColor;
-    theme.instrumental.footerFiller = theme.instrumental.footerFiller || theme.palette.canvasColor;
-    theme.instrumental.fieldsViewLabel = theme.instrumental.fieldsViewLabel || theme.palette.accent1Color;
-    return theme;
-  }
-
   render() {
-    const theme = this.processTheme();
-    console.info('theme 3', theme);
     return (
-      <MuiThemeProvider theme={createMuiTheme(theme)} >
+      <MuiThemeProvider theme={theme} >
         <ConnectedRouter history={history}>
           <div className={css.appWrapper}>
-            {/* <AuthGlobals /> */}
             <DrawerMenu />
-            {/* <Snackbar /> */}
+            <Snackbar />
             <Header />
-            <div className={css.contentWrapper} style={{ background: theme.backgroundColor }}>
-              <Row>
-                <Switch>
-                  <Route exact path='/' component={HomeView} />
-                  <Route exact path='/reset' component={ResetView} />
-                </Switch>
+            <div className={css.contentWrapper} style={{background: theme.backgroundColor}}>
+              <Row horizontalAlignment='center'>
+                <Routes />
               </Row>
             </div>
-            {/* <Footer /> */}
-            <div
-              style={{ background: theme.instrumental.footerFiller }}
-              className={css.footerFiller} />
+            <Footer />
+            <div style={{ background: theme.instrumental.footerFiller }} className={css.footerFiller} />
           </div>
         </ConnectedRouter>
       </MuiThemeProvider>

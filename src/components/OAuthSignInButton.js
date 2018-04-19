@@ -6,11 +6,11 @@ import ActionExitToApp from 'material-ui-icons/ExitToApp';
 // import { oAuthSignIn as _oAuthSignIn } from 'redux-auth';
 
 // hook for rewire
-var oAuthSignIn = _oAuthSignIn;
+// var oAuthSignIn = _oAuthSignIn;
 
 class OAuthSignInButton extends React.Component {
   static propTypes = {
-    auth: PropTypes.object.isRequired,
+    auth: PropTypes.object,
     provider: PropTypes.string.isRequired,
     signInParams: PropTypes.object,
     icon: PropTypes.object,
@@ -27,11 +27,7 @@ class OAuthSignInButton extends React.Component {
   };
 
   getEndpoint() {
-    return (
-      this.props.endpoint ||
-      this.props.auth.getIn(['configure', 'currentEndpointKey']) ||
-      this.props.auth.getIn(['configure', 'defaultEndpointKey'])
-    );
+    return ( this.props.endpoint || false);
   }
 
   handleClick() {
@@ -45,11 +41,8 @@ class OAuthSignInButton extends React.Component {
   }
 
   render() {
-    let disabled = this.props.auth.getIn(['user', 'isSignedIn']);
-    let loading = (
-      (this.props.auth.getIn(['ui', 'oAuthSignInLoadingProvider']) === this.props.provider) &&
-      this.props.auth.getIn(['oAuthSignIn', this.getEndpoint(), 'loading'])
-    );
+    let disabled = false;
+    let loading = false;
 
     return (
       <ButtonLoader

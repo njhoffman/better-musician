@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'material-ui/Button';
-import ActionFavorite from 'material-ui-icons/Favorite';
+// import ActionFavorite from 'material-ui-icons/Favorite';
 import * as Colors from 'material-ui/colors';
 import Spinner from 'react-loader';
+import { withTheme } from 'material-ui/styles';
 
-class ButtonLoader extends React.Component {
+export class ButtonLoader extends React.Component {
   static propTypes = {
     icon:                    PropTypes.any,
     loading:                 PropTypes.bool,
@@ -13,7 +14,6 @@ class ButtonLoader extends React.Component {
     spinColorDark:           PropTypes.string,
     spinColorLight:          PropTypes.string,
     spinColorDisabled:       PropTypes.string,
-    children:                PropTypes.node,
     onClick:                 PropTypes.func.isRequired,
     style:                   PropTypes.object,
     disabled:                PropTypes.bool,
@@ -34,7 +34,7 @@ class ButtonLoader extends React.Component {
   };
 
   static defaultProps = {
-    icon: ActionFavorite,
+    // icon: ActionFavorite,
     loading: false,
     spinConfig: {
       lines: 10,
@@ -46,7 +46,6 @@ class ButtonLoader extends React.Component {
     spinColorDark: Colors.darkBlack,
     spinColorLight: Colors.darkWhite,
     spinColorDisabled: Colors.minBlack,
-    children: <span>Submit</span>,
     style: {}
   };
 
@@ -65,87 +64,27 @@ class ButtonLoader extends React.Component {
     }
   }
 
-  renderIcon() {
-    let icon;
-    let color = this.getColor();
-
-    if (this.props.loading) {
-      icon = (
-        <div style={{ position: 'absolute', top: 15, left: 7 }}>
-          <Spinner
-            ref='spinner'
-            {...this.props.spinConfig}
-            color={color}
-            loaded={false} />
-        </div>
-      );
-    } else {
-      if (typeof this.props.icon === 'object') {
-        icon = this.props.icon;
-      } else {
-        icon = <this.props.icon color={color} style={{ width: 15, height: 15 }} />;
-      }
-    }
-
-    return (
-      <span style={{
-        width: 15,
-        height: 15,
-        position: 'absolute',
-        left: 10,
-        top: 3
-      }}>
-        {icon}
-      </span>
-    );
-  }
-
   render() {
     let color = this.getColor();
     const labelColor = this.props.labelColor || color;
     const flatButton = this.props.flatButton;
 
     const props = {
-      backgroundColor: this.props.backgroundColor,
-      children: this.props.children,
       className: this.props.className,
-      disabled: this.props.disabled || this.props.loading,
-      href: this.props.href,
-      label: this.props.label || <span style={{ paddingLeft: 15, color: labelColor }}>{this.props.children}</span>,
-      labelPosition: this.props.labelPosition || 'after',
-      labelStyle: this.props.labelStyle,
-      primary: this.props.primary,
-      secondary: this.props.secondary,
-      style: this.props.style
+      disabled:  this.props.disabled || this.props.loading,
+      href:      this.props.href,
+      style:     this.props.style
     };
-
-    if (!flatButton) {
-      const raisedProps = { ...props,
-        ...{ disabledBackgroundColor: this.props.disabledBackgroundColor,
-          disabledLabelColor: this.props.disabledLabelColor,
-          fullWidth: this.props.fullWidth,
-          labelColor: this.props.labelColor || color,
-          rippleStyle: this.props.rippleStyle }
-      };
-
-      return (
-        <Button
-          {...raisedProps}
-          variant="raised"
-          onClick={(e) => this.handleClick(e)}>
-          {this.renderIcon()}
-        </Button>
-      );
-    } else {
-      return (
-        <Button
-          {...props}
-          variant="flat"
-          onClick={(e) => this.handleClick(e)}>
-          {this.renderIcon()}
-        </Button>
-      );
-    }
+    return (
+      <Button
+        {...props}
+        variant={this.props.flatButton ? 'flat' : 'raised'}
+        color={this.props.secondary ? 'secondary' : 'primary'}
+        onClick={(e) => this.handleClick(e)}>
+        {this.props.icon}
+        {this.props.label}
+      </Button>
+    );
   }
 }
 

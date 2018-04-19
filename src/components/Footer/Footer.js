@@ -2,14 +2,14 @@ import React, { Component }  from 'react';
 import PropTypes from 'prop-types';
 import { Row, Column } from 'react-foundation';
 import { RenderStars, RenderDifficulty } from 'components/Field';
-import muiThemeable from 'material-ui/styles/muiThemeable';
+import withTheme from 'material-ui/styles/withTheme';
 
 import css from './Footer.scss';
 
 export class Footer extends Component {
   static propTypes = {
     song: PropTypes.object,
-    muiTheme: PropTypes.object.isRequired,
+    theme: PropTypes.object.isRequired,
     stats: PropTypes.object,
     isSignedIn: PropTypes.bool.isRequired,
     maxDifficulty: PropTypes.number
@@ -123,7 +123,7 @@ export class Footer extends Component {
             </Row>
             <Row>
               <Column>
-                <RenderStars number={song.progress} starColor={this.props.muiTheme.starColor} />
+                <RenderStars number={song.progress} starColor={this.props.theme.starColor} />
               </Column>
             </Row>
           </Column>
@@ -133,8 +133,8 @@ export class Footer extends Component {
   };
 
   render() {
-    const { song, stats, isSignedIn, muiTheme } = this.props;
-    const backgroundColor = muiTheme.palette.canvasColor;
+    const { song, stats, isSignedIn, theme } = this.props;
+    const backgroundColor = theme.instrumental ? theme.instrumental.canvasColor : theme.palette.background.default;
     // TODO: figure out why this is double firing
     if (song && song.artist) {
       return this.renderSongFooter(song, backgroundColor);
@@ -149,4 +149,4 @@ export class Footer extends Component {
 Footer.propTypes = {
 };
 
-export default muiThemeable()(Footer);
+export default withTheme()(Footer);

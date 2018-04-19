@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { MdExitToApp } from 'react-icons/lib/md/';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { Row, Column } from 'react-foundation';
 import withTheme from 'material-ui/styles/withTheme';
 
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ButtonLoader from 'components/ButtonLoader';
 import FormField from 'components/Field';
 // import { emailSignIn } from 'redux-auth';
 
 export class EmailSignInForm extends React.Component {
   static propTypes = {
-    auth:        PropTypes.object.isRequired,
+    auth:        PropTypes.object,
     dispatch:    PropTypes.func.isRequired,
     endpoint:    PropTypes.string,
     next:        PropTypes.func.isRequired,
@@ -41,9 +41,9 @@ export class EmailSignInForm extends React.Component {
 
   getEndpoint() {
     return (
-      this.props.endpoint ||
-      this.props.auth.getIn(['configure', 'currentEndpointKey']) ||
-      this.props.auth.getIn(['configure', 'defaultEndpointKey'])
+      this.props.endpoint // ||
+      // this.props.auth.getIn(['configure', 'currentEndpointKey']) ||
+      // this.props.auth.getIn(['configure', 'defaultEndpointKey'])
     );
   }
 
@@ -56,12 +56,14 @@ export class EmailSignInForm extends React.Component {
   }
 
   render() {
-    let disabled = (
-      this.props.auth.getIn(['user', 'isSignedIn']) ||
-      this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'loading'])
-    );
+    // let disabled = (
+    //   // this.props.auth.getIn(['user', 'isSignedIn']) ||
+    //   this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'loading'])
+    // );
+    let disabled = false;
 
-    const errors = this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'errors']);
+    // const errors = this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'errors']);
+    const errors = false;
 
     return (
       <form className='redux-auth email-sign-in-form'
@@ -77,7 +79,7 @@ export class EmailSignInForm extends React.Component {
         <Row>
           <FormField
             type='text'
-            floatingLabelText='Email'
+            label='Email'
             name='email-sign-in-email'
             className='email-sign-in-email'
             ref='emailSignInEmail'
@@ -87,7 +89,7 @@ export class EmailSignInForm extends React.Component {
         <Row>
           <FormField
             type='text'
-            floatingLabelText='Password'
+            label='Password'
             name='email-sign-in-password'
             className='email-sign-in-password'
             disabled={disabled}
@@ -97,15 +99,15 @@ export class EmailSignInForm extends React.Component {
         <Row>
           <Column centerOnSmall>
             <ButtonLoader
-              loading={this.props.auth.getIn(['emailSignIn', 'loading'])}
               type='submit'
-              icon={MdExitToApp}
               className='email-sign-in-submit'
               disabled={disabled}
               label='Sign In'
+              icon={<ExitToAppIcon />}
               onClick={this.handleSubmit}
               primary
-              {...this.props.inputProps.submit} />
+              {...this.props.inputProps.submit}>
+              </ButtonLoader>
           </Column>
         </Row>
       </form>

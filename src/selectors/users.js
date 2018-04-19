@@ -41,7 +41,7 @@ const maxDifficultySelector = ormCreateSelector(orm, (session, user) => {
 });
 export const maxDifficulty = createSelector(
   ormSelector,
-  state => state.auth.get('user'),
+  state => state.auth ? state.auth.get('user') : false,
   maxDifficultySelector
 );
 

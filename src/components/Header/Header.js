@@ -11,13 +11,14 @@ export class Header extends Component {
   render() {
     const { ...props } = this.props;
     const signedIn = props.user && props.user.get ? props.user.get('isSignedIn') : false;
+    const headerStyle = {
+      background: props.theme.instrumental.headerBackground,
+      color: props.theme.instrumental.headerLinksColor
+    };
     if (signedIn) {
       return (
         <div
-          style={{
-            backgroundColor: props.theme.palette.canvasColor,
-            color: props.theme.instrumental.headerLinksColor
-          }}
+          style={headerStyle}
           className={css.header}>
           <Row className={css.wrapper}>
             <Column small={6} medium={3} className={css.headerLeft}>
@@ -40,10 +41,7 @@ export class Header extends Component {
     } else {
       return (
         <div
-          style={{
-            backgroundColor: props.theme.palette.canvasColor,
-            color: props.theme.instrumental.headerLinksColor
-          }}
+          style={headerStyle}
           className={css.header}>
           <Row className={css.wrapper}>
             <Column small={6} className={css.headerLeft}>

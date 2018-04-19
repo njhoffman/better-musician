@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import RenderSelect from './Select';
-import RenderMultiSelect from './MultiSelect';
+// import RenderMultiSelect from './MultiSelect';
 import RenderText from './Text';
 import RenderSlider from './Slider';
 import RenderNumber from './Number';
@@ -27,17 +27,17 @@ class RenderFormField extends Component {
     const renderType = type === 'select'
       ? RenderSelect
       : type === 'text'
-        ? RenderText
-        : type === 'number'
-          ? RenderNumber
-          : type === 'slider'
-            ? RenderSlider
-            : type === 'autocomplete'
-              ? RenderAutoComplete
-              : RenderCheckbox;
+      ? RenderText
+      : type === 'number'
+      ? RenderNumber
+      : type === 'slider'
+      ? RenderSlider
+      : type === 'autocomplete'
+      ? RenderAutoComplete
+      : RenderCheckbox;
 
     return (
-      <Column centerOnSmall={centerOnSmall} small={small} medium={medium} large={large} style={{ minWidth: '200px' }} >
+      <Column small={small} medium={medium} large={large} >
         <Field
           component={renderType}
           style={{ ...style, ...{ maxWidth: '100%' } }}
@@ -59,7 +59,7 @@ RenderFormField.propTypes = {
 
 export {
   RenderSelect,
-  RenderMultiSelect,
+  // RenderMultiSelect,
   RenderText,
   RenderSlider,
   RenderStars,

@@ -10,9 +10,8 @@ const RenderText = ({
   ...custom }) => {
   return (
     <TextField
-      floatingLabelText={label}
-      errorText={meta && meta.touched && meta.error}
-      inputStyle={{ ...inputStyle, ...{ boxShadow: 'none' } }}
+      label={label}
+      error={meta && meta.touched && meta.error}
       style={{ ...style, ...{ maxWidth: '100%' } }}
       {...custom}
     />
