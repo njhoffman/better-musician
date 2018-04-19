@@ -74,11 +74,11 @@ config.globals = {
   '__TEST__'     : config.env === 'test',
   '__COVERAGE__' : !argv.watch && config.env === 'test',
   '__VERBOSE__'  : config.envFlag === 'verbose',
-  '__API_URL__' : `http://${config.server.host}:${config.server.port}/api`,
+  '__API_URL__' : `"http://${config.server.host}:${config.server.port}/api"`,
   '__BASENAME__' : JSON.stringify(process.env.BASENAME || '')
 };
 
 configWebpack(config);
 
-logger.debug({ _trace: { config }}, `Finished configuring for environment: ${config.env}`);
+logger.debug({ _info: { config }}, `Finished configuring for environment: ${config.env}`);
 module.exports = config;

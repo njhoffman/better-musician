@@ -8,7 +8,7 @@ import withTheme from 'material-ui/styles/withTheme';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ButtonLoader from 'components/ButtonLoader';
 import FormField from 'components/Field';
-// import { emailSignIn } from 'redux-auth';
+import { emailSignIn } from 'routes/../actions/emailSignIn';
 
 export class EmailSignInForm extends React.Component {
   static propTypes = {
@@ -16,7 +16,7 @@ export class EmailSignInForm extends React.Component {
     dispatch:    PropTypes.func.isRequired,
     endpoint:    PropTypes.string,
     next:        PropTypes.func.isRequired,
-    // emailSignIn: PropTypes.func.isRequired,
+    emailSignIn: PropTypes.func.isRequired,
     loginForm:   PropTypes.object,
     inputProps:  PropTypes.shape({
       email:     PropTypes.object,
@@ -118,8 +118,8 @@ export class EmailSignInForm extends React.Component {
 const mapStateToProps = (state) => {
   return {
     auth:        state.auth,
-    loginForm:   state.form.login
-    // emailSignIn: emailSignIn
+    loginForm:   state.form.login,
+    emailSignIn: emailSignIn
   };
 };
 

@@ -44,17 +44,39 @@ const memoryStats = () => {
   }
 };
 
+import { configure as authConfigure } from './actions/configure';
+
 const render = () => {
-  memoryStats();
-  ReactDOM.render(
-    <Provider store={store}>
-      <ErrorBoundary onError={onError}>
-        <AppContainer />
-        <DevTools />
-      </ErrorBoundary>
-    </Provider>,
-    MOUNT_NODE
-  );
+  store.dispatch(authConfigure({
+    apiUrl                : __API_URL__,
+    signOutPath           : '/users/logout',
+    emailSignInPath       : '/users/login',
+    emailRegistrationPath : '/users/register',
+    accountUpdatePath     : '/users/update',
+    accountDeletePath     : '/users/delete',
+    passwordResetPath     : '/users/password_reset',
+    passwordUpdatePath    : '/users/password_update',
+    tokenValidationPath   : '/users/validate_token',
+    authProviderPaths     : {
+      github   : '/users/login/github',
+      facebook : '/users/login/facebook',
+      google   : '/users/login/google_oauth2'
+    }
+  }, {
+    serverSideRendering : false,
+    clientOnly          : true
+    // cleanSession:        true
+  })).then(() => {
+    ReactDOM.render(
+      <Provider store={store}>
+        <ErrorBoundary onError={onError}>
+          <AppContainer />
+          <DevTools />
+        </ErrorBoundary>
+      </Provider>,
+      MOUNT_NODE
+    );
+  });
 };
 
 const onError = (error, errorInfo, props) => {
@@ -85,6 +107,9 @@ if (__DEV__) {
     });
   }
   renderDev();
+  window.addEventListener('message', e => {
+    console.clear();
+  });
 } else {
   render();
 }

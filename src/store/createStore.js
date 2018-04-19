@@ -22,12 +22,17 @@ const composeEnhancers = useDevExtension
 
 
 import { init as initLog } from 'shared/logger';
-const { trace } = initLog('action');
+const { trace, warn } = initLog('action');
 const actionLogger = (store) => next => action => {
   // meta.form, meta.field
-  trace(`${action.type} ${action.payload ? ' => ' + JSON.stringify(action.payload) : ''}`);
-  // debug(`${action.type}`, { payload: action.payload, meta: action.meta });
-  next(action);
+  if (_.isUndefined(action)) {
+    warn('undefined action');
+    console.trace();
+  } else {
+    trace(`${action.type} ${action.payload ? ' => ' + JSON.stringify(action.payload) : ''}`);
+    // debug(`${action.type}`, { payload: action.payload, meta: action.meta });
+    next(action);
+  }
 };
 
 export default (initialState = {}) => {

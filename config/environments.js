@@ -42,7 +42,9 @@ module.exports = {
         noInfo: false,
         quiet: false,
         reload: true,
-        heartbeat: 3 * 1000
+        heartbeat: 3 * 1000,
+        log: false
+        //
         // noInfo: true,
         // quiet: true
       }

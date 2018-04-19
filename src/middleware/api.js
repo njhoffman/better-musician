@@ -1,5 +1,6 @@
 // import { fetch } from 'redux-auth';
 import { init as initLog } from 'shared/logger';
+import _ from 'lodash';
 import webpackVariables from 'webpackVariables';
 
 const {
@@ -51,10 +52,13 @@ const apiFetch = (endpoint, options) => {
 };
 
 export default (store) => next => action => {
-  const callApi = action[CALL_API];
-  if (typeof callApi === 'undefined') {
+  if (_.isUndefined(action)) {
+    return;
+  } else if ( _.isUndefined(action[callApi])) {
     return next(action);
   }
+
+  const callApi = action[CALL_API];
 
   let { endpoint, method = 'GET' } = callApi;
   const { types, payload } = callApi;

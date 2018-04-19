@@ -1,10 +1,11 @@
 // import { combineReducers } from 'redux-immutablejs';
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
-// import { authStateReducer } from 'redux-auth';
+import { authStateReducer } from './auth';
 import locationReducer from './location';
 import uiReducer from './ui';
 import apiReducer from './api';
+import userReducer from './user';
 import { routerReducer } from 'react-router-redux';
 
 import { init as initLog } from 'shared/logger';
@@ -29,8 +30,9 @@ export const makeRootReducer = (asyncReducers, injectedModels = []) => {
     form:           formReducer,
     ui:             uiReducer,
     api:            apiReducer,
+    user:           userReducer,
     // auth reducer is immutable js so must be mapped in containers correctly
-    // auth:           authStateReducer,
+    auth:           authStateReducer,
     ...asyncReducers
   };
   info(`Combining reducers: ${Object.keys(reducers)}`);

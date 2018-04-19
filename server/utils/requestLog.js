@@ -55,5 +55,7 @@ module.exports = (sdc, logger) =>
       req.logger.info({ _trace: { _request: req } }, `${req.method.toUpperCase()} - ${reqObj.url}`);
     }
     sdc.increment('app_request');
-    return next();
+    if (_.isFunction(next)) {
+      return next();
+    }
   };

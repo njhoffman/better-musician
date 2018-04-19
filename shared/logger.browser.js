@@ -5,6 +5,8 @@ pjson.init({ browser: true });
 
 //  console.log('%cBlue! %cRed!', 'color: blue;', 'color: red;');
 
+const _log = console.log;
+
 export const init = (subsystem) => {
   return {
     trace : trace.bind(this, subsystem),
@@ -37,7 +39,7 @@ const parse = (subsystem, style, messages) => {
 
       const nextLine = (n + 1) < rendMsg.length ? rendMsg[n + 1] : false;
       if (!nextLine || !/%i$/.test(nextLine[0]) && rendMsg.length > 2) {
-        console.log(msgOut, ...colors);
+        _log(msgOut, ...colors);
         msgOut = '';
         colors = [];
       }
@@ -45,10 +47,20 @@ const parse = (subsystem, style, messages) => {
   });
 };
 
+console.log = function (arg1) {
+  if (arg1.indexOf('[HMR]') !== -1) {
+    return parse('hot-module', 'color: #ffaa00', [`${arg1}`]);
+  } else {
+    return _log.apply(console, arguments);
+  }
+};
+
 export const trace = (subsystem, ...inputs) => parse(subsystem, 'color: #aaffff', inputs);
 export const debug = (subsystem, ...inputs) => parse(subsystem, 'color: #aaffee', inputs);
 export const info  = (subsystem, ...inputs) => parse(subsystem, 'color: #44ddbb', inputs);
-export const log   = (subsystem, ...inputs) => parse(subsystem, 'color: #44ddbb', inputs);
+export const log   = (subsystem, ...inputs) => parse(subsystem, 'color: #11dd88', inputs);
 export const warn  = (subsystem, ...inputs) => parse(subsystem, 'color: #aa6622', inputs);
 export const error = (subsystem, ...inputs) => parse(subsystem, 'color: #ff0000', inputs);
 export const fatal = (subsystem, ...inputs) => parse(subsystem, 'color: #ff0000', inputs);
+
+
