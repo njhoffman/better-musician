@@ -1,26 +1,26 @@
-import * as C from "./constants";
-import extend from "extend";
+import * as C from './constants';
+import extend from 'extend';
 
 // base endpoint that other endpoints extend from
 const defaultEndpoint = {
-  apiUrl:                "/api",
-  signOutPath:           "/auth/sign_out",
-  emailSignInPath:       "/auth/sign_in",
-  emailRegistrationPath: "/auth",
-  accountUpdatePath:     "/auth",
-  accountDeletePath:     "/auth",
-  passwordResetPath:     "/auth/password",
-  passwordUpdatePath:    "/auth/password",
-  tokenValidationPath:   "/auth/validate_token",
+  apiUrl:                '/api',
+  signOutPath:           '/auth/sign_out',
+  emailSignInPath:       '/auth/sign_in',
+  emailRegistrationPath: '/auth',
+  accountUpdatePath:     '/auth',
+  accountDeletePath:     '/auth',
+  passwordResetPath:     '/auth/password',
+  passwordUpdatePath:    '/auth/password',
+  tokenValidationPath:   '/auth/validate_token',
 
   authProviderPaths: {
-    github:    "/auth/github",
-    facebook:  "/auth/facebook",
-    google:    "/auth/google_oauth2"
+    github:    '/auth/github',
+    facebook:  '/auth/facebook',
+    google:    '/auth/google_oauth2'
   }
 };
 
-function getFirstObjectKey (obj) {
+function getFirstObjectKey(obj) {
   for (var key in obj) {
     return key;
   }
@@ -58,5 +58,5 @@ export default function parseEndpointConfig(endpoint, defaultEndpointKey = null)
     );
   }
 
-  return {defaultEndpointKey, currentEndpoint};
+  return { defaultEndpointKey, currentEndpoint };
 }

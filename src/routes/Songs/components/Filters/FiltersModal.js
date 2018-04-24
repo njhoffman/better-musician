@@ -9,13 +9,13 @@ export const FiltersModal = (props) => {
   const actions = [
     <Button
       label='Cancel'
-      variant="flat"
+      variant='flat'
       primary
       onTouchTap={props.uiHideModal}
     />,
     <Button
       label='Submit'
-      variant="flat"
+      variant='flat'
       primary
       keyboardFocused
       onTouchTap={props.uiHideModal}

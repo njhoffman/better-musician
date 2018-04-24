@@ -71,11 +71,10 @@ export const actionLogger = (store) => next => action => {
   }
 };
 
-
 export default (store) => next => action => {
   if (_.isUndefined(action)) {
     return;
-  } else if ( _.isUndefined(action[callApi])) {
+  } else if (_.isUndefined(action[callApi])) {
     return next(action);
   }
 

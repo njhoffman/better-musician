@@ -26,7 +26,7 @@ export const RegisterView = (props) => (
   <Column className='registerView' small={12} medium={10} large={8}>
     <Paper elevation={5}>
       <div className={css.registerContainer}>
-        <Typography variant="title">Sign Up for instrumental.io</Typography>
+        <Typography variant='title'>Sign Up for instrumental.io</Typography>
         <Typography>It's free. It's easy. It takes 5 seconds.</Typography>
         <div className={css.fieldWrapper}>
           <OAuthSignInButton

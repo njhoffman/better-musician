@@ -51,7 +51,6 @@ const memoryStats = () => {
 };
 
 const render = () => {
-
   store.dispatch(authConfigure({
     apiUrl                : __API_URL__,
     signOutPath           : '/users/logout',
@@ -86,7 +85,7 @@ const render = () => {
 
 const onError = (error, errorInfo, props) => {
   console.warn('App.onError:', error, errorInfo, props);
-}
+};
 
 const RedBox = require('redbox-react').default;
 const renderError = (error) => {
@@ -116,7 +115,6 @@ if (__DEV__) {
   });
   renderDev();
   // showChart(store);
-
 } else {
   render();
 }

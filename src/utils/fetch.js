@@ -1,14 +1,14 @@
 import _ from 'lodash';
-import originalFetch from "isomorphic-fetch";
-import * as C from "./constants";
-import extend from "extend";
+import originalFetch from 'isomorphic-fetch';
+import * as C from './constants';
+import extend from 'extend';
 import {
   getApiUrl,
   retrieveData,
   persistData,
   getTokenFormat,
   getSessionEndpointKey
-} from "./sessionStorage";
+} from './sessionStorage';
 
 import { init as initLog } from 'shared/logger';
 const { debug } = initLog('auth:fetch');
@@ -25,14 +25,14 @@ const getAuthHeaders = (url) => {
   const nextHeaders = {};
 
   // bust IE cache
-  nextHeaders["If-Modified-Since"] = "Mon, 26 Jul 1997 05:00:00 GMT";
+  nextHeaders['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
 
   // set header for each key in `tokenFormat` config
   for (var key in getTokenFormat()) {
     nextHeaders[key] = currentHeaders[key];
   }
   return addAuthorizationHeader(currentHeaders['access-token'], nextHeaders);
-}
+};
 
 const updateAuthCredentials = (resp) => {
   // check config apiUrl matches the current response url
@@ -60,14 +60,14 @@ const updateAuthCredentials = (resp) => {
   }
 
   return resp;
-}
+};
 
 export const addAuthorizationHeader = (accessToken, headers) =>
   Object.assign({}, headers, { Authorization: `Bearer ${accessToken}` });
 
 export default (url, options = {}) => {
   if (!options.headers) {
-    options.headers = {}
+    options.headers = {};
   }
   extend(options.headers, getAuthHeaders(url));
   debug(`Fetching ${url}`, options.headers);
@@ -79,4 +79,4 @@ export default (url, options = {}) => {
       }
       return updateAuthCredentials(resp);
     });
-}
+};

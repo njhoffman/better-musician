@@ -6,4 +6,3 @@ export default Loadable({
   loader: () => import('./components/RegisterView'),
   loading: LoadingIndicator
 });
-

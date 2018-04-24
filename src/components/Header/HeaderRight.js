@@ -52,8 +52,8 @@ class HeaderRight extends Component {
             style={linkStyle}>
             <Button
               style={buttonStyle}
-              variant="raised"
-              color="primary"
+              variant='raised'
+              color='primary'
               className={css.loginButton}>
               LOGIN
             </Button>
@@ -63,8 +63,8 @@ class HeaderRight extends Component {
             style={linkStyle}>
             <Button
               style={buttonStyle}
-              variant="raised"
-              color="secondary"
+              variant='raised'
+              color='secondary'
               className={css.registerButton}>
               REGISTER
             </Button>

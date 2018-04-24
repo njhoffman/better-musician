@@ -1,38 +1,38 @@
-import {push} from "react-router-redux";
-import extend from "extend";
-import * as C from "utils/constants";
+import { push } from 'react-router-redux';
+import extend from 'extend';
+import * as C from 'utils/constants';
 import {
   authenticateStart,
   authenticateComplete,
   authenticateError
-} from "./authenticate";
+} from './authenticate';
 import {
   showFirstTimeLoginSuccessModal,
   showFirstTimeLoginErrorModal,
   showPasswordResetSuccessModal,
   showPasswordResetErrorModal
-} from "./ui";
-import {ssAuthTokenUpdate} from "./server";
-import {applyConfig} from "utils/clientSettings";
-import {destroySession} from "utils/sessionStorage";
-import verifyAuth from "utils/verifyAuth";
-import getRedirectInfo from "utils/parseUrl";
+} from './ui';
+import { ssAuthTokenUpdate } from './server';
+import { applyConfig } from 'utils/clientSettings';
+import { destroySession } from 'utils/sessionStorage';
+import verifyAuth from 'utils/verifyAuth';
+import getRedirectInfo from 'utils/parseUrl';
 import { setEndpointKeys } from './endpoints';
 
 export const configure = (endpoint = {}, settings = {}) => {
   return dispatch => {
     // don't render anything for OAuth redirects
     if (settings.currentLocation && settings.currentLocation.match(/blank=true/)) {
-      return Promise.resolve({blank: true});
+      return Promise.resolve({ blank: true });
     }
 
     dispatch(authenticateStart());
 
     let promise,
-        firstTimeLogin,
-        mustResetPassword,
-        user,
-        headers;
+      firstTimeLogin,
+      mustResetPassword,
+      user,
+      headers;
 
     if (settings.isServer) {
       promise = verifyAuth(endpoint, settings)
@@ -62,21 +62,21 @@ export const configure = (endpoint = {}, settings = {}) => {
           currentEndpoint,
           defaultEndpointKey
         }) => {
-          dispatch(ssAuthTokenUpdate({firstTimeLogin, mustResetPassword}));
+          dispatch(ssAuthTokenUpdate({ firstTimeLogin, mustResetPassword }));
           dispatch(setEndpointKeys(Object.keys(currentEndpoint || {}), null, defaultEndpointKey));
-          return Promise.reject({reason});
+          return Promise.reject({ reason });
         });
     } else {
       // if the authentication happened server-side, find the resulting auth
       // credentials that were injected into the dom.
-      let tokenBridge = document.getElementById("token-bridge");
+      let tokenBridge = document.getElementById('token-bridge');
 
       if (tokenBridge) {
         let rawServerCreds = tokenBridge.innerHTML;
         if (rawServerCreds) {
           let serverCreds = JSON.parse(rawServerCreds);
 
-          ({headers, user, firstTimeLogin, mustResetPassword} = serverCreds);
+          ({ headers, user, firstTimeLogin, mustResetPassword } = serverCreds);
 
           if (user) {
             dispatch(authenticateComplete(user));
@@ -96,13 +96,13 @@ export const configure = (endpoint = {}, settings = {}) => {
         }
       }
 
-      let {authRedirectPath, authRedirectHeaders} = getRedirectInfo(window.location);
+      let { authRedirectPath, authRedirectHeaders } = getRedirectInfo(window.location);
 
       if (authRedirectPath) {
-        dispatch(push({pathname: authRedirectPath}));
+        dispatch(push({ pathname: authRedirectPath }));
       }
 
-      if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders["access-token"]) {
+      if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders['access-token']) {
         settings.initialCredentials = extend({}, settings.initialCredentials, authRedirectHeaders);
       }
 
@@ -112,7 +112,7 @@ export const configure = (endpoint = {}, settings = {}) => {
         destroySession();
       }
 
-      promise = Promise.resolve(applyConfig({dispatch, endpoint, settings}));
+      promise = Promise.resolve(applyConfig({ dispatch, endpoint, settings }));
     }
 
     return promise
@@ -129,7 +129,7 @@ export const configure = (endpoint = {}, settings = {}) => {
 
         return user;
       })
-      .catch(({reason} = {}) => {
+      .catch(({ reason } = {}) => {
         dispatch(authenticateError([reason]));
 
         if (firstTimeLogin) {
@@ -140,7 +140,7 @@ export const configure = (endpoint = {}, settings = {}) => {
           dispatch(showPasswordResetErrorModal());
         }
 
-        return Promise.resolve({reason});
+        return Promise.resolve({ reason });
       });
   };
-}
+};

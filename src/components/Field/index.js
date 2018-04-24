@@ -27,14 +27,14 @@ class RenderFormField extends Component {
     const renderType = type === 'select'
       ? RenderSelect
       : type === 'text'
-      ? RenderText
-      : type === 'number'
-      ? RenderNumber
-      : type === 'slider'
-      ? RenderSlider
-      : type === 'autocomplete'
-      ? RenderAutoComplete
-      : RenderCheckbox;
+        ? RenderText
+        : type === 'number'
+          ? RenderNumber
+          : type === 'slider'
+            ? RenderSlider
+            : type === 'autocomplete'
+              ? RenderAutoComplete
+              : RenderCheckbox;
 
     return (
       <Column small={small} medium={medium} large={large} >

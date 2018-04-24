@@ -12,7 +12,7 @@ import Header from 'components/Header/HeaderContainer';
 import Footer from 'components/Footer/FooterContainer';
 import DrawerMenu from 'components/DrawerMenu/DrawerMenuContainer';
 import Snackbar from 'components/Snackbar/SnackbarContainer';
-import Routes from 'routes'
+import Routes from 'routes';
 import processTheme from 'styles/themes';
 
 import { init as initLog } from 'shared/logger';
@@ -21,7 +21,6 @@ const { info } = initLog('AppContainer');
 const theme = processTheme();
 
 class AppContainer extends Component {
-
   shouldComponentUpdate() {
     return false;
   }
@@ -34,7 +33,7 @@ class AppContainer extends Component {
             <DrawerMenu />
             <Snackbar />
             <Header />
-            <div className={css.contentWrapper} style={{background: theme.backgroundColor}}>
+            <div className={css.contentWrapper} style={{ background: theme.backgroundColor }}>
               <Row horizontalAlignment='center'>
                 <Routes />
               </Row>

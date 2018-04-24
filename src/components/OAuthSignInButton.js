@@ -27,7 +27,7 @@ class OAuthSignInButton extends React.Component {
   };
 
   getEndpoint() {
-    return ( this.props.endpoint || false);
+    return (this.props.endpoint || false);
   }
 
   handleClick() {

@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
 let __ErrorBoundary;
-if ( process.env.NODE_ENV === "development" || process.env.ERROR_ENV === "development") {
-  const { ErrorBoundary, FallbackView } = require("./WithErrorHandler");
+if (process.env.NODE_ENV === 'development' || process.env.ERROR_ENV === 'development') {
+  const { ErrorBoundary, FallbackView } = require('./WithErrorHandler');
 
   const withErrorHandler = curry((FallbackComponent, Component) => {
     const WithErrorHandler = props => {
@@ -13,7 +13,7 @@ if ( process.env.NODE_ENV === "development" || process.env.ERROR_ENV === "develo
         </ErrorBoundary>
       );
     };
-    WithErrorHandler.displayName = `WithErrorHandler(${Component.displayName || Component.name || "Component"})`;
+    WithErrorHandler.displayName = `WithErrorHandler(${Component.displayName || Component.name || 'Component'})`;
     return WithErrorHandler;
   });
   __ErrorBoundary = ErrorBoundary;
@@ -27,7 +27,7 @@ if ( process.env.NODE_ENV === "development" || process.env.ERROR_ENV === "develo
   class ErrorBoundary extends React.Component {
     componentDidCatch(error, info) {
       const { onError, ..._props } = this.props;
-      if (typeof onError === "function") {
+      if (typeof onError === 'function') {
         try {
           onError.call(this, error, info, _props);
         } catch (e) {}
@@ -57,8 +57,8 @@ if ( process.env.NODE_ENV === "development" || process.env.ERROR_ENV === "develo
 }
 
 function curry(fn) {
-  if (typeof fn !== "function") {
-    throw Error("curry only receive function params!");
+  if (typeof fn !== 'function') {
+    throw Error('curry only receive function params!');
   }
   let _len = fn.length, _args = [];
 
@@ -77,7 +77,7 @@ function curry(fn) {
     }
     return _curry;
   }
-  _curry.toString = function() {
+  _curry.toString = function () {
     return fn.toString();
   };
   return _curry;

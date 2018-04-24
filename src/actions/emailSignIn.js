@@ -2,15 +2,15 @@ import {
   getEmailSignInUrl,
   setCurrentEndpointKey,
   getCurrentEndpointKey
-} from "utils/sessionStorage";
-import {storeCurrentEndpointKey} from "./endpoints";
-import {parseResponse} from "utils/handleFetchResponse";
-import fetch from "utils/fetch";
+} from 'utils/sessionStorage';
+import { storeCurrentEndpointKey } from './endpoints';
+import { parseResponse } from 'utils/handleFetchResponse';
+import fetch from 'utils/fetch';
 
-export const EMAIL_SIGN_IN_START       = "EMAIL_SIGN_IN_START";
-export const EMAIL_SIGN_IN_COMPLETE    = "EMAIL_SIGN_IN_COMPLETE";
-export const EMAIL_SIGN_IN_ERROR       = "EMAIL_SIGN_IN_ERROR";
-export const EMAIL_SIGN_IN_FORM_UPDATE = "EMAIL_SIGN_IN_FORM_UPDATE";
+export const EMAIL_SIGN_IN_START       = 'EMAIL_SIGN_IN_START';
+export const EMAIL_SIGN_IN_COMPLETE    = 'EMAIL_SIGN_IN_COMPLETE';
+export const EMAIL_SIGN_IN_ERROR       = 'EMAIL_SIGN_IN_ERROR';
+export const EMAIL_SIGN_IN_FORM_UPDATE = 'EMAIL_SIGN_IN_FORM_UPDATE';
 
 export function emailSignInFormUpdate(endpoint, key, value) {
   return { type: EMAIL_SIGN_IN_FORM_UPDATE, endpoint, key, value };
@@ -38,10 +38,10 @@ export function emailSignIn(body, endpointKey) {
 
     return fetch(getEmailSignInUrl(currentEndpointKey), {
       headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       },
-      method: "post",
+      method: 'post',
       body: JSON.stringify(body)
     })
       .then(parseResponse)

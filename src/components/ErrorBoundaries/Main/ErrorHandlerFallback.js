@@ -1,6 +1,6 @@
 // Fallback.jsx
-import React from 'react'
-import Modal from './Modal'
+import React from 'react';
+import Modal from './Modal';
 
 const containerStyl = {
   // opacity: 0.9,
@@ -39,7 +39,6 @@ const detailSty = {
   WebkitHighlight: 'none'
 };
 
-
 const componentTableSty = {
   marginLeft: '30px',
   marginTop: '15px',
@@ -65,7 +64,7 @@ export default function Fallback(props) {
       if (matches && matches.length === 4) {
         errorComponents.push({ component: matches[2], source: matches[3] });
       } else {
-        errorComponents.push({ component: msg, source: msg});
+        errorComponents.push({ component: msg, source: msg });
       }
     }
   });
@@ -77,18 +76,18 @@ export default function Fallback(props) {
       <div style={containerStyl}>
         <button style={btnStyl} onClick={closeErrorModal}>Close</button>
         <div>
-          <pre style={{...preSty, color: '#ff0404', fontSize: '1.0em'}}>
+          <pre style={{ ...preSty, color: '#ff0404', fontSize: '1.0em' }}>
             {errorTitle}
           </pre>
-          <div style={{...preSty}}>
-            <table style={{...componentTableSty}}>
+          <div style={{ ...preSty }}>
+            <table style={{ ...componentTableSty }}>
               <tbody>
-              {errorComponents && errorComponents.map(ec =>
-                <tr>
-                  <td style={{...componentNameSty }}>{ec.component}</td>
-                  <td style={{...componentSourceSty }}>{ec.source}</td>
-                </tr>
-              )}
+                {errorComponents && errorComponents.map(ec =>
+                  <tr>
+                    <td style={{ ...componentNameSty }}>{ec.component}</td>
+                    <td style={{ ...componentSourceSty }}>{ec.source}</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -96,21 +95,20 @@ export default function Fallback(props) {
           <p>
             Stack
           </p>
-          <pre style={{...preSty, color: 'rgba(255, 215, 215, 1)'}}>
+          <pre style={{ ...preSty, color: 'rgba(255, 215, 215, 1)' }}>
             {stackTitle}
           </pre>
-          <pre style={{...preSty, color: '#888888'}}>
+          <pre style={{ ...preSty, color: '#888888' }}>
             {stackLines}
           </pre>
           <hr />
           <p>
             ComponentStack
           </p>
-          <pre style={{...preSty, color: '#f3d429'}}>{errorInfo.componentStack}</pre>
+          <pre style={{ ...preSty, color: '#f3d429' }}>{errorInfo.componentStack}</pre>
           <hr />
         </div>
       </div>
     </Modal>
-  )
+  );
 }
-

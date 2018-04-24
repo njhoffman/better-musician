@@ -6,7 +6,7 @@ import { createDevTools } from 'redux-devtools';
 let popup;
 const openChart = (ChartDevTool, store) => {
   const winOptions = 'menubar=no,location=no,resizable=yes,scrollbars=no,statusbar=no,toolbar=no';
-  const size ='width=2400,height=1300';
+  const size = 'width=2400,height=1300';
   const position = 'left=50,top=50';
 
   popup = window.open(null, 'Redux DevTools', `${winOptions},${size},${position}`);
@@ -35,5 +35,4 @@ export default (store) => {
   //     popup.document.getElementById('react-devtools-root')
   //   );
   // }, 10);
-
 };

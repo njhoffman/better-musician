@@ -15,9 +15,8 @@ import ProfileRoute from './Profile';
 import StatsRoute from './Stats';
 import FieldsRoute from './Fields';
 
-
 import { userIsAuthenticatedRedir, userIsNotAuthenticatedRedir, userIsAdminRedir,
-         userIsAuthenticated, userIsNotAuthenticated } from '../auth'
+  userIsAuthenticated, userIsNotAuthenticated } from '../auth';
 
 // Need to apply the hocs here to avoid applying them inside the render method
 // const Login = userIsNotAuthenticatedRedir(LoginRoute);
@@ -42,14 +41,14 @@ class Routes extends Component {
         <Route path='/profile' component={ProtectedProfile} />
         <Route path='/settings' component={ProtectedSettings} />
       </Switch>
-    )
+    );
   }
 }
 
 const logout = () => {
   return {
     type: 'USER_LOGGED_OUT'
-  }
+  };
 };
 
 const mapStateToProps = state => ({

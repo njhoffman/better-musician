@@ -12,7 +12,7 @@ const LoadingIndicator = ({ isLoading, pastDelay, error }) => {
   } else {
     return null;
   }
-}
+};
 
 const LoadRoute = (route) => {
   info(`Loading route: ${route}`);

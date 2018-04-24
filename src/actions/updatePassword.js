@@ -1,11 +1,11 @@
-import {getPasswordUpdateUrl}  from "utils/sessionStorage";
-import {parseResponse} from "utils/handleFetchResponse";
-import fetch from "utils/fetch";
+import { getPasswordUpdateUrl }  from 'utils/sessionStorage';
+import { parseResponse } from 'utils/handleFetchResponse';
+import fetch from 'utils/fetch';
 
-export const UPDATE_PASSWORD_START       = "UPDATE_PASSWORD_START";
-export const UPDATE_PASSWORD_COMPLETE    = "UPDATE_PASSWORD_COMPLETE";
-export const UPDATE_PASSWORD_ERROR       = "UPDATE_PASSWORD_ERROR";
-export const UPDATE_PASSWORD_FORM_UPDATE = "UPDATE_PASSWORD_FORM_UPDATE";
+export const UPDATE_PASSWORD_START       = 'UPDATE_PASSWORD_START';
+export const UPDATE_PASSWORD_COMPLETE    = 'UPDATE_PASSWORD_COMPLETE';
+export const UPDATE_PASSWORD_ERROR       = 'UPDATE_PASSWORD_ERROR';
+export const UPDATE_PASSWORD_FORM_UPDATE = 'UPDATE_PASSWORD_FORM_UPDATE';
 
 export function updatePasswordFormUpdate(endpoint, key, value) {
   return { type: UPDATE_PASSWORD_FORM_UPDATE, endpoint, key, value };
@@ -25,14 +25,14 @@ export function updatePassword(body, endpoint) {
 
     return fetch(getPasswordUpdateUrl(endpoint), {
       headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       },
-      method: "put",
+      method: 'put',
       body: JSON.stringify(body)
     })
       .then(parseResponse)
-      .then(({user}) => dispatch(updatePasswordComplete(endpoint, user)))
-      .catch(({errors}) => dispatch(updatePasswordError(endpoint, errors)));
+      .then(({ user }) => dispatch(updatePasswordComplete(endpoint, user)))
+      .catch(({ errors }) => dispatch(updatePasswordError(endpoint, errors)));
   };
 }

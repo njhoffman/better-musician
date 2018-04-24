@@ -1,34 +1,33 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ErrorBoundaryFallbackComponent from './ErrorBoundaryFallbackComponent';
 
-import {ComponentType} from 'react';
-
+import { ComponentType } from 'react';
 
 class ErrorBoundary extends Component<Props, State> {
   static defaultProps = {
-    FallbackComponent: ErrorBoundaryFallbackComponent,
+    FallbackComponent: ErrorBoundaryFallbackComponent
   };
 
   state = {
     error: null,
-    info: null,
+    info: null
   };
 
   componentDidCatch(error, info) {
-    const {onError} = this.props;
+    const { onError } = this.props;
 
     if (typeof onError === 'function') {
       try {
-        onError.call(this, error, info ? info.componentStack : "");
+        onError.call(this, error, info ? info.componentStack : '');
       } catch (ignoredError) {}
     }
 
-    this.setState({error, info});
+    this.setState({ error, info });
   }
 
   render() {
-    const {children, FallbackComponent} = this.props;
-    const {error, info} = this.state;
+    const { children, FallbackComponent } = this.props;
+    const { error, info } = this.state;
 
     if (error !== null) {
       return (

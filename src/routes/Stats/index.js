@@ -6,4 +6,3 @@ export default Loadable({
   loader: () => import('./components/StatsView'),
   loading: LoadingIndicator
 });
-

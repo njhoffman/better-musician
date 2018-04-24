@@ -16,23 +16,23 @@ const initialScrollTop = (props, state = 0, action) => {
     return 0;
   }
 
-  return action.type === 'UPDATE_SCROLL_TOP' ?
-    action.scrollTop :
-    state;
-}
+  return action.type === 'UPDATE_SCROLL_TOP'
+    ? action.scrollTop
+    : state;
+};
 
 const startConsecutiveToggle = (props, state, action) => {
-  return action.type === 'START_CONSECUTIVE_TOGGLE' ?
-    action.id :
-    state;
-}
+  return action.type === 'START_CONSECUTIVE_TOGGLE'
+    ? action.id
+    : state;
+};
 
 const reducer = (props, state = {}, action) => {
   return {
     initialScrollTop: initialScrollTop(props, state.initialScrollTop, action),
     consecutiveToggleStartId: startConsecutiveToggle(props, state.consecutiveToggleStartId, action)
   };
-}
+};
 
 const styles = {
   container: {
@@ -234,20 +234,20 @@ export default class LogMonitor extends Component {
 
     console.info(this.props);
     return (
-      <div style={{...styles.container, backgroundColor: theme.base00}}>
+      <div style={{ ...styles.container, backgroundColor: theme.base00 }}>
         <div
           style={this.props.hideMainButtons ? styles.elements : { ...styles.elements, top: 30 }}
           ref={this.getRef}
         >
           <ul>
-        {Object.keys(this.props.actionsById).map(id => {
-          // action.meta, action.payload, timestamp
-          // computedStates: error, state: api, form, location ....
-          // nextActionId, currentStateIndex, store, storeSubscripton: onStateChangej
-          return (
-            <li>{this.props.actionsById[id].action.type}</li>
-          )
-        })}
+            {Object.keys(this.props.actionsById).map(id => {
+              // action.meta, action.payload, timestamp
+              // computedStates: error, state: api, form, location ....
+              // nextActionId, currentStateIndex, store, storeSubscripton: onStateChangej
+              return (
+                <li>{this.props.actionsById[id].action.type}</li>
+              );
+            })}
           </ul>
         </div>
       </div>

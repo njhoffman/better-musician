@@ -13,23 +13,23 @@ const initialScrollTop = (props, state = 0, action) => {
     return 0;
   }
 
-  return action.type === 'UPDATE_SCROLL_TOP' ?
-    action.scrollTop :
-    state;
-}
+  return action.type === 'UPDATE_SCROLL_TOP'
+    ? action.scrollTop
+    : state;
+};
 
 const startConsecutiveToggle = (props, state, action) => {
-  return action.type === 'START_CONSECUTIVE_TOGGLE' ?
-    action.id :
-    state;
-}
+  return action.type === 'START_CONSECUTIVE_TOGGLE'
+    ? action.id
+    : state;
+};
 
 const reducer = (props, state = {}, action) => {
   return {
     initialScrollTop: initialScrollTop(props, state.initialScrollTop, action),
     consecutiveToggleStartId: startConsecutiveToggle(props, state.consecutiveToggleStartId, action)
   };
-}
+};
 
 const styles = {
   container: {
@@ -226,7 +226,7 @@ export default class LogMonitor extends Component {
     };
 
     return (
-      <div style={{...styles.container, backgroundColor: theme.base00}}>
+      <div style={{ ...styles.container, backgroundColor: theme.base00 }}>
         <div
           style={{ ...styles.elements, top: 30 }}
           ref={this.getRef}

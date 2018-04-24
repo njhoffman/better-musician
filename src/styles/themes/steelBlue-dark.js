@@ -23,16 +23,16 @@ export default {
   palette:                {
     type:                 'dark',
     primary: {
-      main:               blueGrey['800'],
+      main:               blueGrey['800']
     },
     secondary: {
-      main:               blueGrey['400'],
+      main:               blueGrey['400']
     },
     background: {
       default: grey['900'],
-      paper: grey['900'],
+      paper: grey['900']
       // paper, appBar, contentFrame
-    },
+    }
     // secondary: {
     //   main:               blueGrey['700'],
     // },

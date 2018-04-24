@@ -4,7 +4,6 @@ import { createMuiTheme } from 'material-ui/styles';
 import { init as initLog } from 'shared/logger';
 const { debug, info } = initLog('themes');
 
-
 const instrumentalDefaults = {
   'headerLinksColor' : 'text.primary',
   'footerFiller'     : 'background.default',
@@ -26,5 +25,5 @@ const processTheme = (themeName = 'steelBlue-dark') => {
   // theme.instrumental.footerFiller = theme.instrumental.footerFiller || theme.palette.canvasColor;
   // theme.instrumental.fieldsViewLabel = theme.instrumental.fieldsViewLabel || theme.palette.accent1Color;
   return theme;
-}
+};
 export default processTheme;

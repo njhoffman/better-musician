@@ -12,7 +12,7 @@ export const LoginView = (props) => (
   <Column className='loginView' small={12} medium={10} large={8}>
     <Paper elevation={5}>
       <div className={css.loginContainer}>
-        <Typography variant="title">This is the Login Page</Typography>
+        <Typography variant='title'>This is the Login Page</Typography>
         <EmailSignInForm next={props.handleLoginSuccess} />
       </div>
     </Paper>

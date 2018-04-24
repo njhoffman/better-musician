@@ -122,9 +122,9 @@ export class EmailSignUpForm extends React.Component {
           </Column>
           <Column centerOnSmall small={12} medium={7} pullOnMedium={5}>
             <Button
-              variant="raised"
+              variant='raised'
               className={css.resetButton}
-              color="secondary"
+              color='secondary'
               icon={<HelpIcon />}>
               Reset Password
             </Button>

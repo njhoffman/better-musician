@@ -1,11 +1,11 @@
-import {getPasswordUpdateUrl}  from "utils/sessionStorage";
-import {parseResponse} from "utils/handleFetchResponse";
-import fetch from "utils/fetch";
+import { getPasswordUpdateUrl }  from 'utils/sessionStorage';
+import { parseResponse } from 'utils/handleFetchResponse';
+import fetch from 'utils/fetch';
 
-export const UPDATE_PASSWORD_MODAL_START       = "UPDATE_PASSWORD_MODAL_START";
-export const UPDATE_PASSWORD_MODAL_COMPLETE    = "UPDATE_PASSWORD_MODAL_COMPLETE";
-export const UPDATE_PASSWORD_MODAL_ERROR       = "UPDATE_PASSWORD_MODAL_ERROR";
-export const UPDATE_PASSWORD_MODAL_FORM_UPDATE = "UPDATE_PASSWORD_MODAL_FORM_UPDATE";
+export const UPDATE_PASSWORD_MODAL_START       = 'UPDATE_PASSWORD_MODAL_START';
+export const UPDATE_PASSWORD_MODAL_COMPLETE    = 'UPDATE_PASSWORD_MODAL_COMPLETE';
+export const UPDATE_PASSWORD_MODAL_ERROR       = 'UPDATE_PASSWORD_MODAL_ERROR';
+export const UPDATE_PASSWORD_MODAL_FORM_UPDATE = 'UPDATE_PASSWORD_MODAL_FORM_UPDATE';
 
 export function updatePasswordModalFormUpdate(endpoint, key, value) {
   return { type: UPDATE_PASSWORD_MODAL_FORM_UPDATE, endpoint, key, value };
@@ -25,14 +25,14 @@ export function updatePasswordModal(body, endpointKey) {
 
     return fetch(getPasswordUpdateUrl(endpointKey), {
       headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       },
-      method: "put",
+      method: 'put',
       body: JSON.stringify(body)
     })
       .then(parseResponse)
-      .then(({user}) => dispatch(updatePasswordModalComplete(endpointKey, user)))
-      .catch(({errors}) => dispatch(updatePasswordModalError(endpointKey, errors)));
+      .then(({ user }) => dispatch(updatePasswordModalComplete(endpointKey, user)))
+      .catch(({ errors }) => dispatch(updatePasswordModalError(endpointKey, errors)));
   };
 }

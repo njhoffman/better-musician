@@ -12,7 +12,7 @@ import apiMiddleware, { actionLogger }  from 'middleware/api';
 import { composeWithDevTools } from 'remote-redux-devtools';
 
 import { DevTools } from 'components/DevTools';
-import { DevToolsChart } from 'components/DevToolsChart'
+import { DevToolsChart } from 'components/DevToolsChart';
 
 import { init as initLog } from 'shared/logger';
 const { info } = initLog('createStore');
@@ -34,7 +34,7 @@ export default (initialState = {}, history) => {
   const middleware = [apiMiddleware, thunkMiddleware, actionLogger, routerMiddleware(history)];
   const enhancers = useDevExtension ? []
     : [ DevTools.instrument({ shouldCatchErrors: false })];
-   /* DevToolsChart.instrument() */
+  /* DevToolsChart.instrument() */
 
   const store = createStore(
     makeRootReducer(),

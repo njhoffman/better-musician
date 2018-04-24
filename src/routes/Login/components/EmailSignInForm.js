@@ -106,8 +106,7 @@ export class EmailSignInForm extends React.Component {
               icon={<ExitToAppIcon />}
               onClick={this.handleSubmit}
               primary
-              {...this.props.inputProps.submit}>
-              </ButtonLoader>
+              {...this.props.inputProps.submit} />
           </Column>
         </Row>
       </form>

@@ -1,7 +1,7 @@
 const initialState = {
   data: null,
   isLoading: false
-}
+};
 
 export default function userUpdate(state = initialState, { type, payload }) {
   switch (type) {

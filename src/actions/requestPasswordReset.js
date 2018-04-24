@@ -1,12 +1,12 @@
-import {getPasswordResetRequestUrl, getPasswordResetRedirectUrl}  from "utils/sessionStorage";
-import {parseResponse} from "utils/handleFetchResponse";
-import extend from "extend";
-import fetch from "utils/fetch";
+import { getPasswordResetRequestUrl, getPasswordResetRedirectUrl }  from 'utils/sessionStorage';
+import { parseResponse } from 'utils/handleFetchResponse';
+import extend from 'extend';
+import fetch from 'utils/fetch';
 
-export const REQUEST_PASSWORD_RESET_START       = "REQUEST_PASSWORD_RESET_START";
-export const REQUEST_PASSWORD_RESET_COMPLETE    = "REQUEST_PASSWORD_RESET_COMPLETE";
-export const REQUEST_PASSWORD_RESET_ERROR       = "REQUEST_PASSWORD_RESET_ERROR";
-export const REQUEST_PASSWORD_RESET_FORM_UPDATE = "REQUEST_PASSWORD_RESET_FORM_UPDATE";
+export const REQUEST_PASSWORD_RESET_START       = 'REQUEST_PASSWORD_RESET_START';
+export const REQUEST_PASSWORD_RESET_COMPLETE    = 'REQUEST_PASSWORD_RESET_COMPLETE';
+export const REQUEST_PASSWORD_RESET_ERROR       = 'REQUEST_PASSWORD_RESET_ERROR';
+export const REQUEST_PASSWORD_RESET_FORM_UPDATE = 'REQUEST_PASSWORD_RESET_FORM_UPDATE';
 
 export function requestPasswordResetFormUpdate(endpoint, key, value) {
   return { type: REQUEST_PASSWORD_RESET_FORM_UPDATE, endpoint, key, value };
@@ -26,16 +26,16 @@ export function requestPasswordReset(body, endpoint) {
 
     return fetch(getPasswordResetRequestUrl(endpoint), {
       headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       },
-      method: "post",
+      method: 'post',
       body: JSON.stringify(extend(body, {
         redirect_url: getPasswordResetRedirectUrl(endpoint)
       }))
     })
       .then(parseResponse)
-      .then(({message}) => dispatch(requestPasswordResetComplete(endpoint, message)))
-      .catch(({errors}) => dispatch(requestPasswordResetError(endpoint, errors)));
+      .then(({ message }) => dispatch(requestPasswordResetComplete(endpoint, message)))
+      .catch(({ errors }) => dispatch(requestPasswordResetError(endpoint, errors)));
   };
 }

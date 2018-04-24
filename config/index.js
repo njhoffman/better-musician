@@ -43,7 +43,7 @@ const config = {
   }
 };
 
-const base = function() {
+const base = function () {
   const args = [config.base].concat([].slice.call(arguments));
   return path.resolve.apply(path, args);
 };
@@ -80,5 +80,5 @@ config.globals = {
 
 configWebpack(config);
 
-logger.debug({ _trace: { config }}, `Finished configuring for environment: ${config.env}`);
+logger.debug({ _trace: { config } }, `Finished configuring for environment: ${config.env}`);
 module.exports = config;

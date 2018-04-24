@@ -1,5 +1,5 @@
-import React from "react";
-import FallbackView from "./ErrorHandlerFallback";
+import React from 'react';
+import FallbackView from './ErrorHandlerFallback';
 
 class ErrorBoundary extends React.PureComponent {
   constructor() {
@@ -23,7 +23,7 @@ class ErrorBoundary extends React.PureComponent {
 
     // Report errors here
     const { onError, FallbackComponent, ..._props } = this.props;
-    if (typeof onError === "function") {
+    if (typeof onError === 'function') {
       try {
         onError.call(this, error, info, _props);
       } catch (e) {}

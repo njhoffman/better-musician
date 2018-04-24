@@ -21,20 +21,20 @@ console.info('css', css);
 
 export const DevTools = createDevTools(
   <DockMonitor
-    defaultIsVisible={true}
-    defaultPosition="bottom"
-    changeMonitorKey="ctrl-m"
-    toggleVisibilityKey="ctrl-shift-h"
-    changePositionKey="ctrl-q">
+    defaultIsVisible
+    defaultPosition='bottom'
+    changeMonitorKey='ctrl-m'
+    toggleVisibilityKey='ctrl-shift-h'
+    changePositionKey='ctrl-q'>
     {/* <RemoteMonitor /> */}
-    <MultipleMonitors className="multi-monitor" theme="twilight">
-      <CustomLauncher theme="twilight" inline={true}></CustomLauncher>
-      <SliderMonitor theme="twilight" inline={true}></SliderMonitor>
+    <MultipleMonitors className='multi-monitor' theme='twilight'>
+      <CustomLauncher theme='twilight' inline />
+      <SliderMonitor theme='twilight' inline />
       <Inspector
-        theme="twilight"
-        expandDiffs={true}
+        theme='twilight'
+        expandDiffs
         invertTheme={false}
-        supportImmutable={true}
+        supportImmutable
         tabs={defaultTabs => [...defaultTabs]}
       />
     </MultipleMonitors>
@@ -44,7 +44,7 @@ export const DevTools = createDevTools(
   </DockMonitor>
 );
 
-export default DevTools
+export default DevTools;
 
 // export default (props) => { console.info('hey props', props); return DevTools; }
 

@@ -165,11 +165,11 @@ export class DrawerMenu extends Component {
           {/* </OAuthSignInButton> */}
 
           {/* icon={googleIconComponent} */}
-        <Link to='/profile'>
-          <ButtonLoader
-            onClick={() => { this.props.hideDrawerMenu(); }}
-            label="Sign In With Email" />
-        </Link>
+          <Link to='/profile'>
+            <ButtonLoader
+              onClick={() => { this.props.hideDrawerMenu(); }}
+              label='Sign In With Email' />
+          </Link>
         </Drawer>
       </div>
     );

@@ -21,7 +21,7 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 
 // Initial routing state
 const routeInitialState = {
-  location: null,
+  location: null
 };
 
 const routeReducer = (state = routeInitialState, action) => {
@@ -31,7 +31,7 @@ const routeReducer = (state = routeInitialState, action) => {
     default:
       return state;
   }
-}
+};
 
 export const makeRootReducer = (asyncReducers, injectedModels = []) => {
   if (injectedModels.length > 0) {

@@ -4,9 +4,9 @@ const toTitle = (error, componentStack) => {
   return `${error.toString()}\n\nThis is located at:${componentStack}`;
 };
 
-const ErrorBoundaryFallbackComponent = ({componentStack, error}) => (
+const ErrorBoundaryFallbackComponent = ({ componentStack, error }) => (
   <div style={style} title={toTitle(error, componentStack)}>
-    <svg style={svgStyle} viewBox="0 0 24 24" preserveAspectRatio="xMidYMid">
+    <svg style={svgStyle} viewBox='0 0 24 24' preserveAspectRatio='xMidYMid'>
       <path
         d={`M20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,
         12M22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,
@@ -32,12 +32,12 @@ const style = {
   backgroundColor: '#C00',
   color: '#FFF',
   boxSizing: 'border-box',
-  cursor: 'help',
+  cursor: 'help'
 };
 
 const svgStyle = {
   fill: 'currentColor',
-  flex: '1 1 auto',
+  flex: '1 1 auto'
 };
 
 export default ErrorBoundaryFallbackComponent;
