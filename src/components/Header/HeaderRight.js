@@ -34,7 +34,7 @@ class HeaderRight extends Component {
             to='/profile'>
             <Avatar
               icon={<AvatarIcon />}
-              backgroundColor={this.props.theme.palette.primary1Color}
+              style={{ backgroundColor: this.props.theme.palette.primary1Color }}
               size={35} />
           </Link>
         </div>
@@ -53,6 +53,7 @@ class HeaderRight extends Component {
             <Button
               style={buttonStyle}
               variant="raised"
+              color="primary"
               className={css.loginButton}>
               LOGIN
             </Button>
@@ -63,6 +64,7 @@ class HeaderRight extends Component {
             <Button
               style={buttonStyle}
               variant="raised"
+              color="secondary"
               className={css.registerButton}>
               REGISTER
             </Button>

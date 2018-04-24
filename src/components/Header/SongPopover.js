@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Row, Column } from 'react-foundation';
 import { Popover } from 'material-ui';
 import withTheme from 'material-ui/styles/withTheme';
@@ -148,4 +148,4 @@ const mapStateToProps = (state) => ({
   currentView:     state.location ? state.location.currentView : null
 });
 
-export default connect(mapStateToProps, mapActionCreators)(withTheme()(SongPopover));
+export default withTheme()(connect(mapStateToProps, mapActionCreators)(SongPopover));

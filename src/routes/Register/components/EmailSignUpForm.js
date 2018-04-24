@@ -8,10 +8,10 @@ import { Row, Column } from 'react-foundation';
 
 import { MdHelp as HelpIcon } from 'react-icons/lib/md';
 
-import { RaisedButton } from 'material-ui';
+import { Button } from 'material-ui';
 import ButtonLoader from 'components/ButtonLoader';
 import FormField from 'components/Field';
-// import { emailSignUp } from 'redux-auth';
+import { emailSignUp } from 'actions/emailSignUp';
 import css from './EmailSignUpForm.scss';
 
 export class EmailSignUpForm extends React.Component {
@@ -19,7 +19,7 @@ export class EmailSignUpForm extends React.Component {
     auth:                   PropTypes.object.isRequired,
     endpoint:               PropTypes.string,
     next:                   PropTypes.func.isRequired,
-    // emailSignUp:            PropTypes.func.isRequired,
+    emailSignUp:            PropTypes.func.isRequired,
     dispatch:               PropTypes.func.isRequired,
     registerForm:           PropTypes.object,
     inputProps:             PropTypes.shape({
@@ -46,9 +46,9 @@ export class EmailSignUpForm extends React.Component {
 
   getEndpoint() {
     return (
-      this.props.endpoint ||
-      this.props.auth.getIn(['configure', 'currentEndpointKey']) ||
-      this.props.auth.getIn(['configure', 'defaultEndpointKey'])
+      this.props.endpoint || false
+      // this.props.auth.getIn(['configure', 'currentEndpointKey']) ||
+      // this.props.auth.getIn(['configure', 'defaultEndpointKey'])
     );
   }
 
@@ -121,12 +121,13 @@ export class EmailSignUpForm extends React.Component {
             </ButtonLoader>
           </Column>
           <Column centerOnSmall small={12} medium={7} pullOnMedium={5}>
-            <RaisedButton
-              label='Reset Password'
+            <Button
+              variant="raised"
               className={css.resetButton}
-              secondary
-              icon={<HelpIcon />}
-            />
+              color="secondary"
+              icon={<HelpIcon />}>
+              Reset Password
+            </Button>
           </Column>
         </Row>
       </form>
@@ -137,9 +138,9 @@ export class EmailSignUpForm extends React.Component {
 const mapStateToProps = (state) => {
   return {
     auth:         state.auth,
-    registerForm: state.form.register
-    // emailSignUp:  emailSignUp
+    registerForm: state.form.register,
+    emailSignUp:  emailSignUp
   };
 };
 
-export default connect(mapStateToProps)(withTheme()(reduxForm({ form: 'register' })(EmailSignUpForm)));
+export default withTheme()(connect(mapStateToProps)(reduxForm({ form: 'register' })(EmailSignUpForm)));

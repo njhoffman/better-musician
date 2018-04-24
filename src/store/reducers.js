@@ -1,12 +1,9 @@
-// import { combineReducers } from 'redux-immutablejs';
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import { authStateReducer } from './auth';
-import locationReducer from './location';
 import uiReducer from './ui';
 import apiReducer from './api';
 import userReducer from './user';
-import { routerReducer } from 'react-router-redux';
 
 import { init as initLog } from 'shared/logger';
 const { info } = initLog('reducers');
@@ -19,14 +16,31 @@ export const orm = new ORM();
 orm.register(...models);
 const ormReducer = createReducer(orm);
 
+import { routerReducer } from 'react-router-redux';
+import { LOCATION_CHANGE } from 'react-router-redux';
+
+// Initial routing state
+const routeInitialState = {
+  location: null,
+};
+
+const routeReducer = (state = routeInitialState, action) => {
+  switch (action.type) {
+    case LOCATION_CHANGE:
+      return ({ ...state, location: action.payload });
+    default:
+      return state;
+  }
+}
+
 export const makeRootReducer = (asyncReducers, injectedModels = []) => {
   if (injectedModels.length > 0) {
     orm.register(...injectedModels);
   }
   const reducers = {
     orm:            ormReducer,
-    location:       locationReducer,
-    router:         routerReducer,
+    // router:         routerReducer,
+    route:         routeReducer,
     form:           formReducer,
     ui:             uiReducer,
     api:            apiReducer,
@@ -35,7 +49,7 @@ export const makeRootReducer = (asyncReducers, injectedModels = []) => {
     auth:           authStateReducer,
     ...asyncReducers
   };
-  info(`Combining reducers: ${Object.keys(reducers)}`);
+  info(`Combining reducers: ${Object.keys(reducers).join(' - ')}`);
 
   return combineReducers(reducers);
 };

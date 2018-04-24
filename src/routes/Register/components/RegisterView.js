@@ -2,7 +2,7 @@ import React  from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Column } from 'react-foundation';
-import { Paper } from 'material-ui';
+import { Paper, Typography } from 'material-ui';
 import OAuthSignInButton from 'components/OAuthSignInButton';
 // import { emailSignUpFormUpdate, emailSignUp } from 'redux-auth';
 
@@ -26,8 +26,8 @@ export const RegisterView = (props) => (
   <Column className='registerView' small={12} medium={10} large={8}>
     <Paper elevation={5}>
       <div className={css.registerContainer}>
-        <h3>Sign Up for instrumental.io</h3>
-        <p>It's free. It's easy. It takes 5 seconds.</p>
+        <Typography variant="title">Sign Up for instrumental.io</Typography>
+        <Typography>It's free. It's easy. It takes 5 seconds.</Typography>
         <div className={css.fieldWrapper}>
           <OAuthSignInButton
             className={css.facebookButton}
@@ -38,20 +38,18 @@ export const RegisterView = (props) => (
           </OAuthSignInButton>
         </div>
         <div className={css.fieldWrapper}>
-          {/* <OAuthSignInButton */}
-          {/*   className={css.googleButton} */}
-          {/*   {...so.googleButton} */}
-          {/*   icon={<SocialIcon name='google' className={css.googleIcon} />} */}
-          {/*   provider='google'> */}
-          {/*   Sign Up With Google */}
-          {/* </OAuthSignInButton> */}
+          <OAuthSignInButton
+            className={css.googleButton}
+            {...so.googleButton}
+            icon={<SocialIcon name='google' className={css.googleIcon} />}
+            provider='google'>
+            Sign Up With Google
+          </OAuthSignInButton>
         </div>
         <div className={css.divider}>
-          <span>or, sign up with email</span>
+          <Typography>or, sign up with email</Typography>
         </div>
-        {/* <EmailSignUpForm */}
-        {/*   next={props.handleRegisterSuccess} */}
-        {/* /> */}
+        <EmailSignUpForm next={props.handleRegisterSuccess} />
       </div>
     </Paper>
   </Column>

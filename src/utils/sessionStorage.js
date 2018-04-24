@@ -1,5 +1,9 @@
 import Cookies from "browser-cookies";
 import * as C from "./constants";
+import _ from 'lodash';
+
+import { init as initLog } from 'shared/logger';
+const { debug } = initLog('auth-session');
 
 // even though this code shouldn't be used server-side, node will throw
 // errors if "window" is used
@@ -129,13 +133,24 @@ export const removeData = (key) => {
 }
 
 export const persistData = (key, val) => {
-  val = JSON.stringify(val);
+  const sVal = JSON.stringify(val);
   switch (root.authState.currentSettings.storage) {
     case "localStorage":
-      root.localStorage.setItem(key, val);
+      if (_.isObject(val)) {
+        debug(`Saving in local storage: ${key}`, val);
+      } else {
+        debug(`Saving in local storage => "${key} : ${val}"`);
+      }
+      root.localStorage.setItem(key, sVal);
       break;
     default:
-      Cookies.set(key, val, {
+      const { cookiePath } = root.authState.currentSettings;
+      if (_.isObject(val)) {
+        debug(`Saving to cookies ${key} at ${cookiePath}`, val);
+      } else {
+        debug(`Saving to cookies => "${key} : ${val}" (location ${cookiePath})`);
+      }
+      Cookies.set(key, sVal, {
         expires: root.authState.currentSettings.cookieExpiry,
         path:    root.authState.currentSettings.cookiePath
       });

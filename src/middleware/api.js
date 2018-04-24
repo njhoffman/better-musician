@@ -1,5 +1,6 @@
 // import { fetch } from 'redux-auth';
 import { init as initLog } from 'shared/logger';
+import { padRight } from 'shared/util';
 import _ from 'lodash';
 import webpackVariables from 'webpackVariables';
 
@@ -50,6 +51,26 @@ const apiFetch = (endpoint, options) => {
   //     })
   //   );
 };
+
+export const actionLogger = (store) => next => action => {
+  // meta.form, meta.field
+  const { warn, trace } = initLog('api-action');
+  if (_.isUndefined(action)) {
+    warn('undefined action');
+  } else {
+    if (action.payload) {
+      trace([
+        `%c ${padRight(action.type, 30)} %c ${JSON.stringify(action.payload)}`,
+        'color: #ffffff;', 'color: #8866aa;'
+      ]);
+    } else {
+      trace(`${padRight(action.type, 30)}`);
+    }
+    // debug(`${action.type}`, { payload: action.payload, meta: action.meta });
+    next(action);
+  }
+};
+
 
 export default (store) => next => action => {
   if (_.isUndefined(action)) {

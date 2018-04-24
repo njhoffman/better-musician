@@ -18,3 +18,36 @@ $breakpoints: (
 // @include foundation-grid;
 @include foundation-flex-classes;
 // @include foundation-everything;
+
+/* override third party css here */
+.actionList-0-2 {
+  /* fancy scrollbars */
+  width: 20px;
+  overflow: auto;
+  float: left;
+  margin: 0 10px;
+
+  .actionListRows-0-4 {
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #222;
+			border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #666;
+			border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-button {
+      background: #222;
+      height: 15px;
+      border-radius: 50%;
+    }
+	}
+}
+
+

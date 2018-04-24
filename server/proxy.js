@@ -1,7 +1,7 @@
 const http = require('http');
 const httpProxy = require('http-proxy');
 
-module.exports = ({ config, app, logger, requestLog }) => {
+module.exports = ({ config, app, logger, sdc }) => {
   // Proxy to API server
   logger = logger.child({ subsystem: 'app:proxy' });
   const server = new http.Server(app);
@@ -15,17 +15,21 @@ module.exports = ({ config, app, logger, requestLog }) => {
   server.on('upgrade', (req, socket, head) => { proxy.ws(req, socket, head); });
 
   proxy.on('proxyReq', (proxyReq, req, res, options) => {
-    // proxyReq.setHeader('Content-Type', 'application/json');
-    // proxyReq.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
+    const requestLog = require('./utils/requestLog')(sdc, logger);
+    proxyReq.setHeader('Content-Type', 'application/json');
+    proxyReq.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
     req._isProxy = true;
     return requestLog(req, res);
   });
 
   proxy.on('proxyRes', (proxyRes, req, res, options) => {
+    const responseLog = require('./utils/responseLog')();
     // forward cookie set from proxy
     if (proxyRes.headers['set-cookie']) {
       res.header['Set-Cookie'] = proxyRes.headers['set-cookie'];
     }
+    const responseTime = proxyRes.headers['x-response-time'];
+    return responseLog(req, res, responseTime);
   });
 
   proxy.on('error', (err, req, res) => {

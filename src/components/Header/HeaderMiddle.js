@@ -79,7 +79,7 @@ class HeaderMiddle extends Component {
   renderSearchButton() {
     return (
       <a className={css.headerLink}
-        onTouchTap={(e) => this.toggleSearchPopover(e)}>
+        onClick={(e) => this.toggleSearchPopover(e)}>
         <span className={css.iconWrapper}>
           <SearchIcon className={css.icon} />
           <span className={css.iconText}>Search</span>

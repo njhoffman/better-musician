@@ -14,8 +14,7 @@
   "watch": [
     "bin",
     "server",
-    "config",
-    "shared"
+    "config"
   ],
   "env": {
     "NODE_ENV": "development"

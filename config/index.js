@@ -80,5 +80,5 @@ config.globals = {
 
 configWebpack(config);
 
-logger.debug({ _info: { config }}, `Finished configuring for environment: ${config.env}`);
+logger.debug({ _trace: { config }}, `Finished configuring for environment: ${config.env}`);
 module.exports = config;

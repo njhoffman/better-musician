@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const uuid = require('uuid/v4');
+const uuid = require('uuid');
 const useragent = require('useragent');
 const geoip = require('geoip-lite');
 const url = require('url');

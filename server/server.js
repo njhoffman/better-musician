@@ -28,7 +28,7 @@ app.use(addRequestId);
 app.use(userAgent.express());
 app.use(responseTime(serverUtils.responseLog));
 app.use(serverUtils.requestLog);
-setupProxy({ config, logger, app, requestLog: serverUtils.requestLog });
+setupProxy({ config, logger, app, sdc });
 
 // Rewrites all routes requests to the root /index.html file (ignoring file requests).
 // Remove this middleware if universal rendering is desired

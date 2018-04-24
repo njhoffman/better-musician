@@ -18,9 +18,6 @@ import processTheme from 'styles/themes';
 import { init as initLog } from 'shared/logger';
 const { info } = initLog('AppContainer');
 
-import createHistory from 'history/createBrowserHistory';
-const history = createHistory();
-
 const theme = processTheme();
 
 class AppContainer extends Component {
@@ -32,7 +29,7 @@ class AppContainer extends Component {
   render() {
     return (
       <MuiThemeProvider theme={theme} >
-        <ConnectedRouter history={history}>
+        <ConnectedRouter history={this.props.history}>
           <div className={css.appWrapper}>
             <DrawerMenu />
             <Snackbar />
@@ -55,6 +52,7 @@ const mapStateToProps = (state) => ({
   theme: state.auth && state.auth.get('user') && state.auth.get('user').get('attributes')
     ? state.auth.get('user').get('attributes').get('visualTheme')
     : 'steelBlue-dark'
+
 });
 
 export default connect(mapStateToProps)(AppContainer);

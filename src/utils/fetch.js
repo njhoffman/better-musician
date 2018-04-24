@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import originalFetch from "isomorphic-fetch";
 import * as C from "./constants";
 import extend from "extend";
@@ -71,5 +72,11 @@ export default (url, options = {}) => {
   extend(options.headers, getAuthHeaders(url));
   debug(`Fetching ${url}`, options.headers);
   return originalFetch(url, options)
-    .then(resp => updateAuthCredentials(resp));
+    .then(resp => {
+      debug(`Fetch response: ${resp.status} ${resp.statusText}`);
+      if (!_.isEmpty(resp.headers) || !_.isEmpty(resp.body)) {
+        debug(_.pick(resp, ['body', 'headers']));
+      }
+      return updateAuthCredentials(resp);
+    });
 }

@@ -2,7 +2,7 @@ const _ = require('lodash');
 
 module.exports = (config, sharedUtils, outputHeap) =>
   (mwStats, { state, stats, log, filename }) => {
-    const { numCommas, padLeft, padRight } = sharedUtils;
+    const { numCommas, padLeft, padRight, humanMemorySize } = sharedUtils;
     // compilation, hash, starttime
     // stats.compilation: hooks, options, profile, outputOptions, performance, chunks, chunkGroupos,
     // namedChunks, namedChunkGroups, modules, assets, name, fullHash, hash
@@ -12,7 +12,6 @@ module.exports = (config, sharedUtils, outputHeap) =>
       const duration = stats.endTime - stats.startTime;
       const fmtDuration = duration >= 1000 ? `${(duration / 1000).toFixed(1)}s` : `${duration}ms`;
 
-      // log.info(stats.toString(mwStats));
       if (stats.hasErrors()) {
         stats.compilation.errors.forEach(se => log.error(`${se.message.replace(/\r\n/g, '')}`));
       } else if (stats.hasWarnings()) {
@@ -68,16 +67,40 @@ module.exports = (config, sharedUtils, outputHeap) =>
         }
       });
 
+      // log.info(stats.toString(mwStats));
+      const assets = Object.keys(stats.compilation.assets)
+        .map(key => ({
+          ...stats.compilation.assets[key],
+          name: key,
+          overLimit: stats.compilation.assets[key].isOverSizeLimit ? 'over-limit' : '',
+          size: stats.compilation.assets[key].size()
+        }));
+
+      assets
+        // .sort((a, b) => a.name > b.name)
+        .forEach(asset => {
+          if (asset.overLimit) {
+            log.warn({ color: 'warn' },
+              `${padRight(asset.name, 50)} %${humanMemorySize(asset.size)}%`);
+          } else {
+            log.trace({ color: 'bold' },
+              `${padRight(asset.name, 50)} %${humanMemorySize(asset.size)}%`);
+          }
+        });
+
       log.info(
         `Built ${numCommas(modules.length)} modules into ${stats.compilation.chunks.length} chunks ` +
-        `(app: ${modInfo.app.mods.length} total with ${numCommas(modInfo.app.deps)} deps, ` +
-        `depth: ${modInfo.app.maxDepth}) (node_modules: ${numCommas(modInfo.node.mods.length)} ` +
-        `total with ${numCommas(modInfo.node.deps)} deps, depth: ${modInfo.node.maxDepth})`
+        `(app: ${modInfo.app.mods.length} mods / ${numCommas(modInfo.app.deps)} deps x` +
+        `${modInfo.app.maxDepth}) (node_modules: ${numCommas(modInfo.node.mods.length)} mods / ` +
+        `${numCommas(modInfo.node.deps)} deps x${modInfo.node.maxDepth})`
       );
 
       // EntryPoint { groupDebugId, name, chunks, origins, rumtimeChunk: { Chunk },
       // _children: { SortableSet }, _parents: {SortableSet}, _blocks: {SortableSet }
       // console.info(stats.compilation.chunkGroups, 'chunks');
+      stats.compilation.chunkGroups.forEach(cg => {
+        // console.info(cg.name, cg.runtimeChunk); // runtimeChunk
+      });
       // Chunk: id, ids, debugId, name, entryModule: { _modules: MultiModule, _groups: SortableSet },
       // files, rendered, hash, contentHash, renderedHash, chunkReason, extraSync
       // console.info(stats.compilation.chunks, 'chunks');

@@ -4,20 +4,26 @@ import webpackVariables from 'webpackVariables';
 import { Provider } from 'react-redux';
 
 import ErrorBoundary from 'components/ErrorBoundaries/Main';
-import DevTools from 'components/DevTools';
 import AppContainer from 'components/AppContainer';
 import createStore from './store/createStore';
-import { init as initLog } from 'shared/logger';
 
 // needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 import injectTapEventPlugin from 'react-fastclick';
 injectTapEventPlugin();
+import { configure as authConfigure } from './actions/configure';
 
+import DevTools from 'components/DevTools';
+import showChart from 'utils/showChart';
+import createHistory from 'history/createBrowserHistory';
+
+import { init as initLog } from 'shared/logger';
 const { info } = initLog('app');
 
+const history = createHistory();
+
 const initialState = window.___INITIAL_STATE__;
-const store = createStore(initialState);
+const store = createStore(initialState, history);
 
 const MOUNT_NODE = document.getElementById('root');
 
@@ -44,9 +50,8 @@ const memoryStats = () => {
   }
 };
 
-import { configure as authConfigure } from './actions/configure';
-
 const render = () => {
+
   store.dispatch(authConfigure({
     apiUrl                : __API_URL__,
     signOutPath           : '/users/logout',
@@ -70,7 +75,7 @@ const render = () => {
     ReactDOM.render(
       <Provider store={store}>
         <ErrorBoundary onError={onError}>
-          <AppContainer />
+          <AppContainer history={history} />
           <DevTools />
         </ErrorBoundary>
       </Provider>,
@@ -106,11 +111,14 @@ if (__DEV__) {
       renderDev();
     });
   }
-  renderDev();
   window.addEventListener('message', e => {
-    console.clear();
+    // console.clear();
   });
+  renderDev();
+  // showChart(store);
+
 } else {
   render();
 }
 
+export { store };

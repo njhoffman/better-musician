@@ -62,7 +62,11 @@ export default function Fallback(props) {
   error.message.split('\n').forEach((msg, i) => {
     if (i > 0) {
       const matches = msg.match(/(in) ([^ ]+) \((.*)\)$/);
-      errorComponents.push({ component: matches[2], source: matches[3] });
+      if (matches && matches.length === 4) {
+        errorComponents.push({ component: matches[2], source: matches[3] });
+      } else {
+        errorComponents.push({ component: msg, source: msg});
+      }
     }
   });
   const stackTitle = error.stack.split('\n')[0];
