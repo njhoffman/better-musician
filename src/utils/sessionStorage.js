@@ -3,14 +3,14 @@ import * as C from './constants';
 import _ from 'lodash';
 
 import { init as initLog } from 'shared/logger';
-const { debug } = initLog('auth-session');
+const { debug, trace } = initLog('auth-session');
 
 // even though this code shouldn't be used server-side, node will throw
 // errors if "window" is used
-const root = Function('return this')() || (42, eval)('this');
+// const root = Function('return this')() || (42, eval)('this');
 
 // stateful variables that persist throughout session
-root.authState = {
+window.authState = {
   currentSettings:    {},
   currentEndpoint:    {},
   defaultEndpointKey: null
@@ -22,17 +22,16 @@ const unescapeQuotes = (val) => val && val.replace(/("|')/g, '');
 export const getSessionEndpointKey = (k) => {
   let key = k || getCurrentEndpointKey();
   if (!key) {
-    throw 'You must configure redux-auth before use.';
-  } else {
-    return key;
+    throw new Error('Authorization is not configured');
   }
+  return key;
 };
 
-export const getCurrentSettings = () => root.authState.currentSettings;
-export const setCurrentSettings = (s) => (root.authState.currentSettings = s);
+export const getCurrentSettings = () => window.authState.currentSettings;
+export const setCurrentSettings = (s) => (window.authState.currentSettings = s);
 
-export const getCurrentEndpoint = () => root.authState.currentEndpoint;
-export const setCurrentEndpoint = (e) => (root.authState.currentEndpoint = e);
+export const getCurrentEndpoint = () => window.authState.currentEndpoint;
+export const setCurrentEndpoint = (e) => (window.authState.currentEndpoint = e);
 
 export const getCurrentEndpointKey = () => (retrieveData(C.SAVED_CONFIG_KEY) || getDefaultEndpointKey());
 export const setDefaultEndpointKey = (k) => (persistData(C.DEFAULT_CONFIG_KEY, k));
@@ -42,9 +41,9 @@ export const setCurrentEndpointKey = (k) => (persistData(C.SAVED_CONFIG_KEY, k |
 
 // reset stateful variables
 export const resetConfig = () => {
-  root.authState = root.authState || {};
-  root.authState.currentSettings = {};
-  root.authState.currentEndpoint = {};
+  window.authState = root.authState || {};
+  window.authState.currentSettings = {};
+  window.authState.currentEndpoint = {};
   destroySession();
 };
 
@@ -54,17 +53,16 @@ export const destroySession = () => {
     C.SAVED_CONFIG_KEY
   ];
 
+  debug('Destroying session');
   for (var key in sessionKeys) {
     key = sessionKeys[key];
 
     // kill all local storage keys
-    if (root.localStorage) {
-      root.localStorage.removeItem(key);
-    }
+    window.localStorage && window.localStorage.removeItem(key);
 
     // remove from base path in case config is not specified
     Cookies.erase(key, {
-      path: root.authState.currentSettings.cookiePath || '/'
+      path: window.authState.currentSettings.cookiePath || '/'
     });
   }
 };
@@ -72,7 +70,7 @@ export const destroySession = () => {
 export const getInitialEndpointKey = () =>
   unescapeQuotes(
     Cookies.get(C.SAVED_CONFIG_KEY) ||
-    (root.localStorage && root.localStorage.getItem(C.SAVED_CONFIG_KEY))
+    (window.localStorage && window.localStorage.getItem(C.SAVED_CONFIG_KEY))
   );
 
 export const getSessionEndpoint = (k) => getCurrentEndpoint()[getSessionEndpointKey(k)];
@@ -102,7 +100,7 @@ export const getTokenValidationPath = (endpointKey) =>
 
 export const getOAuthUrl = ({ provider, params, endpointKey }) => {
   var oAuthUrl = getApiUrl(endpointKey) + getSessionEndpoint(endpointKey).authProviderPaths[provider] +
-    '?auth_origin_url=' + encodeURIComponent(root.location.href) +
+    '?auth_origin_url=' + encodeURIComponent(window.location.href) +
     '&config_name=' + encodeURIComponent(getSessionEndpointKey(endpointKey));
 
   if (params) {
@@ -117,64 +115,55 @@ export const getOAuthUrl = ({ provider, params, endpointKey }) => {
   return oAuthUrl;
 };
 
-export const getConfirmationSuccessUrl = () => root.authState.currentSettings.confirmationSuccessUrl();
-export const getPasswordResetRedirectUrl = () => root.authState.currentSettings.confirmationSuccessUrl();
-export const getApiUrl = (key) => root.authState.currentEndpoint[getSessionEndpointKey(key)].apiUrl;
-export const getTokenFormat = () => root.authState.currentSettings.tokenFormat;
+export const getConfirmationSuccessUrl = () => window.authState.currentSettings.confirmationSuccessUrl();
+export const getPasswordResetRedirectUrl = () => window.authState.currentSettings.confirmationSuccessUrl();
+export const getApiUrl = (key) => window.authState.currentEndpoint[getSessionEndpointKey(key)].apiUrl;
+export const getTokenFormat = () => window.authState.currentSettings.tokenFormat;
 
 export const removeData = (key) => {
-  switch (root.authState.currentSettings.storage) {
-    case 'localStorage':
-      root.localStorage.removeItem(key);
-      break;
-    default:
-      Cookies.erase(key);
+  const { storage } = window.authState.currentSettings;
+  if (storage === 'cookies') {
+    Cookies.erase(key);
+  } else {
+    window.localStorage.removeItem(key);
   }
+  debug(
+    `Removing key ${storage}: ${key}`,
+    { _sessionGet: { key, storage } }
+  );
 };
 
 export const persistData = (key, val) => {
+  const { cookiePath, storage } = window.authState.currentSettings;
   const sVal = JSON.stringify(val);
-  switch (root.authState.currentSettings.storage) {
-    case 'localStorage':
-      if (_.isObject(val)) {
-        debug(`Saving in local storage: ${key}`, val);
-      } else {
-        debug(`Saving in local storage => "${key} : ${val}"`);
-      }
-      root.localStorage.setItem(key, sVal);
-      break;
-    default:
-      const { cookiePath } = root.authState.currentSettings;
-      if (_.isObject(val)) {
-        debug(`Saving to cookies ${key} at ${cookiePath}`, val);
-      } else {
-        debug(`Saving to cookies => "${key} : ${val}" (location ${cookiePath})`);
-      }
-      Cookies.set(key, sVal, {
-        expires: root.authState.currentSettings.cookieExpiry,
-        path:    root.authState.currentSettings.cookiePath
-      });
-      break;
+  debug(
+    `Saving session to ${storage}: ${key}`,
+    { _sessionSave: { key, val, storage } }
+  );
+  if (storage === 'cookies') {
+    Cookies.set(key, sVal, {
+      expires: window.authState.currentSettings.cookieExpiry,
+      path:    window.authState.currentSettings.cookiePath
+    });
+  } else {
+    window.localStorage.setItem(key, sVal);
   }
 };
 
-export const retrieveData = (key, storage) => {
-  let val = null;
-  switch (storage || root.authState.currentSettings.storage) {
-    case 'localStorage':
-      val = root.localStorage && root.localStorage.getItem(key);
-      break;
-    default:
-      val = Cookies.get(key);
-      break;
-  }
-  // if value is a simple string, the parser will fail. in that case, simply
-  // unescape the quotes and return the string.
+export const retrieveData = (key) => {
+  const { cookiePath, storage } = window.authState.currentSettings;
+  const val = storage === 'cookies' ? Cookies.get(key) : window.localStorage.getItem(key);
+  let parsedVal;
+  // if value is a simple string, the parser will fail, just return the string
   try {
-    // return parsed json response
-    return JSON.parse(val);
-  } catch (err) {
-    // unescape quotes
-    return unescapeQuotes(val);
+    parsedVal = JSON.parse(val);
+  } catch (e) {
+    parsedVal = unescapeQuotes(val);
   }
+  debug(
+    `Getting "${key}" from ${storage}`,
+    { _sessionGet: { key, parsedVal, storage } }
+  );
+
+  return parsedVal;
 };

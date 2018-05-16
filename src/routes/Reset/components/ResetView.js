@@ -8,7 +8,7 @@ export const ResetView = (props) => (
   <Column centerOnSmall small={12} medium={10} large={8}>
     <Paper zDepth={5}>
       <Link to='/songs'>
-        Songs
+        Songs!
       </Link>
     </Paper>
   </Column>

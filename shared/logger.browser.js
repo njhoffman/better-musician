@@ -2,69 +2,127 @@ const pjson = require('prettyjson-256');
 const _ = require('lodash');
 const { padRight } = require('./util');
 
-const results = pjson.init({ browser: true });
-
 //  console.log('%cBlue! %cRed!', 'color: blue;', 'color: red;');
-
+const results = pjson.init({ browser: true, showEmpty: false });
 const consoleLog = console.log;
 const subsystems = ['hot-module'];
-
 const lineLimit = 100;
+
+const beautifiers = {
+  _action: (action) => {
+    if (['@@redux-form/BLUR', '@@redux-form/CHANGE', '@@redux-form/FOCUS'].indexOf(action.type) !== -1) {
+      return '';
+    } else if (action.payload) {
+      return [
+        `%c${padRight(action.type, 30)} %c ${JSON.stringify(action.payload)}`,
+        'color: #aa88ff;', 'color: #8866aa;'
+      ];
+    } else {
+      return [
+        `%c${padRight(action.type)}`,
+        'color: #aa88ff;'
+      ];
+    }
+  },
+  _sessionGet: ({ key, parsedVal, storage }) => {
+    if (!_.isObject(parsedVal)) {
+      return [
+        `Get from ${storage}: %c${key} :%c ${parsedVal}`,
+        'color: cyan', 'color: white'
+      ];
+    } else {
+      return [
+        [`Get from ${storage}: %c${key}`, 'color: cyan'],
+        parsedVal
+      ];
+    }
+  },
+  _sessionSave: ({ key, val, storage }) => {
+    if (!_.isObject(val)) {
+      return [
+        `Save to ${storage}: %c${key} :%c ${val}`,
+        'color: cyan', 'color: white'
+      ];
+    } else {
+      return [
+        [`Save to ${storage}: %c${key}`, 'color: cyan'],
+        val
+      ];
+    }
+  }
+};
+
 const parse = (subsystem, style, messages) => {
   subsystems.indexOf(subsystem) === -1 && subsystems.push(subsystem);
-  const ssLength = 3 + _.maxBy(subsystems, (ss) => ss.length).length - subsystem.length;
-  // TODO: fix problems rendering 'undefined'
-  const filtered = _.isArray(messages) ? messages.filter(msg => !_.isUndefined(msg)) : messages;
-  [].concat(filtered).forEach((msg, i) => {
-    let rendMsg = [];
-    msg = _.isArray(msg) && msg.length === 1 ? msg[0] : msg;
-    if (_.isArray(msg) && msg[0].split('%c').length === msg.length) {
-      // msg[0] = Array(ssLength).join(' ') + msg[0];
-      msg[0] = Array(6).join(' ') + msg[0];
-      rendMsg.push(msg);
+  const ssLength = 6 + _.maxBy(subsystems, (ss) => ss.length).length - subsystem.length;
+
+  let toProcess = messages;
+  if (_.isArray(messages)) {
+    const lastKey = _.isObject(_.last(messages)) && _.keys(_.last(messages)).length === 1
+      ? _.keys(_.last(messages))[0] : false;
+    if (lastKey && _.has(beautifiers, lastKey)) {
+      const pretty = beautifiers[lastKey](messages.pop()[lastKey]);
+      toProcess = _.isArray(pretty) && _.isArray(pretty[0]) ? pretty : [pretty];
     } else {
-      rendMsg = pjson.render(
-        (!_.isString(msg) ? _.pickBy(msg) : msg),
-        5 + (i * 3)
-      );
-      rendMsg = _.zip(rendMsg[0], rendMsg[1]);
+      toProcess = messages.filter(msg => !_.isUndefined(msg));
+    }
+  }
+
+  const logMessages = [];
+  [].concat(toProcess).filter(msg => !_.isEmpty(msg)).forEach((msg, i) => {
+    let rendered = [];
+    if (_.isArray(msg) && msg[0].split('%c').length === msg.length) {
+      // if has own color code formatting, don't send it through json parser
+      const tmp = pjson.render(msg.shift());
+      rendered.push([tmp[0], tmp[1][0]].concat(msg));
+    } else {
+      // parser returns rendered messages in first array, colors in second
+      const indent = i > 0 ? ssLength + subsystem.length + ((i + 1) * 3) : 0;
+      rendered = pjson.render(msg, indent);
+      rendered = _.zip(rendered[0], rendered[1]);
     }
 
-    // first line with subsystem
-    i === 0 && rendMsg.unshift([`%c ${subsystem} ${Array(ssLength).join(' ')}`, style]);
-
-    let msgOut = '';
-    let colors = [];
-    rendMsg.forEach((line, n) => {
-      const newMessage = line[0].replace(/%i$/, '');
-      msgOut += newMessage.length > lineLimit
-      ? newMessage.slice(0, lineLimit) + '...'
-      : newMessage;
-      colors.push(...line.slice(1));
-      const nextLine = (n + 1) <= rendMsg.length ? rendMsg[n + 1] : false;
-
-      if (!nextLine || !/%i$/.test(nextLine[0]) && (i + n > 1)) {
-        // const placeHolder = n === 0 && rendMsg.length > 2 ? (Array(ssLength + 4).join(' ') + '↪') : '';
-        // consoleLog((i + n > 1 ? Array(16 + ssLength).join(' ') : '') + msgOut + placeHolder, ...colors);
-      //   const placeHolder = n === 0 && rendMsg.length > 2 ? (Array(ssLength + 4).join(' ') + '↪') : '';
-      //   const fmtMessage = (i + n > 1 ? Array(16 + ssLength).join(' ') : '') + msgOut + placeHolder;
-      //   consoleLog(fmtMessage.length > lineLimit ? fmtMessage.slice(0, lineLimit) + '...' : '',  ...colors);
-      //   msgOut = '';
-      //   colors = [];
-      // }
-        const placeHolder = n === 0 && rendMsg.length > 2 ? (Array(ssLength + 4).join(' ') + '↪') : '';
-        const fmtMessage = (i + n > 1 ? Array(16 + ssLength).join(' ') : '') + msgOut + placeHolder;
-        consoleLog(fmtMessage,  ...colors);
-        msgOut = '';
-        colors = [];
-      }
-    });
+    // add subsystem to first line
+    if (i === 0) {
+      rendered[0][0] += '%i';
+      rendered.unshift([
+        `%c ${subsystem} ${Array(ssLength).join(' ')}`,
+        style
+      ]);
+    }
+    const logLine = createLogLine(rendered);
+    logMessages.push(logLine);
   });
+
+  logMessages.forEach(([msg, ...colors]) =>
+    msg.split('\n').forEach(line =>
+      // !/null\s*$/.test(line) &&
+      consoleLog(line, ...colors.splice(0, line.split('%c').length - 1))
+    )
+  );
+};
+
+const createLogLine = (messages) => {
+  let out = '';
+  let colors = [];
+  messages.forEach((line, n) => {
+    const newMessage = line[0].replace(/%i$/, '');
+    if (n > 0 && !/%i$/.test(line[0])) {
+      out += ' \n ';
+    }
+    out += newMessage.length > lineLimit ? newMessage.slice(0, lineLimit) + '...' : newMessage;
+    colors.push(...line.slice(1));
+    const nextLine = messages[n + 1];
+    if (nextLine && !/%i$/.test(nextLine[0])) {
+      out += ' \r ';
+    }
+  });
+  return [out, ...colors];
 };
 
 console.log = function (arg1) {
-  if (arg1 && arg1.indexOf('[HMR]') !== -1) {
-    return parse('hot-module', 'color: #ffaa00', `${arg1}`);
+  if (arg1 && arg1.indexOf && arg1.indexOf('[HMR]') !== -1) {
+    return parse('hot-module', 'color: #ff8800', `${arg1}`);
   } else {
     return consoleLog.apply(console, arguments);
   }
@@ -80,11 +138,16 @@ export const init = (subsystem) => ({
   fatal : fatal.bind(this, subsystem)
 });
 
-export const trace = (subsystem, ...inputs) => parse(subsystem, 'color: #aaffff', inputs);
-export const debug = (subsystem, ...inputs) => parse(subsystem, 'color: #aaffee', inputs);
-export const info  = (subsystem, ...inputs) => parse(subsystem, 'color: #44ddbb', inputs);
-export const log   = (subsystem, ...inputs) => parse(subsystem, 'color: #11dd88', inputs);
+export const trace = (subsystem, ...inputs) => parse(subsystem, 'color: #ccffff', inputs);
+export const debug = (subsystem, ...inputs) => parse(subsystem, 'color: #88ffee', inputs);
+export const info  = (subsystem, ...inputs) => parse(subsystem, 'color: #44aabb', inputs);
+export const log   = (subsystem, ...inputs) => parse(subsystem, 'color: #00aa66', inputs);
 export const warn  = (subsystem, ...inputs) => parse(subsystem, 'color: #aa6622', inputs);
 export const error = (subsystem, ...inputs) => parse(subsystem, 'color: #ff0000', inputs);
 export const fatal = (subsystem, ...inputs) => parse(subsystem, 'color: #ff0000', inputs);
 
+
+// TODO: Improvements...
+// Allow in place colors to be used without arrays
+// Handle objects without message printing better
+// Handle undefined objects

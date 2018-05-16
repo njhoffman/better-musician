@@ -1,4 +1,4 @@
-import { orm } from 'store/reducers';
+import { orm } from 'store/orm';
 import { createSelector as ormCreateSelector } from 'redux-orm';
 import { createSelector } from 'reselect';
 import { find, isEmpty } from 'lodash';
@@ -33,12 +33,6 @@ const songsSelector = ormCreateSelector(orm, (Session, songsView) => {
   return retObj;
 });
 
-export const songs = createSelector(
-  ormSelector,
-  state => state.songsView,
-  songsSelector
-);
-
 const currentSongSelector = ormCreateSelector(orm, (Session, songsView) => {
   if (!isEmpty(songsView) && !isEmpty(songsView.currentSong)) {
     const song = Session.Song.withId(songsView.currentSong);
@@ -50,31 +44,13 @@ const currentSongSelector = ormCreateSelector(orm, (Session, songsView) => {
   }
 });
 
-export const currentSong = createSelector(
-  ormSelector,
-  state => state.songsView,
-  currentSongSelector
-);
-
 const paginationTotalSelector = ormCreateSelector(orm, Session => {
   return Session.Song.count();
 });
 
-export const paginationTotal = createSelector(
-  ormSelector,
-  state => state.songsView,
-  paginationTotalSelector
-);
-
 const paginationStartSelector = ormCreateSelector(orm, (Session, songsView) => {
   return (1 + (songsView.paginationCurrent - 1) * parseInt(songsView.paginationPerPage));
 });
-
-export const paginationStart = createSelector(
-  ormSelector,
-  state => state.songsView,
-  paginationStartSelector
-);
 
 const paginationEndSelector = ormCreateSelector(orm, (Session, songsView) => {
   return songsView.paginationCurrent * songsView.paginationPerPage > Session.Song.count()
@@ -82,31 +58,13 @@ const paginationEndSelector = ormCreateSelector(orm, (Session, songsView) => {
     : songsView.paginationCurrent * songsView.paginationPerPage;
 });
 
-export const paginationEnd = createSelector(
-  ormSelector,
-  state => state.songsView,
-  paginationEndSelector
-);
-
 const paginationPagesSelector = ormCreateSelector(orm, (Session, songsView) => {
   return parseInt(Math.ceil(Session.Song.count() / songsView.paginationPerPage));
 });
 
-export const paginationPages = createSelector(
-  ormSelector,
-  state => state.songsView,
-  paginationPagesSelector
-);
-
 const songStatsSelector = ormCreateSelector(orm, (Session, state) => {
   return Session.Song ? Session.Song.getStats() : {};
 });
-
-export const songStats = createSelector(
-  ormSelector,
-  state => state.orm,
-  songStatsSelector
-);
 
 const savedTabsSelector = ormCreateSelector(orm, (Session, currentSong) => {
   let tabs = {};
@@ -123,8 +81,11 @@ const savedTabsSelector = ormCreateSelector(orm, (Session, currentSong) => {
   });
 });
 
-export const savedTabs = createSelector(
-  ormSelector,
-  state => state.songsView.currentSong,
-  savedTabsSelector
-);
+export const songs = createSelector(ormSelector, state => state.songsView, songsSelector);
+export const currentSong = createSelector(ormSelector, state => state.songsView, currentSongSelector);
+export const paginationTotal = createSelector(ormSelector, state => state.songsView, paginationTotalSelector);
+export const paginationStart = createSelector(ormSelector, state => state.songsView, paginationStartSelector);
+export const paginationEnd = createSelector(ormSelector, state => state.songsView, paginationEndSelector);
+export const paginationPages = createSelector(ormSelector, state => state.songsView, paginationPagesSelector);
+export const songStats = createSelector(ormSelector, state => state.orm, songStatsSelector);
+export const savedTabs = createSelector(ormSelector, state => state.songsView.currentSong, savedTabsSelector);

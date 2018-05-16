@@ -53,14 +53,14 @@ Object.keys(config.paths).forEach(pathKey => {
 });
 config.paths.base = base;
 
-logger.info(`Looking for environment overrides for NODE_ENV "${config.env}".`);
 const environments = require('./environments.js');
 const overrides = environments[config.env];
 if (overrides) {
-  logger.info({ overrides: overrides(config) }, 'Found overrides, applying to default configuration.');
+  logger.info({ overrides: overrides(config) },
+    `Found overrides for NODE_ENV "${config.env}", applying to default configuration.`);
   Object.assign(config, overrides(config));
 } else {
-  logger.info('No environment overrides found, defaults will be used.');
+  logger.info(`No environment overrides found for NODE_ENV "${config.env}", defaults will be used.`);
 }
 
 // globals added here must _also_ be added to .eslintrc

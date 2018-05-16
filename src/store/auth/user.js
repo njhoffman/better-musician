@@ -1,9 +1,8 @@
 import Immutable from "immutable";
 import { createReducer } from "redux-immutablejs";
 import { getCurrentEndpointKey } from "../../utils/sessionStorage.js"
-import * as authActions from "../../actions/authenticate";
-import { EMAIL_SIGN_IN_COMPLETE } from "../../actions/emailSignIn";
-import { EMAIL_SIGN_UP_COMPLETE } from "../../actions/emailSignUp";
+import * as authActions from "../../actions/auth";
+import { EMAIL_SIGN_IN_COMPLETE, EMAIL_SIGN_UP_COMPLETE } from "../../actions/auth";
 import { SIGN_OUT_COMPLETE, SIGN_OUT_ERROR } from "../../actions/signOut";
 import { OAUTH_SIGN_IN_COMPLETE } from "../../actions/oAuthSignIn";
 import { DESTROY_ACCOUNT_COMPLETE } from "../../actions/destroyAccount";
@@ -19,8 +18,8 @@ const initialState = Immutable.fromJS({
 });
 
 export default createReducer(initialState, {
-  [authActions.AUTHENTICATE_COMPLETE]: (state, { user }) => state.merge({
-    attributes: user,
+  [authActions.AUTHENTICATE_COMPLETE]: (state, { payload }) => state.merge({
+    attributes: payload,
     isSignedIn: true,
     endpointKey: getCurrentEndpointKey()
   }),

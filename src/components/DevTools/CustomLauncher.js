@@ -1,36 +1,30 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
+import { render } from 'react-dom';
 import PropTypes from 'prop-types';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import * as themes from 'redux-devtools-themes';
 import { ActionCreators } from 'redux-devtools';
 import Button from 'devui/lib/Button';
 import debounce from 'lodash.debounce';
+import NewWindow from 'components/NewWindow';
+import { createDevTools } from 'redux-devtools';
+import DevToolsChart  from 'components/DevTools/DevToolsChart';
+import { reducer as chartToolbarReducer } from 'components/DevTools/ChartToolbar';
 
 const { toggleAction, setActionsActive } = ActionCreators;
 
-const initialScrollTop = (props, state = 0, action) => {
-  if (!props.preserveScrollTop) {
-    return 0;
-  }
-
-  return action.type === 'UPDATE_SCROLL_TOP'
-    ? action.scrollTop
-    : state;
-};
-
-const startConsecutiveToggle = (props, state, action) => {
-  return action.type === 'START_CONSECUTIVE_TOGGLE'
-    ? action.id
-    : state;
-};
-
-const reducer = (props, state = {}, action) => {
-  return {
-    initialScrollTop: initialScrollTop(props, state.initialScrollTop, action),
-    consecutiveToggleStartId: startConsecutiveToggle(props, state.consecutiveToggleStartId, action)
-  };
-};
-
+// const startConsecutiveToggle = (props, state, action) => {
+//   return action.type === 'START_CONSECUTIVE_TOGGLE'
+//     ? action.id
+//     : state;
+// };
+//
+// const reducer = (props, state = {}, action) => {
+//   return {
+//     consecutiveToggleStartId: startConsecutiveToggle(props, state.consecutiveToggleStartId, action)
+//   };
+// };
+//
 const styles = {
   container: {
     fontFamily: 'monaco, Consolas, Lucida Console, monospace',
@@ -46,12 +40,17 @@ const styles = {
     justifyContent: 'space-evenly',
     overflowX: 'hidden',
     overflowY: 'auto',
-    verticalAlign: 'middle'
+    verticalAlign: 'middle',
+    top: 30,
+    height: '100%',
+    verticalAlign: 'middle',
+    alignItems: 'center'
   }
 };
 
-export default class LogMonitor extends Component {
-  static update = reducer;
+export default class CustomLauncher extends Component {
+
+  static update = chartToolbarReducer
 
   static propTypes = {
     dispatch: PropTypes.func,
@@ -64,113 +63,32 @@ export default class LogMonitor extends Component {
       consecutiveToggleStartId: PropTypes.number
     }),
 
-    preserveScrollTop: PropTypes.bool,
-    select: PropTypes.func,
     theme: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.string
     ]),
-    expandActionRoot: PropTypes.bool,
-    expandStateRoot: PropTypes.bool,
-    markStateDiff: PropTypes.bool,
-    hideMainButtons: PropTypes.bool
   };
 
   static defaultProps = {
-    select: (state) => state,
-    theme: 'nicinabox',
-    preserveScrollTop: true,
-    expandActionRoot: true,
-    expandStateRoot: true,
-    markStateDiff: false
+    theme: 'twilight',
   };
 
   shouldComponentUpdate = shouldPureComponentUpdate;
 
-  // updateScrollTop = debounce(() => {
-  //   const node = this.node;
-  //   this.props.dispatch(updateScrollTop(node ? node.scrollTop : 0));
-  // }, 500);
-
   constructor(props) {
     super(props);
-    this.handleToggleAction = this.handleToggleAction.bind(this);
-    this.handleToggleConsecutiveAction = this.handleToggleConsecutiveAction.bind(this);
     this.getRef = this.getRef.bind(this);
-  }
-
-  scroll() {
-    const node = this.node;
-    if (!node) {
-      return;
-    }
-    if (this.scrollDown) {
-      const { offsetHeight, scrollHeight } = node;
-      node.scrollTop = scrollHeight - offsetHeight;
-      this.scrollDown = false;
-    }
+    this.toggleChart = this.toggleChart.bind(this);
+    this.popupUnload = this.popupUnload.bind(this);
+    this.state = {
+      showChart : true
+    };
   }
 
   componentDidMount() {
     const node = this.node;
     if (!node || !this.props.monitorState) {
       return;
-    }
-
-    if (this.props.preserveScrollTop) {
-      node.scrollTop = this.props.monitorState.initialScrollTop;
-      // node.addEventListener('scroll', this.updateScrollTop);
-    } else {
-      this.scrollDown = true;
-      this.scroll();
-    }
-  }
-
-  componentWillUnmount() {
-    const node = this.node;
-    if (node && this.props.preserveScrollTop) {
-      node.removeEventListener('scroll', this.updateScrollTop);
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const node = this.node;
-    if (!node) {
-      this.scrollDown = true;
-    } else if (
-      this.props.stagedActionIds.length <
-      nextProps.stagedActionIds.length
-    ) {
-      const { scrollTop, offsetHeight, scrollHeight } = node;
-
-      this.scrollDown = Math.abs(
-        scrollHeight - (scrollTop + offsetHeight)
-      ) < 20;
-    } else {
-      this.scrollDown = false;
-    }
-  }
-
-  componentDidUpdate() {
-    this.scroll();
-  }
-
-  handleToggleAction(id) {
-    this.props.dispatch(toggleAction(id));
-  }
-
-  handleToggleConsecutiveAction(id) {
-    const { monitorState, actionsById } = this.props;
-    const { consecutiveToggleStartId } = monitorState;
-    if (consecutiveToggleStartId && actionsById[consecutiveToggleStartId]) {
-      const { skippedActionIds } = this.props;
-      const start = Math.min(consecutiveToggleStartId, id);
-      const end = Math.max(consecutiveToggleStartId, id);
-      const active = skippedActionIds.indexOf(consecutiveToggleStartId) > -1;
-      this.props.dispatch(setActionsActive(start, end + 1, active));
-      // this.props.dispatch(startConsecutiveToggle(null));
-    } else if (id > 0) {
-      // this.props.dispatch(startConsecutiveToggle(id));
     }
   }
 
@@ -192,50 +110,61 @@ export default class LogMonitor extends Component {
     this.node = node;
   }
 
+  toggleChart() {
+    this.setState(state => ({
+      ...state,
+      showChart: !state.showChart
+    }));
+  }
+
+  popupUnload() {
+    console.info('popup unloading...');
+    this.setState(state => ({
+      ...state,
+      showChart: false
+    }));
+  }
+
   render() {
     const theme = this.getTheme();
-    const { consecutiveToggleStartId } = this.props.monitorState;
 
-    const {
-      dispatch,
-      actionsById,
-      skippedActionIds,
-      stagedActionIds,
-      computedStates,
-      currentStateIndex,
-      select,
-      expandActionRoot,
-      expandStateRoot,
-      markStateDiff
-    } = this.props;
-
-    const entryListProps = {
-      theme,
-      actionsById,
-      skippedActionIds,
-      stagedActionIds,
-      computedStates,
-      currentStateIndex,
-      consecutiveToggleStartId,
-      select,
-      expandActionRoot,
-      expandStateRoot,
-      markStateDiff,
-      onActionClick: this.handleToggleAction,
-      onActionShiftClick: this.handleToggleConsecutiveAction
+    const winOptions =  {
+      menubar: 'no',
+      location: 'no',
+      resizable: 'yes',
+      scrollbars: 'no',
+      statusbar: 'no',
+      toolbar: 'no',
+      width: 1000,
+      height: 1200,
+      left: 3500,
+      top: 50,
+      margin: 0
     };
 
     return (
-      <div style={{ ...styles.container, backgroundColor: theme.base00 }}>
+      <div style={{ ...styles.container, backgroundColor: theme.base01 }}>
         <div
-          style={{ ...styles.elements, top: 30 }}
-          ref={this.getRef}
-        >
+          style={{ ... styles.elements, backgroundColor: theme.base01 }}
+          ref={this.getRef}>
           <Button theme={theme}>Actions</Button>
           <Button theme={theme}>Fixtures</Button>
-          <Button theme={theme}>Extension</Button>
+          <Button
+            theme={theme}
+            onClick={this.toggleChart}>
+            Chart
+          </Button>
         </div>
+        {this.state.showChart && (
+          <NewWindow
+            title="DevTools Chart"
+            features={winOptions}
+            onUnload={this.popupUnload}>
+            <DevToolsChart {...this.props} />
+          </NewWindow>
+        )}
       </div>
     );
   }
+
 }

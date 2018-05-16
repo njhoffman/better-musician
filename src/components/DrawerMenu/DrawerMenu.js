@@ -94,14 +94,11 @@ export class DrawerMenu extends Component {
           <Divider />
           <MenuItem>
             <SignOutButton
-              flatButton
               label='LOGOUT'
               next={() => {
                 this.props.hideDrawerMenu();
-                // browserHistory.push('/');
               }}
-              style={{ backgroundColor: 'transparent', width: '100%' }}
-            />
+              style={{ backgroundColor: 'transparent', width: '100%' }} />
           </MenuItem>
         </Drawer>
       </div>

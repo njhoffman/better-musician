@@ -1,2 +1,2 @@
-export default HomeView from './components/HomeView';
+export { default } from './components/HomeView';
 

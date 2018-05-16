@@ -1,4 +1,5 @@
 import React, { Component, cloneElement } from 'react';
+import _ from 'lodash';
 
 const childrenMonitorState = (props, state, action) => {
   return props.children.map(child => child.type.update(child.props, state, action));
@@ -21,13 +22,16 @@ const rowStyles = [{
   width: '100%',
   flexDirection: 'row',
   display: 'flex',
-  height: '60px',
+  height: '55px',
   alignItems: 'center'
 }, {
   width: '100%',
   flexDirection: 'row',
   display: 'flex',
-  height: 'calc(100% - 60px)'
+  height: 'calc(100% - 55px)'
+}, {
+  display: 'none',
+  width: '100%'
 }];
 
 const cellStyle = {
@@ -35,10 +39,14 @@ const cellStyle = {
 };
 
 const monitorStyles = [{
-  width: '235px'
+  width: '235px',
+  height: '100%'
 }, {
+  height: '100%',
   width: 'calc(100% - 235px)'
-}, {
+},  {
+  width: '100%'
+},  {
   width: '100%'
 }];
 
@@ -50,7 +58,10 @@ export default class MultipleMonitors extends Component {
   }
 
   render() {
-    const { monitorState, children, style = baseStyle, ...rest } = this.props;
+    const {
+      monitorState, children, style = baseStyle, changeMonitorKey, changePositionKey,
+      defaultPosition, defaultSize, toggleVisibilityKey, ...rest
+    } = this.props;
 
     // if (this.props.theme && !style.backgroundColor) {
     //   baseStyle.backgroundColor = this.props.theme.base00

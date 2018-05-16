@@ -2,7 +2,6 @@
   "restartable": "rs",
   "ignore": [
     ".git",
-    "node_modules/**/node_modules",
     "**/tmp",
     "coverage",
     "test",
@@ -14,7 +13,8 @@
   "watch": [
     "bin",
     "server",
-    "config"
+    "config",
+    "node_modules"
   ],
   "env": {
     "NODE_ENV": "development"

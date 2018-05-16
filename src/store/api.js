@@ -7,6 +7,7 @@ const { log } = initLog('api');
 // Constants
 // ------------------------------------
 
+export const LOAD_CONFIG           = 'LOAD_CONFIG';
 export const FETCH_SONGS           = 'FETCH_SONGS';
 export const SONGS_REQUEST         = 'SONGS_REQUEST';
 export const SONGS_SUCCESS         = 'SONGS_SUCCESS';
@@ -118,6 +119,13 @@ const ACTION_HANDLERS = {
       isFetching: false,
       initialized: state.initialized.indexOf('user') === -1 ? state.initialized.concat('user') : state.initialized
     }),
+  [LOAD_CONFIG] : (state, { payload: { api } }) => ({ ...state,
+    endpoints: _.mapValues(api.endpoints, ep => ({
+      loading: false,
+      errors: false,
+      success: false
+    }))
+  }),
   [SONGS_REQUEST] : (state) => ({ ...state, isFetching: true }),
   [SONGS_SUCCESS] : (state) =>
     ({ ...state,
@@ -136,7 +144,10 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 export const initialState = {
   isFetching: false,
-  initialized: []
+  initialized: [],
+  loading: [],
+  error: [],
+  success: []
 };
 
 export default function apiReducer(state = initialState, action) {

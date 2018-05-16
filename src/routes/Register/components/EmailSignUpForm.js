@@ -111,13 +111,13 @@ export class EmailSignUpForm extends React.Component {
               className={css.signupButton}
               loading={this.props.auth.getIn(['emailSignUp', this.getEndpoint(), 'loading'])}
               type='submit'
+              label='Sign Up'
               name='email-sign-up-submit'
               primary
               icon={ContentSend}
               disabled={disabled}
               onClick={() => this.handleSubmit()}
               {...this.props.inputProps.submit}>
-              Sign Up
             </ButtonLoader>
           </Column>
           <Column centerOnSmall small={12} medium={7} pullOnMedium={5}>

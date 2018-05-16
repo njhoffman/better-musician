@@ -58,15 +58,7 @@ export const actionLogger = (store) => next => action => {
   if (_.isUndefined(action)) {
     warn('undefined action');
   } else {
-    if (action.payload) {
-      trace([
-        `%c ${padRight(action.type, 30)} %c ${JSON.stringify(action.payload)}`,
-        'color: #ffffff;', 'color: #8866aa;'
-      ]);
-    } else {
-      trace(`${padRight(action.type, 30)}`);
-    }
-    // debug(`${action.type}`, { payload: action.payload, meta: action.meta });
+    trace(`Action: ${padRight(action.type)}`, { _action: action });
     next(action);
   }
 };

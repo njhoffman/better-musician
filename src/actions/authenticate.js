@@ -6,8 +6,8 @@ export function authenticateStart() {
   return { type: AUTHENTICATE_START };
 }
 export function authenticateComplete(user) {
-  return { type: AUTHENTICATE_COMPLETE, user };
+  return { type: AUTHENTICATE_COMPLETE, payload: user };
 }
 export function authenticateError(errors) {
-  return { type: AUTHENTICATE_ERROR, errors };
+  return { type: AUTHENTICATE_ERROR, payload: errors };
 }

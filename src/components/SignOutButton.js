@@ -15,9 +15,7 @@ export class SignOutButton extends React.Component {
   };
 
   static defaultProps = {
-    next: () => {},
-    children: <span>Sign Out</span>,
-    icon: ActionLock
+    next: () => {}
   };
 
   getEndpoint() {
@@ -36,15 +34,17 @@ export class SignOutButton extends React.Component {
 
   render() {
     let disabled = !this.props.auth.getIn(['user', 'isSignedIn']);
+    console.info(this.props);
     return (
       <ButtonLoader
-        loading={this.props.auth.getIn(['signOut', this.getEndpoint(), 'loading'])}
-        icon={this.props.icon}
+        icon={<ActionLock />}
         disabled={disabled}
+        label='Sign Out'
         primary
         className='sign-out-submit'
         onClick={() => this.handleClick()}
         {...this.props} />
+
     );
   }
 }

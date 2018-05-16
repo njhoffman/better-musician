@@ -13,8 +13,7 @@ import {
 import { init as initLog } from 'shared/logger';
 const { debug } = initLog('auth:fetch');
 
-const isApiRequest = (url) =>
-  (url.match(getApiUrl(getSessionEndpointKey())));
+const isApiRequest = (url) => (url.match(getApiUrl(getSessionEndpointKey())));
 
 const getAuthHeaders = (url) => {
   if (!isApiRequest(url)) {
@@ -35,42 +34,43 @@ const getAuthHeaders = (url) => {
 };
 
 const updateAuthCredentials = (resp) => {
-  // check config apiUrl matches the current response url
   if (isApiRequest(resp.url)) {
-    // set header for each key in `tokenFormat` config
-    const newHeaders = {};
-
     // set flag to ensure that we don't accidentally nuke the headers
     // if the response tokens aren't sent back from the API
     let blankHeaders = true;
-
-    // set header key + val for each key in `tokenFormat` config
+    const newHeaders = {};
     for (var key in getTokenFormat()) {
       newHeaders[key] = resp.headers.get(key);
-
       if (newHeaders[key]) {
         blankHeaders = false;
       }
     }
-
-    // persist headers for next request
     if (!blankHeaders) {
       persistData(C.SAVED_CREDS_KEY, newHeaders);
     }
   }
-
   return resp;
 };
 
 export const addAuthorizationHeader = (accessToken, headers) =>
-  Object.assign({}, headers, { Authorization: `Bearer ${accessToken}` });
+  ({ ...{ headers }, ...{ Authorization: `Bearer ${accessToken}` } });
+
+export const parseResponse = (response) => {
+  let json = response.json();
+  if (response.status >= 200 && response.status < 300) {
+    return json;
+  } else {
+    return json.then(err => Promise.reject(err.errors ? err.errors : err));
+  }
+}
 
 export default (url, options = {}) => {
-  if (!options.headers) {
-    options.headers = {};
-  }
+  options.headers = options.headers || {};
   extend(options.headers, getAuthHeaders(url));
-  debug(`Fetching ${url}`, options.headers);
+  debug(`Fetching ${url}`, {
+    'Authorization' : options.headers.Authorization,
+    headers: _.pickBy(options.headers.headers)
+  });
   return originalFetch(url, options)
     .then(resp => {
       debug(`Fetch response: ${resp.status} ${resp.statusText}`);

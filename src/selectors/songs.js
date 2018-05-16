@@ -12,24 +12,12 @@ const lastNameSelector = ormCreateSelector(orm, session => {
   });
 });
 
-export const artistLastNames = createSelector(
-  ormSelector,
-  state => state,
-  lastNameSelector
-);
-
 const firstNameSelector = ormCreateSelector(orm, session => {
   const artists = session.Artist ? session.Artist.all().toModelArray() : [];
   return artists.map(artist => {
     return artist.firstName;
   });
 });
-
-export const artistFirstNames = createSelector(
-  ormSelector,
-  state => state,
-  firstNameSelector
-);
 
 const artistMatchSelector = ormCreateSelector(orm, (session, artist) => {
   if (artist) {
@@ -38,24 +26,12 @@ const artistMatchSelector = ormCreateSelector(orm, (session, artist) => {
   return null;
 });
 
-export const artistsMatched = createSelector(
-  ormSelector,
-  state => get(state, 'form.addSongForm.values.artist', null),
-  artistMatchSelector
-);
-
 const genreSelector = ormCreateSelector(orm, session => {
   const genres = session.Genre ? session.Genre.all().toModelArray() : [];
   return genres.map(genre => {
     return { text: genre.name, value: genre.id };
   });
 });
-
-export const genres = createSelector(
-  ormSelector,
-  state => state,
-  genreSelector
-);
 
 const instrumentSelector = ormCreateSelector(orm, session => {
   const instruments = session.Instrument ? session.Instrument.all().toModelArray() : [];
@@ -64,8 +40,14 @@ const instrumentSelector = ormCreateSelector(orm, session => {
   });
 });
 
-export const instruments = createSelector(
+export const artistLastNames = createSelector(ormSelector, state => state, lastNameSelector);
+export const artistFirstNames = createSelector(ormSelector, state => state, firstNameSelector);
+
+export const artistsMatched = createSelector(
   ormSelector,
-  state => state,
-  instrumentSelector
+  state => get(state, 'form.addSongForm.values.artist', null),
+  artistMatchSelector
 );
+
+export const genres = createSelector(ormSelector, state => state, genreSelector);
+export const instruments = createSelector(ormSelector, state => state, instrumentSelector);

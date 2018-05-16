@@ -13,6 +13,8 @@ export const UI_UPDATE_MODAL       = 'UI_UPDATE_MODAL';
 export const MODAL_ADD_SONG     = 'MODAL_ADD_SONG';
 export const MODAL_FILTER_SONGS = 'MODAL_FILTER_SONGS';
 
+export const INIT_VIEW = 'INIT_VIEW';
+
 // ------------------------------------
 // Action Creators
 // ------------------------------------
@@ -75,6 +77,10 @@ const showModal = (state, action) =>
 const hideModal = (state) =>
   ({ ...state, modal: { ...initialState.modal } });
 
+const initView = (state, { payload }) =>
+  ({ ...state, currentView: payload.currentView });
+
+
 const ACTION_HANDLERS = {
   [UI_TOGGLE_DRAWER_MENU]: toggleDrawerMenu,
   [UI_SHOW_DRAWER_MENU]:   showDrawerMenu,
@@ -83,7 +89,8 @@ const ACTION_HANDLERS = {
   [UI_HIDE_SNACKBAR]:      hideSnackbar,
   [UI_SHOW_MODAL]:         showModal,
   [UI_HIDE_MODAL]:         hideModal,
-  [UI_UPDATE_MODAL]:       updateModal
+  [UI_UPDATE_MODAL]:       updateModal,
+  [INIT_VIEW]: initView
 };
 
 // ------------------------------------
@@ -91,6 +98,7 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 
 export const initialState = {
+  currentView: null,
   snackbar: {
     isOpen: false,
     message: '',

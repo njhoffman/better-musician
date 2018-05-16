@@ -2,7 +2,9 @@ import * as C from './constants';
 import extend from 'extend';
 import fetch from './fetch';
 import parseEndpointConfig from './parseEndpointConfig';
+
 import { setEndpointKeys } from '../actions/endpoints';
+import { configureComplete } from '../actions/auth';
 import {
   getApiUrl,
   getCurrentSettings,
@@ -17,7 +19,7 @@ import {
 } from './sessionStorage';
 
 // can't use "window" with node app
-const root = Function('return this')() || (42, eval)('this');
+// const root = Function('return this')() || (42, eval)('this');
 
 const defaultSettings = {
   proxyIf:            () => false,
@@ -28,8 +30,8 @@ const defaultSettings = {
   cookiePath:         '/',
   initialCredentials: null,
 
-  passwordResetSuccessUrl: () => root.location.href,
-  confirmationSuccessUrl: () => root.location.href,
+  passwordResetSuccessUrl: () => window.location.href,
+  confirmationSuccessUrl: () => window.location.href,
 
   tokenFormat: {
     'access-token': '{{ access-token }}',
@@ -77,6 +79,7 @@ export const applyConfig = ({ dispatch, endpoint = {}, settings = {}, reset = fa
 
   let savedCreds = retrieveData(C.SAVED_CREDS_KEY);
 
+  dispatch(configureComplete(getCurrentSettings()));
   if (getCurrentSettings().initialCredentials) {
     // skip initial headers check (i.e. check was already done server-side)
     let { user, headers } = getCurrentSettings().initialCredentials;

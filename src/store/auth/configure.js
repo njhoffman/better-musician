@@ -1,6 +1,6 @@
 import Immutable from "immutable";
 import { createReducer } from "redux-immutablejs";
-import * as A from "../../actions/configure";
+import * as A from "../../actions/auth";
 
 const initialState = Immutable.fromJS({
   loading: true,
@@ -20,10 +20,10 @@ export default createReducer(initialState, {
     endpointKeys, defaultEndpointKey, currentEndpointKey
   }),
 
-  [A.CONFIGURE_COMPLETE]: (state, {config}) => state.merge({
+  [A.CONFIGURE_COMPLETE]: (state, {payload}) => state.merge({
     loading: false,
     errors: null,
-    config
+    config: payload
   }),
 
   [A.CONFIGURE_ERROR]: (state, {errors}) => state.merge({

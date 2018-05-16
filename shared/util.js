@@ -15,7 +15,6 @@ export const humanMemorySize = (bytes, si) => {
   return bytes.toFixed(1) + ' ' + units[u];
 }
 
-
 export const padLeft = (input, len) => {
   const str = input.toString() || '';
   return len > str.length

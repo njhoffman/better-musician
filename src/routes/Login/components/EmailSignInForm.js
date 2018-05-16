@@ -41,9 +41,9 @@ export class EmailSignInForm extends React.Component {
 
   getEndpoint() {
     return (
-      this.props.endpoint // ||
-      // this.props.auth.getIn(['configure', 'currentEndpointKey']) ||
-      // this.props.auth.getIn(['configure', 'defaultEndpointKey'])
+      this.props.endpoint ||
+      this.props.auth.getIn(['configure', 'currentEndpointKey']) ||
+      this.props.auth.getIn(['configure', 'defaultEndpointKey'])
     );
   }
 
@@ -56,14 +56,12 @@ export class EmailSignInForm extends React.Component {
   }
 
   render() {
-    // let disabled = (
-    //   // this.props.auth.getIn(['user', 'isSignedIn']) ||
-    //   this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'loading'])
-    // );
-    let disabled = false;
+    let disabled = (
+      this.props.auth.getIn(['user', 'isSignedIn']) ||
+      this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'loading'])
+    );
 
-    // const errors = this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'errors']);
-    const errors = false;
+    const errors = this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'errors']);
 
     return (
       <form className='redux-auth email-sign-in-form'

@@ -7,7 +7,7 @@ import OAuthSignInButton from 'components/OAuthSignInButton';
 // import { emailSignUpFormUpdate, emailSignUp } from 'redux-auth';
 
 import EmailSignUpForm from './EmailSignUpForm';
-import { handleRegisterSuccess } from '../modules/register';
+import { handleRegisterSuccess } from '../modules/reducer';
 import SocialIcon from 'components/SocialIcon';
 import css from './RegisterView.scss';
 

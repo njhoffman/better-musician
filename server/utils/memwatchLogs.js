@@ -56,13 +56,13 @@ const heap = (config, sdc, logger) => {
   }
 };
 
-const stats = (logger, stas) => {
+const stats = (logger, memStats) => {
   const { padZeros, humanMemorySize, padLeft } = sUtils;
   logger.trace(
-    `GC (#${padZeros(stats.num_full_gc, 3)}/${padZeros(stats.num_inc_gc, 3)}): ` +
-    `${padLeft(humanMemorySize(stats.current_base, true), 9)} (Current) ` +
-    `${padLeft(humanMemorySize(stats.estimated_base, true), 9)} (Estimated) ` +
-    `Usage: ${stats.usage_trend}`
+    `GC (#${padZeros(memStats.num_full_gc, 3)}/${padZeros(memStats.num_inc_gc, 3)}): ` +
+    `${padLeft(humanMemorySize(memStats.current_base, true), 9)} (Current) ` +
+    `${padLeft(humanMemorySize(memStats.estimated_base, true), 9)} (Estimated) ` +
+    `Usage: ${memStats.usage_trend}`
   );
 };
 

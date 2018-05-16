@@ -7,7 +7,7 @@ import AuthLoading from 'components/AuthLoading';
 const locationHelper = locationHelperBuilder({});
 
 const userIsAuthenticatedDefaults = {
-  authenticatedSelector: state => state.user.data !== null,
+  authenticatedSelector: state => state.auth.getIn(['user', 'isSignedIn']),
   authenticatingSelector: state => state.user.isLoading,
   wrapperDisplayName: 'UserIsAuthenticated'
 };
@@ -30,7 +30,8 @@ export const userIsAdminRedir = connectedRouterRedirect({
 
 const userIsNotAuthenticatedDefaults = {
   // Want to redirect the user when they are done loading and authenticated
-  authenticatedSelector: state => state.user.data === null && state.user.isLoading === false,
+  // authenticatedSelector: state => state.user.data === null && state.user.isLoading === false,
+  authenticatedSelector: state => !state.auth.getIn(['user', 'isSignedIn']),
   wrapperDisplayName: 'UserIsNotAuthenticated'
 };
 
@@ -41,3 +42,10 @@ export const userIsNotAuthenticatedRedir = connectedRouterRedirect({
   redirectPath: (state, ownProps) => locationHelper.getRedirectQueryParam(ownProps) || '/protected',
   allowRedirectBack: false
 });
+
+export const userNoAuthenticationDefaults = {
+  authenticatedSelector: state => true,
+  wrapperDisplayName: 'UserNoAuthentication'
+};
+
+export const userNoAuthentication = connectedAuthWrapper(userNoAuthenticationDefaults);

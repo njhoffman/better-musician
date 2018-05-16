@@ -4,17 +4,14 @@ import { authStateReducer } from './auth';
 import uiReducer from './ui';
 import apiReducer from './api';
 import userReducer from './user';
+import configReducer from './config';
+import ormReducer from './orm';
 
 import { init as initLog } from 'shared/logger';
 const { info } = initLog('reducers');
 
 // selectors need access to ORM
 // TODO: put orm in own module
-import { ORM, createReducer } from 'redux-orm';
-import models from './models';
-export const orm = new ORM();
-orm.register(...models);
-const ormReducer = createReducer(orm);
 
 import { routerReducer } from 'react-router-redux';
 import { LOCATION_CHANGE } from 'react-router-redux';
@@ -39,13 +36,12 @@ export const makeRootReducer = (asyncReducers, injectedModels = []) => {
   }
   const reducers = {
     orm:            ormReducer,
-    // router:         routerReducer,
-    route:         routeReducer,
+    route:          routeReducer,
     form:           formReducer,
     ui:             uiReducer,
     api:            apiReducer,
     user:           userReducer,
-    // auth reducer is immutable js so must be mapped in containers correctly
+    config:         configReducer,
     auth:           authStateReducer,
     ...asyncReducers
   };
@@ -54,12 +50,15 @@ export const makeRootReducer = (asyncReducers, injectedModels = []) => {
   return combineReducers(reducers);
 };
 
-export const injectReducer = (store, { key, reducer, models }) => {
+export const injectReducer = ({ key, reducer, store, clearOld = true }, models = []) => {
+  info(`Injecting reducer: ${key}`);
   if (Object.hasOwnProperty.call(store.asyncReducers, key)) {
     return;
   }
+  store.asyncReducers = clearOld ? {} : store.asyncReducers;
   store.asyncReducers[key] = reducer;
-  store.replaceReducer(exports.makeRootReducer(store.asyncReducers, models));
+  const newReducer = exports.makeRootReducer(store.asyncReducers, models);
+  store.replaceReducer(newReducer);
 };
 
 export default makeRootReducer;

@@ -22,7 +22,7 @@ import {
   editField,
   deleteField,
   cancelEdit
-} from '../modules/fields';
+} from '../modules/reducer';
 import { savedTabs as savedTabsSelector } from '../modules/selectors';
 
 import css from './FieldsView.scss';

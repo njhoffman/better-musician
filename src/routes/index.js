@@ -2,44 +2,39 @@ import React, { Component }  from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { LoadRoute } from 'components/LoadingIndicator';
-
-// import HomeRoute from './Home/index';
-import LoginRoute from './Login/index';
-import RegisterRoute from './Register';
-import ResetRoute from './Reset';
-
-import SongsRoute from './Songs';
-import SettingsRoute from './Settings';
-import ProfileRoute from './Profile';
-import StatsRoute from './Stats';
-import FieldsRoute from './Fields';
+import { LoadRoute } from './loader';
 
 import { userIsAuthenticatedRedir, userIsNotAuthenticatedRedir, userIsAdminRedir,
-  userIsAuthenticated, userIsNotAuthenticated } from '../auth';
+  userIsAuthenticated, userIsNotAuthenticated, userNoAuthentication } from '../auth';
 
 // Need to apply the hocs here to avoid applying them inside the render method
-// const Login = userIsNotAuthenticatedRedir(LoginRoute);
-const ProtectedSongs = userIsAuthenticatedRedir(SongsRoute);
-const ProtectedSettings = userIsAuthenticatedRedir(SettingsRoute);
-const ProtectedProfile = userIsAuthenticatedRedir(ProfileRoute);
-const ProtectedStats = userIsAuthenticatedRedir(StatsRoute);
-const ProtectedFields = userIsAuthenticatedRedir(FieldsRoute);
+
+const HomeRoute = userNoAuthentication(LoadRoute('Home'));
+const LoginRoute = userIsNotAuthenticatedRedir(LoadRoute('Login'));
+const RegisterRoute = userIsNotAuthenticatedRedir(LoadRoute('Register'));
+
+const ResetRoute = userIsAuthenticatedRedir(LoadRoute('Reset'));
+
+const SongsRoute = userIsAuthenticatedRedir(LoadRoute('Songs'));
+const SettingsRoute = userIsAuthenticatedRedir(LoadRoute('Settings'));
+const ProfileRoute = userIsAuthenticatedRedir(LoadRoute('Profile'));
+const StatsRoute = userIsAuthenticatedRedir(LoadRoute('Stats'));
+const FieldsRoute = userIsAuthenticatedRedir(LoadRoute('Fields'));
 // const Admin = userIsAuthenticatedRedir(userIsAdminRedir(AdminComponent));
 
 class Routes extends Component {
   render() {
     return (
       <Switch>
-        <Route exact path='/' component={LoadRoute('Home')} />
-        <Route path='/reset' component={ResetRoute} />
-        <Route path='/login' component={LoginRoute} />
-        <Route path='/register' component={RegisterRoute} />
-        <Route path='/fields' component={ProtectedFields} />
-        <Route path='/songs' component={ProtectedSongs} />
-        <Route path='/stats' component={ProtectedStats} />
-        <Route path='/profile' component={ProtectedProfile} />
-        <Route path='/settings' component={ProtectedSettings} />
+        <Route exact path='/' component={HomeRoute} store={this.props.store} />
+        <Route path='/reset' component={ResetRoute} store={this.props.store} />
+        <Route path='/login' component={LoginRoute} store={this.props.store} />
+        <Route path='/register' component={RegisterRoute} store={this.props.store} />
+        <Route path='/fields' component={FieldsRoute} store={this.props.store} />
+        <Route path='/songs' component={SongsRoute} store={this.props.store} />
+        <Route path='/stats' component={StatsRoute} store={this.props.store} />
+        <Route path='/profile' component={ProfileRoute} store={this.props.store} />
+        <Route path='/settings' component={SettingsRoute} store={this.props.store} />
       </Switch>
     );
   }
@@ -55,4 +50,8 @@ const mapStateToProps = state => ({
   user: state.user
 });
 
-export default withRouter(connect(mapStateToProps, { logout })(Routes));
+const mapActionCreators = ({
+  logout
+});
+
+export default withRouter(connect(mapStateToProps, mapActionCreators)(Routes));

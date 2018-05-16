@@ -1,16 +1,20 @@
 const _ = require('lodash');
 
 module.exports = (config, sharedUtils, outputHeap) =>
-  (mwStats, { state, stats, log, filename }) => {
+  (mwStats, buildStats) => {
+    const { state, stats, log, filename } = buildStats;
     const { numCommas, padLeft, padRight, humanMemorySize } = sharedUtils;
     // compilation, hash, starttime
     // stats.compilation: hooks, options, profile, outputOptions, performance, chunks, chunkGroupos,
     // namedChunks, namedChunkGroups, modules, assets, name, fullHash, hash
     if (state) {
+      log.info('Building ...');
       const { compilation: { modules } } = stats;
       outputHeap(log);
       const duration = stats.endTime - stats.startTime;
-      const fmtDuration = duration >= 1000 ? `${(duration / 1000).toFixed(1)}s` : `${duration}ms`;
+      const fmtDuration = Number(duration) >= 1000
+        ? `${(duration / 1000).toFixed(1)}s`
+        : `${duration}ms`;
 
       if (stats.hasErrors()) {
         stats.compilation.errors.forEach(se => log.error(`${se.message.replace(/\r\n/g, '')}`));
@@ -44,7 +48,7 @@ module.exports = (config, sharedUtils, outputHeap) =>
 
         if (config.showAppModulesBuild) {
           log.trace(
-            `app-module ${padLeft(('#' + (i + 1)), 3)} ${padRight(prefix, 20)} => ${mod.id}` +
+            `    app-module ${padLeft(('#' + (i + 1)), 3)} ${padRight(prefix, 20)} => ${mod.id}` +
             (mod.useSourceMap ? ' (source-map)' : '') +
             (mod.buildMeta.moduleConcatenationBailout ? ` (bailout: ${mod.buildMeta.moduleConcatenationBailout})` : '')
           );
@@ -56,10 +60,12 @@ module.exports = (config, sharedUtils, outputHeap) =>
         if (!modInfo.node.maxDepth || modInfo.node.maxDepth < mod.depth) {
           modInfo.node.maxDepth = mod.depth;
         }
+
         // name, message, module, origin, originLoc, dependencies
         mod.warnings.forEach(mw =>
           log.warn(`node-module warning: ${mw.name} ${mw.message.replace(/\n/g, '')} (${mw.origin})`)
         );
+
         mod.errors.forEach(me => log.error(me));
         // TODO: implement silly level
         if (config.showNodeModulesBuild) {
@@ -70,49 +76,55 @@ module.exports = (config, sharedUtils, outputHeap) =>
       // log.info(stats.toString(mwStats));
       const assets = Object.keys(stats.compilation.assets)
         .map(key => ({
-          ...stats.compilation.assets[key],
           name: key,
-          overLimit: stats.compilation.assets[key].isOverSizeLimit ? 'over-limit' : '',
+          overLimit: stats.compilation.assets[key].isOverSizeLimit ? true : false,
           size: stats.compilation.assets[key].size()
         }));
 
-      assets
-        // .sort((a, b) => a.name > b.name)
-        .forEach(asset => {
-          if (asset.overLimit) {
-            log.warn({ color: 'warn' },
-              `${padRight(asset.name, 50)} %${humanMemorySize(asset.size)}%`);
-          } else {
-            log.trace({ color: 'bold' },
-              `${padRight(asset.name, 50)} %${humanMemorySize(asset.size)}%`);
-          }
-        });
+      const oversizeAssets = _.filter(assets, 'overLimit');
 
-      log.info(
-        `Built ${numCommas(modules.length)} modules into ${stats.compilation.chunks.length} chunks ` +
-        `(app: ${modInfo.app.mods.length} mods / ${numCommas(modInfo.app.deps)} deps x` +
-        `${modInfo.app.maxDepth}) (node_modules: ${numCommas(modInfo.node.mods.length)} mods / ` +
-        `${numCommas(modInfo.node.deps)} deps x${modInfo.node.maxDepth})`
+      let totalSize = 0;
+      _.difference(assets, oversizeAssets).forEach(asset => {
+        totalSize += asset.size;
+        log.debug({ _wpAsset: asset },`${asset.name}: ${humanMemorySize(asset.size)}`);
+      });
+
+      _.sortBy(oversizeAssets, 'size').forEach(asset => {
+        totalSize += asset.size;
+        const logLevel = asset.size > 1000000 ? 'warn' : 'info';
+        log[logLevel]({ _wpAsset: asset }, `${asset.name}: ${humanMemorySize(asset.size)}`);
+      });
+
+      const _wpDone = {
+        modules: modules.length,
+        chunks:  stats.compilation.chunks.length,
+        size: totalSize,
+        time: fmtDuration // duration
+      };
+
+      log.info( { _wpDone },
+        `Built ${_wpDone.modules} modules into ${_wpDone.chunks} ` +
+        `chunks totaling ${humanMemorySize(totalSize)} in ${fmtDuration}`
       );
 
-      // EntryPoint { groupDebugId, name, chunks, origins, rumtimeChunk: { Chunk },
-      // _children: { SortableSet }, _parents: {SortableSet}, _blocks: {SortableSet }
-      // console.info(stats.compilation.chunkGroups, 'chunks');
-      stats.compilation.chunkGroups.forEach(cg => {
-        // console.info(cg.name, cg.runtimeChunk); // runtimeChunk
-      });
-      // Chunk: id, ids, debugId, name, entryModule: { _modules: MultiModule, _groups: SortableSet },
-      // files, rendered, hash, contentHash, renderedHash, chunkReason, extraSync
-      // console.info(stats.compilation.chunks, 'chunks');
+      log.debug(
+        `    ${padRight('app:', 16)} ${padRight(modInfo.app.mods.length + ' modules', 15)} ` +
+        ` ${numCommas(modInfo.app.deps)} dependenciess x${modInfo.app.maxDepth}`
+      );
+
+      log.debug(
+        `    ${padRight('node_modules:', 16)} ${padRight(numCommas(modInfo.node.mods.length + ' modules'), 15)}` +
+        ` ${numCommas(modInfo.node.deps)} dependencies x${modInfo.node.maxDepth}`
+      );
+
+      // stats.compilation.chunkGroups.forEach(cg => { console.info(cg.name, cg.runtimeChunk);  });
 
       if (stats.hasErrors()) {
         log.info(`Failed to compile with ${stats.compilation.errors.length}`);
       } else if (stats.hasWarnings()) {
         log.info(`Compiled with ${stats.compilation.warnings.length} warnings in ${fmtDuration}`);
-      } else {
-        log.info(`Completed in ${fmtDuration}`);
       }
     } else {
-      log.info(`Building ...`);
+      log.info(`Webpack rebuild initiated`);
     }
   };

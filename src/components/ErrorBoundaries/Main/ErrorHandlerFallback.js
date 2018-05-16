@@ -68,8 +68,28 @@ export default function Fallback(props) {
       }
     }
   });
+  const stackLineRE = /at ([^\(]+ )([^\.]+.\/)([^:]+):(\d+):(\d+)/;
   const stackTitle = error.stack.split('\n')[0];
-  const stackLines = error.stack.replace(stackTitle, '');
+  const stackLines = error.stack
+    .replace(stackTitle, '')
+    .split('\n')
+    .map(sl => {
+      const matches = sl.match(stackLineRE);
+      if (matches &&
+        matches.length === 6 &&
+        matches[3].indexOf('node_modules') === -1) {
+        return (
+          <span>
+            <span style={{ color: '#ffffff' }}>{matches[1]}</span>
+            <span>{matches[2]}</span>
+            <span style={{ color: '#ffffff' }}>{matches[3]}</span>:
+            <span style={{ color: '#aaccff', fontWeight: 'bold' }}>{matches[4]}</span>:
+            <span style={{ color: '#ccddff' }}>{matches[5]}</span>
+          </span>
+        )
+      }
+      return <span>{sl}</span>;
+    });
 
   return (
     <Modal>
@@ -99,7 +119,13 @@ export default function Fallback(props) {
             {stackTitle}
           </pre>
           <pre style={{ ...preSty, color: '#888888' }}>
-            {stackLines}
+            <code>
+              {stackLines.map(sl => (
+                <div>
+                  {sl}
+                </div>
+              ))}
+            </code>
           </pre>
           <hr />
           <p>
