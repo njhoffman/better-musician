@@ -1,7 +1,6 @@
 import { getPasswordResetRequestUrl, getPasswordResetRedirectUrl }  from 'utils/sessionStorage';
-import { parseResponse } from 'utils/handleFetchResponse';
 import extend from 'extend';
-import fetch from 'utils/fetch';
+import fetch, { parseResponse } from 'utils/fetch';
 
 export const REQUEST_PASSWORD_RESET_START       = 'REQUEST_PASSWORD_RESET_START';
 export const REQUEST_PASSWORD_RESET_COMPLETE    = 'REQUEST_PASSWORD_RESET_COMPLETE';

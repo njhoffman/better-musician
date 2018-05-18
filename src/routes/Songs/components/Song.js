@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { TableRow, TableRowColumn } from 'material-ui/Table';
+import { TableRow, TableCell } from 'material-ui/Table';
 import css from './Song.scss';
 import withTheme from 'material-ui/styles/withTheme';
 import { RenderStars, RenderDifficulty } from 'components/Field';
@@ -16,41 +16,35 @@ export const Song = ({
   songValues,
   showViewSongModal,
   maxDifficulty,
-  muiTheme,
+  theme,
   ...custom }) => {
   return (
     <TableRow
-      hoverable
       onDoubleClick={showViewSongModal}
       style={rowStyle}
-      displayBorder
       {...custom}>
-      <TableRowColumn
+      <TableCell
         style={colStyle}
-        data-rowId={songValues.id}
         className={css.title}>
         { songValues.title }
-      </TableRowColumn>
-      <TableRowColumn
+      </TableCell>
+      <TableCell
         style={colStyle}
-        data-rowId={songValues.id}
         className={css.artist}>
         { songValues.artist.fullName }
-      </TableRowColumn>
-      <TableRowColumn
+      </TableCell>
+      <TableCell
         style={colStyle}
-        data-rowId={songValues.id}
         className={css.progress}>
-        <RenderStars number={songValues.progress} starColor={muiTheme.starColor} />
-      </TableRowColumn>
-      <TableRowColumn
+        <RenderStars number={songValues.progress} starColor={theme.instrumental.starColor} />
+      </TableCell>
+      <TableCell
         style={colStyle}
-        data-rowId={songValues.id}
         className={css.difficulty}>
         <RenderDifficulty
           difficulty={songValues.difficulty}
           maxDifficulty={maxDifficulty} />
-      </TableRowColumn>
+      </TableCell>
     </TableRow>
   );
 };
@@ -64,7 +58,7 @@ Song.propTypes = {
   }).isRequired,
   showViewSongModal: PropTypes.func,
   maxDifficulty: PropTypes.number.isRequired,
-  muiTheme: PropTypes.object
+  theme: PropTypes.object
 };
 
 const showViewSongModal = () => uiShowModal(MODAL_ADD_SONG, 'view');

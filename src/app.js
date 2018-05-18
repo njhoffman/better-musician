@@ -9,6 +9,7 @@ import ErrorBoundary from 'components/ErrorBoundaries/Main';
 import AppContainer from 'components/AppContainer';
 import initDevTools from 'components/DevTools/DevTools';
 
+import { configureStart, configureComplete } from './actions/auth';
 import createStore from './store/createStore';
 
 import { configure as authConfigure } from './actions/configure';
@@ -33,10 +34,28 @@ const memoryStats = () => {
     debug(`Used JS Heap Size:   ${humanMemorySize(usedJSHeapSize, true)}`);
   }
 };
-
 setInterval(memoryStats, 120000);
 
+const domStats = () => {
+  let stats = { maxDepth: 0, totalNodes: 0, totalDepth: 0 };
+  const getNodeStats = (el, depth) => {
+    stats.maxDepth = depth > stats.maxDepth ? depth : stats.maxDepth;
+    stats.totalNodes++;
+    stats.totalDepth += depth;
+    let i;
+    for(i = 0; i < el.children.length; i++) {
+      getNodeStats(el.children[i], depth + 1);
+    }
+  }
+  getNodeStats(document, 0);
+  stats.averageDepth = (stats.totalDepth / stats.totalNodes).toFixed(2);
+  debug(`average depth => ${stats.averageDepth}`);
+  debug(`maximum depth => ${stats.maxDepth}`);
+  debug(`total nodes   => ${stats.totalDepth}`);
+};
+
 const configApp = () => {
+  store.dispatch(configureStart());
   store.dispatch(
     authConfigure({
       apiUrl                : __API_URL__,
@@ -57,15 +76,17 @@ const configApp = () => {
       serverSideRendering : false,
       clientOnly          : true,
       // cleanSession:        true
-    })).then(() => {
+    })).then((userData) => {
       return store.dispatch(
         loadConfig({
           api: {
             url: __API_URL__
           }
         })
-      )}).then(() => {
+      )}).then((arg1, arg2) => {
+        store.dispatch(configureComplete());
         render(AppContainer);
+        domStats();
       })
 };
 
@@ -107,6 +128,7 @@ if (__DEV__) {
   if (module.hot) {
     // module.hot.accept(() => {
     module.hot.accept('components/AppContainer', () => {
+      console.clear();
       info('HMR reloading ...');
       ReactDOM.unmountComponentAtNode(MOUNT_NODE);
       renderDev();
@@ -115,7 +137,6 @@ if (__DEV__) {
   window.addEventListener('message', e => {
     // console.clear();
   });
-  renderDev();
 } else {
   render();
 }

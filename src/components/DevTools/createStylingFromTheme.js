@@ -102,7 +102,8 @@ const getSheetFromColorMap = map => ({
   actionListRows: {
     overflow: 'auto',
     resize: 'vertical',
-    height: '300px',
+    height: 'auto',
+    'max-height': '1000px',
     'min-height': '100px',
     '&:after' : {
       'pointer-events': 'none',

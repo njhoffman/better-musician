@@ -1,7 +1,6 @@
 import { getDestroyAccountUrl, setCurrentEndpointKey, getDefaultEndpointKey }  from 'utils/sessionStorage';
-import { parseResponse } from 'utils/handleFetchResponse';
 import { storeCurrentEndpointKey } from './configure';
-import fetch from 'utils/fetch';
+import fetch, { parseResponse } from 'utils/fetch';
 
 export const DESTROY_ACCOUNT_START    = 'DESTROY_ACCOUNT_START';
 export const DESTROY_ACCOUNT_COMPLETE = 'DESTROY_ACCOUNT_COMPLETE';

@@ -8,8 +8,7 @@ import {
   persistData
 } from 'utils/sessionStorage';
 import { storeCurrentEndpointKey } from './configure';
-import { parseResponse } from 'utils/handleFetchResponse';
-import fetch from 'utils/fetch';
+import fetch, { parseResponse } from 'utils/fetch';
 import _openPopup from 'utils/popup';
 
 export const OAUTH_SIGN_IN_START    = 'OAUTH_SIGN_IN_START';

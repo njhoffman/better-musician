@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Table, TableBody, TableRow } from 'material-ui/Table';
+import { Table, TableBody, TableRow } from 'material-ui';
 import withTheme from 'material-ui/styles/withTheme';
 import Tappable from 'react-tappable';
 
@@ -12,8 +12,6 @@ import { uiShowModal, MODAL_ADD_SONG } from 'store/ui';
 import Song from './Song';
 import css from './SongList.scss';
 
-const myTmp = 'hello';
-
 export const SongsList = ({
   songsCollection,
   muiTheme,
@@ -23,16 +21,12 @@ export const SongsList = ({
   currentSongId }) => (
   <Tappable onPress={showViewSongModal}>
     <Table
-      selectable
-      onRowSelection={setCurrentSong}
       className={css.songsList}
       style={{ tableLayout: 'fixed' }}>
-      <TableBody
-        showRowHover
-        stripedRows
-        deselectOnClickaway
-        displayRowCheckbox={false}>
-        <TableRow>
+      <TableBody>
+        <TableRow
+          onClick={setCurrentSong}
+          hover={true}>
           <SongsListHeader
             className={css.title}
             setSort={setSort}
@@ -59,7 +53,6 @@ export const SongsList = ({
             <Song
               key={song.id}
               songValues={song}
-              selectable={song.id !== currentSongId}
             />
           );
         })}
@@ -87,7 +80,7 @@ const showViewSongModal = () => {
 
 const mapStateToProps = (state, action) => ({
   songsCollection: songsSelector(state),
-  currentSongId:   state.songsView.currentSong
+  currentSongId:   state.SongsView.currentSong
 });
 
 const mapActionCreators = ({

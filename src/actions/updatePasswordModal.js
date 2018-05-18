@@ -1,6 +1,5 @@
 import { getPasswordUpdateUrl }  from 'utils/sessionStorage';
-import { parseResponse } from 'utils/handleFetchResponse';
-import fetch from 'utils/fetch';
+import fetch, { parseResponse } from 'utils/fetch';
 
 export const UPDATE_PASSWORD_MODAL_START       = 'UPDATE_PASSWORD_MODAL_START';
 export const UPDATE_PASSWORD_MODAL_COMPLETE    = 'UPDATE_PASSWORD_MODAL_COMPLETE';

@@ -1,7 +1,6 @@
 import { getEmailSignUpUrl, getConfirmationSuccessUrl }  from 'utils/sessionStorage';
-import { parseResponse } from 'utils/handleFetchResponse';
 import extend from 'extend';
-import fetch from 'utils/fetch';
+import fetch, { parseResponse } from 'utils/fetch';
 
 export const EMAIL_SIGN_UP_START       = 'EMAIL_SIGN_UP_START';
 export const EMAIL_SIGN_UP_COMPLETE    = 'EMAIL_SIGN_UP_COMPLETE';

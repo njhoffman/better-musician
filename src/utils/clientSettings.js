@@ -79,7 +79,7 @@ export const applyConfig = ({ dispatch, endpoint = {}, settings = {}, reset = fa
 
   let savedCreds = retrieveData(C.SAVED_CREDS_KEY);
 
-  dispatch(configureComplete(getCurrentSettings()));
+  // dispatch(configureComplete(getCurrentSettings()));
   if (getCurrentSettings().initialCredentials) {
     // skip initial headers check (i.e. check was already done server-side)
     let { user, headers } = getCurrentSettings().initialCredentials;

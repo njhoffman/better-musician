@@ -4,8 +4,7 @@ import {
   getCurrentEndpointKey
 } from 'utils/sessionStorage';
 import { storeCurrentEndpointKey } from './endpoints';
-import { parseResponse } from 'utils/handleFetchResponse';
-import fetch from 'utils/fetch';
+import fetch, { parseResponse } from 'utils/fetch';
 
 export const EMAIL_SIGN_IN_START       = 'EMAIL_SIGN_IN_START';
 export const EMAIL_SIGN_IN_COMPLETE    = 'EMAIL_SIGN_IN_COMPLETE';

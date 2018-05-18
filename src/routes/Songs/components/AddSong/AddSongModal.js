@@ -21,7 +21,7 @@ import css from './AddSong.scss';
 let lastActiveField = 'artist';
 
 export const AddSongModal = (props) => {
-  const { modal, muiTheme } = props;
+  const { modal, theme } = props;
   const modalView = {
     isView  : () => modal.props.action === 'view',
     isEdit  : () => modal.props.action === 'edit',
@@ -34,7 +34,7 @@ export const AddSongModal = (props) => {
   lastActiveField = ['artist', 'instrument'].indexOf(props.activeField) !== -1 ? props.activeField : lastActiveField;
 
   const labelStyle     = modalView.isView() ? { textAlign: 'center', width: '100%' } : { };
-  const textInputStyle = modalView.isView() ? { color: muiTheme.palette.textColor } : { };
+  const textInputStyle = modalView.isView() ? { color: theme.instrumental.textColor } : { };
   const textStyle      = modalView.isView() ? { cursor: 'default' } : {};
 
   const styleObj = {
@@ -48,7 +48,7 @@ export const AddSongModal = (props) => {
     textInputStyle,
     labelStyle,
     textStyle,
-    muiTheme,
+    theme,
     modalView
   };
 
@@ -112,7 +112,7 @@ AddSongModal.propTypes = {
   modal:         PropTypes.object.isRequired,
   savedTabs:     PropTypes.array.isRequired,
   activeField:   PropTypes.string,
-  muiTheme:      PropTypes.object.isRequired
+  theme:      PropTypes.object.isRequired
 };
 
 const validate = (values) => {
@@ -128,7 +128,6 @@ const validate = (values) => {
       errors[ field ] = 'Required';
     }
   });
-  console.log('validate', errors);
   return errors;
 };
 

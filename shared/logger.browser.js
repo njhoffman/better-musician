@@ -2,56 +2,17 @@ const pjson = require('prettyjson-256');
 const _ = require('lodash');
 const { padRight } = require('./util');
 
+const beautifiers = require('./logger.browser.beautifiers');
+
 //  console.log('%cBlue! %cRed!', 'color: blue;', 'color: red;');
 const results = pjson.init({ browser: true, showEmpty: false });
 const consoleLog = console.log;
 const subsystems = ['hot-module'];
-const lineLimit = 100;
+const lineLimit = 175;
 
-const beautifiers = {
-  _action: (action) => {
-    if (['@@redux-form/BLUR', '@@redux-form/CHANGE', '@@redux-form/FOCUS'].indexOf(action.type) !== -1) {
-      return '';
-    } else if (action.payload) {
-      return [
-        `%c${padRight(action.type, 30)} %c ${JSON.stringify(action.payload)}`,
-        'color: #aa88ff;', 'color: #8866aa;'
-      ];
-    } else {
-      return [
-        `%c${padRight(action.type)}`,
-        'color: #aa88ff;'
-      ];
-    }
-  },
-  _sessionGet: ({ key, parsedVal, storage }) => {
-    if (!_.isObject(parsedVal)) {
-      return [
-        `Get from ${storage}: %c${key} :%c ${parsedVal}`,
-        'color: cyan', 'color: white'
-      ];
-    } else {
-      return [
-        [`Get from ${storage}: %c${key}`, 'color: cyan'],
-        parsedVal
-      ];
-    }
-  },
-  _sessionSave: ({ key, val, storage }) => {
-    if (!_.isObject(val)) {
-      return [
-        `Save to ${storage}: %c${key} :%c ${val}`,
-        'color: cyan', 'color: white'
-      ];
-    } else {
-      return [
-        [`Save to ${storage}: %c${key}`, 'color: cyan'],
-        val
-      ];
-    }
-  }
-};
-
+const ignoredActions = [
+  '@@redux-form/BLUR', '@@redux-form/CHANGE', '@@redux-form/FOCUS'
+];
 const parse = (subsystem, style, messages) => {
   subsystems.indexOf(subsystem) === -1 && subsystems.push(subsystem);
   const ssLength = 6 + _.maxBy(subsystems, (ss) => ss.length).length - subsystem.length;
@@ -105,12 +66,16 @@ const parse = (subsystem, style, messages) => {
 const createLogLine = (messages) => {
   let out = '';
   let colors = [];
+  let lineLength = 0;
   messages.forEach((line, n) => {
     const newMessage = line[0].replace(/%i$/, '');
+    const newMessageLength = newMessage.replace(/\%c/g, '').length;
     if (n > 0 && !/%i$/.test(line[0])) {
       out += ' \n ';
+      lineLength = 0;
     }
-    out += newMessage.length > lineLimit ? newMessage.slice(0, lineLimit) + '...' : newMessage;
+    lineLength += newMessageLength;
+    out += lineLength > lineLimit ? newMessage.slice(0, lineLimit - (lineLength - newMessageLength)) + '...' : newMessage;
     colors.push(...line.slice(1));
     const nextLine = messages[n + 1];
     if (nextLine && !/%i$/.test(nextLine[0])) {
@@ -122,6 +87,9 @@ const createLogLine = (messages) => {
 
 console.log = function (arg1) {
   if (arg1 && arg1.indexOf && arg1.indexOf('[HMR]') !== -1) {
+    if (arg1.indexOf('bundle rebuilding') !== -1) {
+      console.clear();
+    }
     return parse('hot-module', 'color: #ff8800', `${arg1}`);
   } else {
     return consoleLog.apply(console, arguments);

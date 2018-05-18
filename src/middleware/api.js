@@ -1,4 +1,4 @@
-// import { fetch } from 'redux-auth';
+import fetch from 'utils/fetch';
 import { init as initLog } from 'shared/logger';
 import { padRight } from 'shared/util';
 import _ from 'lodash';
@@ -32,7 +32,7 @@ const makeFormData = (FormData, data, name = '') => {
 };
 
 const apiFetch = (endpoint, options) => {
-  endpoint = webpackVariables.apiUrl + endpoint;
+  endpoint = __API_URL__ + endpoint;
   log(`Fetching: ${endpoint}`);
   trace('Options', options);
   if (typeof options.body === 'object' && Object.keys(options.body).length > 0) {
@@ -40,16 +40,16 @@ const apiFetch = (endpoint, options) => {
     makeFormData(formData, options.body);
     options.body = formData;
   }
-  // return fetch(endpoint, options)
-  //   .then(response =>
-  //     response.json()
-  //     .then(json => {
-  //       if (!response.ok) {
-  //         return Promise.reject(json);
-  //       }
-  //       return json.data;
-  //     })
-  //   );
+  return fetch(endpoint, options)
+    .then(response =>
+      response.json()
+      .then(json => {
+        if (!response.ok) {
+          return Promise.reject(json);
+        }
+        return json.data;
+      })
+    );
 };
 
 export const actionLogger = (store) => next => action => {
@@ -58,15 +58,17 @@ export const actionLogger = (store) => next => action => {
   if (_.isUndefined(action)) {
     warn('undefined action');
   } else {
-    trace(`Action: ${padRight(action.type)}`, { _action: action });
-    next(action);
+    const callApi = action[CALL_API] || false;
+    trace(`Action: ${padRight(callApi ? 'CALL_API' : action.type)}`,
+      { _action: { ...action, ...{ callApi } } });
+    apiHandler(store, action, next);
   }
 };
 
-export default (store) => next => action => {
+const apiHandler = (store, action, next) => {
   if (_.isUndefined(action)) {
     return;
-  } else if (_.isUndefined(action[callApi])) {
+  } else if (_.isUndefined(action[CALL_API])) {
     return next(action);
   }
 
@@ -148,3 +150,5 @@ export default (store) => next => action => {
   return apiFetch(endpoint, options)
     .then(responseSuccess, responseFailure);
 };
+
+export default (store) => next => action => apiHandler(store, action, next);

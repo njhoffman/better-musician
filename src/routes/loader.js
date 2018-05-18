@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Loadable from 'react-loadable';
 import LoadingIndicator from 'components/LoadingIndicator';
 
+import { initView } from 'actions/view';
 import { injectReducer } from 'store/reducers';
 
 import { init as initLog } from 'shared/logger';
@@ -14,7 +15,7 @@ const LoadRoute = (route) => ({ dispatch }) => {
   class ReducerInjector extends React.Component {
     componentWillMount() {
       const { store } = this.context;
-      dispatch({ type: 'INIT_VIEW', payload: { currentView: route } });
+      initView(store, route);
       injectReducer({
         key: `${route}View`,
         reducer: require(`routes/${route}/modules/reducer`).default,

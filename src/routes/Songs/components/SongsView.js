@@ -11,7 +11,7 @@ import css from './SongsView.scss';
 
 export const SongsView = (props) => (
   <Column small={12} className='songsView'>
-    <Paper zDepth={5}>
+    <Paper elevation={5}>
       <div className={css.songsContainer}>
         <SongsList {...props} />
         <SongsPagination />

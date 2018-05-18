@@ -1,4 +1,5 @@
 import React, { Component }  from 'react';
+import { connect } from 'react-redux';
 import { Row, Column, Breakpoints } from 'react-foundation';
 import withTheme from 'material-ui/styles/withTheme';
 
@@ -10,12 +11,11 @@ import css from './Header.scss';
 export class Header extends Component {
   render() {
     const { ...props } = this.props;
-    const signedIn = props.user && props.user.get ? props.user.get('isSignedIn') : false;
     const headerStyle = {
       background: props.theme.instrumental.headerBackground,
       color: props.theme.instrumental.headerLinksColor
     };
-    if (signedIn) {
+    if (props.isSignedIn) {
       return (
         <div
           style={headerStyle}
@@ -57,4 +57,8 @@ export class Header extends Component {
   }
 };
 
-export default withTheme()(Header);
+const mapStateToProps = (state) => ({
+  isSignedIn: state.auth.getIn(['user', 'isSignedIn'])
+});
+
+export default connect(mapStateToProps)(withTheme()(Header));

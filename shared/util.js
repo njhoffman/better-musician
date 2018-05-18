@@ -16,14 +16,14 @@ export const humanMemorySize = (bytes, si) => {
 }
 
 export const padLeft = (input, len) => {
-  const str = input.toString() || '';
+  const str = input && input.toString() || '';
   return len > str.length
     ? (new Array(len - str.length + 1)).join(' ') + str
     : str;
 };
 
 export const padRight = (input, len) => {
-  const str = input.toString() || '';
+  const str = input && input.toString() || '';
   return len > str.length
     ? str + (new Array(len - str.length + 1)).join(' ')
     : str;

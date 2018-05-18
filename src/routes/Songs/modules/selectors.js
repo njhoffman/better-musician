@@ -5,10 +5,10 @@ import { find, isEmpty } from 'lodash';
 
 export const ormSelector = state => state.orm;
 
-const songsSelector = ormCreateSelector(orm, (Session, songsView) => {
-  const sortField = songsView ? songsView.sortField : 'title';
-  const perPage = songsView ? songsView.paginationPerPage : false;
-  const paginationCurrent = songsView ? songsView.paginationCurrent : 1;
+const songsSelector = ormCreateSelector(orm, (Session, SongsView) => {
+  const sortField = SongsView ? SongsView.sortField : 'title';
+  const perPage = SongsView ? SongsView.paginationPerPage : false;
+  const paginationCurrent = SongsView ? SongsView.paginationCurrent : 1;
 
   let retObj = Session.Song.all().toModelArray();
 
@@ -20,7 +20,7 @@ const songsSelector = ormCreateSelector(orm, (Session, songsView) => {
         return (a[sortField] > b[sortField]);
       }
     });
-    if (songsView.sortInverse) {
+    if (SongsView.sortInverse) {
       retObj = retObj.reverse();
     }
   }
@@ -33,9 +33,9 @@ const songsSelector = ormCreateSelector(orm, (Session, songsView) => {
   return retObj;
 });
 
-const currentSongSelector = ormCreateSelector(orm, (Session, songsView) => {
-  if (!isEmpty(songsView) && !isEmpty(songsView.currentSong)) {
-    const song = Session.Song.withId(songsView.currentSong);
+const currentSongSelector = ormCreateSelector(orm, (Session, SongsView) => {
+  if (!isEmpty(SongsView) && !isEmpty(SongsView.currentSong)) {
+    const song = Session.Song.withId(SongsView.currentSong);
     song.customFields = Session.CustomField.all().toModelArray().map((cf, idx) => {
       const found = find(song.customFields, { id: cf.id });
       return found ? found.value : '';
@@ -48,18 +48,18 @@ const paginationTotalSelector = ormCreateSelector(orm, Session => {
   return Session.Song.count();
 });
 
-const paginationStartSelector = ormCreateSelector(orm, (Session, songsView) => {
-  return (1 + (songsView.paginationCurrent - 1) * parseInt(songsView.paginationPerPage));
+const paginationStartSelector = ormCreateSelector(orm, (Session, SongsView) => {
+  return (1 + (SongsView.paginationCurrent - 1) * parseInt(SongsView.paginationPerPage));
 });
 
-const paginationEndSelector = ormCreateSelector(orm, (Session, songsView) => {
-  return songsView.paginationCurrent * songsView.paginationPerPage > Session.Song.count()
+const paginationEndSelector = ormCreateSelector(orm, (Session, SongsView) => {
+  return SongsView.paginationCurrent * SongsView.paginationPerPage > Session.Song.count()
     ? Session.Song.count()
-    : songsView.paginationCurrent * songsView.paginationPerPage;
+    : SongsView.paginationCurrent * SongsView.paginationPerPage;
 });
 
-const paginationPagesSelector = ormCreateSelector(orm, (Session, songsView) => {
-  return parseInt(Math.ceil(Session.Song.count() / songsView.paginationPerPage));
+const paginationPagesSelector = ormCreateSelector(orm, (Session, SongsView) => {
+  return parseInt(Math.ceil(Session.Song.count() / SongsView.paginationPerPage));
 });
 
 const songStatsSelector = ormCreateSelector(orm, (Session, state) => {
@@ -81,11 +81,11 @@ const savedTabsSelector = ormCreateSelector(orm, (Session, currentSong) => {
   });
 });
 
-export const songs = createSelector(ormSelector, state => state.songsView, songsSelector);
-export const currentSong = createSelector(ormSelector, state => state.songsView, currentSongSelector);
-export const paginationTotal = createSelector(ormSelector, state => state.songsView, paginationTotalSelector);
-export const paginationStart = createSelector(ormSelector, state => state.songsView, paginationStartSelector);
-export const paginationEnd = createSelector(ormSelector, state => state.songsView, paginationEndSelector);
-export const paginationPages = createSelector(ormSelector, state => state.songsView, paginationPagesSelector);
+export const songs = createSelector(ormSelector, state => state.SongsView, songsSelector);
+export const currentSong = createSelector(ormSelector, state => state.SongsView, currentSongSelector);
+export const paginationTotal = createSelector(ormSelector, state => state.SongsView, paginationTotalSelector);
+export const paginationStart = createSelector(ormSelector, state => state.SongsView, paginationStartSelector);
+export const paginationEnd = createSelector(ormSelector, state => state.SongsView, paginationEndSelector);
+export const paginationPages = createSelector(ormSelector, state => state.SongsView, paginationPagesSelector);
 export const songStats = createSelector(ormSelector, state => state.orm, songStatsSelector);
-export const savedTabs = createSelector(ormSelector, state => state.songsView.currentSong, savedTabsSelector);
+export const savedTabs = createSelector(ormSelector, state => state.SongsView.currentSong, savedTabsSelector);
