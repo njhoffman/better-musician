@@ -29,7 +29,6 @@ function isIterable(obj) {
     typeof obj[window.Symbol.iterator] === 'function';
 }
 
-
 function iterateToKey(obj, key) { // maybe there's a better way, dunno
   let idx = 0;
   for (let entry of obj) {
@@ -70,7 +69,7 @@ export default function getInspectedState(state, path, convertImmutable) {
   if (convertImmutable) {
     try {
       state = fromJS(state).toJS();
-    } catch(e) {}
+    } catch (e) {}
   }
 
   return state;

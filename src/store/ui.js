@@ -80,7 +80,6 @@ const hideModal = (state) =>
 const initView = (state, { payload }) =>
   ({ ...state, currentView: payload.currentView });
 
-
 const ACTION_HANDLERS = {
   [UI_TOGGLE_DRAWER_MENU]: toggleDrawerMenu,
   [UI_SHOW_DRAWER_MENU]:   showDrawerMenu,

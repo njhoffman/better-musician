@@ -34,7 +34,7 @@ function reduceUpdateState(state, action) {
   } : state;
 }
 
-export function reducer(props, state=DEFAULT_STATE, action) {
+export function reducer(props, state = DEFAULT_STATE, action) {
   return {
     ...reduceUpdateState(state, action)
   };
@@ -44,8 +44,8 @@ function getLastActionId(props) {
 }
 
 function getCurrentActionId(props, monitorState) {
-  return monitorState.selectedActionId === null ?
-    props.stagedActionIds[props.currentStateIndex] : monitorState.selectedActionId;
+  return monitorState.selectedActionId === null
+    ? props.stagedActionIds[props.currentStateIndex] : monitorState.selectedActionId;
 }
 
 function getFromState(actionIndex, stagedActionIds, computedStates, monitorState) {
@@ -60,9 +60,9 @@ function getFromState(actionIndex, stagedActionIds, computedStates, monitorState
 
 function createIntermediateState(props, monitorState) {
   const { supportImmutable, computedStates, stagedActionIds,
-          actionsById: actions, diffObjectHash, diffPropertyFilter } = props;
+    actionsById: actions, diffObjectHash, diffPropertyFilter } = props;
   if (!monitorState) {
-    debugger;
+
   }
   const { inspectedStatePath, inspectedActionPath } = monitorState;
   const currentActionId = getCurrentActionId(props, monitorState);
@@ -73,13 +73,13 @@ function createIntermediateState(props, monitorState) {
   const toState = computedStates[actionIndex];
   const error = toState ? toState.error : null;
 
-  const fromInspectedState = !error && fromState ?
-    getInspectedState(fromState.state, inspectedStatePath, supportImmutable) : null;
-  const toInspectedState = !error && toState ?
-    getInspectedState(toState.state, inspectedStatePath, supportImmutable) : null;
+  const fromInspectedState = !error && fromState
+    ? getInspectedState(fromState.state, inspectedStatePath, supportImmutable) : null;
+  const toInspectedState = !error && toState
+    ? getInspectedState(toState.state, inspectedStatePath, supportImmutable) : null;
 
-  const delta = fromInspectedState && toInspectedState ?
-    createDiffPatcher(diffObjectHash, diffPropertyFilter).diff(
+  const delta = fromInspectedState && toInspectedState
+    ? createDiffPatcher(diffObjectHash, diffPropertyFilter).diff(
       fromInspectedState,
       toInspectedState
     ) : null;
@@ -105,7 +105,6 @@ function setupTheme(props) {
   return theme;
 }
 
-
 function createThemeState(props) {
   const base16Theme = getBase16Theme(props.theme);
   if (props.theme === 'twilight') {
@@ -116,7 +115,6 @@ function createThemeState(props) {
 
   return { base16Theme, styling };
 }
-
 
 class ChartToolbar extends Component {
   static propTypes = {
@@ -245,15 +243,15 @@ class ChartToolbar extends Component {
     return (
       <div style={this.toolbarWrapperStyle()}>
         <div
-            key='inspector'
-            ref='inspector'
-            style={{
-              width: '25%',
-              borderTop: 'solid 1px #333',
-              position: 'absolute',
-              bottom: '0px'
-            }}
-            {...styling(['inspector'])}>
+          key='inspector'
+          ref='inspector'
+          style={{
+            width: '25%',
+            borderTop: 'solid 1px #333',
+            position: 'absolute',
+            bottom: '0px'
+          }}
+          {...styling(['inspector'])}>
           <ActionList {...{
             actions,
             actionIds,
@@ -271,7 +269,7 @@ class ChartToolbar extends Component {
             skippedActionIds={skippedActionIds}
             currentActionId={actionIds[currentStateIndex]}
             lastActionId={getLastActionId(this.props)} />
-          </div>
+        </div>
         <div
           className='timeline-controls'
           style={this.toolbarStyle()}>
@@ -279,12 +277,9 @@ class ChartToolbar extends Component {
             <SliderMonitor {...this.props} theme={theme} parsedDelta={parsedDelta} />
           </div>
         </div>
-        <div style={{ width: '25%', position: 'absolute' }}>
-
-        </div>
+        <div style={{ width: '25%', position: 'absolute' }} />
       </div>
     );
-
   }
 
   updateMonitorState = (monitorState) => {
@@ -348,4 +343,3 @@ class ChartToolbar extends Component {
 }
 
 export default ChartToolbar;
-

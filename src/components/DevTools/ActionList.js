@@ -30,7 +30,7 @@ export default class ActionList extends PureComponent {
       onCommit, onSweep, onJumpToState } = this.props;
     const lowerSearchValue = searchValue && searchValue.toLowerCase();
     const filteredActionIds = (searchValue ? actionIds.filter(
-        id => actions[id].action.type.toLowerCase().indexOf(lowerSearchValue) !== -1
+      id => actions[id].action.type.toLowerCase().indexOf(lowerSearchValue) !== -1
     ) : actionIds);
 
     return (

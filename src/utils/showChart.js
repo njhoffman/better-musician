@@ -22,7 +22,6 @@ const openChart = (store, props) => {
   info(`opening dev chart popup: ${winOptions},${size},${position}`);
   popup = window.open('', 'DevTools_Chart', `${winOptions},${size},${position}`);
 
-
   window.onunload = () => {
     info('parent window unloading, removing popup');
     popup.unload();
@@ -54,7 +53,7 @@ const openChart = (store, props) => {
     popup.document.getElementsByTagName('body')[0].style.margin = '0px';
     popup.document.title = 'DevTools Chart';
 
-    checkPopupTimer = setInterval(function() {
+    checkPopupTimer = setInterval(function () {
       if (popup.closed) {
         clearInterval(checkPopupTimer);
         checkPopupTimer = null;
@@ -64,7 +63,6 @@ const openChart = (store, props) => {
       }
     }, 1000);
   }, 20);
-
 };
 
 export default (store, props) => {

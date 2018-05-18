@@ -53,7 +53,7 @@ const colorMap = theme => ({
   DIFF_ARROW_COLOR: theme.base0E,
   LINK_COLOR: rgba(theme.base0E, 90),
   LINK_HOVER_COLOR: theme.base0E,
-  ERROR_COLOR: theme.base08,
+  ERROR_COLOR: theme.base08
 });
 
 const getSheetFromColorMap = map => ({
@@ -107,7 +107,7 @@ const getSheetFromColorMap = map => ({
     'min-height': '100px',
     '&:after' : {
       'pointer-events': 'none',
-      content: "↓",
+      content: '↓',
       'font-size': '14px',
       position: 'absolute',
       height: '22px',
@@ -244,7 +244,7 @@ const getSheetFromColorMap = map => ({
       color: 'inherit'
     },
 
-    'background-color': map.BACKGROUND_COLOR,
+    'background-color': map.BACKGROUND_COLOR
   },
 
   actionPreviewContent: {
@@ -412,7 +412,7 @@ const getSheetFromColorMap = map => ({
 
   rightSliderShown: {
     position: 'static',
-    transform: 'translateX(0)',
+    transform: 'translateX(0)'
   },
 
   rightSliderRotateShown: {
@@ -446,4 +446,3 @@ export const createStylingFromTheme = createStyling(getDefaultThemeStyling, {
 });
 
 // export const createStylingFromTheme = createStyling(getDefaultThemeStyling);
-

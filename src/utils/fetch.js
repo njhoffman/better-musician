@@ -62,7 +62,7 @@ export const parseResponse = (response) => {
   } else {
     return json.then(err => Promise.reject(err.errors ? err.errors : err));
   }
-}
+};
 
 export default (url, options = {}) => {
   options.headers = options.headers || {};

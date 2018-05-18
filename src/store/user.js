@@ -5,12 +5,12 @@ const SIGN_OUT_ERROR = 'SIGN_OUT_ERROR';
 const SIGN_OUT_COMPLETE = 'SIGN_OUT_COMPLETE';
 
 const ACTION_HANDLERS = {
-  [SET_ENDPOINT_KEYS]: (state, {endpoints}) => ({ ...state, ...endpoints }),
+  [SET_ENDPOINT_KEYS]: (state, { endpoints }) => ({ ...state, ...endpoints }),
 
-  [SIGN_OUT_START]: (state, {endpoint}) =>
+  [SIGN_OUT_START]: (state, { endpoint }) =>
     ({ ...state, ...{ ...endpoint, ...{ loading: true } } }),
 
-  [SIGN_OUT_COMPLETE]: (state, {endpoint}) =>
+  [SIGN_OUT_COMPLETE]: (state, { endpoint }) =>
     ({ ...state, ...{ ...endpoint, ...{ loading: true, errors: null } } }),
 
   [SIGN_OUT_ERROR]: (state, { endpoint, errors }) =>

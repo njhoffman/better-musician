@@ -15,7 +15,7 @@ export default ({ key, reducer }) => (WrappedComponent) => {
   class ReducerInjector extends React.Component {
     static WrappedComponent = WrappedComponent;
     static contextTypes = {
-      store: PropTypes.object.isRequired,
+      store: PropTypes.object.isRequired
     };
     static displayName = `withReducer(${(WrappedComponent.displayName || WrappedComponent.name || 'Component')})`;
 
@@ -34,5 +34,3 @@ export default ({ key, reducer }) => (WrappedComponent) => {
 
   return hoistNonReactStatics(ReducerInjector, WrappedComponent);
 };
-
-

@@ -21,19 +21,19 @@ class DevToolsChart extends Component {
   componentDidMount() {
     this.props.parentWindow.document.addEventListener('keydown', (e) => {
       const container = this.chartMonitor.chartNode.node.children[0].children[0];
-      const transform = container.getAttribute('transform').match(/translate\((?:([^\)]+)\)scale\(([^\)]+))/)
+      const transform = container.getAttribute('transform').match(/translate\((?:([^\)]+)\)scale\(([^\)]+))/);
       let newTranslate;
       if (e.key === 'ArrowLeft') {
         newTranslate = (parseInt(transform[1].split(',')[0]) + 10) + ',' + transform[1].split(',')[1];
       } else if (e.key === 'ArrowRight') {
         newTranslate = (parseInt(transform[1].split(',')[0]) - 10) + ',' + transform[1].split(',')[1];
       } else if (e.key === 'ArrowUp') {
-        newTranslate = transform[1].split(',')[0]  + ',' + (parseInt(transform[1].split(',')[1]) + 10);
+        newTranslate = transform[1].split(',')[0] + ',' + (parseInt(transform[1].split(',')[1]) + 10);
       } else if (e.key === 'ArrowDown') {
-        newTranslate = transform[1].split(',')[0]  + ',' + (parseInt(transform[1].split(',')[1]) - 10);
+        newTranslate = transform[1].split(',')[0] + ',' + (parseInt(transform[1].split(',')[1]) - 10);
       }
       if (newTranslate) {
-        const newTransform = `translate(${newTranslate})scale(${transform[2]})`
+        const newTransform = `translate(${newTranslate})scale(${transform[2]})`;
         // console.info('newTransform', newTransform);
         container.setAttribute('transform', newTransform);
       }
@@ -48,7 +48,7 @@ class DevToolsChart extends Component {
     return (
       <div >
         <ChartMonitor
-          defaultIsVisible={true}
+          defaultIsVisible
           size={1000}
           style={{ link: { stroke: '#223344' }, text: { colors: { 'default': '#779cc1' } } }}
           {...this.props}

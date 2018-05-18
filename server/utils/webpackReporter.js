@@ -77,7 +77,7 @@ module.exports = (config, sharedUtils, outputHeap) =>
       const assets = Object.keys(stats.compilation.assets)
         .map(key => ({
           name: key,
-          overLimit: stats.compilation.assets[key].isOverSizeLimit ? true : false,
+          overLimit: !!stats.compilation.assets[key].isOverSizeLimit,
           size: stats.compilation.assets[key].size()
         }));
 
@@ -86,7 +86,7 @@ module.exports = (config, sharedUtils, outputHeap) =>
       let totalSize = 0;
       _.difference(assets, oversizeAssets).forEach(asset => {
         totalSize += asset.size;
-        log.debug({ _wpAsset: asset },`${asset.name}: ${humanMemorySize(asset.size)}`);
+        log.debug({ _wpAsset: asset }, `${asset.name}: ${humanMemorySize(asset.size)}`);
       });
 
       _.sortBy(oversizeAssets, 'size').forEach(asset => {
@@ -102,7 +102,7 @@ module.exports = (config, sharedUtils, outputHeap) =>
         time: fmtDuration // duration
       };
 
-      log.info( { _wpDone },
+      log.info({ _wpDone },
         `Built ${_wpDone.modules} modules into ${_wpDone.chunks} ` +
         `chunks totaling ${humanMemorySize(totalSize)} in ${fmtDuration}`
       );

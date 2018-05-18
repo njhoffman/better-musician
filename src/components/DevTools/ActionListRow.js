@@ -13,7 +13,7 @@ export default class ActionListRow extends PureComponent {
 
   render() {
     const { styling, isSelected, action, isInitAction, onSelect,
-            timestamps, isSkipped, isInFuture, isActive, actionId } = this.props;
+      timestamps, isSkipped, isInFuture, isActive, actionId } = this.props;
     const { hover } = this.state;
     const timeDelta = timestamps.current - timestamps.previous;
     const showButtons = hover && !isInitAction || isSkipped;
@@ -50,9 +50,9 @@ export default class ActionListRow extends PureComponent {
         <div {...styling('actionListItemButtons')}>
           <RightSlider styling={styling} shown={!showButtons} rotate>
             <div {...styling('actionListItemTime')}>
-              {false ?
-                (timeDelta === 0 ? '+00:00:00' :
-                  dateformat(timeDelta, timestamps.previous ? '+MM:ss.L' : 'h:MM:ss.L')
+              {false
+                ? (timeDelta === 0 ? '+00:00:00'
+                  : dateformat(timeDelta, timestamps.previous ? '+MM:ss.L' : 'h:MM:ss.L')
                 ) : actionId}
             </div>
           </RightSlider>
@@ -80,13 +80,13 @@ export default class ActionListRow extends PureComponent {
   handleButtonClick(btn, e) {
     e.stopPropagation();
 
-    switch(btn) {
-    case BUTTON_SKIP:
-      this.props.onToggleClick();
-      break;
-    case BUTTON_JUMP:
-      this.props.onJumpClick();
-      break;
+    switch (btn) {
+      case BUTTON_SKIP:
+        this.props.onToggleClick();
+        break;
+      case BUTTON_JUMP:
+        this.props.onJumpClick();
+        break;
     }
   }
 

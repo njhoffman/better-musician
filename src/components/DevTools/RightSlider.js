@@ -7,7 +7,7 @@ const RightSlider = ({ styling, shown, children, rotate }) =>
     rotate ? 'rightSliderRotate' : null,
     rotate && shown ? 'rightSliderRotateShown' : null
   ])}>
-  {children}
-</div>;
+    {children}
+  </div>;
 
 export default RightSlider;

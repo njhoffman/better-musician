@@ -34,7 +34,7 @@ const LoadRoute = (route) => ({ dispatch }) => {
     store: PropTypes.object.isRequired
   };
 
-  return <ReducerInjector />
+  return <ReducerInjector />;
 };
 
 export { LoadRoute };

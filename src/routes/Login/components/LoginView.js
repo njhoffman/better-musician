@@ -27,7 +27,7 @@ LoginView.propTypes = {
 };
 
 const mapActionCreators = {
-  handleLoginSuccess,
+  handleLoginSuccess
 };
 const mapStateToProps = (state) => ({
   settings: state.login

@@ -86,7 +86,7 @@ export default function Fallback(props) {
             <span style={{ color: '#aaccff', fontWeight: 'bold' }}>{matches[4]}</span>:
             <span style={{ color: '#ccddff' }}>{matches[5]}</span>
           </span>
-        )
+        );
       }
       return <span>{sl}</span>;
     });

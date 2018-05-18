@@ -117,8 +117,7 @@ export class EmailSignUpForm extends React.Component {
               icon={ContentSend}
               disabled={disabled}
               onClick={() => this.handleSubmit()}
-              {...this.props.inputProps.submit}>
-            </ButtonLoader>
+              {...this.props.inputProps.submit} />
           </Column>
           <Column centerOnSmall small={12} medium={7} pullOnMedium={5}>
             <Button

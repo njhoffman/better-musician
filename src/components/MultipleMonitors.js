@@ -44,9 +44,9 @@ const monitorStyles = [{
 }, {
   height: '100%',
   width: 'calc(100% - 235px)'
-},  {
+}, {
   width: '100%'
-},  {
+}, {
   width: '100%'
 }];
 

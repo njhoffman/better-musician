@@ -46,7 +46,6 @@ const getStateFromProps = props => ({
 });
 
 export default class JSONDiff extends PureComponent {
-
   constructor(props) {
     super(props);
     this.state = getStateFromProps(props);
@@ -54,7 +53,7 @@ export default class JSONDiff extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.base16Theme !== this.props.base16Theme) {
-      this.setState(getStateFromProps(nextProps))
+      this.setState(getStateFromProps(nextProps));
     }
   }
 
@@ -95,27 +94,27 @@ export default class JSONDiff extends PureComponent {
     }
 
     if (Array.isArray(value)) {
-      switch(value.length) {
-      case 1:
-        return (
-          <span {...styling('diffWrap')}>
-            {renderSpan('diffAdd', stringifyAndShrink(value[0], isWideLayout))}
-          </span>
-        );
-      case 2:
-        return (
-          <span {...styling('diffWrap')}>
-            {renderSpan('diffUpdateFrom', stringifyAndShrink(value[0], isWideLayout))}
-            {renderSpan('diffUpdateArrow', ' => ')}
-            {renderSpan('diffUpdateTo', stringifyAndShrink(value[1], isWideLayout))}
-          </span>
-        );
-      case 3:
-        return (
-          <span {...styling('diffWrap')}>
-            {renderSpan('diffRemove', stringifyAndShrink(value[0], isWideLayout))}
-          </span>
-        );
+      switch (value.length) {
+        case 1:
+          return (
+            <span {...styling('diffWrap')}>
+              {renderSpan('diffAdd', stringifyAndShrink(value[0], isWideLayout))}
+            </span>
+          );
+        case 2:
+          return (
+            <span {...styling('diffWrap')}>
+              {renderSpan('diffUpdateFrom', stringifyAndShrink(value[0], isWideLayout))}
+              {renderSpan('diffUpdateArrow', ' => ')}
+              {renderSpan('diffUpdateTo', stringifyAndShrink(value[1], isWideLayout))}
+            </span>
+          );
+        case 3:
+          return (
+            <span {...styling('diffWrap')}>
+              {renderSpan('diffRemove', stringifyAndShrink(value[0], isWideLayout))}
+            </span>
+          );
       }
     }
 
@@ -126,4 +125,3 @@ export default class JSONDiff extends PureComponent {
     return getItemString(this.props.styling, type, data, this.props.isWideLayout, true);
   };
 }
-

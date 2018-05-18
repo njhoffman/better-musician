@@ -43,12 +43,12 @@ const apiFetch = (endpoint, options) => {
   return fetch(endpoint, options)
     .then(response =>
       response.json()
-      .then(json => {
-        if (!response.ok) {
-          return Promise.reject(json);
-        }
-        return json.data;
-      })
+        .then(json => {
+          if (!response.ok) {
+            return Promise.reject(json);
+          }
+          return json.data;
+        })
     );
 };
 

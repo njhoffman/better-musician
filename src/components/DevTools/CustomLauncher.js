@@ -49,7 +49,6 @@ const styles = {
 };
 
 export default class CustomLauncher extends Component {
-
   static update = chartToolbarReducer
 
   static propTypes = {
@@ -66,11 +65,11 @@ export default class CustomLauncher extends Component {
     theme: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.string
-    ]),
+    ])
   };
 
   static defaultProps = {
-    theme: 'twilight',
+    theme: 'twilight'
   };
 
   shouldComponentUpdate = shouldPureComponentUpdate;
@@ -88,7 +87,7 @@ export default class CustomLauncher extends Component {
   componentDidMount() {
     const node = this.node;
     if (!node || !this.props.monitorState) {
-      return;
+
     }
   }
 
@@ -145,7 +144,7 @@ export default class CustomLauncher extends Component {
     return (
       <div style={{ ...styles.container, backgroundColor: theme.base01 }}>
         <div
-          style={{ ... styles.elements, backgroundColor: theme.base01 }}
+          style={{ ...styles.elements, backgroundColor: theme.base01 }}
           ref={this.getRef}>
           <Button theme={theme}>Actions</Button>
           <Button theme={theme}>Fixtures</Button>
@@ -157,7 +156,7 @@ export default class CustomLauncher extends Component {
         </div>
         {this.state.showChart && (
           <NewWindow
-            title="DevTools Chart"
+            title='DevTools Chart'
             features={winOptions}
             onUnload={this.popupUnload}>
             <DevToolsChart {...this.props} />
@@ -166,5 +165,4 @@ export default class CustomLauncher extends Component {
       </div>
     );
   }
-
 }

@@ -30,7 +30,7 @@ const MOUNT_NODE = document.getElementById('root');
 const memoryStats = () => {
   if (window.performance && window.performance.memory) {
     const { totalJSHeapSize, usedJSHeapSize } = window.performance.memory;
-    debug( `Total JS Heap Size:  ${humanMemorySize(totalJSHeapSize, true)}`);
+    debug(`Total JS Heap Size:  ${humanMemorySize(totalJSHeapSize, true)}`);
     debug(`Used JS Heap Size:   ${humanMemorySize(usedJSHeapSize, true)}`);
   }
 };
@@ -43,10 +43,10 @@ const domStats = () => {
     stats.totalNodes++;
     stats.totalDepth += depth;
     let i;
-    for(i = 0; i < el.children.length; i++) {
+    for (i = 0; i < el.children.length; i++) {
       getNodeStats(el.children[i], depth + 1);
     }
-  }
+  };
   getNodeStats(document, 0);
   stats.averageDepth = (stats.totalDepth / stats.totalNodes).toFixed(2);
   debug(`average depth => ${stats.averageDepth}`);
@@ -74,20 +74,21 @@ const configApp = () => {
       }
     }, {
       serverSideRendering : false,
-      clientOnly          : true,
+      clientOnly          : true
       // cleanSession:        true
     })).then((userData) => {
-      return store.dispatch(
-        loadConfig({
-          api: {
-            url: __API_URL__
-          }
-        })
-      )}).then((arg1, arg2) => {
-        store.dispatch(configureComplete());
-        render(AppContainer);
-        domStats();
+    return store.dispatch(
+      loadConfig({
+        api: {
+          url: __API_URL__
+        }
       })
+    );
+  }).then((arg1, arg2) => {
+    store.dispatch(configureComplete());
+    render(AppContainer);
+    domStats();
+  });
 };
 
 configApp();

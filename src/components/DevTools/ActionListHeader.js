@@ -8,31 +8,31 @@ const getActiveButtons = (hasSkippedActions) => [
 
 const ActionListHeader =
   ({ styling, onSearch, hasSkippedActions, hasStagedActions, onCommit, onSweep }) =>
-  <div {...styling('actionListHeader')}>
-    <input
-      {...styling('actionListHeaderSearch')}
-      onChange={e => onSearch(e.target.value)}
-      placeholder='filter...'
-    />
-    <div {...styling('actionListHeaderWrapper')}>
-      <RightSlider shown={hasStagedActions} styling={styling}>
-        <div {...styling('actionListHeaderSelector')}>
-          {getActiveButtons(hasSkippedActions).map(btn =>
-            <div
-              key={btn}
-              onClick={() => ({
-                Commit: onCommit,
-                Sweep: onSweep
-              })[btn]()}
-              {...styling([
-                'selectorButton',
-                'selectorButtonSmall'], false, true)}>
+    <div {...styling('actionListHeader')}>
+      <input
+        {...styling('actionListHeaderSearch')}
+        onChange={e => onSearch(e.target.value)}
+        placeholder='filter...'
+      />
+      <div {...styling('actionListHeaderWrapper')}>
+        <RightSlider shown={hasStagedActions} styling={styling}>
+          <div {...styling('actionListHeaderSelector')}>
+            {getActiveButtons(hasSkippedActions).map(btn =>
+              <div
+                key={btn}
+                onClick={() => ({
+                  Commit: onCommit,
+                  Sweep: onSweep
+                })[btn]()}
+                {...styling([
+                  'selectorButton',
+                  'selectorButtonSmall'], false, true)}>
                 {btn}
-            </div>
-          )}
-        </div>
-      </RightSlider>
-    </div>
-  </div>;
+              </div>
+            )}
+          </div>
+        </RightSlider>
+      </div>
+    </div>;
 
 export default ActionListHeader;

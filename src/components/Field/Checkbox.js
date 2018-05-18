@@ -7,9 +7,9 @@ const RenderCheckbox = ({
   meta: { touched, error },
   ...custom }) => (
   <Checkbox
-    style={{ textAlign: 'left', marginLeft: 'auto', marginRight: 'auto', width: 'initial' }}
-    labelStyle={{ width: '100%' }}
-    {...custom}
+      style={{ textAlign: 'left', marginLeft: 'auto', marginRight: 'auto', width: 'initial' }}
+      labelStyle={{ width: '100%' }}
+      {...custom}
   />
 );
 

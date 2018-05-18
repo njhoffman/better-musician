@@ -11,7 +11,7 @@ export const INIT_VIEW = 'INIT_VIEW';
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [INIT_VIEW] : (state, action) => ({ ...state , ...{ initialized: true }}),
+  [INIT_VIEW] : (state, action) => ({ ...state, ...{ initialized: true } })
 };
 
 // ------------------------------------

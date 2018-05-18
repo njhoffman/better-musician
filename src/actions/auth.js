@@ -45,7 +45,7 @@ export const emailSignInFormUpdate = (endpoint, key, value) =>
   ({ type: EMAIL_SIGN_IN_FORM_UPDATE, endpoint, key, value });
 
 export const emailSignInStart = (endpoint) =>
-  ({type: EMAIL_SIGN_IN_START, endpoint });
+  ({ type: EMAIL_SIGN_IN_START, endpoint });
 
 export const emailSignInComplete = (endpoint, user) =>
   ({ type: EMAIL_SIGN_IN_COMPLETE, user, endpoint });
@@ -54,7 +54,7 @@ export const emailSignInError = (endpoint, errors) =>
   ({ type: EMAIL_SIGN_IN_ERROR, errors, endpoint });
 
 export const emailSignIn = (body, endpointKey) => (dispatch) => {
-    // save previous endpoint key in case of failure
+  // save previous endpoint key in case of failure
   const prevEndpointKey = getCurrentEndpointKey();
 
   // necessary for fetch to recognize the response as an api request

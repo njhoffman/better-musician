@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 import PropTypes from 'prop-types';
-import TokenBridge from "./TokenBridge";
-import { connect } from "react-redux";
+import TokenBridge from './TokenBridge';
+import { connect } from 'react-redux';
 
 class AuthGlobals extends React.Component {
   static propTypes = {
@@ -46,13 +46,13 @@ class AuthGlobals extends React.Component {
     passwordResetErrorEnabled: true
   };
 
-  render () {
+  render() {
     return (
-      <div id="auth-modals">
+      <div id='auth-modals'>
         <TokenBridge />
       </div>
     );
   }
 }
 
-export default connect(({auth}) => ({auth}))(AuthGlobals);
+export default connect(({ auth }) => ({ auth }))(AuthGlobals);

@@ -30,7 +30,7 @@ export const DevTools = (store) =>
         <SliderMonitor theme={twilightMod} inline />
         <Inspector
           theme='twilight'
-          expandDiffs={true}
+          expandDiffs
           invertTheme={false}
           supportImmutable
         />

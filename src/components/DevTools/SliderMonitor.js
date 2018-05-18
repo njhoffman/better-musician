@@ -270,15 +270,15 @@ export default class SliderMonitor extends (PureComponent || Component) {
     else actionType = actionType.toString() || '<EMPTY>';
 
     const onPlayClick = replaySpeed === 'Live' ? this.startRealtimeReplay : this.startReplay;
-    const playPause = this.state.timer ?
-      <SliderButton
+    const playPause = this.state.timer
+      ? <SliderButton
         theme={theme}
         type='pause'
-        onClick={this.pauseReplay} /> :
-      <SliderButton
+        onClick={this.pauseReplay} />
+      : <SliderButton
         theme={theme}
-        iconWidth="2.25rem"
-        iconHeight="2.25rem"
+        iconWidth='2.25rem'
+        iconHeight='2.25rem'
         type='play'
         disabled={max <= 0}
         onClick={onPlayClick} />;
@@ -291,7 +291,7 @@ export default class SliderMonitor extends (PureComponent || Component) {
             type='stepLeft'
             style={{
               display: 'inline-block',
-              border: 'none',
+              border: 'none'
             }}
             disabled={currentStateIndex <= 0}
             onClick={this.stepLeft}
@@ -299,7 +299,7 @@ export default class SliderMonitor extends (PureComponent || Component) {
           <div style={{ display: 'inline-block', width: 'calc(100% - 75px)' }}>
             <span>+{parsedDelta.primitives.added}</span>
             <Slider
-              type="range"
+              type='range'
               label={actionType}
               sublabel={`(${actionId} / ${max})`}
               min={0}
@@ -379,4 +379,3 @@ export default class SliderMonitor extends (PureComponent || Component) {
     );
   }
 }
-

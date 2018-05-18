@@ -4,7 +4,7 @@ import * as C from 'utils/constants';
 import {
   authenticateStart,
   authenticateComplete,
-  authenticateError,
+  authenticateError
 } from './auth';
 import {
   showFirstTimeLoginSuccessModal,
@@ -21,7 +21,6 @@ import { setEndpointKeys } from './endpoints';
 
 export const configure = (endpoint = {}, settings = {}) => {
   return dispatch => {
-
     // don't render anything for OAuth redirects
     if (settings.currentLocation && settings.currentLocation.match(/blank=true/)) {
       return Promise.resolve({ blank: true });

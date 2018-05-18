@@ -27,12 +27,12 @@ const RenderSelect = ({
   meta,
   ...custom }) => (
   <SelectField
-    floatingLabelText={label}
-    errorText={meta && meta.touched && meta.error}
-    inputStyle={{ boxShadow: 'none', maxWidth: '100%' }}
-    style={{ ...style, ...{ maxWidth: '100%' } }}
-    children={generateMenu(dataSource)}
-    {...custom} />
+      floatingLabelText={label}
+      errorText={meta && meta.touched && meta.error}
+      inputStyle={{ boxShadow: 'none', maxWidth: '100%' }}
+      style={{ ...style, ...{ maxWidth: '100%' } }}
+      children={generateMenu(dataSource)}
+      {...custom} />
 );
 
 RenderSelect.propTypes = {

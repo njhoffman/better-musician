@@ -8,7 +8,6 @@ export const INIT_VIEW = 'INIT_VIEW';
 // Actions
 // ------------------------------------
 
-
 export const handleLoginSuccess = () => (dispatch, getState) => {
   browserHistory.push('/songs');
 };
@@ -16,7 +15,7 @@ export const handleLoginSuccess = () => (dispatch, getState) => {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [INIT_VIEW] : (state, action) => ({ ...state , ...{ initialized: true }}),
+  [INIT_VIEW] : (state, action) => ({ ...state, ...{ initialized: true } })
 };
 
 // ------------------------------------

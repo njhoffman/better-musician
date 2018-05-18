@@ -55,7 +55,6 @@ const defaultConfig = {
 
 const initialState = _.omit(defaultConfig, 'api');
 
-
 // ------------------------------------
 // Action Creators
 // ------------------------------------
@@ -71,7 +70,6 @@ export const loadConfig = (config) => (dispatch) => {
 // Action Handlers
 // ------------------------------------
 
-
 const ACTION_HANDLERS = {
   [LOAD_CONFIG]: (state, action) => ({ ...state, ...(_.omit(action.payload, 'api')) })
 };
@@ -79,5 +77,4 @@ const ACTION_HANDLERS = {
 export default function configReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
   return handler ? handler(state, action) : state;
-
 }
