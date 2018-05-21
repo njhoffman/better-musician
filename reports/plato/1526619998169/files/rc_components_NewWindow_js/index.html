@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/components/NewWindow.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/components/NewWindow.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">67.70</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">284</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">46.99</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.20</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/**
+ * Component dependencies.
+ * @private
+ */
+
+import React from &#039;react&#039;;
+import ReactDOM from &#039;react-dom&#039;;
+import PropTypes from &#039;prop-types&#039;;
+
+/**
+ * The NewWindow class object.
+ * @public
+ */
+
+class NewWindow extends React.PureComponent {
+  /**
+   * NewWindow default props.
+   */
+  static defaultProps = {
+    url: &#039;&#039;,
+    name: &#039;&#039;,
+    title: &#039;&#039;,
+    features: { width: &#039;600px&#039;, height: &#039;640px&#039; },
+    onBlock: null,
+    onUnload: null,
+    center: &#039;parent&#039;,
+    copyStyles: true
+  }
+
+  /**
+   * The NewWindow function constructor.
+   * @param {Object} props
+   */
+  constructor(props) {
+    super(props);
+    this.container = document.createElement(&#039;div&#039;);
+    this.window = null;
+    this.windowCheckerInterval = null;
+    this.released = false;
+    this.state = {
+      mounted: false
+    };
+  }
+
+  /**
+   * Render the NewWindow component.
+   */
+  render() {
+    if (!this.state.mounted) return null;
+    const children = React.Children.map(this.props.children, child =&gt;
+      React.cloneElement(child, { ...{ parentWindow: this.window } })
+    );
+    return ReactDOM.createPortal(children, this.container);
+  }
+
+  componentDidMount() {
+    this.openChild();
+    this.setState({ mounted: true });
+  }
+
+  /**
+   * Create the new window when NewWindow component mount.
+   */
+  openChild() {
+    const { url, title, name, features, onBlock, center } = this.props;
+
+    // Prepare position of the new window to be centered against the &#039;parent&#039; window or &#039;screen&#039;.
+    if (
+      typeof center === &#039;string&#039; &amp;&amp;
+      (features.width === undefined || features.height === undefined)
+    ) {
+      console.warn(
+        &#039;width and height window features must be present when a center prop is provided&#039;
+      );
+    } else if (center === &#039;parent&#039;) {
+      features.left =
+        window.top.outerWidth / 2 + window.top.screenX - features.width / 2;
+      features.top =
+        window.top.outerHeight / 2 + window.top.screenY - features.height / 2;
+    } else if (center === &#039;screen&#039;) {
+      const screenLeft =
+        window.screenLeft !== undefined ? window.screenLeft : screen.left;
+      const screenTop =
+        window.screenTop !== undefined ? window.screenTop : screen.top;
+
+      const width = window.innerWidth
+        ? window.innerWidth
+        : document.documentElement.clientWidth
+          ? document.documentElement.clientWidth
+          : screen.width;
+      const height = window.innerHeight
+        ? window.innerHeight
+        : document.documentElement.clientHeight
+          ? document.documentElement.clientHeight
+          : screen.height;
+
+      features.left = width / 2 - features.width / 2 + screenLeft;
+      features.top = height / 2 - features.height / 2 + screenTop;
+    }
+
+    // Open a new window.
+    this.window = window.open(url, name, toWindowFeatures(features));
+
+    // When a new window use content from a cross-origin there&#039;s no way we can attach event
+    // to it. Therefore, we need to detect in a interval when the new window was destroyed
+    // or was closed.
+    this.windowCheckerInterval = setInterval(() =&gt; {
+      if (!this.window || this.window.closed) {
+        this.release();
+      }
+    }, 50);
+
+    // Check if the new window was succesfully opened.
+    if (this.window) {
+      this.window.document.title = title;
+      this.window.document.body.appendChild(this.container);
+
+      // If specified, copy styles from parent window&#039;s document.
+      if (this.props.copyStyles) {
+        setTimeout(() =&gt; copyStyles(document, this.window.document), 0);
+      }
+
+      // Release anything bound to this component before the new window unload.
+      this.window.addEventListener(&#039;beforeunload&#039;, () =&gt; this.release());
+      window.onunload = () =&gt; {
+        if (this.window) {
+          this.window.close();
+        }
+      };
+    } else {
+      // Handle error on opening of new window.
+      if (typeof onBlock === &#039;function&#039;) {
+        onBlock.call(null);
+      } else {
+        console.warn(&#039;A new window could not be opened. Maybe it was blocked.&#039;);
+      }
+    }
+  }
+
+  /**
+   * Close the opened window (if any) when NewWindow will unmount.
+   */
+  componentWillUnmount() {
+    if (this.window) {
+      this.window.close();
+    }
+  }
+
+  /**
+   * Release the new window and anything that was bound to it.
+   */
+  release() {
+    // This method can be called once.
+    if (this.released) {
+      return;
+    }
+    this.released = true;
+
+    // Remove checker interval.
+    clearInterval(this.windowCheckerInterval);
+
+    // Call any function bound to the `onUnload` prop.
+    const { onUnload } = this.props;
+
+    if (typeof onUnload === &#039;function&#039;) {
+      onUnload.call(null);
+    }
+  }
+}
+
+NewWindow.propTypes = {
+  children: PropTypes.node,
+  url: PropTypes.string,
+  name: PropTypes.string,
+  title: PropTypes.string,
+  features: PropTypes.object,
+  onUnload: PropTypes.func,
+  onBlock: PropTypes.func,
+  center: PropTypes.oneOf([&#039;parent&#039;, &#039;screen&#039;]),
+  copyStyles: PropTypes.bool
+};
+
+/**
+ * Utility functions.
+ * @private
+ */
+
+/**
+ * Copy styles from a source document to a target.
+ * @param {Object} source
+ * @param {Object} target
+ * @private
+ */
+
+function createNewStyleElement(source, rules) {
+  const newStyleEl = source.createElement(&#039;style&#039;);
+
+  // Write the text of each rule into the body of the style element
+  Array.from(rules).forEach(cssRule =&gt; {
+    const { cssText, type } = cssRule;
+    let returnText = cssText;
+    // Check if the cssRule type is CSSImportRule (3) or CSSFontFaceRule (5) to handle local imports on a about:blank page
+    // &#039;/custom.css&#039; turns to &#039;http://my-site.com/custom.css&#039;
+    if ([3, 5].includes(type)) {
+      returnText = cssText
+        .split(&#039;url(&#039;)
+        .map(line =&gt; {
+          if (line[1] === &#039;/&#039;) {
+            return `${line.slice(0, 1)}${
+              window.location.origin
+            }${line.slice(1)}`;
+          }
+          return line;
+        })
+        .join(&#039;url(&#039;);
+    }
+    newStyleEl.appendChild(source.createTextNode(returnText));
+  });
+  return newStyleEl;
+}
+
+function copyStyles(source, target) {
+  Array.from(source.styleSheets).forEach(styleSheet =&gt; {
+    const isStyledComponent = styleSheet.ownerNode.attributes[&#039;data-styled-components&#039;];
+    // For &lt;style&gt; elements
+    let rules;
+    try {
+      rules = styleSheet.cssRules;
+    } catch (err) {
+      // console.error(err)
+    }
+    if (rules) {
+      let newStyleEl = createNewStyleElement(source, rules);
+      target.head.appendChild(newStyleEl);
+      if (isStyledComponent) {
+        const observer = new MutationObserver(mutations =&gt; {
+          mutations.forEach(mutation =&gt; {
+            const newRules = mutation.target.sheet.cssRules;
+            const replaceEl = createNewStyleElement(source, newRules);
+            newStyleEl.replaceWith(replaceEl);
+            newStyleEl = replaceEl;
+          });
+        });
+        observer.observe(styleSheet.ownerNode, { attributes: true, attributeFilter: [&#039;data-styled-components&#039;] });
+      }
+    } else if (styleSheet.href) {
+      // for &lt;link&gt; elements loading CSS from a URL
+      const newLinkEl = source.createElement(&#039;link&#039;);
+
+      newLinkEl.rel = &#039;stylesheet&#039;;
+      newLinkEl.href = styleSheet.href;
+      target.head.appendChild(newLinkEl);
+    }
+  });
+}
+
+/**
+ * Convert features props to window features format (name=value,other=value).
+ * @param {Object} obj
+ * @return {String}
+ * @private
+ */
+
+function toWindowFeatures(obj) {
+  return Object.keys(obj)
+    .reduce((features, name) =&gt; {
+      const value = obj[name];
+      if (typeof value === &#039;boolean&#039;) {
+        features.push(`${name}=${value ? &#039;yes&#039; : &#039;no&#039;}`);
+      } else {
+        features.push(`${name}=${value}`);
+      }
+      return features;
+    }, [])
+    .join(&#039;,&#039;);
+}
+
+/**
+ * Component export.
+ * @private
+ */
+
+export default NewWindow;
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

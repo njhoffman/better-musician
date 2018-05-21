@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/components/DevTools/Custom.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/components/DevTools/Custom.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">67.73</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">257</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">52.63</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.95</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import React, { Component } from &#039;react&#039;;
+import PropTypes from &#039;prop-types&#039;;
+import shouldPureComponentUpdate from &#039;react-pure-render/function&#039;;
+import * as themes from &#039;redux-devtools-themes&#039;;
+import { ActionCreators } from &#039;redux-devtools&#039;;
+// import { updateScrollTop, startConsecutiveToggle } from &#039;./actions&#039;;
+// import reducer from &#039;./reducers&#039;;
+// import LogMonitorButtonBar from &#039;./LogMonitorButtonBar&#039;;
+// import LogMonitorEntryList from &#039;./LogMonitorEntryList&#039;;
+import debounce from &#039;lodash.debounce&#039;;
+
+const { toggleAction, setActionsActive } = ActionCreators;
+
+const initialScrollTop = (props, state = 0, action) =&gt; {
+  if (!props.preserveScrollTop) {
+    return 0;
+  }
+
+  return action.type === &#039;UPDATE_SCROLL_TOP&#039;
+    ? action.scrollTop
+    : state;
+};
+
+const startConsecutiveToggle = (props, state, action) =&gt; {
+  return action.type === &#039;START_CONSECUTIVE_TOGGLE&#039;
+    ? action.id
+    : state;
+};
+
+const reducer = (props, state = {}, action) =&gt; {
+  return {
+    initialScrollTop: initialScrollTop(props, state.initialScrollTop, action),
+    consecutiveToggleStartId: startConsecutiveToggle(props, state.consecutiveToggleStartId, action)
+  };
+};
+
+const styles = {
+  container: {
+    fontFamily: &#039;monaco, Consolas, Lucida Console, monospace&#039;,
+    fontSize: &#039;0.8em&#039;,
+    position: &#039;relative&#039;,
+    overflowY: &#039;hidden&#039;,
+    width: &#039;100%&#039;,
+    height: &#039;100%&#039;,
+    minWidth: 300,
+    direction: &#039;ltr&#039;,
+    color: &#039;white&#039;
+  },
+  elements: {
+    position: &#039;absolute&#039;,
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    overflowX: &#039;hidden&#039;,
+    overflowY: &#039;auto&#039;
+  }
+};
+
+export default class LogMonitor extends Component {
+  static update = reducer;
+
+  static propTypes = {
+    dispatch: PropTypes.func,
+    computedStates: PropTypes.array,
+    actionsById: PropTypes.object,
+    stagedActionIds: PropTypes.array,
+    skippedActionIds: PropTypes.array,
+    monitorState: PropTypes.shape({
+      initialScrollTop: PropTypes.number,
+      consecutiveToggleStartId: PropTypes.number
+    }),
+
+    preserveScrollTop: PropTypes.bool,
+    select: PropTypes.func,
+    theme: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.string
+    ]),
+    expandActionRoot: PropTypes.bool,
+    expandStateRoot: PropTypes.bool,
+    markStateDiff: PropTypes.bool,
+    hideMainButtons: PropTypes.bool
+  };
+
+  static defaultProps = {
+    select: (state) =&gt; state,
+    theme: &#039;nicinabox&#039;,
+    preserveScrollTop: true,
+    expandActionRoot: true,
+    expandStateRoot: true,
+    markStateDiff: false
+  };
+
+  shouldComponentUpdate = shouldPureComponentUpdate;
+
+  // updateScrollTop = debounce(() =&gt; {
+  //   const node = this.node;
+  //   this.props.dispatch(updateScrollTop(node ? node.scrollTop : 0));
+  // }, 500);
+
+  constructor(props) {
+    super(props);
+    this.handleToggleAction = this.handleToggleAction.bind(this);
+    this.handleToggleConsecutiveAction = this.handleToggleConsecutiveAction.bind(this);
+    this.getRef = this.getRef.bind(this);
+  }
+
+  scroll() {
+    const node = this.node;
+    if (!node) {
+      return;
+    }
+    if (this.scrollDown) {
+      const { offsetHeight, scrollHeight } = node;
+      node.scrollTop = scrollHeight - offsetHeight;
+      this.scrollDown = false;
+    }
+  }
+
+  componentDidMount() {
+    const node = this.node;
+    if (!node || !this.props.monitorState) {
+      return;
+    }
+
+    if (this.props.preserveScrollTop) {
+      node.scrollTop = this.props.monitorState.initialScrollTop;
+      // node.addEventListener(&#039;scroll&#039;, this.updateScrollTop);
+    } else {
+      this.scrollDown = true;
+      this.scroll();
+    }
+  }
+
+  componentWillUnmount() {
+    const node = this.node;
+    if (node &amp;&amp; this.props.preserveScrollTop) {
+      node.removeEventListener(&#039;scroll&#039;, this.updateScrollTop);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const node = this.node;
+    if (!node) {
+      this.scrollDown = true;
+    } else if (
+      this.props.stagedActionIds.length &lt;
+      nextProps.stagedActionIds.length
+    ) {
+      const { scrollTop, offsetHeight, scrollHeight } = node;
+
+      this.scrollDown = Math.abs(
+        scrollHeight - (scrollTop + offsetHeight)
+      ) &lt; 20;
+    } else {
+      this.scrollDown = false;
+    }
+  }
+
+  componentDidUpdate() {
+    this.scroll();
+  }
+
+  handleToggleAction(id) {
+    this.props.dispatch(toggleAction(id));
+  }
+
+  handleToggleConsecutiveAction(id) {
+    const { monitorState, actionsById } = this.props;
+    const { consecutiveToggleStartId } = monitorState;
+    if (consecutiveToggleStartId &amp;&amp; actionsById[consecutiveToggleStartId]) {
+      const { skippedActionIds } = this.props;
+      const start = Math.min(consecutiveToggleStartId, id);
+      const end = Math.max(consecutiveToggleStartId, id);
+      const active = skippedActionIds.indexOf(consecutiveToggleStartId) &gt; -1;
+      this.props.dispatch(setActionsActive(start, end + 1, active));
+      // this.props.dispatch(startConsecutiveToggle(null));
+    } else if (id &gt; 0) {
+      // this.props.dispatch(startConsecutiveToggle(id));
+    }
+  }
+
+  getTheme() {
+    let { theme } = this.props;
+    if (typeof theme !== &#039;string&#039;) {
+      return theme;
+    }
+
+    if (typeof themes[theme] !== &#039;undefined&#039;) {
+      return themes[theme];
+    }
+
+    console.warn(&#039;DevTools theme &#039; + theme + &#039; not found, defaulting to nicinabox&#039;);
+    return themes.nicinabox;
+  }
+
+  getRef(node) {
+    this.node = node;
+  }
+
+  render() {
+    const theme = this.getTheme();
+    const { consecutiveToggleStartId } = this.props.monitorState;
+
+    const {
+      dispatch,
+      actionsById,
+      skippedActionIds,
+      stagedActionIds,
+      computedStates,
+      currentStateIndex,
+      select,
+      expandActionRoot,
+      expandStateRoot,
+      markStateDiff
+    } = this.props;
+
+    const entryListProps = {
+      theme,
+      actionsById,
+      skippedActionIds,
+      stagedActionIds,
+      computedStates,
+      currentStateIndex,
+      consecutiveToggleStartId,
+      select,
+      expandActionRoot,
+      expandStateRoot,
+      markStateDiff,
+      onActionClick: this.handleToggleAction,
+      onActionShiftClick: this.handleToggleConsecutiveAction
+    };
+
+    console.info(this.props);
+    return (
+      &lt;div style={{ ...styles.container, backgroundColor: theme.base00 }}&gt;
+        &lt;div
+          style={this.props.hideMainButtons ? styles.elements : { ...styles.elements, top: 30 }}
+          ref={this.getRef}
+        &gt;
+          &lt;ul&gt;
+            {Object.keys(this.props.actionsById).map(id =&gt; {
+              // action.meta, action.payload, timestamp
+              // computedStates: error, state: api, form, location ....
+              // nextActionId, currentStateIndex, store, storeSubscripton: onStateChangej
+              return (
+                &lt;li&gt;{this.props.actionsById[id].action.type}&lt;/li&gt;
+              );
+            })}
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    );
+  }
+}
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

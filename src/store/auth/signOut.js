@@ -1,6 +1,6 @@
 import Immutable from "immutable";
 import { createReducer } from "redux-immutablejs";
-import * as A from "actions/signOut";
+import * as A from "actions/auth";
 import { SET_ENDPOINT_KEYS } from "actions/configure";
 
 const initialState = {

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ButtonLoader from './ButtonLoader';
 import ActionLock from 'material-ui-icons/Lock';
 import { connect } from 'react-redux';
-import { signOut } from 'actions/signOut';
+import { signOut } from 'actions/auth';
 
 export class SignOutButton extends React.Component {
   static propTypes = {

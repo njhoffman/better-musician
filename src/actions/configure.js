@@ -1,6 +1,6 @@
 import { push } from 'react-router-redux';
 import extend from 'extend';
-import * as C from 'utils/constants';
+import * as C from 'utils/auth/constants';
 import {
   authenticateStart,
   authenticateComplete,
@@ -13,10 +13,10 @@ import {
   showPasswordResetErrorModal
 } from './ui';
 import { ssAuthTokenUpdate } from './server';
-import { applyConfig } from 'utils/clientSettings';
-import { destroySession } from 'utils/sessionStorage';
-import verifyAuth from 'utils/verifyAuth';
-import getRedirectInfo from 'utils/parseUrl';
+import { applyConfig } from 'utils/auth/clientSettings';
+import { destroySession } from 'utils/auth/sessionStorage';
+import verifyAuth from 'utils/auth/verifyAuth';
+import getRedirectInfo from 'utils/auth/parseUrl';
 import { setEndpointKeys } from './endpoints';
 
 export const configure = (endpoint = {}, settings = {}) => {

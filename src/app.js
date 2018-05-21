@@ -30,8 +30,9 @@ const MOUNT_NODE = document.getElementById('root');
 const memoryStats = () => {
   if (window.performance && window.performance.memory) {
     const { totalJSHeapSize, usedJSHeapSize } = window.performance.memory;
-    debug(`Total JS Heap Size:  ${humanMemorySize(totalJSHeapSize, true)}`);
-    debug(`Used JS Heap Size:   ${humanMemorySize(usedJSHeapSize, true)}`);
+    const used = humanMemorySize(usedJSHeapSize, true);
+    const total = humanMemorySize(totalJSHeapSize, true);
+    debug( `-- JS Heap Size: ${used} / ${total}`);
   }
 };
 setInterval(memoryStats, 120000);
@@ -49,9 +50,7 @@ const domStats = () => {
   };
   getNodeStats(document, 0);
   stats.averageDepth = (stats.totalDepth / stats.totalNodes).toFixed(2);
-  debug(`average depth => ${stats.averageDepth}`);
-  debug(`maximum depth => ${stats.maxDepth}`);
-  debug(`total nodes   => ${stats.totalDepth}`);
+  debug( `-- depth => ${stats.averageDepth} / ${stats.maxDepth} : ${stats.totalNodes} Nodes`);
 };
 
 const configApp = () => {

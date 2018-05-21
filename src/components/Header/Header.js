@@ -58,7 +58,7 @@ export class Header extends Component {
 };
 
 const mapStateToProps = (state) => ({
-  isSignedIn: state.auth.getIn(['user', 'isSignedIn'])
+  isSignedIn: state.user.isSignedIn
 });
 
 export default connect(mapStateToProps)(withTheme()(Header));

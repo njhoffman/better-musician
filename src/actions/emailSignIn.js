@@ -2,7 +2,7 @@ import {
   getEmailSignInUrl,
   setCurrentEndpointKey,
   getCurrentEndpointKey
-} from 'utils/sessionStorage';
+} from 'utils/auth/sessionStorage';
 import { storeCurrentEndpointKey } from './endpoints';
 import fetch, { parseResponse } from 'utils/fetch';
 

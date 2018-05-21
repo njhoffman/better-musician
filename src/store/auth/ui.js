@@ -1,15 +1,15 @@
 import Immutable from "immutable";
 import { createReducer } from "redux-immutablejs";
-import * as uiActions from "../../actions/ui";
-import * as emailSignInActions from "../../actions/emailSignIn";
-import * as emailSignUpActions from "../../actions/emailSignUp";
-import * as signOutActions from "../../actions/signOut";
-import * as requestPasswordResetActions from "../../actions/requestPasswordReset";
-import * as oAuthSignInActions from "../../actions/oAuthSignIn";
-import * as updatePasswordActions from "../../actions/updatePassword";
-import * as destroyAccountActions from "../../actions/destroyAccount";
-import * as updatePasswordModalActions from "../../actions/updatePasswordModal";
-import * as serverActions from "../../actions/server";
+import * as uiActions from "actions/ui";
+import * as emailSignInActions from "actions/emailSignIn";
+import * as emailSignUpActions from "actions/emailSignUp";
+import * as signOutActions from "actions/auth";
+import * as requestPasswordResetActions from "actions/requestPasswordReset";
+import * as oAuthSignInActions from "actions/oAuthSignIn";
+import * as updatePasswordActions from "actions/updatePassword";
+import * as destroyAccountActions from "actions/destroyAccount";
+import * as updatePasswordModalActions from "actions/updatePasswordModal";
+import * as serverActions from "actions/server";
 
 const initialState = Immutable.fromJS({
   emailSignInSuccessModalVisible:          false,

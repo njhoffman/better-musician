@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import originalFetch from 'isomorphic-fetch';
-import * as C from './constants';
+import * as C from './auth/constants';
 import extend from 'extend';
 import {
   getApiUrl,
@@ -8,7 +8,7 @@ import {
   persistData,
   getTokenFormat,
   getSessionEndpointKey
-} from './sessionStorage';
+} from './auth/sessionStorage';
 
 import { init as initLog } from 'shared/logger';
 const { debug } = initLog('auth:fetch');

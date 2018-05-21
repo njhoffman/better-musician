@@ -173,8 +173,8 @@ export class DrawerMenu extends Component {
   }
 
   render() {
-    const isSignedIn = this.props.user && this.props.user.get('isSignedIn');
-    linkStyle = { ...linkStyle, ...{ color: this.props.theme.instrumental.headerLinksColor } };
+    const { isSignedIn, theme } = this.props;
+    linkStyle = { ...linkStyle, ...{ color: theme.instrumental.headerLinksColor } };
     if (isSignedIn) {
       return this.renderSignedIn();
     } else {

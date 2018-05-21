@@ -124,7 +124,7 @@ export const SongPopover = (props) => {
     );
   };
 
-  if (currentView === 'songsView') {
+  if (currentView === 'Songs') {
     if (currentSong) {
       return renderSongButtonView();
     }
@@ -145,7 +145,7 @@ const showAddSongModal = (actionType) => uiShowModal(MODAL_ADD_SONG, actionType)
 const mapActionCreators = { showAddSongModal };
 
 const mapStateToProps = (state) => ({
-  currentView:     state.location ? state.location.currentView : null
+  currentView:     state.ui.currentView ? state.ui.currentView : null
 });
 
 export default withTheme()(connect(mapStateToProps, mapActionCreators)(SongPopover));

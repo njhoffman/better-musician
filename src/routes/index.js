@@ -4,22 +4,22 @@ import { connect } from 'react-redux';
 
 import { LoadRoute } from './loader';
 
-import { userIsAuthenticatedRedir, userIsNotAuthenticatedRedir, userIsAdminRedir,
-  userIsAuthenticated, userIsNotAuthenticated, userNoAuthentication } from '../auth';
+import { userIsAuthRedir, userNotAuthRedir, userIsAdminRedir,
+  userIsAuth, userNotAuth, userNoAuthentication } from './auth';
 
 // Need to apply the hocs here to avoid applying them inside the render method
 
 const HomeRoute = userNoAuthentication(LoadRoute('Home'));
-const LoginRoute = userIsNotAuthenticatedRedir(LoadRoute('Login'));
-const RegisterRoute = userIsNotAuthenticatedRedir(LoadRoute('Register'));
+const LoginRoute = userNotAuthRedir(LoadRoute('Login'));
+const RegisterRoute = userNotAuthRedir(LoadRoute('Register'));
 
-const ResetRoute = userIsAuthenticatedRedir(LoadRoute('Reset'));
+const ResetRoute = userIsAuthRedir(LoadRoute('Reset'));
 
-const SongsRoute = userIsAuthenticatedRedir(LoadRoute('Songs'));
-const SettingsRoute = userIsAuthenticatedRedir(LoadRoute('Settings'));
-const ProfileRoute = userIsAuthenticatedRedir(LoadRoute('Profile'));
-const StatsRoute = userIsAuthenticatedRedir(LoadRoute('Stats'));
-const FieldsRoute = userIsAuthenticatedRedir(LoadRoute('Fields'));
+const SongsRoute = userIsAuthRedir(LoadRoute('Songs'));
+const SettingsRoute = userIsAuthRedir(LoadRoute('Settings'));
+const ProfileRoute = userIsAuthRedir(LoadRoute('Profile'));
+const StatsRoute = userIsAuthRedir(LoadRoute('Stats'));
+const FieldsRoute = userIsAuthRedir(LoadRoute('Fields'));
 // const Admin = userIsAuthenticatedRedir(userIsAdminRedir(AdminComponent));
 
 class Routes extends Component {

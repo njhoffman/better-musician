@@ -8,7 +8,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => ({
   isOpen: state.ui.drawer.isOpen,
-  user: state.auth && state.auth.get('user')
+  isSignedIn: state.user.isSignedIn,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DrawerMenu);

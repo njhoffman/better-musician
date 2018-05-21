@@ -1,4 +1,4 @@
-import { getDestroyAccountUrl, setCurrentEndpointKey, getDefaultEndpointKey }  from 'utils/sessionStorage';
+import { getDestroyAccountUrl, setCurrentEndpointKey, getDefaultEndpointKey }  from 'utils/auth/sessionStorage';
 import { storeCurrentEndpointKey } from './configure';
 import fetch, { parseResponse } from 'utils/fetch';
 

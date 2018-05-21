@@ -11,7 +11,8 @@ const mapActionCreators = { };
 
 const mapStateToProps = (state) => ({
   userDisplayName: userDisplaySelector(state),
-  getUserPoints:   userPointsSelector(state)
+  getUserPoints:   userPointsSelector(state),
+  isSignedIn: state.user.isSignedIn
 });
 
 export default connect(mapStateToProps, mapActionCreators)(HeaderRight);

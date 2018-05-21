@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { AutoComplete } from 'redux-form-material-ui';
+// import { AutoComplete } from 'redux-form-material-ui';
+import { TextField } from 'material-ui';
 
 const RenderAutoComplete = ({
   label,
@@ -8,7 +9,7 @@ const RenderAutoComplete = ({
   meta,
   ...custom }) => {
   return (
-    <AutoComplete
+    <TextField
       floatingLabelText={label}
       inputStyle={{ ...inputStyle, ...{ boxShadow: 'none' } }}
       errorText={meta && meta.touched && meta.error}

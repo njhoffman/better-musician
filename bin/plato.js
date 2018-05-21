@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const plato = require('plato');
+const plato = require('es6-plato');
 const fs = require('fs');
 const path = require('path');
 

@@ -1,4 +1,4 @@
-import {getPasswordUpdateUrl}  from "utils/sessionStorage";
+import {getPasswordUpdateUrl}  from "utils/auth/sessionStorage";
 import fetch, { parseResponse } from "utils/fetch";
 
 export const UPDATE_PASSWORD_MODAL_START       = "UPDATE_PASSWORD_MODAL_START";

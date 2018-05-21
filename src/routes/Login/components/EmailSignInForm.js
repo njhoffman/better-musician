@@ -56,8 +56,7 @@ export class EmailSignInForm extends React.Component {
   }
 
   render() {
-    let disabled = (
-      this.props.auth.getIn(['user', 'isSignedIn']) ||
+    let disabled = (this.props.isSignedIn ||
       this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'loading'])
     );
 
@@ -115,6 +114,7 @@ export class EmailSignInForm extends React.Component {
 const mapStateToProps = (state) => {
   return {
     auth:        state.auth,
+    isSignedIn:  state.user.isSignedIn,
     loginForm:   state.form.login,
     emailSignIn: emailSignIn
   };

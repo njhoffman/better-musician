@@ -50,7 +50,8 @@ export const fetchSongs = ({ dispatch, getState }) => {
 
 export const songsSuccess = (response) => (dispatch) => {
   const tables = response.tables;
-  info('fetchSongsSuccess', response);
+  // info('fetchSongsSuccess', response);
+  info(`fetchSongsSuccess: ${tables.songs.length} songs and ${tables.artists.length} artists`);
 
   /* eslint-disable no-multi-spaces */
   dispatch({ type: SONGS_SUCCESS,    payload: response });

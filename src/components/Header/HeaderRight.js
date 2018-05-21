@@ -75,7 +75,7 @@ class HeaderRight extends Component {
   }
 
   render() {
-    if (this.props.user && this.props.user.get('isSignedIn')) {
+    if (this.props.isSignedIn) {
       return this.renderSignedIn();
     }
     return this.renderSignedOut();

@@ -1,13 +1,12 @@
 import Immutable from "immutable";
 import { createReducer } from "redux-immutablejs";
-import { getCurrentEndpointKey } from "../../utils/sessionStorage.js"
-import * as authActions from "../../actions/auth";
-import { EMAIL_SIGN_IN_COMPLETE, EMAIL_SIGN_UP_COMPLETE } from "../../actions/auth";
-import { SIGN_OUT_COMPLETE, SIGN_OUT_ERROR } from "../../actions/signOut";
-import { OAUTH_SIGN_IN_COMPLETE } from "../../actions/oAuthSignIn";
-import { DESTROY_ACCOUNT_COMPLETE } from "../../actions/destroyAccount";
-import * as ssActions from "../../actions/server";
-import { STORE_CURRENT_ENDPOINT_KEY, SET_ENDPOINT_KEYS } from "../../actions/configure";
+import { getCurrentEndpointKey } from "utils/auth/sessionStorage.js"
+import * as authActions from "actions/auth";
+import { EMAIL_SIGN_IN_COMPLETE, EMAIL_SIGN_UP_COMPLETE, SIGN_OUT_COMPLETE, SIGN_OUT_ERROR } from "actions/auth";
+import { OAUTH_SIGN_IN_COMPLETE } from "actions/oAuthSignIn";
+import { DESTROY_ACCOUNT_COMPLETE } from "actions/destroyAccount";
+import * as ssActions from "actions/server";
+import { STORE_CURRENT_ENDPOINT_KEY, SET_ENDPOINT_KEYS } from "actions/configure";
 
 const initialState = Immutable.fromJS({
   attributes: null,

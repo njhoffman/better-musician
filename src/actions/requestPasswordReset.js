@@ -1,4 +1,4 @@
-import { getPasswordResetRequestUrl, getPasswordResetRedirectUrl }  from 'utils/sessionStorage';
+import { getPasswordResetRequestUrl, getPasswordResetRedirectUrl }  from 'utils/auth/sessionStorage';
 import extend from 'extend';
 import fetch, { parseResponse } from 'utils/fetch';
 

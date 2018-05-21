@@ -3,7 +3,7 @@ import {
   destroySession,
   getEmailSignInUrl,
   getCurrentEndpointKey
-} from 'utils/sessionStorage';
+} from 'utils/auth/sessionStorage';
 
 import fetch, { parseResponse } from 'utils/fetch';
 

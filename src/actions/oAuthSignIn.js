@@ -1,12 +1,12 @@
-import * as C from 'utils/constants';
-import { getAllParams, normalizeTokenKeys } from 'utils/parseUrl';
-import { getOAuthUrl } from 'utils/sessionStorage';
+import * as C from 'utils/auth/constants';
+import { getAllParams, normalizeTokenKeys } from 'utils/auth/parseUrl';
+import { getOAuthUrl } from 'utils/auth/sessionStorage';
 import {
   setCurrentEndpointKey,
   getCurrentEndpointKey,
   getTokenValidationPath,
   persistData
-} from 'utils/sessionStorage';
+} from 'utils/auth/sessionStorage';
 import { storeCurrentEndpointKey } from './configure';
 import fetch, { parseResponse } from 'utils/fetch';
 import _openPopup from 'utils/popup';
@@ -17,6 +17,7 @@ export const OAUTH_SIGN_IN_ERROR    = 'OAUTH_SIGN_IN_ERROR';
 
 // hook for rewire
 var openPopup = _openPopup;
+
 
 function listenForCredentials(endpointKey, popup, provider, resolve, reject) {
   if (!resolve) {
@@ -56,13 +57,17 @@ function authenticate({ endpointKey, provider, url, tab = false }) {
 export function oAuthSignInStart(provider, endpoint) {
   return { type: OAUTH_SIGN_IN_START, provider, endpoint };
 }
+
 export function oAuthSignInComplete(user, endpoint) {
   return { type: OAUTH_SIGN_IN_COMPLETE, user, endpoint };
 }
+
 export function oAuthSignInError(errors, endpoint) {
   return { type: OAUTH_SIGN_IN_ERROR, errors, endpoint };
 }
+
 export function oAuthSignIn({ provider, params, endpointKey }) {
+
   return dispatch => {
     // save previous endpoint key in case of failure
     var prevEndpointKey = getCurrentEndpointKey();

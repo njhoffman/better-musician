@@ -9,7 +9,7 @@ import Footer from './Footer';
 
 const mapStateToProps = (state) => ({
   song:          currentSongSelector(state),
-  isSignedIn:    state.auth ? state.auth.get('user') && state.auth.get('user').get('isSignedIn') : false,
+  isSignedIn:    state.user.isSignedIn,
   stats:         songStatsSelector(state),
   maxDifficulty: maxDifficultySelector(state)
 });

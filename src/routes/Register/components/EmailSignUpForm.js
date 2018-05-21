@@ -53,7 +53,6 @@ export class EmailSignUpForm extends React.Component {
   }
 
   handleSubmit(event) {
-    console.log('@-->handling submit');
     event.preventDefault();
 
     let formData = this.props.registerForm.values;
@@ -63,8 +62,7 @@ export class EmailSignUpForm extends React.Component {
   }
 
   render() {
-    let disabled = (
-      this.props.auth.getIn(['user', 'isSignedIn']) ||
+    let disabled = (this.props.isSignedIn ||
       this.props.auth.getIn(['emailSignUp', this.getEndpoint(), 'loading'])
     );
 
@@ -138,7 +136,8 @@ const mapStateToProps = (state) => {
   return {
     auth:         state.auth,
     registerForm: state.form.register,
-    emailSignUp:  emailSignUp
+    emailSignUp:  emailSignUp,
+    isSignedIn:  state.user.isSignedIn
   };
 };
 

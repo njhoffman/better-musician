@@ -8,13 +8,16 @@ import { initView } from 'actions/view';
 import { injectReducer } from 'store/reducers';
 
 import { init as initLog } from 'shared/logger';
-const { info } = initLog('loader');
+const { info, warn } = initLog('loader');
 
-const LoadRoute = (route) => ({ dispatch }) => {
-  info(`Loading route: ${route}`);
-  class ReducerInjector extends React.Component {
+const LoadRoute = (route) => ({ dispatch, isAuthenticated }) => {
+  class ViewInjector extends React.Component {
     componentWillMount() {
       const { store } = this.context;
+      if (store.getState().ui.currentView === route) {
+        warn(`Attempting to reload already loaded route: ${route}, ignoring...`);
+        return;
+      }
       initView(store, route);
       injectReducer({
         key: `${route}View`,
@@ -23,6 +26,7 @@ const LoadRoute = (route) => ({ dispatch }) => {
       });
     }
     render() {
+      info(`Loading route: ${route}`);
       const Loader = Loadable({
         loader: () => import(`routes/${route}/components/${route}View`),
         loading: LoadingIndicator
@@ -30,11 +34,11 @@ const LoadRoute = (route) => ({ dispatch }) => {
       return <Loader />;
     }
   }
-  ReducerInjector.contextTypes = {
+  ViewInjector.contextTypes = {
     store: PropTypes.object.isRequired
   };
 
-  return <ReducerInjector />;
+  return <ViewInjector />;
 };
 
 export { LoadRoute };

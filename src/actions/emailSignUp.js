@@ -1,4 +1,4 @@
-import { getEmailSignUpUrl, getConfirmationSuccessUrl }  from 'utils/sessionStorage';
+import { getEmailSignUpUrl, getConfirmationSuccessUrl }  from 'utils/auth/sessionStorage';
 import extend from 'extend';
 import fetch, { parseResponse } from 'utils/fetch';
 
