@@ -33,10 +33,10 @@ export class SignOutButton extends React.Component {
   }
 
   render() {
-    let disabled = !this.props.auth.getIn(['user', 'isSignedIn']);
+    let disabled = !this.props.user.isSignedIn;
     return (
       <ButtonLoader
-        icon={<ActionLock />}
+        icon={ActionLock}
         disabled={disabled}
         label='Sign Out'
         primary
@@ -48,4 +48,4 @@ export class SignOutButton extends React.Component {
   }
 }
 
-export default connect(({ auth }) => ({ auth }))(SignOutButton);
+export default connect(({ auth, user }) => ({ auth, user }))(SignOutButton);

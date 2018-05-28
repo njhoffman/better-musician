@@ -24,23 +24,21 @@ export function normalizeTokenKeys(params) {
 };
 
 const getAnchorSearch = function (location) {
-  var rawAnchor = location.anchor || '',
-    arr       = rawAnchor.split('?');
+  const rawAnchor = location.anchor || '';
+  const arr = rawAnchor.split('?');
   return (arr.length > 1) ? arr[1] : null;
 };
 
 const getSearchQs = function (location) {
-  var rawQs = location.search || '',
-    qs    = rawQs.replace('?', ''),
-    qsObj = (qs) ? querystring.parse(qs) : {};
-
+  const rawQs = location.search || '';
+  const qs = rawQs.replace('?', '');
+  const qsObj = (qs) ? querystring.parse(qs) : {};
   return qsObj;
 };
 
 const getAnchorQs = function (location) {
-  var anchorQs    = getAnchorSearch(location),
-    anchorQsObj = (anchorQs) ? querystring.parse(anchorQs) : {};
-
+  const anchorQs = getAnchorSearch(location);
+  const anchorQsObj = (anchorQs) ? querystring.parse(anchorQs) : {};
   return anchorQsObj;
 };
 
@@ -57,8 +55,8 @@ export function getAllParams(location) {
 };
 
 const buildCredentials = function (location, keys) {
-  var params = getAllParams(location);
-  var authHeaders = {};
+  const params = getAllParams(location);
+  const authHeaders = {};
 
   for (var key of keys) {
     authHeaders[key] = params[key];
@@ -75,9 +73,9 @@ const buildCredentials = function (location, keys) {
 // 4. url protocol, host, and path are preserved
 const getLocationWithoutParams = function (currentLocation, keys) {
   // strip all values from both actual and anchor search params
-  var newSearch   = querystring.stringify(stripKeys(getSearchQs(currentLocation), keys)),
-    newAnchorQs = querystring.stringify(stripKeys(getAnchorQs(currentLocation), keys)),
-    newAnchor   = (currentLocation.hash || '').split('?')[0];
+  var newSearch   = querystring.stringify(stripKeys(getSearchQs(currentLocation), keys));
+  var newAnchorQs = querystring.stringify(stripKeys(getAnchorQs(currentLocation), keys));
+  var newAnchor   = (currentLocation.hash || '').split('?')[0];
 
   if (newSearch) {
     newSearch = '?' + newSearch;

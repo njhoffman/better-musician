@@ -3,8 +3,7 @@ import extend from 'extend';
 import fetch from '../fetch';
 import parseEndpointConfig from './parseEndpointConfig';
 
-import { setEndpointKeys } from '../../actions/endpoints';
-import { configureComplete } from '../../actions/auth';
+import { setEndpointKeys } from 'actions/auth';
 import {
   getApiUrl,
   getCurrentSettings,
@@ -15,6 +14,7 @@ import {
   setCurrentEndpointKey,
   removeData,
   retrieveData,
+  resetConfig,
   persistData
 } from './sessionStorage';
 

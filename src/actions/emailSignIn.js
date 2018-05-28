@@ -3,7 +3,8 @@ import {
   setCurrentEndpointKey,
   getCurrentEndpointKey
 } from 'utils/auth/sessionStorage';
-import { storeCurrentEndpointKey } from './endpoints';
+import { storeCurrentEndpointKey } from './auth';
+import { CALL_API } from 'middleware/api';
 import fetch, { parseResponse } from 'utils/fetch';
 
 export const EMAIL_SIGN_IN_START       = 'EMAIL_SIGN_IN_START';
@@ -23,6 +24,7 @@ export function emailSignInComplete(endpoint, user) {
 export function emailSignInError(endpoint, errors) {
   return { type: EMAIL_SIGN_IN_ERROR, errors, endpoint };
 }
+
 export function emailSignIn(body, endpointKey) {
   return dispatch => {
     // save previous endpoint key in case of failure
@@ -35,6 +37,25 @@ export function emailSignIn(body, endpointKey) {
     dispatch(storeCurrentEndpointKey(currentEndpointKey));
     dispatch(emailSignInStart(currentEndpointKey));
 
+    //     dispatch({
+    //       [CALL_API]: {
+    //         types: [
+    //           EMAIL_SIGN_IN_START,
+    //           (user) => dispatch(emailSignInComplete(user, currentEndpointKey, errors)),
+    //           (errors) => {
+    //             // revert endpoint key to what it was before failed request
+    //             setCurrentEndpointKey(prevEndpointKey);
+    //             dispatch(storeCurrentEndpointKey(prevEndpointKey));
+    //             dispatch(emailSignInError(currentEndpointKey, errors));
+    //             throw errors;
+    //           }
+    //         ],
+    //         endpoint: getEmailSignInUrl(currentEndpointKey)
+    //       }
+    //     });
+    //   }
+    // };
+    //
     return fetch(getEmailSignInUrl(currentEndpointKey), {
       headers: {
         'Accept': 'application/json',

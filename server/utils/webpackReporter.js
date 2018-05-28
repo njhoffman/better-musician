@@ -8,7 +8,7 @@ module.exports = (config, sharedUtils, outputHeap) =>
     // stats.compilation: hooks, options, profile, outputOptions, performance, chunks, chunkGroupos,
     // namedChunks, namedChunkGroups, modules, assets, name, fullHash, hash
     if (state) {
-      log.info('Building ...');
+      log.info('Building assets ...');
       const { compilation: { modules } } = stats;
       outputHeap(log);
       const duration = stats.endTime - stats.startTime;
@@ -79,14 +79,15 @@ module.exports = (config, sharedUtils, outputHeap) =>
           name: key,
           overLimit: !!stats.compilation.assets[key].isOverSizeLimit,
           size: stats.compilation.assets[key].size()
-        }));
+        })).sort((a, b) => (a.size > b.size));
 
       const oversizeAssets = _.filter(assets, 'overLimit');
 
       let totalSize = 0;
       _.difference(assets, oversizeAssets).forEach(asset => {
         totalSize += asset.size;
-        log.debug({ _wpAsset: asset }, `${asset.name}: ${humanMemorySize(asset.size)}`);
+        const logLevel = asset.name.split('.').pop() === 'js' ? 'debug' : 'trace';
+        log[logLevel]({ _wpAsset: asset }, `${asset.name}: ${humanMemorySize(asset.size)}`);
       });
 
       _.sortBy(oversizeAssets, 'size').forEach(asset => {

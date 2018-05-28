@@ -4,20 +4,22 @@ import * as C from 'utils/auth/constants';
 import {
   authenticateStart,
   authenticateComplete,
-  authenticateError
+  authenticateError,
+  setEndpointKeys
 } from './auth';
+
 import {
   showFirstTimeLoginSuccessModal,
   showFirstTimeLoginErrorModal,
   showPasswordResetSuccessModal,
   showPasswordResetErrorModal
 } from './ui';
+
 import { ssAuthTokenUpdate } from './server';
 import { applyConfig } from 'utils/auth/clientSettings';
 import { destroySession } from 'utils/auth/sessionStorage';
 import verifyAuth from 'utils/auth/verifyAuth';
 import getRedirectInfo from 'utils/auth/parseUrl';
-import { setEndpointKeys } from './endpoints';
 
 export const configure = (endpoint = {}, settings = {}) => {
   return dispatch => {

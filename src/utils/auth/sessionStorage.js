@@ -1,9 +1,8 @@
 import Cookies from 'browser-cookies';
 import * as C from './constants';
-import _ from 'lodash';
 
 import { init as initLog } from 'shared/logger';
-const { debug, trace } = initLog('auth-session');
+const { debug } = initLog('auth-session');
 
 // even though this code shouldn't be used server-side, node will throw
 // errors if "window" is used

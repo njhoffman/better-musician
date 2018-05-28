@@ -20,35 +20,35 @@ export const SongsList = ({
   setSort,
   currentSongId }) => (
   <Tappable onPress={showViewSongModal}>
-      <Table
+    <Table
       className={css.songsList}
       style={{ tableLayout: 'fixed' }}>
       <TableBody>
-          <TableRow
+        <TableRow
           onClick={setCurrentSong}
           hover>
           <SongsListHeader
-              className={css.title}
-              setSort={setSort}
-              name='title'
-              displayName='Title' />
+            className={css.title}
+            setSort={setSort}
+            name='title'
+            displayName='Title' />
           <SongsListHeader
-              className={css.artist}
-              setSort={setSort}
-              name='artist'
-              displayName='Artist' />
+            className={css.artist}
+            setSort={setSort}
+            name='artist'
+            displayName='Artist' />
           <SongsListHeader
-              className={css.progress}
-              setSort={setSort}
-              name='progress'
-              displayName='Progress' />
+            className={css.progress}
+            setSort={setSort}
+            name='progress'
+            displayName='Progress' />
           <SongsListHeader
-              className={css.difficulty}
-              setSort={setSort}
-              name='difficulty'
-              displayName='Difficulty' />
+            className={css.difficulty}
+            setSort={setSort}
+            name='difficulty'
+            displayName='Difficulty' />
         </TableRow>
-          {songsCollection && songsCollection.map(song => {
+        {songsCollection && songsCollection.map(song => {
           return (
             <Song
               key={song.id}
@@ -56,9 +56,9 @@ export const SongsList = ({
             />
           );
         })}
-        </TableBody>
+      </TableBody>
     </Table>
-    </Tappable>
+  </Tappable>
 );
 
 SongsList.propTypes = {

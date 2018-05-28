@@ -43,9 +43,10 @@ export class ButtonLoader extends React.Component {
       radius: 3
     },
     flatButton: false,
-    spinColorDark: Colors.darkBlack,
-    spinColorLight: Colors.darkWhite,
-    spinColorDisabled: Colors.minBlack,
+    // TODO: pull from theme
+    spinColorDark: '#000000',
+    spinColorLight: '#dddddd',
+    spinColorDisabled: '#444444',
     style: {}
   };
 
@@ -62,6 +63,41 @@ export class ButtonLoader extends React.Component {
     } else {
       return this.props.spinColorDark;
     }
+  }
+
+  renderIcon() {
+    let icon;
+    const color = this.getColor();
+    if (this.props.loading) {
+      icon = (
+        <div style={{
+          // position: "absolute", top: 15, left: 7
+        }}>
+          <Spinner
+            ref='spinner'
+            {...this.props.spinConfig}
+            color={color}
+            loaded={false} />
+        </div>
+      );
+    } else {
+      if (typeof (this.props.icon) === 'object') {
+        icon = this.props.icon;
+      } else {
+        const { icon: Icon } = this.props;
+        icon = <Icon color={color} />;
+      }
+    }
+
+    return (
+      <span style={{
+        display: 'inline-flex',
+        marginRight: '5px'
+        // width: 25, height: 25, position: "absolute", left: 10, top: 3
+      }}>
+        {icon}
+      </span>
+    );
   }
 
   render() {
@@ -81,8 +117,8 @@ export class ButtonLoader extends React.Component {
         variant={this.props.flatButton ? 'flat' : 'raised'}
         color={this.props.secondary ? 'secondary' : 'primary'}
         onClick={(e) => this.handleClick(e)}>
-        {this.props.icon}
-        {this.props.label}
+        {this.renderIcon()}
+        {!this.props.loading && this.props.label}
       </Button>
     );
   }

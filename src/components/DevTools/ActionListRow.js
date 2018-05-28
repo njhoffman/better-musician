@@ -3,8 +3,6 @@ import dateformat from 'dateformat';
 import debounce from 'lodash.debounce';
 import RightSlider from './RightSlider';
 
-type Button = 'Skip' | 'Jump';
-
 const BUTTON_SKIP = 'Skip';
 const BUTTON_JUMP = 'Jump';
 
@@ -12,14 +10,15 @@ export default class ActionListRow extends PureComponent {
   state: State = { hover: false };
 
   render() {
-    const { styling, isSelected, action, isInitAction, onSelect,
-      timestamps, isSkipped, isInFuture, isActive, actionId } = this.props;
+    const { styling, isSelected, action, isInitAction, onSelect, onJumpClick,
+      timestamps, isSkipped, isInFuture, isActive,
+      isHidden, customStyling, actionId } = this.props;
+
     const { hover } = this.state;
     const timeDelta = timestamps.current - timestamps.previous;
     const showButtons = hover && !isInitAction || isSkipped;
 
-    const isButtonSelected = btn =>
-      btn === BUTTON_SKIP && isSkipped;
+    const isButtonSelected = btn => btn === BUTTON_SKIP && isSkipped;
 
     let actionType = action.type;
     if (typeof actionType === 'undefined') actionType = '<UNDEFINED>';
@@ -32,14 +31,17 @@ export default class ActionListRow extends PureComponent {
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
         onMouseDown={this.handleMouseDown}
+        style={customStyling}
         {...styling([
           'actionListItem',
           isSelected ? 'actionListItemSelected' : null,
           isSkipped ? 'actionListItemSkipped' : null,
           isInFuture ? 'actionListFromFuture' : null,
-          isActive ? 'actionListIsActive' : null
-        ], isSelected, action)}>
+          isActive ? 'actionListIsActive' : null,
+          isHidden ? 'actionListIsHidden' : null
+        ])}>
         <div
+          onDoubleClick={onJumpClick}
           {...styling([
             'actionListItemName',
             isSkipped ? 'actionListItemNameSkipped' : null

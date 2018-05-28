@@ -160,10 +160,9 @@ const mapStateToProps = (state) => ({
 });
 
 const addSongForm = withTheme()(reduxForm({
-  form: 'addSongForm',
+  form: 'addSongForm'
   // enableReinitialize: true,
   // validate
 })(AddSongModal));
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(addSongForm);

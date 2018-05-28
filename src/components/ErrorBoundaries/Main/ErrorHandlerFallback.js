@@ -68,7 +68,7 @@ export default function Fallback(props) {
       }
     }
   });
-  const stackLineRE = /at ([^\(]+ )([^\.]+.\/)([^:]+):(\d+):(\d+)/;
+  const stackLineRE = /at ([^(]+ )([^.]+.\/)([^:]+):(\d+):(\d+)/;
   const stackTitle = error.stack.split('\n')[0];
   const stackLines = error.stack
     .replace(stackTitle, '')

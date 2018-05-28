@@ -9,7 +9,7 @@ const locationHelper = locationHelperBuilder({});
 // is authenticated
 
 const userIsAuthDefaults = {
-  authenticatedSelector: state => state.auth.getIn(['user', 'isSignedIn']),
+  authenticatedSelector: state => state.user.isSignedIn,
   authenticatingSelector: state => state.user.isLoading,
   wrapperDisplayName: 'UserIsAuth'
 };
@@ -35,7 +35,7 @@ export const userIsAdminRedir = connectedRouterRedirect({
 const userNotAuthDefaults = {
   // Want to redirect the user when they are done loading and auth
   // authSelector: state => state.user.data === null && state.user.isLoading === false,
-  authenticatedSelector: state => !state.auth.getIn(['user', 'isSignedIn']),
+  authenticatedSelector: state => !state.user.isSignedIn,
   wrapperDisplayName: 'UserNotAuth'
 };
 

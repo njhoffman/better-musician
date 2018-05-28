@@ -112,7 +112,7 @@ export class EmailSignUpForm extends React.Component {
               label='Sign Up'
               name='email-sign-up-submit'
               primary
-              icon={ContentSend}
+              icon={<ContentSend />}
               disabled={disabled}
               onClick={() => this.handleSubmit()}
               {...this.props.inputProps.submit} />

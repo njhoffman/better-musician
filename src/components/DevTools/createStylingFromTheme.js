@@ -164,6 +164,12 @@ const getSheetFromColorMap = map => ({
     opacity: '0.6'
   },
 
+  actionListIsHidden: {
+    height: '1px',
+    padding: '1px',
+    overflow: 'hidden'
+  },
+
   actionListIsActive: {
     background: 'rgba(0, 128, 128, 0.3)',
     border: 'rgba(0, 128, 128, 0.2)'

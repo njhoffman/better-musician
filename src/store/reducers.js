@@ -7,13 +7,11 @@ import userReducer from './user';
 import configReducer from './config';
 import ormReducer from './orm';
 
-import { init as initLog } from 'shared/logger';
-
 // selectors need access to ORM
 // TODO: put orm in own module
-
-import { routerReducer } from 'react-router-redux';
 import { LOCATION_CHANGE } from 'react-router-redux';
+import { init as initLog } from 'shared/logger';
+
 const { info } = initLog('reducers');
 
 // Initial routing state

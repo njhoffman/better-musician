@@ -1,12 +1,10 @@
 import {
   blueGrey,
   grey,
-  pink,
-  yellow,
-  white
+  yellow
 } from 'material-ui/colors';
 
-import { fade, darken } from 'material-ui/styles/colorManipulator';
+import { darken } from 'material-ui/styles/colorManipulator';
 import spacing from 'material-ui/styles/spacing';
 
 export default {

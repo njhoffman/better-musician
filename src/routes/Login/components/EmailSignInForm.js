@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { Row, Column } from 'react-foundation';
 import withTheme from 'material-ui/styles/withTheme';
 
+import { Divider } from 'material-ui';
+
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ButtonLoader from 'components/ButtonLoader';
 import FormField from 'components/Field';
@@ -42,8 +44,8 @@ export class EmailSignInForm extends React.Component {
   getEndpoint() {
     return (
       this.props.endpoint ||
-      this.props.auth.getIn(['configure', 'currentEndpointKey']) ||
-      this.props.auth.getIn(['configure', 'defaultEndpointKey'])
+      this.props.config.auth.currentEndpointKey ||
+      this.props.config.auth.defaultEndpointkey
     );
   }
 
@@ -56,9 +58,7 @@ export class EmailSignInForm extends React.Component {
   }
 
   render() {
-    let disabled = (this.props.isSignedIn ||
-      this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'loading'])
-    );
+    let disabled = (this.props.isSignedIn || this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'loading']));
 
     const errors = this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'errors']);
 
@@ -92,6 +92,7 @@ export class EmailSignInForm extends React.Component {
             disabled={disabled}
             {...this.props.inputProps.password} />
 
+          <Divider />
         </Row>
         <Row>
           <Column centerOnSmall>
@@ -113,6 +114,7 @@ export class EmailSignInForm extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    config:      state.config,
     auth:        state.auth,
     isSignedIn:  state.user.isSignedIn,
     loginForm:   state.form.login,

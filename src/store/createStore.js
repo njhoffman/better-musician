@@ -1,8 +1,7 @@
-import _ from 'lodash';
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { createLogger } from 'redux-logger';
 import { routerMiddleware } from 'react-router-redux';
+// import { createLogger } from 'redux-logger';
 // import generateReduxReport from 'redux-usage-report';
 
 import makeRootReducer from './reducers';
@@ -39,7 +38,7 @@ export default (initialState = {}, history) => {
   }
   const middleware = [apiMiddleware, thunkMiddleware, actionLogger, routerMiddleware(history)];
   const enhancers = useDevExtension ? []
-    : [ DevTools().instrument({ shouldCatchErrors: true })];
+    : [DevTools().instrument({ shouldCatchErrors: true })];
 
   store = createStore(
     makeRootReducer(),

@@ -17,9 +17,10 @@ export const LOAD_INSTRUMENTS      = 'LOAD_INSTRUMENTS';
 export const LOAD_GENRES           = 'LOAD_GENRES';
 export const LOAD_SONGS            = 'LOAD_SONGS';
 export const LOAD_FIELDS           = 'LOAD_FIELDS';
-// redux-auth actions
+
 export const AUTHENTICATE_START    = 'AUTHENTICATE_START';
 export const AUTHENTICATE_COMPLETE = 'AUTHENTICATE_COMPLETE';
+export const AUTHENTICATE_ERROR    = 'AUTHENTICATE_ERROR';
 
 export const USER_UPDATE = 'USER_UPDATE';
 export const USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';
@@ -28,6 +29,10 @@ export const USER_UPDATE_FAILURE = 'USER_UPDATE_FAILURE';
 export const SONGS_ADD = 'SONGS_ADD';
 export const SONGS_ADD_SUCCESS = 'SONGS_ADD_SUCCESS';
 export const SONGS_ADD_FAILURE = 'SONGS_ADD_FAILURE';
+
+export const EMAIL_SIGN_IN_START       = 'EMAIL_SIGN_IN_START';
+export const EMAIL_SIGN_IN_COMPLETE    = 'EMAIL_SIGN_IN_COMPLETE';
+export const EMAIL_SIGN_IN_ERROR       = 'EMAIL_SIGN_IN_ERROR';
 
 // ------------------------------------
 // Action Creators
@@ -115,13 +120,21 @@ export const songsAddFailure = (response) => (dispatch) => {
 // ------------------------------------
 
 const ACTION_HANDLERS = {
-  [AUTHENTICATE_START] : (state) =>
-    ({ ...state, isFetching: true }),
+
+  [AUTHENTICATE_START] : (state) => ({
+    ...state,
+    loading: true
+  }),
+  [AUTHENTICATE_ERROR] : (state) => ({
+    ...state,
+    loading: false
+  }),
   [AUTHENTICATE_COMPLETE] : (state) =>
     ({ ...state,
-      isFetching: false,
+      loading: false,
       initialized: state.initialized.indexOf('user') === -1 ? state.initialized.concat('user') : state.initialized
     }),
+
   [LOAD_CONFIG] : (state, { payload: { api } }) => ({ ...state,
     endpoints: _.mapValues(api.endpoints, ep => ({
       loading: false,
@@ -129,28 +142,34 @@ const ACTION_HANDLERS = {
       success: false
     }))
   }),
-  [SONGS_REQUEST] : (state) => ({ ...state, isFetching: true }),
+
+  [EMAIL_SIGN_IN_START] : (state) =>
+    ({ ...state, loading: true }),
+  [EMAIL_SIGN_IN_COMPLETE] : (state) =>
+    ({ ...state, loading: false }),
+  [EMAIL_SIGN_IN_ERROR] : (state) =>
+    ({ ...state, loading: false }),
+
+  [SONGS_REQUEST] : (state) => ({ ...state, loading: true }),
   [SONGS_SUCCESS] : (state) =>
     ({ ...state,
-      isFetching: false,
+      loading: false,
       initialized: state.initialized.indexOf('songs') === -1 ? state.initialized.concat('songs') : state.initialized }),
-  [USER_UPDATE] : (state) => ({ ...state, isFetching: true }),
-  [USER_UPDATE_SUCCESS] : (state) => ({ ...state, isFetching: false }),
-  [USER_UPDATE_FAILURE] : (state) => ({ ...state, isFetching: false }),
-  [SONGS_ADD] : (state) => ({ ...state, isFetching: true }),
-  [SONGS_ADD_SUCCESS] : (state) => ({ ...state, isFetching: false }),
-  [SONGS_ADD_FAILURE] : (state) => ({ ...state, isFetching: false })
+  [USER_UPDATE] : (state) => ({ ...state, loading: true }),
+  [USER_UPDATE_SUCCESS] : (state) => ({ ...state, loading: false }),
+  [USER_UPDATE_FAILURE] : (state) => ({ ...state, loading: false }),
+  [SONGS_ADD] : (state) => ({ ...state, loading: true }),
+  [SONGS_ADD_SUCCESS] : (state) => ({ ...state, loading: false }),
+  [SONGS_ADD_FAILURE] : (state) => ({ ...state, loading: false })
 };
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 export const initialState = {
-  isFetching: false,
+  loading: false,
   initialized: [],
-  loading: [],
-  error: [],
-  success: []
+  errors: []
 };
 
 export default function apiReducer(state = initialState, action) {

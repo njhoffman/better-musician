@@ -128,13 +128,13 @@ export const AddSongMainTab = (props) => {
               type='autocomplete'
               className={className}
               {...textProps}
-              { ...{} /* dataSource={props.artistLastNames} */ }
+              {...{} /* dataSource={props.artistLastNames} */}
               label='Last Name / Band' />
             <FormField
               name='artist.firstName'
               type='autocomplete'
               {...textProps}
-              { ...{} /* dataSource={props.artistFirstNames} */ }
+              {...{} /* dataSource={props.artistFirstNames} */}
               label='First Name' />
           </Row>
         </div>
@@ -146,13 +146,13 @@ export const AddSongMainTab = (props) => {
           label='Song Genre'
           className={className}
           {...textProps}
-          { ...{} /* dataSource={props.genres} */ } />
+          {...{} /* dataSource={props.genres} */} />
         <FormField
           name='instrument.name'
           type='autocomplete'
           className={className}
           {...textProps}
-          { ...{} /* dataSource={props.instruments} */ }
+          {...{} /* dataSource={props.instruments} */}
           label='Instrument' />
       </Row>
       <Row>

@@ -1,6 +1,11 @@
 import _ from 'lodash';
 
 export const LOAD_CONFIG = 'LOAD_CONFIG';
+export const CONFIGURE_START = 'CONFIGURE_START';
+export const STORE_CURRENT_ENDPOINT_KEY = 'STORE_CURRENT_ENDPOINT_KEY';
+export const SET_ENDPOINT_KEYS = 'SET_ENDPOINT_KEYS';
+export const CONFIGURE_COMPLETE = 'CONFIGURE_COMPLETE';
+export const CONFIGURE_ERROR = 'CONFIGURE_ERROR';
 
 const defaultConfig = {
   api: {
@@ -48,6 +53,14 @@ const defaultConfig = {
       }
     }
   },
+  auth: {
+    loading: true,
+    errors: null,
+    config: null,
+    endpointKeys: null,
+    defaultEndpointKey: null,
+    currentEndpointKey: null
+  },
   serverSideRendering : false,
   clientOnly          : true
   // cleanSession:        true
@@ -71,7 +84,32 @@ export const loadConfig = (config) => (dispatch) => {
 // ------------------------------------
 
 const ACTION_HANDLERS = {
-  [LOAD_CONFIG]: (state, action) => ({ ...state, ...(_.omit(action.payload, 'api')) })
+  // [LOAD_CONFIG]: (state, action) =>
+  // ({ ...state, ...(_.omit(action.payload, 'api')) }),
+  //
+  [CONFIGURE_START]: (state, action) =>
+    ({ ...state, ...(_.omit(action.payload, 'api')), auth: { ...state.auth, loading: true } }),
+
+  [STORE_CURRENT_ENDPOINT_KEY]: (state, { currentEndpointKey }) =>
+    ({ ...state, auth: { ...state.auth, currentEndpointKey } }),
+
+  [SET_ENDPOINT_KEYS]: (state, { endpointKeys, defaultEndpointKey, currentEndpointKey }) =>
+    ({ ...state, auth: { ...state.auth, ...{ endpointKeys, defaultEndpointKey, currentEndpointKey } } }),
+
+  [CONFIGURE_COMPLETE]: (state, { payload }) => ({ ...state,
+    auth: { ...state.auth,
+      ...{
+        loading: false,
+        errors: null,
+        config: payload
+      } } }),
+
+  [CONFIGURE_ERROR]: (state, { errors }) => ({ ...state,
+    auth: { ...state.auth,
+      ...{
+        loading: false,
+        errors
+      } } })
 };
 
 export default function configReducer(state = initialState, action) {

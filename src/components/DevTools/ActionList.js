@@ -29,12 +29,18 @@ export default class ActionList extends PureComponent {
       selectedActionId, startActionId, onSelect, onSearch, searchValue, currentActionId,
       onCommit, onSweep, onJumpToState } = this.props;
     const lowerSearchValue = searchValue && searchValue.toLowerCase();
-    const filteredActionIds = (searchValue ? actionIds.filter(
-      id => actions[id].action.type.toLowerCase().indexOf(lowerSearchValue) !== -1
-    ) : actionIds);
+
+    const blacklistedActions = ['@@redux-form/BLUR', '@@redux-form/FOCUS'];
+    const styledActions = {
+      'CONFIGURE_COMPLETE' :  { color: '#00ffaa' },
+      'EMAIL_SIGN_IN_ERROR' : { color: 'red', border: 'solid 1px #660000' },
+      'EMAIL_SIGN_IN_START' : { color: 'rgba(200, 255, 255, 1)' }
+    };
+
+    const filteredActionIds = (searchValue ? actionIds.filter(id =>
+      actions[id].action.type.toLowerCase().indexOf(lowerSearchValue) !== -1) : actionIds);
 
     return (
-
       <div
         key='actionList'
         {...styling(
@@ -61,6 +67,8 @@ export default class ActionList extends PureComponent {
               }
               isActive={actionId === currentActionId}
               isInFuture={actionId > currentActionId}
+              isHidden={blacklistedActions.indexOf(actions[actionId].action.type) !== -1}
+              customStyling={styledActions[actions[actionId].action.type] || {}}
               onSelect={(e) => onSelect(e, actionId)}
               timestamps={getTimestamps(actions, actionIds, actionId)}
               action={actions[actionId].action}

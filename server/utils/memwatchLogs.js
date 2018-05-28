@@ -46,7 +46,7 @@ const heap = (config, sdc, logger) => {
     if (memoryAmount) {
       logger.info(
         { color: ['webpackMemoryLabel', 'webpackMemoryValue'] },
-        `%${memoryMap[memoryKey]}%\t%${memoryAmount}%`
+        `  %${memoryMap[memoryKey]}%\t%${memoryAmount}%`
       );
       sdc.gauge(`app_memory_${memoryKey}`, memoryAmount);
     }

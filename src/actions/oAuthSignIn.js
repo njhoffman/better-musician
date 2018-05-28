@@ -18,7 +18,6 @@ export const OAUTH_SIGN_IN_ERROR    = 'OAUTH_SIGN_IN_ERROR';
 // hook for rewire
 var openPopup = _openPopup;
 
-
 function listenForCredentials(endpointKey, popup, provider, resolve, reject) {
   if (!resolve) {
     return new Promise((resolve, reject) => {
@@ -67,7 +66,6 @@ export function oAuthSignInError(errors, endpoint) {
 }
 
 export function oAuthSignIn({ provider, params, endpointKey }) {
-
   return dispatch => {
     // save previous endpoint key in case of failure
     var prevEndpointKey = getCurrentEndpointKey();

@@ -32,7 +32,7 @@ const memoryStats = () => {
     const { totalJSHeapSize, usedJSHeapSize } = window.performance.memory;
     const used = humanMemorySize(usedJSHeapSize, true);
     const total = humanMemorySize(totalJSHeapSize, true);
-    debug( `-- JS Heap Size: ${used} / ${total}`);
+    debug(`-- JS Heap Size: ${used} / ${total}`);
   }
 };
 setInterval(memoryStats, 120000);
@@ -50,12 +50,20 @@ const domStats = () => {
   };
   getNodeStats(document, 0);
   stats.averageDepth = (stats.totalDepth / stats.totalNodes).toFixed(2);
-  debug( `-- depth => ${stats.averageDepth} / ${stats.maxDepth} : ${stats.totalNodes} Nodes`);
+  debug(`-- depth => ${stats.averageDepth} / ${stats.maxDepth} : ${stats.totalNodes} Nodes`);
 };
 
-const configApp = () => {
-  store.dispatch(configureStart());
-  store.dispatch(
+const loadAppConfig = (store) => {
+  return store.dispatch(
+    loadConfig({
+      api: {
+        url: __API_URL__
+      }
+    })
+  );
+};
+const loadAuthConfig = (store) => {
+  return store.dispatch(
     authConfigure({
       apiUrl                : __API_URL__,
       signOutPath           : '/users/logout',
@@ -75,19 +83,20 @@ const configApp = () => {
       serverSideRendering : false,
       clientOnly          : true
       // cleanSession:        true
-    })).then((userData) => {
-    return store.dispatch(
-      loadConfig({
-        api: {
-          url: __API_URL__
-        }
-      })
-    );
-  }).then((arg1, arg2) => {
-    store.dispatch(configureComplete());
-    render(AppContainer);
-    domStats();
-  });
+    }
+    )
+  );
+};
+
+const configApp = () => {
+  store.dispatch(configureStart());
+  loadAppConfig(store)
+    .then(() => loadAuthConfig(store))
+    .then((userData) => {
+      store.dispatch(configureComplete());
+      render(AppContainer);
+      domStats();
+    });
 };
 
 configApp();
