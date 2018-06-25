@@ -1,7 +1,7 @@
 import Immutable from "immutable";
 import { createReducer } from "redux-immutablejs";
-import * as A from "../../actions/emailSignIn";
-import { SET_ENDPOINT_KEYS } from "../../actions/configure";
+import * as A from "constants/auth";
+import { SET_ENDPOINT_KEYS } from "actions/configure";
 
 const initialState = {
   loading: false,

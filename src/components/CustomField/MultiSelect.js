@@ -16,15 +16,13 @@ const RenderCustomMultiSelect = ({
         style={{ width: '200px' }}
         name={field.name}
         component={RenderSelect}
-        label={field.label}
-        dataSource={field.optionValues} />
+        label={field.label} />
     );
   } else {
     return (
       <FieldArray
         name={field.name}
         label={field.label}
-        dataSource={field.optionValues}
         component={RenderMultiSelect}
         {...custom} />
     );

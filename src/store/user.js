@@ -15,22 +15,30 @@ const initialState = {
 };
 
 const ACTION_HANDLERS = {
-  [authActions.AUTHENTICATE_COMPLETE]: (state, { payload }) =>
-    ({ ...state,
-      ...{
-        attributes: payload,
-        isSignedIn: true,
-        endpointKey: getCurrentEndpointKey()
-      } }),
+  [authActions.AUTHENTICATE_COMPLETE]: (state, { payload }) => ({
+    ...state,
+    ...{
+      isSignedIn: true,
+      attributes: payload.user,
+      endpointKey: getCurrentEndpointKey(),
+      endpoints: payload.endpoints
+    }
+  }),
 
-  [ssActions.SS_TOKEN_VALIDATION_COMPLETE]: (state, { user, mustResetPassword, firstTimeLogin }) =>
-    ({ ...state,
-      ...{
-        attributes: user,
-        isSignedIn: true,
-        firstTimeLogin,
-        mustResetPassword
-      } }),
+  [authActions.AUTHENTICATE_ERROR]: (state, { payload }) => ({
+    ...state,
+    endpoints: payload.endpoints
+  }),
+
+  [ssActions.SS_TOKEN_VALIDATION_COMPLETE]: (state, { user, mustResetPassword, firstTimeLogin }) => ({
+    ...state,
+    ...{
+      attributes: user,
+      isSignedIn: true,
+      firstTimeLogin,
+      mustResetPassword
+    }
+  }),
 
   [authActions.STORE_CURRENT_ENDPOINT_KEY]: (state, { currentEndpointKey }) =>
     ({ ...state, ...{ currentEndpointKey } }),

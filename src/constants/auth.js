@@ -1,0 +1,19 @@
+export const EMAIL_SIGN_IN_START        = 'EMAIL_SIGN_IN_START';
+export const EMAIL_SIGN_IN_COMPLETE     = 'EMAIL_SIGN_IN_COMPLETE';
+export const EMAIL_SIGN_IN_ERROR        = 'EMAIL_SIGN_IN_ERROR';
+export const EMAIL_SIGN_IN_FORM_UPDATE  = 'EMAIL_SIGN_IN_FORM_UPDATE';
+
+export const AUTHENTICATE_START         = 'AUTHENTICATE_START';
+export const AUTHENTICATE_COMPLETE      = 'AUTHENTICATE_COMPLETE';
+export const AUTHENTICATE_ERROR         = 'AUTHENTICATE_ERROR';
+
+export const SET_ENDPOINT_KEYS          = 'SET_ENDPOINT_KEYS';
+export const STORE_CURRENT_ENDPOINT_KEY = 'STORE_CURRENT_ENDPOINT_KEY';
+
+export const CONFIGURE_START            = 'CONFIGURE_START';
+export const CONFIGURE_COMPLETE         = 'CONFIGURE_COMPLETE';
+
+export const SIGN_OUT_START             = 'SIGN_OUT_START';
+export const SIGN_OUT_COMPLETE          = 'SIGN_OUT_COMPLETE';
+export const SIGN_OUT_ERROR             = 'SIGN_OUT_ERROR';
+

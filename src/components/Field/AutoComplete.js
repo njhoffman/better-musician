@@ -7,13 +7,12 @@ const RenderAutoComplete = ({
   label,
   inputStyle,
   meta,
-  ...custom }) => {
+  ...custom
+}) => {
   return (
     <TextField
-      floatingLabelText={label}
-      inputStyle={{ ...inputStyle, ...{ boxShadow: 'none' } }}
+      label={label}
       errorText={meta && meta.touched && meta.error}
-      textFieldStyle={{ maxWidth: '100%' }}
       {...custom}
     />
   );

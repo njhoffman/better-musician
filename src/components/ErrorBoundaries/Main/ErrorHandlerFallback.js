@@ -102,8 +102,8 @@ export default function Fallback(props) {
           <div style={{ ...preSty }}>
             <table style={{ ...componentTableSty }}>
               <tbody>
-                {errorComponents && errorComponents.map(ec =>
-                  <tr>
+                {errorComponents && errorComponents.map((ec, i) =>
+                  <tr key={i}>
                     <td style={{ ...componentNameSty }}>{ec.component}</td>
                     <td style={{ ...componentSourceSty }}>{ec.source}</td>
                   </tr>
@@ -120,8 +120,8 @@ export default function Fallback(props) {
           </pre>
           <pre style={{ ...preSty, color: '#888888' }}>
             <code>
-              {stackLines.map(sl => (
-                <div>
+              {stackLines.map((sl, i) => (
+                <div key={i}>
                   {sl}
                 </div>
               ))}

@@ -1,18 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ContentSend from 'material-ui-icons/Send';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
-import withTheme from 'material-ui/styles/withTheme';
+import withStyles from 'material-ui/styles/withStyles';
 import { Row, Column } from 'react-foundation';
 
 import { MdHelp as HelpIcon } from 'react-icons/lib/md';
+import ContentSend from 'material-ui-icons/Send';
 
-import { Button } from 'material-ui';
-import ButtonLoader from 'components/ButtonLoader';
+import Button from 'components/Button';
 import FormField from 'components/Field';
 import { emailSignUp } from 'actions/emailSignUp';
 import css from './EmailSignUpForm.scss';
+
+const styles = theme => ({
+  button: {
+    width: '250px',
+    display: 'none'
+  }
+});
 
 export class EmailSignUpForm extends React.Component {
   static propTypes = {
@@ -82,6 +88,7 @@ export class EmailSignUpForm extends React.Component {
         <Row>
           <FormField
             type='text'
+            className='_inst_email-sign-up'
             label='Email'
             name='email-sign-up-email'
             disabled={disabled}
@@ -105,26 +112,22 @@ export class EmailSignUpForm extends React.Component {
         </Row>
         <Row className={css.buttonWrapper}>
           <Column centerOnSmall small={12} medium={5} pushOnMedium={7}>
-            <ButtonLoader
+            <Button
+              label='Sign Up'
+              icon={<ContentSend />}
               className={css.signupButton}
               loading={this.props.auth.getIn(['emailSignUp', this.getEndpoint(), 'loading'])}
-              type='submit'
-              label='Sign Up'
-              name='email-sign-up-submit'
-              primary
-              icon={<ContentSend />}
               disabled={disabled}
               onClick={() => this.handleSubmit()}
               {...this.props.inputProps.submit} />
           </Column>
           <Column centerOnSmall small={12} medium={7} pullOnMedium={5}>
             <Button
-              variant='raised'
               className={css.resetButton}
+              label='Reset Password'
               color='secondary'
-              icon={<HelpIcon />}>
-              Reset Password
-            </Button>
+              icon={<HelpIcon />}
+            />
           </Column>
         </Row>
       </form>
@@ -141,4 +144,9 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default withTheme()(connect(mapStateToProps)(reduxForm({ form: 'register' })(EmailSignUpForm)));
+export default withStyles(styles)(
+  connect(mapStateToProps)(
+    reduxForm({ form: 'register' })(
+      EmailSignUpForm
+    ))
+);

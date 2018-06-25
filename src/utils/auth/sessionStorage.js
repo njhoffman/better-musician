@@ -33,10 +33,52 @@ export const getCurrentEndpoint = () => window.authState.currentEndpoint;
 export const setCurrentEndpoint = (e) => (window.authState.currentEndpoint = e);
 
 export const getCurrentEndpointKey = () => (retrieveData(C.SAVED_CONFIG_KEY) || getDefaultEndpointKey());
-export const setDefaultEndpointKey = (k) => (persistData(C.DEFAULT_CONFIG_KEY, k));
+export const setCurrentEndpointKey = (k) => (persistData(C.SAVED_CONFIG_KEY, k || getDefaultEndpointKey()));
 
 export const getDefaultEndpointKey = () => retrieveData(C.DEFAULT_CONFIG_KEY);
-export const setCurrentEndpointKey = (k) => (persistData(C.SAVED_CONFIG_KEY, k || getDefaultEndpointKey()));
+export const setDefaultEndpointKey = (k) => (persistData(C.DEFAULT_CONFIG_KEY, k));
+
+export const getInitialEndpointKey = () =>
+  unescapeQuotes(
+    Cookies.get(C.SAVED_CONFIG_KEY) ||
+    (window.localStorage && window.localStorage.getItem(C.SAVED_CONFIG_KEY))
+  );
+
+export const getSessionEndpoint = (k) => getCurrentEndpoint()[getSessionEndpointKey(k)];
+
+// only should work for current session
+const getUrl = (endpointKey, path) =>
+  `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey)[path]}`;
+
+export const getDestroyAccountUrl = (ek) => getUrl(ek, 'accountDeletePath');
+export const getSignOutUrl = (ek) => getUrl(ek, 'signOutPath');
+export const getEmailSignInUrl = (ek) => getUrl(ek, 'emailSignInPath');
+export const getEmailSignUpUrl = (ek) => getUrl(ek, 'emailRegistrationPath') + `?config_name=${ek}`;
+export const getPasswordResetUrl = (ek) => getUrl(ek, 'passwordResetPath') + `?config_name=${ek}`;
+export const getPasswordUpdateUrl = (ek) => getUrl(ek, 'passwordUpdatePath');
+export const getTokenValidationPath = (ek) => getUrl(ek, 'tokenValidationPath');
+
+export const getOAuthUrl = ({ provider, params, endpointKey }) => {
+  let oAuthUrl = getApiUrl(endpointKey) + getSessionEndpoint(endpointKey).authProviderPaths[provider] +
+    '?auth_origin_url=' + encodeURIComponent(window.location.href) +
+    '&config_name=' + encodeURIComponent(getSessionEndpointKey(endpointKey));
+
+  if (params) {
+    for (var key in params) {
+      oAuthUrl += '&';
+      oAuthUrl += encodeURIComponent(key);
+      oAuthUrl += '=';
+      oAuthUrl += encodeURIComponent(params[key]);
+    }
+  }
+
+  return oAuthUrl;
+};
+
+export const getConfirmationSuccessUrl = () => window.authState.currentSettings.confirmationSuccessUrl();
+export const getPasswordResetRedirectUrl = () => window.authState.currentSettings.confirmationSuccessUrl();
+export const getApiUrl = (key) => window.authState.currentEndpoint[getSessionEndpointKey(key)].apiUrl;
+export const getTokenFormat = () => window.authState.currentSettings.tokenFormat;
 
 // reset stateful variables
 export const resetConfig = () => {
@@ -65,59 +107,6 @@ export const destroySession = () => {
     });
   }
 };
-
-export const getInitialEndpointKey = () =>
-  unescapeQuotes(
-    Cookies.get(C.SAVED_CONFIG_KEY) ||
-    (window.localStorage && window.localStorage.getItem(C.SAVED_CONFIG_KEY))
-  );
-
-export const getSessionEndpoint = (k) => getCurrentEndpoint()[getSessionEndpointKey(k)];
-
-// only should work for current session
-export const getDestroyAccountUrl = (endpointKey) =>
-  `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).accountDeletePath}`;
-
-// only should work for current session
-export const getSignOutUrl = (endpointKey) =>
-  `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).signOutPath}`;
-
-export const getEmailSignInUrl = (endpointKey) =>
-  `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).emailSignInPath}`;
-
-export const getEmailSignUpUrl = (endpointKey) =>
-  `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).emailRegistrationPath}?config_name=${endpointKey}`;
-
-export const getPasswordResetRequestUrl = (endpointKey) =>
-  `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).passwordResetPath}?config_name=${endpointKey}`;
-
-export const getPasswordUpdateUrl = (endpointKey) =>
-  `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).passwordUpdatePath}`;
-
-export const getTokenValidationPath = (endpointKey) =>
-  `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).tokenValidationPath}`;
-
-export const getOAuthUrl = ({ provider, params, endpointKey }) => {
-  var oAuthUrl = getApiUrl(endpointKey) + getSessionEndpoint(endpointKey).authProviderPaths[provider] +
-    '?auth_origin_url=' + encodeURIComponent(window.location.href) +
-    '&config_name=' + encodeURIComponent(getSessionEndpointKey(endpointKey));
-
-  if (params) {
-    for (var key in params) {
-      oAuthUrl += '&';
-      oAuthUrl += encodeURIComponent(key);
-      oAuthUrl += '=';
-      oAuthUrl += encodeURIComponent(params[key]);
-    }
-  }
-
-  return oAuthUrl;
-};
-
-export const getConfirmationSuccessUrl = () => window.authState.currentSettings.confirmationSuccessUrl();
-export const getPasswordResetRedirectUrl = () => window.authState.currentSettings.confirmationSuccessUrl();
-export const getApiUrl = (key) => window.authState.currentEndpoint[getSessionEndpointKey(key)].apiUrl;
-export const getTokenFormat = () => window.authState.currentSettings.tokenFormat;
 
 export const removeData = (key) => {
   const { storage } = window.authState.currentSettings;

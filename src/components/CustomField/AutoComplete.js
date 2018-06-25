@@ -27,10 +27,7 @@ const RenderCustomAutoComplete = ({
           style={{ ...style, ...{ width: '200px ', verticalAlign: 'middle' } }}
           name={field.name}
           disabled={disabled}
-          underlineShow={!disabled}
-          inputStyle={{ ...inputStyle, ...{ textAlign: 'center' } }}
           component={RenderAutoComplete}
-          floatingLabelStyle={{ ...labelStyle, ...(disabled ? { left: '25px', textAlign: 'center' } : {}) }}
           label={field.label} />
       </Column>
     );

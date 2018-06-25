@@ -14,18 +14,14 @@ import Footer from 'components/Footer/FooterContainer';
 import DrawerMenu from 'components/DrawerMenu/DrawerMenuContainer';
 import Snackbar from 'components/Snackbar/SnackbarContainer';
 import Routes from 'routes';
-import processTheme from 'styles/themes';
+import themes from 'styles/themes';
 
 import { init as initLog } from 'shared/logger';
 const { info } = initLog('AppContainer');
 
-const theme = processTheme();
+const theme = themes['steelBlue-dark'];
 
 class AppContainer extends Component {
-  shouldComponentUpdate() {
-    return false;
-  }
-
   render() {
     return (
       <MuiThemeProvider theme={theme} >
@@ -53,7 +49,7 @@ class AppContainer extends Component {
 const mapStateToProps = (state) => ({
   theme: state.auth && state.auth.get('user') && state.auth.get('user').get('attributes')
     ? state.auth.get('user').get('attributes').get('visualTheme')
-    : 'steelBlue-dark'
+    : 'steelBlue'
 });
 
 export default connect(mapStateToProps)(AppContainer);

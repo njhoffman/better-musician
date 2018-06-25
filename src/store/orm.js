@@ -1,7 +1,7 @@
 import { ORM, createReducer } from 'redux-orm';
 import models from './models';
-import { init as initLog } from 'shared/logger';
-const { info } = initLog('orm');
+// import { init as initLog } from 'shared/logger';
+// const { info } = initLog('orm');
 
 let orm;
 if (!orm) {

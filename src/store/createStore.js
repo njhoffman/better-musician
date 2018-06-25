@@ -10,7 +10,7 @@ import apiMiddleware, { actionLogger }  from 'middleware/api';
 import { DevTools } from 'components/DevTools/DevTools';
 
 import { init as initLog } from 'shared/logger';
-const { info, error } = initLog('createStore');
+const { info, debug, error } = initLog('createStore');
 
 let store;
 
@@ -34,6 +34,7 @@ export const getStore = () => {
 
 export default (initialState = {}, history) => {
   if (store) {
+    debug(`returning store`);
     return store;
   }
   const middleware = [apiMiddleware, thunkMiddleware, actionLogger, routerMiddleware(history)];
@@ -60,5 +61,6 @@ export default (initialState = {}, history) => {
     });
   }
 
+  info('created store');
   return store;
 };

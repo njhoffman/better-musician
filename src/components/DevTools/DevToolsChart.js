@@ -1,27 +1,26 @@
 import * as Themes from 'redux-devtools-themes';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { createDevTools } from 'redux-devtools';
 import ChartMonitor from 'redux-devtools-chart-monitor';
 import ChartToolbar from './ChartToolbar';
 
-import { init as initLog } from 'shared/logger';
-const { info } = initLog('devToolsChart');
-
-// info('Available themes', Object.keys(Themes));
+// import { init as initLog } from 'shared/logger';
+// const { info } = initLog('devToolsChart');
+//
 const theme = Themes.marrakesh;
 
 theme.base07 = '#000000';
 // stroke 226688
 
 class DevToolsChart extends Component {
-  constructor(props) {
-    super(props);
-  }
+  static propTypes = {
+    parentWindow: PropTypes.object
+  };
+
   componentDidMount() {
     this.props.parentWindow.document.addEventListener('keydown', (e) => {
       const container = this.chartMonitor.chartNode.node.children[0].children[0];
-      const transform = container.getAttribute('transform').match(/translate\((?:([^\)]+)\)scale\(([^\)]+))/);
+      const transform = container.getAttribute('transform').match(/translate\((?:([^)]+)\)scale\(([^)]+))/);
       let newTranslate;
       if (e.key === 'ArrowLeft') {
         newTranslate = (parseInt(transform[1].split(',')[0]) + 10) + ',' + transform[1].split(',')[1];
@@ -45,12 +44,24 @@ class DevToolsChart extends Component {
     });
   }
   render() {
+    const chartStyle = {
+      link: {
+        stroke: '#223344'
+      },
+      node: {
+        opacity: { empty: 0.5 }
+      },
+      text: {
+        colors: { 'default': '#779cc1' },
+        opacity: { empty: 0.5 }
+      }
+    };
     return (
       <div >
         <ChartMonitor
           defaultIsVisible
           size={1000}
-          style={{ link: { stroke: '#223344' }, text: { colors: { 'default': '#779cc1' } } }}
+          style={chartStyle}
           {...this.props}
           theme={theme}
           ref={(node) => this.chartMonitor = node}

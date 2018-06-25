@@ -8,7 +8,7 @@ const beautifiers = require('./logger.browser.beautifiers');
 const results = pjson.init({ browser: true, showEmpty: false });
 const consoleLog = console.log;
 const subsystems = ['hot-module'];
-const lineLimit = 175;
+const lineLimit = 150;
 
 const ignoredActions = [
   '@@redux-form/BLUR', '@@redux-form/CHANGE', '@@redux-form/FOCUS'

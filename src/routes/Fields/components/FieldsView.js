@@ -7,7 +7,7 @@ import { FieldArray, reduxForm } from 'redux-form';
 import { browserHistory } from 'react-router';
 import withTheme from 'material-ui/styles/withTheme';
 
-import ButtonLoader from 'components/ButtonLoader';
+import Button from 'components/Button';
 import FieldList from './FieldList';
 import FormField from 'components/Field';
 import FieldOptions from './FieldOptions';
@@ -65,7 +65,7 @@ export const FieldsView = (props) => {
 
   const renderEditButtons = () => (
     <div>
-      <ButtonLoader
+      <Button
         type='submit'
         label='Update'
         labelStyle={{ color: textColor, paddingRight: '5px' }}
@@ -80,7 +80,7 @@ export const FieldsView = (props) => {
   );
 
   const renderAddButtons = () => (
-    <ButtonLoader
+    <Button
       type='submit'
       label='Add Field'
       labelStyle={{ color: textColor, paddingRight: '5px' }}

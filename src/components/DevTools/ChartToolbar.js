@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Button from 'devui/lib/Button';
+import Draggable from 'react-draggable';
+import { ActionCreators } from 'redux-devtools';
+import { getBase16Theme } from 'react-base16-styling';
 import * as themes from 'redux-devtools-themes';
-// import SliderMonitor from 'redux-slider-monitor';
+import flatten from 'flat';
+
+import ActionPreview from 'redux-devtools-inspector/lib/ActionPreview';
+import createDiffPatcher from 'redux-devtools-inspector/lib/createDiffPatcher';
+import getInspectedState from 'redux-devtools-inspector/lib/utils/getInspectedState';
+
+import { createStylingFromTheme } from './createStylingFromTheme';
 import SliderMonitor from './SliderMonitor';
 import ActionList from './ActionList';
-import { createStylingFromTheme } from './createStylingFromTheme';
-import { getBase16Theme } from 'react-base16-styling';
-import getInspectedState from './getInspectedState';
-import { ActionCreators } from 'redux-devtools';
-import createDiffPatcher from './createDiffPatcher';
-import flatten from 'flat';
 
 const { commit, sweep, toggleAction, jumpToAction, jumpToState } = ActionCreators;
 
@@ -84,25 +86,29 @@ function createIntermediateState(props, monitorState) {
       toInspectedState
     ) : null;
 
+  const stateFlat = flatten(toState);
+  const stateFields = {};
+  Object.keys(stateFlat).forEach(fieldKey => {
+    const base = fieldKey.split('.').slice(0, -1).join('.');
+    if (!stateFields[base]) {
+      stateFields[base] = 1;
+    } else {
+      stateFields[base] = stateFields[base] + 1;
+    }
+  });
+
+  const stateCount = {
+    keys: Object.keys(stateFields).length,
+    primitives: Object.keys(stateFlat).length
+  };
+
   return {
+    stateCount,
     delta,
     nextState: toState && getInspectedState(toState.state, inspectedStatePath, false),
     action: getInspectedState(currentAction, inspectedActionPath, false),
     error
   };
-}
-
-function setupTheme(props) {
-  let theme;
-  if (typeof props.theme === 'string') {
-    if (typeof themes[props.theme] !== 'undefined') {
-      theme = themes.nicinabox;
-    }
-  } else {
-    theme = props.theme;
-  }
-
-  return theme;
 }
 
 function createThemeState(props) {
@@ -115,6 +121,16 @@ function createThemeState(props) {
 
   return { base16Theme, styling };
 }
+
+const positionState = {
+  activeDrags: 0,
+  deltaPosition: {
+    x: 0, y: 0
+  },
+  controlledPosition: {
+    x: -400, y: 200
+  }
+};
 
 class ChartToolbar extends Component {
   static propTypes = {
@@ -138,7 +154,10 @@ class ChartToolbar extends Component {
     super(props);
     this.state = {
       ...createIntermediateState(props, props.monitorState),
-      themeState: createThemeState(props)
+      themeState: createThemeState(props),
+      actionListPosition: { ...positionState },
+      sliderPosition: { ...positionState },
+      actionPreviewPosition: { ...positionState }
     };
   }
   toolbarWrapperStyle() {
@@ -150,20 +169,33 @@ class ChartToolbar extends Component {
     };
   };
 
-  toolbarStyle() {
+  sliderStyle() {
     return {
       color: 'white',
       margin: 'auto',
       textAlign: 'center',
       paddingTop: '10px',
       paddingBottom: '10px',
-      borderTop: 'solid 1px #333',
+      border: 'solid 1px #333',
       background: 'rgba(0, 0, 0, 0.8)',
       width: '50%',
-      margin: 'auto',
       position: 'absolute',
       bottom: '0px',
       left: '25%'
+    };
+  };
+
+  actionPreviewStyle() {
+    return {
+      color: 'white',
+      paddingBottom: '10px',
+      border: 'solid 1px #333',
+      background: 'rgba(0, 0, 0, 0.8)',
+      width: '25%',
+      margin: 'auto',
+      position: 'absolute',
+      bottom: '0px',
+      right: '0%'
     };
   };
 
@@ -187,13 +219,48 @@ class ChartToolbar extends Component {
     }
   }
 
+  handleDrag(panel, e, ui) {
+    const stateKey = `${panel}Position`;
+    const { x, y } = this.state[stateKey].deltaPosition;
+    const stateObj = {};
+    stateObj[stateKey] = {
+      ...this.state[stateKey],
+      deltaPosition: {
+        x: x + ui.deltaX,
+        y: y + ui.deltaY,
+      }
+    };
+    this.setState(stateObj);
+  }
+
+  onStart(panel) {
+    const stateObj = {};
+    const stateKey = `${panel}Position`;
+    stateObj[stateKey] = {
+      ...this.state[stateKey],
+      activeDrags: ++this.state[stateKey].activeDrags
+    };
+    this.setState(stateObj);
+  }
+
+  onStop(panel) {
+    const stateObj = {};
+    const stateKey = `${panel}Position`;
+    stateObj[stateKey] = {
+      ...this.state[stateKey],
+      activeDrags: --this.state[stateKey].activeDrags
+    };
+    this.setState(stateObj);
+  }
+
   render() {
     const { stagedActionIds: actionIds, actionsById: actions, computedStates, tabs,
-      invertTheme, skippedActionIds, currentStateIndex, monitorState } = this.props;
+      invertTheme, skippedActionIds, currentStateIndex, monitorState, isWideLayout
+    } = this.props;
     const { selectedActionId, startActionId, searchValue, tabName } = monitorState;
 
     const {
-      themeState, action, nextState, delta, error
+      themeState, action, nextState, delta, stateCount, error
     } = this.state;
 
     const flatDelta = delta ? flatten(delta) : {};
@@ -242,42 +309,87 @@ class ChartToolbar extends Component {
 
     return (
       <div style={this.toolbarWrapperStyle()}>
-        <div
-          key='inspector'
-          ref='inspector'
-          style={{
-            width: '25%',
-            borderTop: 'solid 1px #333',
-            position: 'absolute',
-            bottom: '0px'
-          }}
-          {...styling(['inspector'])}>
-          <ActionList {...{
-            actions,
-            actionIds,
-            searchValue,
-            selectedActionId,
-            startActionId
-          }}
-            styling={styling}
-            onSearch={this.handleSearch}
-            onSelect={this.handleSelectAction}
-            onToggleAction={this.handleToggleAction}
-            onJumpToState={this.handleJumpToState}
-            onCommit={this.handleCommit}
-            onSweep={this.handleSweep}
-            skippedActionIds={skippedActionIds}
-            currentActionId={actionIds[currentStateIndex]}
-            lastActionId={getLastActionId(this.props)} />
-        </div>
-        <div
-          className='timeline-controls'
-          style={this.toolbarStyle()}>
-          <div className='slider'>
-            <SliderMonitor {...this.props} theme={theme} parsedDelta={parsedDelta} />
+        <Draggable
+          onStart={() => this.onStart('actionList')}
+          onStop={() => this.onStop('actionList')}
+          onDrag={(e, ui) => this.handleDrag('actionList', e, ui)}>
+          <div
+            key='inspector'
+            ref='inspector'
+            style={{
+              width: '25%',
+              borderTop: 'solid 1px #333',
+              position: 'absolute',
+              bottom: '0px'
+            }}
+            {...styling(['inspector'])}>
+            <ActionList
+              {...{
+                actions,
+                actionIds,
+                searchValue,
+                selectedActionId,
+                startActionId
+              }}
+              styling={styling}
+              onSearch={this.handleSearch}
+              onSelect={this.handleSelectAction}
+              onToggleAction={this.handleToggleAction}
+              onJumpToState={this.handleJumpToState}
+              onCommit={this.handleCommit}
+              onSweep={this.handleSweep}
+              skippedActionIds={skippedActionIds}
+              currentActionId={actionIds[currentStateIndex]}
+              lastActionId={getLastActionId(this.props)}
+            />
           </div>
-        </div>
-        <div style={{ width: '25%', position: 'absolute' }} />
+        </Draggable>
+        <Draggable
+          onStart={() => this.onStart('slider')}
+          onStop={() => this.onStop('slider')}
+          onDrag={(e, ui) => this.handleDrag('slider', e, ui)}>
+          <div
+            className='timeline-controls'
+            style={this.sliderStyle()}>
+            <div className='slider'>
+              <SliderMonitor
+                {...this.props}
+                theme={theme}
+                parsedDelta={parsedDelta}
+                stateCount={stateCount} />
+            </div>
+          </div>
+        </Draggable>
+        <Draggable
+          onStart={() => this.onStart('actionPreview')}
+          onStop={() => this.onStop('actionPreview')}
+          onDrag={(e, ui) => this.handleDrag('actionPreview', e, ui)}>
+          <div
+            className='action-preview'
+            style={this.actionPreviewStyle()}>
+            <ActionPreview
+              {...{
+                base16Theme: themeState.base16Theme,
+                invertTheme,
+                expandDiffs: true,
+                isWideLayout,
+                tabs,
+                tabName,
+                delta,
+                error,
+                nextState,
+                computedStates,
+                action,
+                actions,
+                selectedActionId,
+                startActionId
+              }}
+              styling={styling}
+              onInspectPath={this.handleInspectPath.bind(this, inspectedPathType)}
+              inspectedPath={monitorState[inspectedPathType]}
+              onSelectTab={this.handleSelectTab} />
+          </div>
+        </Draggable>
       </div>
     );
   }
@@ -340,6 +452,15 @@ class ChartToolbar extends Component {
 
     this.updateMonitorState({ startActionId, selectedActionId, tabName: monitorState.tabName });
   };
-}
+
+  handleInspectPath = (pathType, path) => {
+    this.updateMonitorState({ [pathType]: path });
+  };
+
+  handleSelectTab = (tabName) => {
+    const { monitorState } = this.props;
+    this.updateMonitorState({ tabName, selectedActionId: monitorState.selectedActionId });
+  };
+};
 
 export default ChartToolbar;

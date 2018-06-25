@@ -1,4 +1,5 @@
 import React, { Component, cloneElement } from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 const childrenMonitorState = (props, state, action) => {
@@ -53,9 +54,16 @@ const monitorStyles = [{
 export default class MultipleMonitors extends Component {
   static update = reducer;
 
-  constructor(props, context) {
-    super(props, context);
-  }
+  staticPropTypes = {
+    monitorState: PropTypes.object.isRequired,
+    changeMonitorKey: PropTypes.string,
+    changePositionKey: PropTypes.string,
+    defaultPosition: PropTypes.object,
+    defaultSize: PropTypes.object,
+    toggleVisibilityKey: PropTypes.bool,
+    children: PropTypes.array.isRequired,
+    style: PropTypes.object
+  };
 
   render() {
     const {

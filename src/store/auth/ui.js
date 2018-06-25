@@ -1,7 +1,6 @@
 import Immutable from "immutable";
 import { createReducer } from "redux-immutablejs";
 import * as uiActions from "actions/ui";
-import * as emailSignInActions from "actions/emailSignIn";
 import * as emailSignUpActions from "actions/emailSignUp";
 import * as signOutActions from "actions/auth";
 import * as requestPasswordResetActions from "actions/requestPasswordReset";
@@ -12,8 +11,6 @@ import * as updatePasswordModalActions from "actions/updatePasswordModal";
 import * as serverActions from "actions/server";
 
 const initialState = Immutable.fromJS({
-  emailSignInSuccessModalVisible:          false,
-  emailSignInErrorModalVisible:            false,
   oAuthSignInSuccessModalVisible:          false,
   oAuthSignInErrorModalVisible:            false,
   oAuthSignInLoadingProvider:              null,
@@ -36,14 +33,6 @@ const initialState = Immutable.fromJS({
 });
 
 export default createReducer(initialState, {
-  [emailSignInActions.EMAIL_SIGN_IN_COMPLETE]: state => state.set(
-    "emailSignInSuccessModalVisible", true
-  ),
-
-  [emailSignInActions.EMAIL_SIGN_IN_ERROR]: state => state.set(
-    "emailSignInErrorModalVisible", true
-  ),
-
   [oAuthSignInActions.OAUTH_SIGN_IN_COMPLETE]: state => state.merge({
     oAuthSignInSuccessModalVisible: true,
     oAuthSignInLoadingProvider: null
@@ -57,14 +46,6 @@ export default createReducer(initialState, {
   [oAuthSignInActions.OAUTH_SIGN_IN_START]: (state, { provider }) => state.merge({
     oAuthSignInLoadingProvider: provider
   }),
-
-  [uiActions.HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL]: state => state.set(
-    "emailSignInSuccessModalVisible", false
-  ),
-
-  [uiActions.HIDE_EMAIL_SIGN_IN_ERROR_MODAL]: state => state.set(
-    "emailSignInErrorModalVisible", false
-  ),
 
   [signOutActions.SIGN_OUT_COMPLETE]: state => state.set(
     "signOutSuccessModalVisible", true

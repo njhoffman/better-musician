@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import withTheme from 'material-ui/styles/withTheme';
 import { Row, Column } from 'react-foundation';
-import { Button, TextField } from 'material-ui';
+import { TextField, Typography } from '@material-ui/core';
+import Button from 'components/Button';
 import {
   MdNavigateBefore as BeforeIcon,
   MdNavigateNext as NextIcon
@@ -18,7 +19,13 @@ import {
 import css from './SongsPagination.scss';
 
 const styleObj = {
-  buttons: { height: '25px', minWidth: '25px', fontSize: '1.4em', margin: '0px 5px' }
+  buttons: {
+    minWidth: '25px',
+    fontSize: '1.4em',
+    margin: '0px 5px',
+    minHeight: 'unset',
+    padding: '0px 16px'
+  }
 };
 export const SongsPagination = ({
   paginationCurrent,
@@ -37,11 +44,13 @@ export const SongsPagination = ({
 }) => (
   <Row className={css.paginationRow}>
     <Column small={3} >
-      <div className={css.paginationText}>
+      <Typography className={css.paginationText}>
         <span>
-          <strong>{paginationStart}</strong> - <strong>
-            {paginationEnd}</strong> of <strong>{paginationTotal}</strong> Songs </span>
-      </div>
+          <strong>{paginationStart}</strong> -
+          <strong> {paginationEnd}</strong> of
+          <strong>{paginationTotal}</strong> Songs
+        </span>
+      </Typography>
     </Column>
     <Column small={6} >
       <div className={css.buttonWrapper}>
@@ -50,20 +59,15 @@ export const SongsPagination = ({
           className={css.beginning}
           variant='raised'
           color='secondary'
-          onClick={setPaginationStart}>
-          <span style={{ color: theme.instrumental.textColor }}>
-            <BeforeIcon />
-            <BeforeIcon style={{ marginLeft: '-10px' }} />
-          </span>
-        </Button>
+          icon={<BeforeIcon />}
+          onClick={setPaginationStart} />
         <Button
           style={styleObj.buttons}
           variant='raised'
           className={css.prev}
           onClick={setPaginationDecrement}
-          color='secondary'>
-          <span style={{ color: theme.instrumental.textColor }}><BeforeIcon /></span>
-        </Button>
+          icon={<BeforeIcon />}
+          color='secondary' />
         <TextField
           type='number'
           name='paginationCurrent'
@@ -76,20 +80,15 @@ export const SongsPagination = ({
           variant='raised'
           className={css.next}
           color='secondary'
-          onClick={setPaginationIncrement}>
-          <span style={{ color: theme.instrumental.textColor }}><NextIcon /></span>
-        </Button>
-
+          icon={<NextIcon />}
+          onClick={setPaginationIncrement} />
         <Button
           style={styleObj.buttons}
           className={css.end}
           variant='raised'
           color='secondary'
-          onClick={setPaginationEnd}>
-          <span style={{ color: theme.instrumental.textColor }}>
-            <NextIcon /><NextIcon style={{ marginLeft: '-10px' }} />
-          </span>
-        </Button>
+          icon={<NextIcon />}
+          onClick={setPaginationEnd} />
       </div>
     </Column>
     <Column small={3}>
@@ -100,7 +99,7 @@ export const SongsPagination = ({
           defaultValue={paginationPerPage}
           onChange={setPaginationPerPage}
           style={{ width: '50px' }} />
-        <span>Per Page</span>
+        <Typography variant='caption'>Per Page</Typography>
       </div>
     </Column>
   </Row>

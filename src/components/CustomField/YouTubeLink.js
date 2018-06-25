@@ -54,8 +54,6 @@ class RenderCustomYouTubeLink extends Component {
                 onChange={(e, val) => this.parseUrl(val)}
                 inputStyle={this.props.inputStyle}
                 disabled={this.props.disabled}
-                underlineShow={!this.props.disabled}
-                floatingLabelStyle={{ ...this.props.labelStyle, ...{ left: '25px', textAlign: 'center' } }}
                 component={RenderText}
                 label={this.props.field.label}
               />

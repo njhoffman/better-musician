@@ -33,7 +33,7 @@ const heapDiff = (logger) => {
 };
 
 const heap = (config, sdc, logger) => {
-  const { humanMemorySize } = sUtils;
+  const { humanMemorySize: hms } = sUtils;
   const memoryMap = {
     heapTotal: 'Heap Total:',
     heapUsed: 'Heap Used:',
@@ -42,7 +42,7 @@ const heap = (config, sdc, logger) => {
   };
   Object.keys(memoryMap).forEach(memoryKey => {
     const memoryAmount = process.memoryUsage()[memoryKey]
-      ? humanMemorySize(process.memoryUsage()[memoryKey], true) : false;
+      ? hms(process.memoryUsage()[memoryKey], true) : false;
     if (memoryAmount) {
       logger.info(
         { color: ['webpackMemoryLabel', 'webpackMemoryValue'] },
@@ -57,11 +57,11 @@ const heap = (config, sdc, logger) => {
 };
 
 const stats = (logger, memStats) => {
-  const { padZeros, humanMemorySize, padLeft } = sUtils;
-  logger.trace(
+  const { padZeros, humanMemorySize: hms, padLeft } = sUtils;
+  logger.debug(
     `GC (#${padZeros(memStats.num_full_gc, 3)}/${padZeros(memStats.num_inc_gc, 3)}): ` +
-    `${padLeft(humanMemorySize(memStats.current_base, true), 9)} (Current) ` +
-    `${padLeft(humanMemorySize(memStats.estimated_base, true), 9)} (Estimated) ` +
+    `${padLeft(hms(memStats.current_base, true), 9)} (Current) ` +
+    `${padLeft(hms(memStats.estimated_base, true), 9)} (Estimated) ` +
     `Usage: ${memStats.usage_trend}`
   );
 };

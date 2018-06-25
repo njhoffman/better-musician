@@ -1,4 +1,4 @@
-import * as A from "../../actions/authenticate";
+import * as A from "actions/auth";
 
 const initialState = {
   loading: false,
@@ -17,7 +17,7 @@ const ACTION_HANDLERS = {
 
   [A.AUTHENTICATE_ERROR]: (state, { payload }) => ({ ...state, ...{
     loading: false,
-    errors: payload,
+    errors: payload.errors,
     valid: false
   }})
 }

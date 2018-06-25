@@ -2,7 +2,6 @@ import React, { Component, PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import * as themes from 'redux-devtools-themes';
 import { ActionCreators } from 'redux-devtools';
-import { Toolbar, Divider } from 'devui/lib/Toolbar';
 import Slider from 'devui/lib/Slider';
 import Button from 'devui/lib/Button';
 import SegmentedControl from 'devui/lib/SegmentedControl';
@@ -29,7 +28,6 @@ export default class SliderMonitor extends (PureComponent || Component) {
     preserveScrollTop: PropTypes.bool,
     stagedActions: PropTypes.array,
     select: PropTypes.func.isRequired,
-    hideResetButton: PropTypes.bool,
     theme: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.string
@@ -257,8 +255,9 @@ export default class SliderMonitor extends (PureComponent || Component) {
 
   render() {
     const {
-      currentStateIndex, computedStates, actionsById, stagedActionIds, hideResetButton, parsedDelta
+      currentStateIndex, computedStates, actionsById, stagedActionIds, parsedDelta, stateCount
     } = this.props;
+    const { primitives, totals } = parsedDelta;
     const { replaySpeed } = this.state;
     const theme = this.setUpTheme();
 
@@ -283,21 +282,119 @@ export default class SliderMonitor extends (PureComponent || Component) {
         disabled={max <= 0}
         onClick={onPlayClick} />;
 
+    const styles = {
+      sliderButton : {
+        display: 'inline-block',
+        border: 'none'
+      },
+      sliderContainer: {
+        display: 'inline-block',
+        width: 'calc(100% - 75px)'
+      },
+      slider: {
+        WebkitAppearance: 'none',
+        outline: 'none',
+        boxSizing: 'border-box',
+        borderTop: 'solid 0.5em transparent',
+        borderBottom: 'solid 0.5em transparent',
+        padding: '0.5em',
+        height: '2.5em',
+        borderRadius: '0.8em / 1.1em',
+        fontSize: '0.75em',
+        cursor: 'pointer',
+        // background: 'linear-gradient(#464b50,#0e0e0e) padding-box, 50% 50% border-box',
+        background: 'transparent',
+        backgroundSize: '100% 100%'
+      },
+      diffSummary: {
+        float: 'left',
+        fontSize: '0.8em'
+      },
+      diffAdded: {
+        color: 'green'
+      },
+      diffRemoved: {
+        color: 'red'
+      },
+      diffChanged: {
+        color: 'cyan'
+      },
+      diffTotal: {
+        marginLeft: '5px',
+        marginRight: '2px'
+      },
+      diffPrimitive: {
+        fontSize: '0.75em',
+        marginRight: '3px'
+      },
+      nodeSummary: {
+        float: 'right',
+        fontSize: '0.8em',
+        color: 'darkCyan'
+      },
+      nodeKeysCount: {
+        marginLeft: '5px',
+        marginRight: '2px'
+      },
+      nodePrimitivesCount: {
+        fontSize: '0.75em',
+        marginRight: '3px'
+      }
+    };
+
     return (
       <div>
         <div>
           <SliderButton
             theme={theme}
             type='stepLeft'
-            style={{
-              display: 'inline-block',
-              border: 'none'
-            }}
+            style={styles.sliderButton}
             disabled={currentStateIndex <= 0}
             onClick={this.stepLeft}
           />
-          <div style={{ display: 'inline-block', width: 'calc(100% - 75px)' }}>
-            <span>+{parsedDelta.primitives.added}</span>
+          <div style={styles.sliderContainer}>
+            <div style={styles.nodeSummary}>
+              <span>
+                <span style={styles.nodeKeysCount}>
+                  {stateCount.keys}
+                </span>
+                <span style={styles.nodePrimitivesCount}>
+                  ({stateCount.primitives})
+                </span>
+              </span>
+            </div>
+            <div style={styles.diffSummary}>
+              {(totals.added > 0 || primitives.added > 0) &&
+                <span style={styles.diffAdded}>
+                  <span style={styles.diffTotal}>
+                    <strong>+</strong>{totals.added}
+                  </span>
+                  <span style={styles.diffPrimitive}>
+                    ({primitives.added})
+                  </span>
+                </span>
+              }
+              {(totals.removed > 0 || primitives.removed > 0) &&
+                <span style={styles.diffRemoved}>
+                  <span style={styles.diffTotal}>
+                    <strong>-</strong>{totals.removed}
+                  </span>
+                  <span style={styles.diffPrimitive}>
+                    ({primitives.removed})
+                  </span>
+                </span>
+              }
+              {(totals.changed > 0 || primitives.changed > 0) &&
+                <span style={styles.diffChanged}>
+                  <span style={styles.diffTotal}>
+                    {totals.changed}
+                  </span>
+                  <span style={styles.diffPrimitive}>
+                    ({primitives.changed})
+                  </span>
+                </span>
+              }
+            </div>
             <Slider
               type='range'
               label={actionType}
@@ -306,31 +403,13 @@ export default class SliderMonitor extends (PureComponent || Component) {
               max={max}
               value={currentStateIndex}
               onChange={this.handleSliderChange}
-              style={{
-                WebkitAppearance: 'none',
-                outline: 'none',
-                boxSizing: 'border-box',
-                borderTop: 'solid 0.5em transparent',
-                borderBottom: 'solid 0.5em transparent',
-                padding: '0.5em',
-                height: '2.5em',
-                borderRadius: '0.8em / 1.1em',
-                fontSize: '0.75em',
-                cursor: 'pointer',
-                // background: 'linear-gradient(#464b50,#0e0e0e) padding-box, 50% 50% border-box',
-                background: 'transparent',
-                backgroundSize: '100% 100%'
-              }}
+              style={styles.slider}
               theme={theme}
             />
           </div>
           <SliderButton
             theme={theme}
-            style={{
-              display: 'inline-block',
-              border: 'none'
-            }}
-
+            style={styles.sliderButton}
             type='stepRight'
             disabled={currentStateIndex === max}
             onClick={this.stepRight}

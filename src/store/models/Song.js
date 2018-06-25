@@ -39,6 +39,7 @@ class Song extends BaseModel {
       return song.artist.fullName;
     }));
     const genres = uniq(songs.map(song => {
+      // TODO: investigate whhy navigating through time quickly this can throw bc song is undefined
       return song.genre.name;
     }));
 

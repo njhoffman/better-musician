@@ -13,15 +13,15 @@ const RenderCustomSelect = ({
   labelStyle,
   style,
   optionValues,
-  ...custom }) => {
+  ...custom
+}) => {
   if (preview) {
     return (
       <Field
         style={{ width: '200px' }}
         name={field.name}
         component={RenderSelect}
-        label={field.label}
-        dataSource={field.optionValues} />
+        label={field.label} />
     );
   } else {
     return (
@@ -30,13 +30,8 @@ const RenderCustomSelect = ({
           style={{ ...style, ...{ width: '200px', verticalAlign: 'middle' } }}
           name={field.name}
           disabled={disabled}
-          underlineShow={!disabled}
-          labelStyle={inputStyle}
-          iconStyle={{ visibility: (disabled ? 'hidden' : 'visible') }}
-          floatingLabelStyle={{ ...labelStyle, ...(disabled ? { textAlign: 'center' } : {}) }}
           component={RenderSelect}
-          label={field.label}
-          dataSource={field.optionValues} />
+          label={field.label} />
       </Column>
     );
   }

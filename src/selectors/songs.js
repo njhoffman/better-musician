@@ -1,4 +1,4 @@
-import { orm } from 'store/reducers';
+import { orm } from 'store/orm';
 import { get } from 'lodash';
 import { createSelector as ormCreateSelector } from 'redux-orm';
 import { createSelector } from 'reselect';

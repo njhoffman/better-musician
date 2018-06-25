@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { CALL_API } from 'middleware/api';
 import { init as initLog } from 'shared/logger';
 
@@ -129,13 +130,14 @@ const ACTION_HANDLERS = {
     ...state,
     loading: false
   }),
-  [AUTHENTICATE_COMPLETE] : (state) =>
-    ({ ...state,
-      loading: false,
-      initialized: state.initialized.indexOf('user') === -1 ? state.initialized.concat('user') : state.initialized
-    }),
+  [AUTHENTICATE_COMPLETE] : (state) => ({
+    ...state,
+    loading: false,
+    initialized: state.initialized.indexOf('user') === -1 ? state.initialized.concat('user') : state.initialized
+  }),
 
-  [LOAD_CONFIG] : (state, { payload: { api } }) => ({ ...state,
+  [LOAD_CONFIG] : (state, { payload: { api } }) => ({
+    ...state,
     endpoints: _.mapValues(api.endpoints, ep => ({
       loading: false,
       errors: false,
@@ -143,12 +145,21 @@ const ACTION_HANDLERS = {
     }))
   }),
 
-  [EMAIL_SIGN_IN_START] : (state) =>
-    ({ ...state, loading: true }),
-  [EMAIL_SIGN_IN_COMPLETE] : (state) =>
-    ({ ...state, loading: false }),
-  [EMAIL_SIGN_IN_ERROR] : (state) =>
-    ({ ...state, loading: false }),
+  [EMAIL_SIGN_IN_START] : (state) => ({
+    ...state,
+    loading: true,
+    endpoints: { ...state.endpoints, login: { ...state.endpoints.login, loading: true } }
+  }),
+  [EMAIL_SIGN_IN_COMPLETE] : (state) => ({
+    ...state,
+    loading: false,
+    endpoints: { ...state.endpoints, login: { ...state.endpoints.login, loading: false, success: true, errors: [] } }
+  }),
+  [EMAIL_SIGN_IN_ERROR] : (state, { errors }) => ({
+    ...state,
+    loading: false ,
+    endpoints: { ...state.endpoints, login: { ...state.endpoints.login, loading: false, success: false, errors } }
+  }),
 
   [SONGS_REQUEST] : (state) => ({ ...state, loading: true }),
   [SONGS_SUCCESS] : (state) =>

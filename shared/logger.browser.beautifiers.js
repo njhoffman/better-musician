@@ -1,36 +1,37 @@
 const _ = require('lodash');
 const { padRight } = require('./util');
 
+const ignoredActions = ['@@redux-form/BLUR', '@@redux-form/CHANGE', '@@redux-form/FOCUS'];
 module.exports = {
   _action: (action) => {
-    if (['@@redux-form/BLUR', '@@redux-form/CHANGE', '@@redux-form/FOCUS'].indexOf(action.type) !== -1) {
+    if (ignoredActions.indexOf(action.type) !== -1) {
       return '';
     } else if (action.callApi) {
       return [
-        `%c${padRight('CALL_API', 30)} %c ${JSON.stringify(action)}`,
-        'color: #aaaaff;', 'color: #8866aa;'
+        `%cCALL_API %c${padRight(action.endpoint, 21)} %c ${action.payload ? JSON.stringify(action.payload) : ''}`,
+        'color: #aa66ff; font-weight: bold', 'color: #22ccff', 'color: #886688;'
       ];
     } else if (action.payload) {
       return [
         `%c${padRight(action.type, 30)} %c ${JSON.stringify(action.payload)}`,
-        'color: #8888ff;', 'color: #8866aa;'
+        'color: #88aaff;', 'color: #886688;'
       ];
     } else {
       return [
         `%c${padRight(action.type)}`,
-        'color: #8888ff;'
+        'color: #88aaff;'
       ];
     }
   },
   _sessionGet: ({ key, parsedVal, storage }) => {
     if (!_.isObject(parsedVal)) {
       return [
-        `Get from ${storage}: %c${key} :%c ${parsedVal}`,
-        'color: cyan', 'color: white'
+        `← (${storage}) %c${key} :%c ${parsedVal}`,
+        'color: #22ccff', 'color: #bbb'
       ];
     } else {
       return [
-        [`Get from ${storage}: %c${key}`, 'color: cyan'],
+        [`← (${storage}) : %c${key}`, 'color: #22ccff'],
         parsedVal
       ];
     }
@@ -38,12 +39,12 @@ module.exports = {
   _sessionSave: ({ key, val, storage }) => {
     if (!_.isObject(val)) {
       return [
-        `Save to ${storage}: %c${key} :%c ${val}`,
-        'color: cyan', 'color: white'
+        `→ (${storage}) %c${key} :%c ${val}`,
+        'color: #22ccff', 'color: #bbb'
       ];
     } else {
       return [
-        [`Save to ${storage}: %c${key}`, 'color: cyan'],
+        [`→ (${storage}) %c${key}`, 'color: #22ccff'],
         val
       ];
     }

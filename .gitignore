@@ -11,3 +11,6 @@ coverage
 
 tmp/
 .idea/
+
+tests/integration/videos/
+tests/integration/screenshots/

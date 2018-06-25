@@ -94,7 +94,7 @@ const ACTION_HANDLERS = {
     ({ ...state, auth: { ...state.auth, currentEndpointKey } }),
 
   [SET_ENDPOINT_KEYS]: (state, { endpointKeys, defaultEndpointKey, currentEndpointKey }) =>
-    ({ ...state, auth: { ...state.auth, ...{ endpointKeys, defaultEndpointKey, currentEndpointKey } } }),
+    ({ ...state, auth: { ...state.auth, endpointKeys, defaultEndpointKey, currentEndpointKey } }),
 
   [CONFIGURE_COMPLETE]: (state, { payload }) => ({ ...state,
     auth: { ...state.auth,

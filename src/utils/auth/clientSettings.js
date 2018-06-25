@@ -49,7 +49,7 @@ const defaultSettings = {
 };
 
 // save session configuration
-export const applyConfig = ({ dispatch, endpoint = {}, settings = {}, reset = false } = {}) => {
+export const applyConfig = ({ dispatch, endpoints = {}, settings = {}, reset = false } = {}) => {
   let currentEndpointKey;
 
   if (reset) {
@@ -62,9 +62,10 @@ export const applyConfig = ({ dispatch, endpoint = {}, settings = {}, reset = fa
 
   setCurrentSettings(extend({}, defaultSettings, settings));
 
-  let { defaultEndpointKey, currentEndpoint } = parseEndpointConfig(
-    endpoint, getInitialEndpointKey()
-  );
+  let {
+    defaultEndpointKey,
+    currentEndpoint
+  } = parseEndpointConfig(endpoints, getInitialEndpointKey());
 
   if (!currentEndpointKey) {
     currentEndpointKey = defaultEndpointKey;
@@ -79,7 +80,6 @@ export const applyConfig = ({ dispatch, endpoint = {}, settings = {}, reset = fa
 
   let savedCreds = retrieveData(C.SAVED_CREDS_KEY);
 
-  // dispatch(configureComplete(getCurrentSettings()));
   if (getCurrentSettings().initialCredentials) {
     // skip initial headers check (i.e. check was already done server-side)
     let { user, headers } = getCurrentSettings().initialCredentials;

@@ -12,7 +12,7 @@ import {
 import withTheme from 'material-ui/styles/withTheme';
 
 import { updateUser } from 'store/api';
-import ButtonLoader from 'components/ButtonLoader';
+import Button from 'components/Button';
 import FormField from 'components/Field';
 import css from './SettingsView.scss';
 
@@ -129,7 +129,7 @@ export class SettingsView extends Component {
                   </Row>
                   <Row className={css.buttonWrapper}>
                     <Column>
-                      <ButtonLoader
+                      <Button
                         type='submit'
                         label='Reset'
                         secondary
@@ -140,7 +140,7 @@ export class SettingsView extends Component {
                         icon={<ResetIcon style={{ marginTop: '-10px', color: textColor }} />}
                         className='update-profile-submit'
                         disabled={disabled} />
-                      <ButtonLoader
+                      <Button
                         type='submit'
                         label='Save'
                         loading={disabled}

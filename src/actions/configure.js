@@ -21,7 +21,7 @@ import { destroySession } from 'utils/auth/sessionStorage';
 import verifyAuth from 'utils/auth/verifyAuth';
 import getRedirectInfo from 'utils/auth/parseUrl';
 
-export const configure = (endpoint = {}, settings = {}) => {
+export const configure = (endpoints = {}, settings = {}) => {
   return dispatch => {
     // don't render anything for OAuth redirects
     if (settings.currentLocation && settings.currentLocation.match(/blank=true/)) {
@@ -30,117 +30,40 @@ export const configure = (endpoint = {}, settings = {}) => {
 
     dispatch(authenticateStart());
 
-    let promise,
-      firstTimeLogin,
-      mustResetPassword,
-      user,
-      headers;
+    let promise, firstTimeLogin, mustResetPassword, user, headers;
 
-    if (settings.isServer) {
-      promise = verifyAuth(endpoint, settings)
-        .then(({
-          user,
-          headers,
-          firstTimeLogin,
-          mustResetPassword,
-          currentEndpoint,
-          currentEndpointKey,
-          defaultEndpointKey
-        }) => {
-          dispatch(ssAuthTokenUpdate({
-            headers,
-            user,
-            firstTimeLogin,
-            mustResetPassword
-          }));
+    let { authRedirectPath, authRedirectHeaders } = getRedirectInfo(window.location);
 
-          dispatch(setEndpointKeys(Object.keys(currentEndpoint), currentEndpointKey, defaultEndpointKey));
-
-          return user;
-        }).catch(({
-          reason,
-          firstTimeLogin,
-          mustResetPassword,
-          currentEndpoint,
-          defaultEndpointKey
-        }) => {
-          dispatch(ssAuthTokenUpdate({ firstTimeLogin, mustResetPassword }));
-          dispatch(setEndpointKeys(Object.keys(currentEndpoint || {}), null, defaultEndpointKey));
-          return Promise.reject({ reason });
-        });
-    } else {
-      // if the authentication happened server-side, find the resulting auth
-      // credentials that were injected into the dom.
-      let tokenBridge = document.getElementById('token-bridge');
-
-      if (tokenBridge) {
-        let rawServerCreds = tokenBridge.innerHTML;
-        if (rawServerCreds) {
-          let serverCreds = JSON.parse(rawServerCreds);
-
-          ({ headers, user, firstTimeLogin, mustResetPassword } = serverCreds);
-
-          if (user) {
-            dispatch(authenticateComplete(user));
-
-            // do NOT send initial validation request.
-            // instead use the credentials that were sent back by the server.
-            settings.initialCredentials = serverCreds;
-          }
-
-          // sync client dom to prevent React "out of sync" error
-          dispatch(ssAuthTokenUpdate({
-            user,
-            headers,
-            mustResetPassword,
-            firstTimeLogin
-          }));
-        }
-      }
-
-      let { authRedirectPath, authRedirectHeaders } = getRedirectInfo(window.location);
-
-      if (authRedirectPath) {
-        dispatch(push({ pathname: authRedirectPath }));
-      }
-
-      if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders['access-token']) {
-        settings.initialCredentials = extend({}, settings.initialCredentials, authRedirectHeaders);
-      }
-
-      // if tokens were invalidated by server or from the settings, make sure
-      // to clear browser credentials
-      if (!settings.clientOnly && !settings.initialCredentials || settings.cleanSession) {
-        destroySession();
-      }
-
-      promise = Promise.resolve(applyConfig({ dispatch, endpoint, settings }));
+    if (authRedirectPath) {
+      dispatch(push({ pathname: authRedirectPath }));
     }
+
+    if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders['access-token']) {
+      settings.initialCredentials = extend({}, settings.initialCredentials, authRedirectHeaders);
+    }
+
+    // if tokens were invalidated by server or from the settings, make sure
+    // to clear browser credentials
+    if (!settings.clientOnly && !settings.initialCredentials || settings.cleanSession) {
+      destroySession();
+    }
+
+    promise = Promise.resolve(applyConfig({ dispatch, endpoints, settings }));
 
     return promise
       .then(user => {
-        dispatch(authenticateComplete(user));
+        dispatch(authenticateComplete(user, endpoints));
 
-        if (firstTimeLogin) {
-          dispatch(showFirstTimeLoginSuccessModal());
-        }
-
-        if (mustResetPassword) {
-          dispatch(showPasswordResetSuccessModal());
-        }
+        // if (firstTimeLogin) dispatch(showFirstTimeLoginSuccessModal());
+        // if (mustResetPassword) dispatch(showPasswordResetSuccessModal());
 
         return user;
       })
       .catch(({ reason } = {}) => {
-        dispatch(authenticateError([reason]));
+        dispatch(authenticateError([reason], endpoints));
 
-        if (firstTimeLogin) {
-          dispatch(showFirstTimeLoginErrorModal());
-        }
-
-        if (mustResetPassword) {
-          dispatch(showPasswordResetErrorModal());
-        }
+        // if (firstTimeLogin) dispatch(showFirstTimeLoginErrorModal());
+        // if (mustResetPassword) dispatch(showPasswordResetErrorModal());
 
         return Promise.resolve({ reason });
       });

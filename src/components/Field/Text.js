@@ -1,22 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextField } from 'redux-form-material-ui';
+
+import MaterialTextField from '@material-ui/core/TextField'
+import createComponent from './createComponent'
+import mapError from './mapError'
+
+const TextField = createComponent(
+  MaterialTextField, ({
+    defaultValue,
+    ...props
+  }) => ({
+    ...mapError(props)
+  })
+);
 
 const RenderText = ({
-  label,
   meta,
-  inputStyle,
   style,
-  ...custom }) => {
-  return (
-    <TextField
-      label={label}
-      error={meta && meta.touched && meta.error}
-      style={{ ...style, ...{ maxWidth: '100%' } }}
-      {...custom}
-    />
-  );
-};
+  ...props
+}) => (
+  <TextField
+    error={meta && meta.touched && meta.error}
+    style={{ ...style, ...{ maxWidth: '100%' } }}
+    {...props}
+  />
+);
 
 RenderText.propTypes = {
   inputStyle : PropTypes.object,

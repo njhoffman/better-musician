@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { MenuItem } from 'material-ui';
-import { SelectField } from 'redux-form-material-ui';
+import { Field } from 'redux-form';
+import { Select } from 'redux-form-material-ui';
 
 const generateMenu = (dataSource) => {
   let items = [];
@@ -25,20 +26,19 @@ const RenderSelect = ({
   dataSource,
   style,
   meta,
-  ...custom }) => (
-  <SelectField
-    floatingLabelText={label}
-    errorText={meta && meta.touched && meta.error}
-    inputStyle={{ boxShadow: 'none', maxWidth: '100%' }}
+  ...custom
+}) => (
+  <Field
+    component={Select}
+    name={label}
     style={{ ...style, ...{ maxWidth: '100%' } }}
-    children={generateMenu(dataSource)}
     {...custom} />
 );
 
 RenderSelect.propTypes = {
   label:      PropTypes.string,
   viewType:   PropTypes.string,
-  dataSource: PropTypes.any.isRequired,
+  dataSource: PropTypes.any,
   style:      PropTypes.object,
   meta:       PropTypes.object
 };

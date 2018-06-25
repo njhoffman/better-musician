@@ -8,6 +8,7 @@ module.exports = {
     webpack: {
       mode: 'development',
       devtool: 'eval-source-map',
+      // devtool: 'inline-source-map',
       performance: {
         hints: false
       },

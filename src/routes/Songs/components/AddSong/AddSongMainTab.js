@@ -79,7 +79,6 @@ export const AddSongMainTab = (props) => {
 
   const textProps = {
     disabled       : modalView.isView(),
-    underlineShow  : !modalView.isView(),
     style          : textStyle,
     inputStyle     : textInputStyle
   };
@@ -198,13 +197,13 @@ AddSongMainTab.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  // activeField      : state.form.addSongForm ? state.form.addSongForm.active : null,
-  // matchedArtist    : artistsMatchedSelector(state),
-  // maxDifficulty    : maxDifficultySelector(state),
-  // genres           : genresSelector(state),
-  // instruments      : instrumentsSelector(state),
-  // artistFirstNames : artistFirstNamesSelector(state),
-  // artistLastNames  : artistLastNamesSelector(state)
+  activeField      : state.form.addSongForm ? state.form.addSongForm.active : null,
+  matchedArtist    : artistsMatchedSelector(state),
+  maxDifficulty    : maxDifficultySelector(state),
+  genres           : genresSelector(state),
+  instruments      : instrumentsSelector(state),
+  artistFirstNames : artistFirstNamesSelector(state),
+  artistLastNames  : artistLastNamesSelector(state)
 });
 
 export default connect(mapStateToProps)(AddSongMainTab);

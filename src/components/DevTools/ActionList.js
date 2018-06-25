@@ -14,16 +14,6 @@ function getTimestamps(actions, actionIds, actionId) {
 }
 
 export default class ActionList extends PureComponent {
-  componentDidMount() {
-    // this.scrollToBottom(true);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.lastActionId !== prevProps.lastActionId) {
-      // this.scrollToBottom();
-    }
-  }
-
   render() {
     const { styling, actions, actionIds, isWideLayout, onToggleAction, skippedActionIds,
       selectedActionId, startActionId, onSelect, onSearch, searchValue, currentActionId,
@@ -47,7 +37,8 @@ export default class ActionList extends PureComponent {
           ['actionList', isWideLayout ? 'actionListWide' : null], isWideLayout
         )}
       >
-        <ActionListHeader styling={styling}
+        <ActionListHeader
+          styling={styling}
           onSearch={onSearch}
           onCommit={onCommit}
           onSweep={onSweep}

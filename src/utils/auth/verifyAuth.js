@@ -65,10 +65,9 @@ export const fetchToken = ({ rawEndpoints, cookies, currentLocation }) => {
         });
       }
 
-      var newHeaders,
-        { currentEndpoint, defaultEndpointKey } = parseEndpointConfig(rawEndpoints),
-        { apiUrl, tokenValidationPath } = currentEndpoint[currentEndpointKey || defaultEndpointKey],
-        validationUrl = `${apiUrl}${tokenValidationPath}?unbatch=true`;
+      var newHeaders, { currentEndpoint, defaultEndpointKey } = parseEndpointConfig(rawEndpoints);
+      var { apiUrl, tokenValidationPath } = currentEndpoint[currentEndpointKey || defaultEndpointKey];
+      var validationUrl = `${apiUrl}${tokenValidationPath}?unbatch=true`;
 
       return fetch(validationUrl, {
         headers: addAuthorizationHeader(headers['access-token'], headers)

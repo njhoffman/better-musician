@@ -3,17 +3,25 @@ import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { Row, Column } from 'react-foundation';
-import withTheme from 'material-ui/styles/withTheme';
-
-import { Divider } from 'material-ui';
-
+import withStyles from '@material-ui/core/styles/withStyles';
+import { Divider, Typography } from '@material-ui/core';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import ButtonLoader from 'components/ButtonLoader';
+
+import Button from 'components/Button';
 import FormField from 'components/Field';
-import { emailSignIn } from 'routes/../actions/emailSignIn';
+import { emailSignIn } from 'actions/auth/login';
+
+import config from 'data/config';
+
+const styles = theme => ({
+  divider: {
+    margin: '20px 0px 5px 0px'
+  }
+});
 
 export class EmailSignInForm extends React.Component {
   static propTypes = {
+    config:      PropTypes.object.isRequired,
     auth:        PropTypes.object,
     dispatch:    PropTypes.func.isRequired,
     endpoint:    PropTypes.string,
@@ -24,7 +32,8 @@ export class EmailSignInForm extends React.Component {
       email:     PropTypes.object,
       password:  PropTypes.object,
       submit:    PropTypes.object
-    })
+    }),
+    isSignedIn:  PropTypes.bool.isRequired
   };
 
   static defaultProps = {
@@ -49,9 +58,16 @@ export class EmailSignInForm extends React.Component {
     );
   }
 
+  getFormValue(key, formData = {}) {
+    formData[key] = formData[key] || $(`input[name="${key}"]`).value || '';
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     let formData = this.props.loginForm.values;
+    // TODO: dev/production check
+    this.getFormValue('email-sign-in-email', formData);
+    this.getFormValue('email-sign-in-password', formData);
     this.props.dispatch(this.props.emailSignIn(formData, this.getEndpoint()))
       .then(this.props.next)
       .catch(() => {});
@@ -59,7 +75,6 @@ export class EmailSignInForm extends React.Component {
 
   render() {
     let disabled = (this.props.isSignedIn || this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'loading']));
-
     const errors = this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'errors']);
 
     return (
@@ -69,7 +84,11 @@ export class EmailSignInForm extends React.Component {
         <Row>
           <Column>
             {errors && [].concat(errors).map((error, i) =>
-              <p key={i} className='error'>{error}</p>
+              <Typography
+                variant="body1"
+                key={i} className='error'>
+                {error}
+              </Typography>
             )}
           </Column>
         </Row>
@@ -79,7 +98,6 @@ export class EmailSignInForm extends React.Component {
             label='Email'
             name='email-sign-in-email'
             className='email-sign-in-email'
-            ref='emailSignInEmail'
             disabled={disabled}
             {...this.props.inputProps.email} />
         </Row>
@@ -92,19 +110,18 @@ export class EmailSignInForm extends React.Component {
             disabled={disabled}
             {...this.props.inputProps.password} />
 
-          <Divider />
         </Row>
+        <Divider className={this.props.classes.divider} />
         <Row>
           <Column centerOnSmall>
-            <ButtonLoader
-              type='submit'
-              className='email-sign-in-submit'
-              disabled={disabled}
+            <Button
               label='Sign In'
-              icon={<ExitToAppIcon />}
-              onClick={this.handleSubmit}
               primary
-              {...this.props.inputProps.submit} />
+              className={`email-sign-in-submit ${config.prefix}sign_in_button`}
+              icon={<ExitToAppIcon />}
+              disabled={disabled}
+              loading={this.props.isLoading}
+              onClick={this.handleSubmit} />
           </Column>
         </Row>
       </form>
@@ -118,8 +135,9 @@ const mapStateToProps = (state) => {
     auth:        state.auth,
     isSignedIn:  state.user.isSignedIn,
     loginForm:   state.form.login,
+    isLoading:   state.api.endpoints.login.loading,
     emailSignIn: emailSignIn
   };
 };
 
-export default connect(mapStateToProps)(withTheme()(reduxForm({ form: 'login' })(EmailSignInForm)));
+export default connect(mapStateToProps)(withStyles(styles)(reduxForm({ form: 'login' })(EmailSignInForm)));

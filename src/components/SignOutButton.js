@@ -1,6 +1,6 @@
 import React  from 'react';
 import PropTypes from 'prop-types';
-import ButtonLoader from './ButtonLoader';
+import Button from './Button';
 import ActionLock from 'material-ui-icons/Lock';
 import { connect } from 'react-redux';
 import { signOut } from 'actions/auth';
@@ -11,7 +11,8 @@ export class SignOutButton extends React.Component {
     endpoint: PropTypes.string,
     icon:     PropTypes.func,
     dispatch: PropTypes.func.isRequired,
-    auth:     PropTypes.object.isRequired
+    auth:     PropTypes.object.isRequired,
+    user:     PropTypes.object.isRequired
   };
 
   static defaultProps = {
@@ -35,7 +36,7 @@ export class SignOutButton extends React.Component {
   render() {
     let disabled = !this.props.user.isSignedIn;
     return (
-      <ButtonLoader
+      <Button
         icon={ActionLock}
         disabled={disabled}
         label='Sign Out'

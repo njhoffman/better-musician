@@ -1,30 +1,15 @@
-import React, { Component, PureComponent } from 'react';
-import { render } from 'react-dom';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import * as themes from 'redux-devtools-themes';
-import { ActionCreators } from 'redux-devtools';
 import Button from 'devui/lib/Button';
 import debounce from 'lodash.debounce';
-import NewWindow from 'components/NewWindow';
 import { createDevTools } from 'redux-devtools';
+
+import NewWindow from 'components/NewWindow';
 import DevToolsChart  from 'components/DevTools/DevToolsChart';
 import { reducer as chartToolbarReducer } from 'components/DevTools/ChartToolbar';
 
-const { toggleAction, setActionsActive } = ActionCreators;
-
-// const startConsecutiveToggle = (props, state, action) => {
-//   return action.type === 'START_CONSECUTIVE_TOGGLE'
-//     ? action.id
-//     : state;
-// };
-//
-// const reducer = (props, state = {}, action) => {
-//   return {
-//     consecutiveToggleStartId: startConsecutiveToggle(props, state.consecutiveToggleStartId, action)
-//   };
-// };
-//
 const styles = {
   container: {
     fontFamily: 'monaco, Consolas, Lucida Console, monospace',
@@ -43,7 +28,6 @@ const styles = {
     verticalAlign: 'middle',
     top: 30,
     height: '100%',
-    verticalAlign: 'middle',
     alignItems: 'center'
   }
 };
@@ -80,7 +64,7 @@ export default class CustomLauncher extends Component {
     this.toggleChart = this.toggleChart.bind(this);
     this.popupUnload = this.popupUnload.bind(this);
     this.state = {
-      showChart : true
+      showChart : false
     };
   }
 

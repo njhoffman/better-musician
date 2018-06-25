@@ -29,9 +29,9 @@ const routeReducer = (state = routeInitialState, action) => {
 };
 
 export const makeRootReducer = (asyncReducers, injectedModels = []) => {
-  if (injectedModels.length > 0) {
-    orm.register(...injectedModels);
-  }
+  // if (injectedModels.length > 0) {
+  //   orm.register(...injectedModels);
+  // }
   const reducers = {
     orm:            ormReducer,
     route:          routeReducer,

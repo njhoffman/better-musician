@@ -23,6 +23,10 @@ const FieldsRoute = userIsAuthRedir(LoadRoute('Fields'));
 // const Admin = userIsAuthenticatedRedir(userIsAdminRedir(AdminComponent));
 
 class Routes extends Component {
+  shouldComponentUpdate() {
+    return false;
+  }
+
   render() {
     return (
       <Switch>

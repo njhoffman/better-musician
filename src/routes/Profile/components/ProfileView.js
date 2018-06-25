@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Avatar, Paper, Tabs, Tab, RaisedButton } from 'material-ui';
 import { Row, Column } from 'react-foundation';
-import ButtonLoader from 'components/ButtonLoader';
+import Button from 'components/Button';
 import { reduxForm } from 'redux-form';
 import { browserHistory } from 'react-router';
 import withTheme from 'material-ui/styles/withTheme';
@@ -93,7 +93,7 @@ export const ProfileView = (props) => {
                 </Row>
                 <Row className={css.buttons}>
                   <Column>
-                    <ButtonLoader
+                    <Button
                       type='submit'
                       label='Save'
                       loading={isFetching}

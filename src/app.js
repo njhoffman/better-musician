@@ -3,10 +3,8 @@ import ReactDOM from 'react-dom';
 import webpackVariables from 'webpackVariables';
 import { Provider } from 'react-redux';
 import createHistory from 'history/createBrowserHistory';
-import { AuthGlobals } from 'components/AuthGlobals';
 
 import ErrorBoundary from 'components/ErrorBoundaries/Main';
-import AppContainer from 'components/AppContainer';
 import initDevTools from 'components/DevTools/DevTools';
 
 import { configureStart, configureComplete } from './actions/auth';
@@ -94,6 +92,7 @@ const configApp = () => {
     .then(() => loadAuthConfig(store))
     .then((userData) => {
       store.dispatch(configureComplete());
+      const AppContainer = require('./components/AppContainer').default;
       render(AppContainer);
       domStats();
     });
@@ -126,6 +125,7 @@ const renderError = (error) => {
 const renderDev = () => {
   try {
     const NextApp = require('./components/AppContainer').default;
+    console.info('RenderDev');
     render(NextApp);
   } catch (error) {
     renderError(error);
@@ -137,7 +137,7 @@ if (__DEV__) {
   if (module.hot) {
     // module.hot.accept(() => {
     module.hot.accept('components/AppContainer', () => {
-      console.clear();
+      // console.clear();
       info('HMR reloading ...');
       ReactDOM.unmountComponentAtNode(MOUNT_NODE);
       renderDev();
@@ -146,6 +146,4 @@ if (__DEV__) {
   window.addEventListener('message', e => {
     // console.clear();
   });
-} else {
-  render();
 }

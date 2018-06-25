@@ -1,25 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Drawer, Divider, MenuItem } from 'material-ui';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import withTheme from 'material-ui/styles/withTheme';
+import config from 'data/config';
 
-// import { OAuthSignInButton } from 'redux-auth/material-ui-theme';
+import OAuthSignInButton from 'components/OAuthSignInButton';
 import SignOutButton from 'components/SignOutButton';
-import ButtonLoader from 'components/ButtonLoader';
+import Button from 'components/Button';
 import facebookIcon from 'assets/fb-icon.png';
 import googleIcon from 'assets/google-icon.png';
+import EmailIcon from 'material-ui-icons/Email';
 import css from './DrawerMenu.scss';
 
-const googleIconComponent = () =>
+const googleIconComponent =
   <img
     src={googleIcon}
-    style={{ marginTop: '-10px', maxWidth: '30px', width: '30px', height: '30px' }} />;
+    style={{ position: 'absolute', left: '15px', width: '25px', height: '25px' }} />;
 
-const facebookIconComponent = () =>
+const facebookIconComponent =
   <img
     src={facebookIcon}
-    style={{ marginTop: '-10px', width: '20px', maxWidth: '20px' }} />;
+    style={{ position: 'absolute', left: '15px', width: '20px', height: '20px' }} />;
 
 let linkStyle = {
   width: '100%',
@@ -44,52 +46,52 @@ export class DrawerMenu extends Component {
           open={this.props.isOpen}
           onClose={this.props.hideDrawerMenu}>
           <MenuItem>
-            <Link
+            <NavLink
               to='/'
               onClick={this.props.hideDrawerMenu}
               style={linkStyle}>
               Home
-            </Link>
+            </NavLink>
           </MenuItem>
           <MenuItem>
-            <Link
+            <NavLink
               to='/songs'
               onClick={this.props.hideDrawerMenu}
               style={linkStyle}>
               Song List
-            </Link>
+            </NavLink>
           </MenuItem>
           <MenuItem>
-            <Link
+            <NavLink
               to='/profile'
               onClick={this.props.hideDrawerMenu}
               style={linkStyle}>
               Profile
-            </Link>
+            </NavLink>
           </MenuItem>
           <MenuItem>
-            <Link
+            <NavLink
               to='/stats'
               onClick={this.props.hideDrawerMenu}
               style={linkStyle}>
               Statistics
-            </Link>
+            </NavLink>
           </MenuItem>
           <MenuItem>
-            <Link
+            <NavLink
               to='/settings'
               onClick={this.props.hideDrawerMenu}
               style={linkStyle}>
               Settings
-            </Link>
+            </NavLink>
           </MenuItem>
           <MenuItem>
-            <Link
+            <NavLink
               to='/fields'
               onClick={this.props.hideDrawerMenu}
               style={linkStyle}>
               Field Builder
-            </Link>
+            </NavLink>
           </MenuItem>
           <Divider />
           <MenuItem>
@@ -112,61 +114,65 @@ export class DrawerMenu extends Component {
           open={this.props.isOpen}
           onClose={this.props.hideDrawerMenu}>
           <MenuItem>
-            <Link
+            <NavLink
               to='/'
               style={linkStyle}
               onClick={this.props.hideDrawerMenu}>
               Home
-            </Link>
+            </NavLink>
           </MenuItem>
           <MenuItem>
-            <Link
+            <NavLink
               to='/register'
               onClick={this.props.hideDrawerMenu}
               style={linkStyle}>
               Register
-            </Link>
+            </NavLink>
           </MenuItem>
           <MenuItem>
-            <Link
+            <NavLink
               to='/reset'
               onClick={this.props.hideDrawerMenu}
               style={linkStyle}>
               Reset Password
-            </Link>
+            </NavLink>
           </MenuItem>
           <MenuItem>
-            <Link
+            <NavLink
               to='/contact'
               onClick={this.props.hideDrawerMenu}
               style={linkStyle}>
               Contact Support
-            </Link>
+            </NavLink>
           </MenuItem>
           <Divider />
-          {/* <OAuthSignInButton */}
-          {/*   style={{ width: '245px', margin: '5px 0px 5px 5px' }} */}
-          {/*   backgroundColor={'#4c69ba'} */}
-          {/*   labelColor={'#ffffff'} */}
-          {/*   icon={facebookIconComponent} */}
-          {/*   provider='facebook'> */}
-          {/*   Sign In With Facebook */}
-          {/* </OAuthSignInButton> */}
-          {/* <OAuthSignInButton */}
-          {/*   style={{ width: '245px', margin: '0px 0px 5px 5px' }} */}
-          {/*   backgroundColor={'#4285f4'} */}
-          {/*   labelColor={'#ffffff'} */}
-          {/*   icon={googleIconComponent} */}
-          {/*   provider='google'> */}
-          {/*   Sign In With Google */}
-          {/* </OAuthSignInButton> */}
-
-          {/* icon={googleIconComponent} */}
-          <Link to='/profile'>
-            <ButtonLoader
-              onClick={() => { this.props.hideDrawerMenu(); }}
-              label='Sign In With Email' />
-          </Link>
+          <OAuthSignInButton
+            style={{ width: '245px', margin: '5px 0px 5px 5px', height: '40px' }}
+            label='Sign In With Facebook'
+            icon={facebookIconComponent}
+            provider='facebook'>
+          </OAuthSignInButton>
+          <OAuthSignInButton
+            style={{ width: '245px', margin: '0px 0px 5px 5px', height: '40px' }}
+            label='Sign In With Google'
+            icon={googleIconComponent}
+            provider='google'>
+          </OAuthSignInButton>
+          <NavLink to='/login'>
+            <Button
+              className={`${config.prefix}drawer_sign_in_email`}
+              onClick={this.props.hideDrawerMenu}
+              primary
+              icon={<EmailIcon />}
+              iconAlign='left'
+              label='Sign In With Email'
+              variant='raised'
+              style={{
+                width: 'calc(100% - 6px)',
+                margin: '0px 3px 5px 3px',
+              }}
+            />
+          </NavLink>
         </Drawer>
       </div>
     );

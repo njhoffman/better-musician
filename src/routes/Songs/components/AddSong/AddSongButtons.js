@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { FlatButton, RaisedButton } from 'material-ui';
+import { Button } from 'material-ui';
 import { MdDelete as DeleteIcon } from 'react-icons/lib/md';
 
 import { uiShowModal, uiHideModal, MODAL_ADD_SONG } from 'store/ui';
@@ -17,23 +17,26 @@ export const AddSongButtons = (props) => {
   return (
     <div>
       {!props.modalView.isAdd() &&
-        <FlatButton
-          label='Delete'
-          icon={<DeleteIcon />}
+        <Button
+          variant='flat'
           style={{ float: 'left', color: '#ff8888' }}
-          onTouchTap={props.addSong}
-        />
+          onClick={props.addSong}>
+          <DeleteIcon />
+          Delete
+        </Button>
       }
-      <FlatButton
-        label='Cancel'
-        primary
-        onTouchTap={props.hideModal}
-      />
-      <RaisedButton
-        label={buttonLabel}
-        primary
-        onTouchTap={props.modalView.isView() ? props.editSong : props.addSong}
-      />
+      <Button
+        variant='flat'
+        color='primary'
+        onClick={props.hideModal}>
+        Cancel
+      </Button>
+      <Button
+        variant='raised'
+        color='primary'
+        onClick={props.modalView.isView() ? props.editSong : props.addSong}>
+        {buttonLabel}
+      </Button>
     </div>
   );
 };

@@ -1,8 +1,9 @@
 import React, { Component }  from 'react';
 import { connect } from 'react-redux';
 import { Row, Column, Breakpoints } from 'react-foundation';
-import withTheme from 'material-ui/styles/withTheme';
+import { withTheme } from '@material-ui/core/styles';
 
+import config from 'data/config';
 import HeaderLeft from './HeaderLeftContainer';
 import HeaderMiddle from './HeaderMiddleContainer';
 import HeaderRight from './HeaderRightContainer';
@@ -19,7 +20,7 @@ export class Header extends Component {
       return (
         <div
           style={headerStyle}
-          className={css.header}>
+          className={`${css.header} ${config.prefix}header`}>
           <Row className={css.wrapper}>
             <Column small={6} medium={3} className={css.headerLeft}>
               <HeaderLeft {...props} />
@@ -42,7 +43,7 @@ export class Header extends Component {
       return (
         <div
           style={headerStyle}
-          className={css.header}>
+          className={`${css.header} ${config.prefix}header`}>
           <Row className={css.wrapper}>
             <Column small={6} className={css.headerLeft}>
               <HeaderLeft {...props} />

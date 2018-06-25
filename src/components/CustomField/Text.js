@@ -11,7 +11,8 @@ const RenderCustomText = ({
   inputStyle,
   labelStyle,
   style,
-  ...custom }) => {
+  ...custom
+}) => {
   if (preview) {
     return (
       <Field
@@ -27,11 +28,8 @@ const RenderCustomText = ({
           style={{ ...style, ...{ width: '200px ', verticalAlign: 'middle' } }}
           name={field.name}
           disabled={disabled}
-          underlineShow={!disabled}
-          inputStyle={{ ...inputStyle, ...{ textAlign: 'center' } }}
           component={RenderText}
-          floatingLabelStyle={{ ...labelStyle, ...(disabled ? { left: '25px', textAlign: 'center' } : {}) }}
-          label={field.label} />
+          name={field.label} />
       </Column>
     );
   }
