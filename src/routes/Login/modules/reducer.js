@@ -1,4 +1,4 @@
-import { browserHistory } from 'react-router';
+import { push } from 'react-router-redux';
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -8,9 +8,13 @@ export const INIT_VIEW = 'INIT_VIEW';
 // Actions
 // ------------------------------------
 
-export const handleLoginSuccess = () => (dispatch, getState) => {
-  browserHistory.push('/songs');
+export const handleLoginSuccess = (dispatch, getState) => {
+  return dispatch(push('/songs'));
 };
+// export const handleLoginSuccess = () => (dispatch, getState) => {
+//   console.info('handleLoginSuccess');
+//   return dispatch(push('/songs'));
+// };
 // ------------------------------------
 // Action Handlers
 // ------------------------------------

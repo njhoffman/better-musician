@@ -1,16 +1,25 @@
 import React, { Component }  from 'react';
 import PropTypes from 'prop-types';
 import { MdAccountCircle as AvatarIcon } from 'react-icons/lib/md';
-import { Avatar } from 'material-ui';
+import { withStyles, Avatar } from '@material-ui/core';
 import Button from 'components/Button';
 import { Link } from 'react-router-dom';
 import css from './Header.scss';
+import { Row, Column } from 'react-foundation';
 
-const linkStyle = { display: 'table-cell', verticalAlign: 'middle', paddingRight: '5px' };
+const styles = {
+  flex: {
+    flex: 1,
+    textAlign: 'right'
+  },
+  headerRight: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+};
 
 class HeaderRight extends Component {
   static propTypes = {
-    theme           : PropTypes.object.isRequired,
     getUserPoints   : PropTypes.string,
     userDisplayName : PropTypes.string,
     isSignedIn      : PropTypes.bool.isRequired
@@ -18,10 +27,9 @@ class HeaderRight extends Component {
 
   renderSignedIn() {
     return (
-      <div className={css.headerLink}>
+      <div className={this.props.classes.headerRight}>
         <div className={css.profileDisplay}>
-          <Link
-            to='/profile'>
+          <Link to='/profile'>
             <div className={css.profilePoints}>
               { this.props.getUserPoints }
             </div>
@@ -31,11 +39,9 @@ class HeaderRight extends Component {
           </Link>
         </div>
         <div className={css.profileAvatar}>
-          <Link
-            to='/profile'>
+          <Link to='/profile'>
             <Avatar
               icon={<AvatarIcon />}
-              style={{ backgroundColor: this.props.theme.palette.primary1Color }}
               size={35} />
           </Link>
         </div>
@@ -44,28 +50,10 @@ class HeaderRight extends Component {
   }
 
   renderSignedOut() {
-    // const buttonStyle = { height: '25px', display: 'table-cell', minWidth: '0px' };
-    // const buttonLabelStyle = { padding: '5px 10px', paddingLeft: '10px', display: 'table-cell' };
     return (
-      <div style={{ float: 'right', height: '100%', fontSize: '0.9em', paddingRight: '10px' }}>
-        <div style={{ display: 'table', height: '100%' }}>
-          <Link
-            to='/login'
-            style={linkStyle}>
-            <Button
-              label='Login'
-              primary
-              className={css.loginButton} />
-          </Link>
-          <Link
-            to='/register'
-            style={linkStyle}>
-            <Button
-              label='Register'
-              secondary
-              className={css.registerButton} />
-          </Link>
-        </div>
+      <div className={this.props.classes.flex}>
+        <Button label='Login' href='/login' primary />
+        <Button label='Register' href='/register' secondary />
       </div>
     );
   }
@@ -77,4 +65,4 @@ class HeaderRight extends Component {
     return this.renderSignedOut();
   }
 }
-export default HeaderRight;
+export default withStyles(styles)(HeaderRight);

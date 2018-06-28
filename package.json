@@ -131,6 +131,7 @@
     "browser-cookies": "^1.2.0",
     "bunyan": "^1.8.12",
     "compression": "^1.6.2",
+    "connected-react-router": "^4.3.0",
     "cookie-parser": "^1.4.3",
     "cosmos": "^0.1.2",
     "cssobjects-loader": "^0.4.1",

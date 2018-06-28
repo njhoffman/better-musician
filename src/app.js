@@ -17,10 +17,11 @@ import { init as initLog } from 'shared/logger';
 import { humanMemorySize } from 'shared/util';
 const { debug, info } = initLog('app');
 
-const history = createHistory();
-
 const initialState = window.___INITIAL_STATE__;
+
+export const history = createHistory();
 export const store = createStore(initialState, history);
+
 const DevTools = initDevTools(store);
 
 const MOUNT_NODE = document.getElementById('root');

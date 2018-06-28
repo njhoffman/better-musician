@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Row, Column } from 'react-foundation';
 import SearchPopover from './SearchPopover';
 import SongPopover from './SongPopover';
+import { withStyles } from '@material-ui/core';
 
 /* eslint-disable no-multi-spaces */
 import {
@@ -12,6 +13,26 @@ import {
 /* eslint-enable no-multi-spaces */
 
 import css from './Header.scss';
+const styles = {
+  headerMiddle: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'stretch',
+    justifyContent: 'space-around',
+    textAlign: 'center'
+  },
+  headerLink: {
+    width: '100%',
+    height: '100%',
+    display: 'table',
+    textDecoration: 'none',
+    cursor: 'pointer',
+    verticalAlign: 'middle',
+    '&:hover' : {
+      backgroundColor: 'rgba(255, 255, 255, 0.078430)'
+    }
+  }
+};
 
 const popoverStyle = {
   anchor: { horizontal: 'left', vertical: 'bottom' },
@@ -66,7 +87,7 @@ class HeaderMiddle extends Component {
     const isActive = this.props.modal && this.props.modal.type === 'MODAL_FILTER_SONGS';
     return (
       <a
-        className={css.headerLink + ' ' + (isActive ? css.headerLinkActive : '')}
+        className={this.props.classes.headerLink + ' ' + (isActive ? css.headerLinkActive : '')}
         onClick={this.props.showFiltersModal} >
         <span className={css.iconWrapper}>
           <FilterIcon className={css.icon} />
@@ -78,7 +99,7 @@ class HeaderMiddle extends Component {
 
   renderSearchButton() {
     return (
-      <a className={css.headerLink}
+      <a className={this.props.classes.headerLink}
         onClick={(e) => this.toggleSearchPopover(e)}>
         <span className={css.iconWrapper}>
           <SearchIcon className={css.icon} />
@@ -96,7 +117,7 @@ class HeaderMiddle extends Component {
 
   render() {
     return (
-      <Row className={css.wrapper}>
+      <Row className={this.props.classes.headerMiddle}>
         <Column style={{ padding: '0px', height: '100%' }}>
           <SongPopover
             songPopoverOpen={this.state.songPopoverOpen}
@@ -115,4 +136,4 @@ class HeaderMiddle extends Component {
     );
   }
 }
-export default HeaderMiddle;
+export default withStyles(styles)(HeaderMiddle);

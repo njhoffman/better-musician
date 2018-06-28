@@ -55,7 +55,7 @@ export const fetchSongs = ({ dispatch, getState }) => {
 };
 
 export const songsSuccess = (response) => (dispatch) => {
-  const tables = response.tables;
+  const tables = response.data.tables;
   // info('fetchSongsSuccess', response);
   info(`fetchSongsSuccess: ${tables.songs.length} songs and ${tables.artists.length} artists`);
 
@@ -157,7 +157,7 @@ const ACTION_HANDLERS = {
   }),
   [EMAIL_SIGN_IN_ERROR] : (state, { errors }) => ({
     ...state,
-    loading: false ,
+    loading: false,
     endpoints: { ...state.endpoints, login: { ...state.endpoints.login, loading: false, success: false, errors } }
   }),
 

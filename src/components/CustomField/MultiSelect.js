@@ -11,21 +11,23 @@ const RenderCustomMultiSelect = ({
   optionValues,
   ...custom }) => {
   if (preview) {
-    return (
-      <Field
-        style={{ width: '200px' }}
-        name={field.name}
-        component={RenderSelect}
-        label={field.label} />
-    );
+    return (<div>POOP</div>);
+    // return (
+    //   <Field
+    //     style={{ width: '200px' }}
+    //     name={field.name}
+    //     component={RenderSelect}
+    //     label={field.label} />
+    // );
   } else {
-    return (
-      <FieldArray
-        name={field.name}
-        label={field.label}
-        component={RenderMultiSelect}
-        {...custom} />
-    );
+    return (<div>POOP</div>);
+    // return (
+    //   <FieldArray
+    //     name={field.name}
+    //     label={field.label}
+    //     component={RenderMultiSelect}
+    //     {...custom} />
+    // );
   }
 };
 

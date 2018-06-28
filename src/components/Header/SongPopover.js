@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Row, Column } from 'react-foundation';
-import { Popover } from 'material-ui';
-import withTheme from 'material-ui/styles/withTheme';
+import { withStyles, Popover } from '@material-ui/core';
 
 /* eslint-disable no-multi-spaces */
 import {
@@ -22,6 +21,20 @@ import {
   uiShowModal,
   MODAL_ADD_SONG
 } from 'store/ui';
+
+const styles = {
+  headerLink: {
+    width: '100%',
+    height: '100%',
+    display: 'table',
+    textDecoration: 'none',
+    cursor: 'pointer',
+    verticalAlign: 'middle',
+    '&:hover' : {
+      backgroundColor: 'rgba(255, 255, 255, 0.078430)'
+    }
+  }
+};
 
 const popoverStyle = {
   anchor: { horizontal: 'left', vertical: 'bottom' },
@@ -52,7 +65,7 @@ export const SongPopover = (props) => {
 
   const renderSongButtonOther = () => {
     return (
-      <Link className={css.headerLink} to='/songs'>
+      <Link className={props.classes.headerLink} to='/songs'>
         <span className={css.iconWrapper}>
           <ViewIcon className={css.icon} />
           <span className={css.iconText}>View Songs</span>
@@ -64,7 +77,7 @@ export const SongPopover = (props) => {
   const renderSongButtonAdd = () => {
     return (
       <a
-        className={css.headerLink}
+        className={props.classes.headerLink}
         onClick={() => showAdd()}>
         <span className={css.iconWrapper}>
           <AddIcon className={css.icon} />
@@ -75,11 +88,10 @@ export const SongPopover = (props) => {
   };
 
   const renderSongButtonView = () => {
-    const { instrumental: { headerLinksColor } } = theme;
     return (
       <a
         onTouchTap={() => showEdit()}
-        className={css.headerLink}>
+        className={props.classes.headerLink}>
         <span className={css.iconWrapper}>
           <EditIcon className={css.icon} />
           <span className={css.iconText}>Edit Song</span>
@@ -96,8 +108,7 @@ export const SongPopover = (props) => {
             <Row className={css.row}>
               <Column className={css.column} >
                 <a
-                  style={{ color: headerLinksColor }}
-                  className={css.headerLink}
+                  className={props.classes.headerLink}
                   onClick={() => showAdd()} >
                   <span className={css.iconWrapper}>
                     <AddIcon style={{ margin: '0px 12px 0px -12px' }} className={css.icon} />
@@ -108,9 +119,7 @@ export const SongPopover = (props) => {
             </Row>
             <Row className={css.row}>
               <Column className={css.column}>
-                <a
-                  style={{ color: headerLinksColor }}
-                  className={css.headerLink}>
+                <a className={props.classes.headerLink}>
                   <span className={css.iconWrapper}>
                     <DeleteIcon className={css.icon} />
                     <span className={css.iconText}>Delete Song</span>
@@ -134,7 +143,6 @@ export const SongPopover = (props) => {
 };
 
 SongPopover.propTypes = {
-  theme:             PropTypes.object.isRequired,
   currentSong:       PropTypes.string,
   songPopoverOpen:   PropTypes.bool.isRequired,
   songPopoverAnchor: PropTypes.object.isRequired
@@ -148,4 +156,4 @@ const mapStateToProps = (state) => ({
   currentView:     state.ui.currentView ? state.ui.currentView : null
 });
 
-export default withTheme()(connect(mapStateToProps, mapActionCreators)(SongPopover));
+export default (connect(mapStateToProps, mapActionCreators)(withStyles(styles)(SongPopover)));

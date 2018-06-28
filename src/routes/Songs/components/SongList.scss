@@ -1,8 +1,15 @@
 .songsList {
   width: 100%;
-  table-layout: fixed;
   th a {
     font-size: 1.2em;
+  }
+  .artist {
+  }
+  .progress {
+    width: 150px;
+  }
+  .difficulty {
+    width: 100px;
   }
   @media (max-width: 450px) {
     .progress {

@@ -82,7 +82,7 @@ export const getTokenFormat = () => window.authState.currentSettings.tokenFormat
 
 // reset stateful variables
 export const resetConfig = () => {
-  window.authState = root.authState || {};
+  window.authState = {};
   window.authState.currentSettings = {};
   window.authState.currentEndpoint = {};
   destroySession();
@@ -122,7 +122,7 @@ export const removeData = (key) => {
 };
 
 export const persistData = (key, val) => {
-  const { cookiePath, storage } = window.authState.currentSettings;
+  const { cookiePath, storage, cookieExpiry } = window.authState.currentSettings;
   const sVal = JSON.stringify(val);
   debug(
     `Saving session to ${storage}: ${key}`,
@@ -130,8 +130,8 @@ export const persistData = (key, val) => {
   );
   if (storage === 'cookies') {
     Cookies.set(key, sVal, {
-      expires: window.authState.currentSettings.cookieExpiry,
-      path:    window.authState.currentSettings.cookiePath
+      expires: cookieExpiry,
+      path:    cookiePath
     });
   } else {
     window.localStorage.setItem(key, sVal);

@@ -3,7 +3,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 export default [{
-  title:'Text Buttons',
+  title:'Text (Flat) Buttons',
   props: [{
     label: 'Default',
     variant: 'text',
@@ -49,7 +49,7 @@ export default [{
     href: '#text-link'
   }]
 }, {
-  title:'Contained Buttons',
+  title:'Contained (Raised) Buttons',
   props: [{
     label: 'Default',
     variant: 'contained',
@@ -69,52 +69,6 @@ export default [{
   }, {
     label: 'Link',
     variant: 'contained',
-    href: '#text-link'
-  }]
-}, {
-  title:'Flat Buttons',
-  props: [{
-    label: 'Default',
-    variant: 'flat',
-    color: 'default'
-  }, {
-    label: 'Primary',
-    variant: 'flat',
-    primary: true
-  }, {
-    label: 'Secondary',
-    variant: 'flat',
-    secondary: true
-  }, {
-    label: 'Disabled',
-    variant: 'flat',
-    disabled: true
-  }, {
-    label: 'Link',
-    variant: 'flat',
-    href: '#text-link'
-  }]
-}, {
-  title:'Raised Buttons',
-  props: [{
-    label: 'Default',
-    variant: 'raised',
-    color: 'default'
-  }, {
-    label: 'Primary',
-    variant: 'raised',
-    primary: true
-  }, {
-    label: 'Secondary',
-    variant: 'raised',
-    secondary: true
-  }, {
-    label: 'Disabled',
-    variant: 'raised',
-    disabled: true
-  }, {
-    label: 'Link',
-    variant: 'raised',
     href: '#text-link'
   }]
 }, {

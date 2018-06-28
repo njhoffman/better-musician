@@ -13,10 +13,10 @@ export const SongsView = (props) => (
   <Column small={12} className='songsView'>
     <Paper elevation={5}>
       <div className={css.songsContainer}>
+        <AddSongModal />
         <SongsList {...props} />
         <SongsPagination />
         <FiltersModal />
-        <AddSongModal />
       </div>
     </Paper>
   </Column>

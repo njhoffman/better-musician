@@ -1,4 +1,6 @@
 import React from 'react';
+import { withRouter } from 'react-router';
+import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Paper, Typography } from 'material-ui';
@@ -7,6 +9,8 @@ import withTheme from 'material-ui/styles/withTheme';
 import css from './LoginView.scss';
 import EmailSignInForm from './EmailSignInForm';
 import { handleLoginSuccess } from '../modules/reducer';
+import SignOutButton from 'components/SignOutButton';
+import { push } from 'react-router-redux';
 
 export const LoginView = (props) => {
   return (
@@ -14,7 +18,20 @@ export const LoginView = (props) => {
       <Paper elevation={5}>
         <div className={css.loginContainer}>
           <Typography variant='title'>This is the Login Page</Typography>
-          <EmailSignInForm next={props.handleLoginSuccess} />
+          {props.isSignedIn && (
+            <div>
+              <Typography variant='body2'>
+                You are already logged in.  Would you like to log out?
+              </Typography>
+              <SignOutButton
+                label='LOGOUT'
+                next={() => { }}
+                style={{ backgroundColor: 'transparent', width: '100%' }} />
+            </div>
+          )}
+          {!props.isSignedIn && (
+            <EmailSignInForm next={handleLoginSuccess} />
+          )}
         </div>
       </Paper>
     </Column>
@@ -29,9 +46,10 @@ const mapActionCreators = {
   handleLoginSuccess
 };
 const mapStateToProps = (state) => ({
-  settings: state.login
+  settings: state.login,
+  isSignedIn: state.user.isSignedIn
 });
 
 const withConnect = connect(mapStateToProps, mapActionCreators);
 
-export default withConnect(withTheme()(LoginView));
+export default withRouter(withConnect(withTheme()(LoginView)));

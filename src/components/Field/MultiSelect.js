@@ -24,18 +24,18 @@ const RenderMultiSelect = ({
         <Column centerOnSmall small={6}>
           <Row>
             <Column centerOnSmall small={disabled ? 12 : 8}>
-              <Field
-                label={label}
-                onChange={(e) => (e)}
-                component={RenderSelect}
-                disabled={disabled}
-                underlineShow={disabled}
-                labelStyle={inputStyle}
-                floatingLabelStyle={{ ...labelStyle, ...(disabled ? { textAlign: 'center', width: '100%' } : {}) }}
-                iconStyle={{ visibility: disabled ? 'hidden' : 'visible' }}
-                dataSource={dataSource}
-                name='optionText'
-              />
+              {/* <Field */}
+              {/*   label={label} */}
+              {/*   onChange={(e) => (e)} */}
+              {/*   component={RenderSelect} */}
+              {/*   disabled={disabled} */}
+              {/*   underlineShow={disabled} */}
+              {/*   labelStyle={inputStyle} */}
+              {/*   floatingLabelStyle={{ ...labelStyle, ...(disabled ? { textAlign: 'center', width: '100%' } : {}) }} */}
+              {/*   iconStyle={{ visibility: disabled ? 'hidden' : 'visible' }} */}
+              {/*   dataSource={dataSource} */}
+              {/*   name='optionText' */}
+              {/* /> */}
             </Column>
             <Column centerOnSmall small={disabled ? 0 : 4}>
               {!disabled &&
@@ -54,26 +54,26 @@ const RenderMultiSelect = ({
           style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}
           small={10}>
           {fields.map((name, idx, fields) => {
-            if (disabled) {
-              return (
-                <Field
-                  key={idx}
-                  name={name}
-                  onChange={() => { }}
-                  component={RenderChip}
-                  style={{ margin: '5px 2px', fontSize: '0.8em' }} />
-              );
-            } else {
-              return (
-                <Field
-                  key={idx}
-                  name={name}
-                  onChange={() => { }}
-                  component={RenderChip}
-                  onRequestDelete={() => fields.remove(idx)}
-                  style={{ margin: '5px 2px', fontSize: '0.8em' }} />
-              );
-            }
+            // if (disabled) {
+            //   return (
+            //     <Field
+            //       key={idx}
+            //       name={name}
+            //       onChange={() => { }}
+            //       component={RenderChip}
+            //       style={{ margin: '5px 2px', fontSize: '0.8em' }} />
+            //   );
+            // } else {
+            //   return (
+            //     <Field
+            //       key={idx}
+            //       name={name}
+            //       onChange={() => { }}
+            //       component={RenderChip}
+            //       onRequestDelete={() => fields.remove(idx)}
+            //       style={{ margin: '5px 2px', fontSize: '0.8em' }} />
+            //   );
+            // }
           })}
         </Column>
       </Row>

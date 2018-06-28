@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Loadable from 'react-loadable';
 import LoadingIndicator from 'components/LoadingIndicator';
 
@@ -10,7 +9,7 @@ import { injectReducer } from 'store/reducers';
 import { init as initLog } from 'shared/logger';
 const { info, warn } = initLog('loader');
 
-const LoadRoute = (route) => ({ dispatch, isAuthenticated }) => {
+const LoadRoute = (route) => ({ /* dispatch, */ isAuthenticated }) => {
   class ViewInjector extends React.Component {
     componentWillMount() {
       const { store } = this.context;
@@ -26,7 +25,7 @@ const LoadRoute = (route) => ({ dispatch, isAuthenticated }) => {
       });
     }
     render() {
-      info(`Loading route: ${route}`);
+      info(`Loading route: ${route} (${isAuthenticated ? 'authenticated' : 'not authenticated'})`);
       const Loader = Loadable({
         loader: () => import(`routes/${route}/components/${route}View`),
         loading: LoadingIndicator
@@ -41,4 +40,4 @@ const LoadRoute = (route) => ({ dispatch, isAuthenticated }) => {
   return <ViewInjector />;
 };
 
-export { LoadRoute };
+export default LoadRoute;

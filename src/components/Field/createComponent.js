@@ -1,4 +1,4 @@
-import { Component, createElement } from 'react'
+import { Component, createElement } from 'react';
 
 /**
  * Creates a component class that renders the given Material UI component

@@ -1,8 +1,9 @@
 import React, { Component }  from 'react';
-import { Switch, Route, withRouter } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import { LoadRoute } from './loader';
+import LoadRoute from 'utils/routeLoader';
 
 import { userIsAuthRedir, userNotAuthRedir, userIsAdminRedir,
   userIsAuth, userNotAuth, userNoAuthentication } from './auth';
@@ -10,7 +11,7 @@ import { userIsAuthRedir, userNotAuthRedir, userIsAdminRedir,
 // Need to apply the hocs here to avoid applying them inside the render method
 
 const HomeRoute = userNoAuthentication(LoadRoute('Home'));
-const LoginRoute = userNotAuthRedir(LoadRoute('Login'));
+const LoginRoute = userNoAuthentication(LoadRoute('Login'));
 const RegisterRoute = userNotAuthRedir(LoadRoute('Register'));
 
 const ResetRoute = userIsAuthRedir(LoadRoute('Reset'));
@@ -23,10 +24,6 @@ const FieldsRoute = userIsAuthRedir(LoadRoute('Fields'));
 // const Admin = userIsAuthenticatedRedir(userIsAdminRedir(AdminComponent));
 
 class Routes extends Component {
-  shouldComponentUpdate() {
-    return false;
-  }
-
   render() {
     return (
       <Switch>

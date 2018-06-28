@@ -1,8 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Table, TableBody, TableRow } from 'material-ui';
-import withTheme from 'material-ui/styles/withTheme';
+import {
+  Table,
+  TableBody,
+  TableRow
+} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import Tappable from 'react-tappable';
 
 import { setCurrentSong, setSort } from 'routes/Songs/modules/reducer';
@@ -12,21 +16,18 @@ import { uiShowModal, MODAL_ADD_SONG } from 'store/ui';
 import Song from './Song';
 import css from './SongList.scss';
 
+const styles = (theme) => { };
+
 export const SongsList = ({
   songsCollection,
-  muiTheme,
   showViewSongModal,
   setCurrentSong,
   setSort,
   currentSongId }) => (
   <Tappable onPress={showViewSongModal}>
-    <Table
-      className={css.songsList}
-      style={{ tableLayout: 'fixed' }}>
+    <Table className={css.songsList}>
       <TableBody>
-        <TableRow
-          onClick={setCurrentSong}
-          hover>
+        <TableRow>
           <SongsListHeader
             className={css.title}
             setSort={setSort}
@@ -51,6 +52,7 @@ export const SongsList = ({
         {songsCollection && songsCollection.map(song => {
           return (
             <Song
+              onClick={(e) => setCurrentSong(song)}
               key={song.id}
               songValues={song}
             />
@@ -68,7 +70,6 @@ SongsList.propTypes = {
       title:     PropTypes.string
     }).isRequired),
   setSort: PropTypes.func.isRequired,
-  muiTheme: PropTypes.object,
   setCurrentSong: PropTypes.func,
   showViewSongModal: PropTypes.func,
   currentSongId: PropTypes.string
@@ -89,4 +90,4 @@ const mapActionCreators = ({
   setSort
 });
 
-export default connect(mapStateToProps, mapActionCreators)(withTheme()(SongsList));
+export default connect(mapStateToProps, mapActionCreators)(withStyles(styles)(SongsList));

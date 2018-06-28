@@ -37,6 +37,7 @@ export default (initialState = {}, history) => {
     debug(`returning store`);
     return store;
   }
+  // TODO: why does thunk need to be after apimiddleware?
   const middleware = [apiMiddleware, thunkMiddleware, actionLogger, routerMiddleware(history)];
   const enhancers = useDevExtension ? []
     : [DevTools().instrument({ shouldCatchErrors: true })];

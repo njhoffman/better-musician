@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { TableRow, TableCell } from 'material-ui/Table';
+import withTheme from '@material-ui/core/styles/withTheme';
+import { TableRow, TableCell } from '@material-ui/core';
 import css from './Song.scss';
-import withTheme from 'material-ui/styles/withTheme';
 import { RenderStars, RenderDifficulty } from 'components/Field';
 import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
 import { uiShowModal, MODAL_ADD_SONG } from 'store/ui';
@@ -20,6 +20,7 @@ export const Song = ({
   ...custom }) => {
   return (
     <TableRow
+      hover
       onDoubleClick={showViewSongModal}
       style={rowStyle}
       {...custom}>

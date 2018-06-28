@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import MaterialTextField from '@material-ui/core/TextField'
-import createComponent from './createComponent'
-import mapError from './mapError'
+import MaterialTextField from '@material-ui/core/TextField';
+import createComponent from './createComponent';
+import mapError from './mapError';
 
 const TextField = createComponent(
   MaterialTextField, ({
@@ -16,6 +16,8 @@ const TextField = createComponent(
 
 const RenderText = ({
   meta,
+  inputStyle,
+  errorText,
   style,
   ...props
 }) => (

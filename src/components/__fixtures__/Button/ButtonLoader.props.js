@@ -36,12 +36,12 @@ export default [{
     label: 'Primary',
     primary: true,
     icon: <Icon>send</Icon>,
-    variant: 'contained',
+    variant: 'contained'
   }, {
     label: 'Secondary',
     secondary: true,
     icon: FileUploadIcon,
-    variant: 'contained',
+    variant: 'contained'
   }, {
     label: 'Disabled',
     disabled: true,
@@ -66,13 +66,13 @@ export default [{
     primary: true,
     icon: <Icon>send</Icon>,
     iconAlign: 'left',
-    variant: 'contained',
+    variant: 'contained'
   }, {
     label: 'Secondary',
     secondary: true,
     icon: FileUploadIcon,
     iconAlign: 'left',
-    variant: 'contained',
+    variant: 'contained'
   }, {
     label: 'Disabled',
     disabled: true,

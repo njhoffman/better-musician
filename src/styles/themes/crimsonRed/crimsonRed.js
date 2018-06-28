@@ -15,17 +15,17 @@ export default {
   themeName:            'Crimson Red',
   palette:              {
     primary: {
-      main:             darken(red['900'], 0.7),
+      main:             darken(red['900'], 0.7)
     },
     secondary: {
       main:              red['600']
-    },
+    }
   },
   typography:         {
     fontFamily:       '"Roboto", "Helvetica", "Arial", sans-serif',
     fontSize:         14
   },
-  backgroundColor:      'linear-gradient(135deg, #141a1e 0%,#220000 49%,#220000 52%,#141a1e 100%)',
+  backgroundColor:      'linear-gradient(135deg, #141a1e 0%,#220000 49%,#220000 52%,#141a1e 100%)'
 };
 
 // const old = {

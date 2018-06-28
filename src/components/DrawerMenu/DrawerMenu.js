@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Drawer, Divider, MenuItem } from 'material-ui';
 import { NavLink } from 'react-router-dom';
-import withTheme from 'material-ui/styles/withTheme';
+import withStyles from '@material-ui/core/styles/withStyles';
 import config from 'data/config';
 
 import OAuthSignInButton from 'components/OAuthSignInButton';
@@ -11,88 +11,39 @@ import Button from 'components/Button';
 import facebookIcon from 'assets/fb-icon.png';
 import googleIcon from 'assets/google-icon.png';
 import EmailIcon from 'material-ui-icons/Email';
+
+import DrawerMenuLink from './DrawerMenuLink';
 import css from './DrawerMenu.scss';
 
-const googleIconComponent =
-  <img
-    src={googleIcon}
-    style={{ position: 'absolute', left: '15px', width: '25px', height: '25px' }} />;
+const googleIconComponent = <img src={googleIcon} />;
 
-const facebookIconComponent =
-  <img
-    src={facebookIcon}
-    style={{ position: 'absolute', left: '15px', width: '20px', height: '20px' }} />;
+const facebookIconComponent = <img src={facebookIcon} />;
 
-let linkStyle = {
-  width: '100%',
-  display: 'inline-block',
-  textAlign: 'center',
-  textTransform: 'uppercase',
-  textDecoration: 'none'
-};
+const styles = (theme) => ({
+  buttonLink: {
+    width: 'calc(100% - 6px)',
+    margin: '3px'
+  }
+});
 
 export class DrawerMenu extends Component {
   static propTypes = {
     hideDrawerMenu: PropTypes.func.isRequired,
     isOpen:         PropTypes.bool.isRequired,
     user:           PropTypes.object,
-    theme:          PropTypes.object.isRequired
+    classes:        PropTypes.object
   };
 
   renderSignedIn() {
     return (
       <div className={css.drawerMenuContainer} >
-        <Drawer
-          open={this.props.isOpen}
-          onClose={this.props.hideDrawerMenu}>
-          <MenuItem>
-            <NavLink
-              to='/'
-              onClick={this.props.hideDrawerMenu}
-              style={linkStyle}>
-              Home
-            </NavLink>
-          </MenuItem>
-          <MenuItem>
-            <NavLink
-              to='/songs'
-              onClick={this.props.hideDrawerMenu}
-              style={linkStyle}>
-              Song List
-            </NavLink>
-          </MenuItem>
-          <MenuItem>
-            <NavLink
-              to='/profile'
-              onClick={this.props.hideDrawerMenu}
-              style={linkStyle}>
-              Profile
-            </NavLink>
-          </MenuItem>
-          <MenuItem>
-            <NavLink
-              to='/stats'
-              onClick={this.props.hideDrawerMenu}
-              style={linkStyle}>
-              Statistics
-            </NavLink>
-          </MenuItem>
-          <MenuItem>
-            <NavLink
-              to='/settings'
-              onClick={this.props.hideDrawerMenu}
-              style={linkStyle}>
-              Settings
-            </NavLink>
-          </MenuItem>
-          <MenuItem>
-            <NavLink
-              to='/fields'
-              onClick={this.props.hideDrawerMenu}
-              style={linkStyle}>
-              Field Builder
-            </NavLink>
-          </MenuItem>
+        <Drawer open={this.props.isOpen} onClose={this.props.hideDrawerMenu}>
+          <DrawerMenuLink link='/' label='Home' />
+          <DrawerMenuLink link='/songs' label='Songs' />
+          <DrawerMenuLink link='/profile' label='Profile' />
+          <DrawerMenuLink link='/stats' label='Stats' />
+          <DrawerMenuLink link='/settings' label='Settings' />
+          <DrawerMenuLink link='/fields' label='Fields' />
           <Divider />
           <MenuItem>
             <SignOutButton
@@ -110,69 +61,35 @@ export class DrawerMenu extends Component {
   renderSignedOut() {
     return (
       <div className={css.drawerMenuContainer} >
-        <Drawer
-          open={this.props.isOpen}
-          onClose={this.props.hideDrawerMenu}>
-          <MenuItem>
-            <NavLink
-              to='/'
-              style={linkStyle}
-              onClick={this.props.hideDrawerMenu}>
-              Home
-            </NavLink>
-          </MenuItem>
-          <MenuItem>
-            <NavLink
-              to='/register'
-              onClick={this.props.hideDrawerMenu}
-              style={linkStyle}>
-              Register
-            </NavLink>
-          </MenuItem>
-          <MenuItem>
-            <NavLink
-              to='/reset'
-              onClick={this.props.hideDrawerMenu}
-              style={linkStyle}>
-              Reset Password
-            </NavLink>
-          </MenuItem>
-          <MenuItem>
-            <NavLink
-              to='/contact'
-              onClick={this.props.hideDrawerMenu}
-              style={linkStyle}>
-              Contact Support
-            </NavLink>
-          </MenuItem>
+        <Drawer open={this.props.isOpen} onClose={this.props.hideDrawerMenu}>
+          <DrawerMenuLink link='/' label='Home' />
+          <DrawerMenuLink link='/register' label='Register' />
+          <DrawerMenuLink link='/reset' label='Reset' />
+          <DrawerMenuLink link='/contact' label='Contact' />
           <Divider />
           <OAuthSignInButton
-            style={{ width: '245px', margin: '5px 0px 5px 5px', height: '40px' }}
             label='Sign In With Facebook'
+            iconAlign='left'
+            className={this.props.classes.buttonLink}
             icon={facebookIconComponent}
-            provider='facebook'>
-          </OAuthSignInButton>
+            provider='facebook' />
           <OAuthSignInButton
-            style={{ width: '245px', margin: '0px 0px 5px 5px', height: '40px' }}
             label='Sign In With Google'
             icon={googleIconComponent}
-            provider='google'>
-          </OAuthSignInButton>
-          <NavLink to='/login'>
-            <Button
-              className={`${config.prefix}drawer_sign_in_email`}
-              onClick={this.props.hideDrawerMenu}
-              primary
-              icon={<EmailIcon />}
-              iconAlign='left'
-              label='Sign In With Email'
-              variant='raised'
-              style={{
-                width: 'calc(100% - 6px)',
-                margin: '0px 3px 5px 3px',
-              }}
-            />
-          </NavLink>
+            className={this.props.classes.buttonLink}
+            iconHeight={1.5}
+            iconAlign='left'
+            provider='google' />
+          <Button
+            href='/login'
+            className={this.props.classes.buttonLink}
+            onClick={this.props.hideDrawerMenu}
+            primary
+            icon={<EmailIcon />}
+            iconAlign='left'
+            label='Sign In With Email'
+            variant='raised'
+          />
         </Drawer>
       </div>
     );
@@ -180,7 +97,6 @@ export class DrawerMenu extends Component {
 
   render() {
     const { isSignedIn, theme } = this.props;
-    linkStyle = { ...linkStyle, ...{ color: theme.instrumental.headerLinksColor } };
     if (isSignedIn) {
       return this.renderSignedIn();
     } else {
@@ -189,4 +105,4 @@ export class DrawerMenu extends Component {
   }
 }
 
-export default withTheme()(DrawerMenu);
+export default withStyles(styles)(DrawerMenu);

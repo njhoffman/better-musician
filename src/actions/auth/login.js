@@ -14,9 +14,11 @@ export function emailSignInFormUpdate(endpoint, key, value) {
 export function emailSignInStart(endpoint) {
   return { type: A.EMAIL_SIGN_IN_START, endpoint };
 }
+
 export function emailSignInComplete(endpoint, user) {
-  return { type: A.EMAIL_SIGN_IN_COMPLETE, user, endpoint };
+  return { type: A.EMAIL_SIGN_IN_COMPLETE, payload: { user, endpoint } };
 }
+
 export function emailSignInError(endpoint, errors) {
   return { type: A.EMAIL_SIGN_IN_ERROR, errors, endpoint };
 }
@@ -32,29 +34,26 @@ export function emailSignIn(body, endpointKey) {
 
     dispatch(storeCurrentEndpointKey(currentEndpointKey));
 
-    const callApi = new Promise((resolve, reject) => {
-      dispatch({
+    const signInError = (errors) => {
+      setCurrentEndpointKey(prevEndpointKey);
+      dispatch(storeCurrentEndpointKey(prevEndpointKey));
+      dispatch(emailSignInError(currentEndpointKey, errors));
+    };
+
+    const callApi = () => {
+      return dispatch({
         [CALL_API]: {
           types: [
             A.EMAIL_SIGN_IN_START,
-            (user) => () => resolve(user),
-            (errors) => () => reject(errors)
+            (user) => dispatch(emailSignInComplete(currentEndpointKey, user)),
+            (errors) => signInError
           ],
           method: 'POST',
           payload: JSON.stringify(body),
           endpoint: getEmailSignInUrl(currentEndpointKey).replace(`${window.location.origin}/api`, '')
         }
       });
-    });
-
-    return callApi.then(user => {
-      dispatch(emailSignInComplete(currentEndpointKey, user));
-    }).catch(errors => {
-      // revert endpoint key to what it was before failed request
-      setCurrentEndpointKey(prevEndpointKey);
-      dispatch(storeCurrentEndpointKey(prevEndpointKey));
-      dispatch(emailSignInError(currentEndpointKey, errors));
-      // throw errors;
-    });
+    };
+    return callApi();
   };
 }

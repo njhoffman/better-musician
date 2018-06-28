@@ -64,13 +64,14 @@ export class EmailSignInForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+
     let formData = this.props.loginForm.values;
     // TODO: dev/production check
     this.getFormValue('email-sign-in-email', formData);
     this.getFormValue('email-sign-in-password', formData);
     this.props.dispatch(this.props.emailSignIn(formData, this.getEndpoint()))
-      .then(this.props.next)
-      .catch(() => {});
+      .then(() => this.props.next(this.props.dispatch))
+      .catch((e) => { console.error(e); });
   }
 
   render() {
@@ -85,7 +86,7 @@ export class EmailSignInForm extends React.Component {
           <Column>
             {errors && [].concat(errors).map((error, i) =>
               <Typography
-                variant="body1"
+                variant='body1'
                 key={i} className='error'>
                 {error}
               </Typography>

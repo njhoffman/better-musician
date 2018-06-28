@@ -1,16 +1,14 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 
-import ViewLayout from 'utils/dev/ViewLayout';
+import ViewLayout from 'components/DevTools/Cosmos/ViewLayout';
 import Header from 'components/Header';
 
-const titleStyle = {
-  width: '100%',
-  textAlign: 'center',
-  marginTop: '10px',
-  fontVariant: 'small-caps'
-};
+// const titleStyle = {
+//   width: '100%',
+//   textAlign: 'center',
+//   marginTop: '10px',
+//   fontVariant: 'small-caps'
+// };
 
 export default {
   namespace: 'Header',

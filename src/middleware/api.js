@@ -1,7 +1,9 @@
-import fetch from 'utils/fetch';
+// import fetch from 'utils/fetch';
 import { init as initLog } from 'shared/logger';
 import { padRight } from 'shared/util';
 import _ from 'lodash';
+import { persistData, retrieveData, getTokenFormat } from 'utils/auth/sessionStorage';
+import { SAVED_CREDS_KEY } from 'constants/auth';
 
 const {
   /* error,  */
@@ -29,6 +31,59 @@ const makeFormData = (FormData, data, name = '') => {
     FormData.append(name, data);
   }
 };
+export const addAuthorizationHeader = (accessToken, headers) =>
+  Object.assign({}, headers, { Authorization: `Bearer ${accessToken}` });
+
+const getAuthHeaders = (url) => {
+  // fetch current auth headers from storage
+  const currentHeaders = retrieveData(SAVED_CREDS_KEY) || {};
+  const nextHeaders = {};
+
+  // bust IE cache
+  nextHeaders['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
+
+  // set header for each key in `tokenFormat` config
+  for (var key in getTokenFormat()) {
+    nextHeaders[key] = currentHeaders[key];
+  }
+
+  return addAuthorizationHeader(currentHeaders['access-token'], nextHeaders);
+};
+
+export const parseResponse = (response) => {
+  let json = response.json();
+  if (response.status >= 200 && response.status < 300) {
+    return json;
+  } else {
+    return json.then(err => Promise.reject(err.errors ? err.errors : err));
+  }
+};
+
+const updateAuthCredentials = (resp) => {
+  // check config apiUrl matches the current response url
+  // set header for each key in `tokenFormat` config
+  const newHeaders = {};
+
+  // set flag to ensure that we don't accidentally nuke the headers
+  // if the response tokens aren't sent back from the API
+  let blankHeaders = true;
+
+  // set header key + val for each key in `tokenFormat` config
+  for (var key in getTokenFormat()) {
+    newHeaders[key] = resp.headers.get(key);
+
+    if (newHeaders[key]) {
+      blankHeaders = false;
+    }
+  }
+
+  // persist headers for next request
+  if (!blankHeaders) {
+    persistData(SAVED_CREDS_KEY, newHeaders);
+  }
+
+  return resp;
+};
 
 const apiFetch = (endpoint, options) => {
   endpoint = __API_URL__ + endpoint;
@@ -39,16 +94,7 @@ const apiFetch = (endpoint, options) => {
     makeFormData(formData, options.body);
     options.body = formData;
   }
-  return fetch(endpoint, options)
-    .then(response =>
-      response.json()
-        .then(json => {
-          if (!response.ok) {
-            return Promise.reject(json);
-          }
-          return json.data;
-        })
-    );
+  return fetch(endpoint, options);
 };
 
 export const actionLogger = (store) => next => action => {
@@ -85,8 +131,7 @@ const apiHandler = (store, action, next) => {
   };
 
   const responseSuccess = (response) => {
-    info(`Fetch Success: ${JSON.stringify(response).length} characters returned`);
-    // trace(response);
+    info(`Fetch success: ${JSON.stringify(response).length} characters returned`);
     if (response.errors && response.errors.length > 0) {
       // successful fetch but validation errors returned
       return responseFailure({ name: 'ValidationError', message: response.errors.join('\n') });
@@ -128,14 +173,13 @@ const apiHandler = (store, action, next) => {
   if (_.isUndefined(action)) {
     return;
   } else if (_.isUndefined(action[CALL_API])) {
+    // not an API call, pass it through
     return next(action);
   }
 
   const callApi = action[CALL_API];
-
   let { endpoint, method = 'GET' } = callApi;
   const { types, payload } = callApi;
-
   info(`Call to API: ${types[0]}`, { _action: { ...action[CALL_API], callApi: true } });
 
   if (typeof endpoint === 'function') {
@@ -145,15 +189,17 @@ const apiHandler = (store, action, next) => {
   validateCall({ endpoint, types, method, payload });
 
   const [ requestType, successType, failureType ] = types;
-
   next(actionWith({ type: requestType }));
 
   const options = {
     method,
+    headers: getAuthHeaders(endpoint),
     body: _.isObject(payload) ? JSON.stringify(payload) : payload
   };
 
   return apiFetch(endpoint, options)
+    .then(resp => updateAuthCredentials(resp))
+    .then(resp => parseResponse(resp))
     .then(responseSuccess, responseFailure);
 };
 

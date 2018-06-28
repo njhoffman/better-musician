@@ -13,6 +13,17 @@ const lineLimit = 150;
 const ignoredActions = [
   '@@redux-form/BLUR', '@@redux-form/CHANGE', '@@redux-form/FOCUS'
 ];
+
+const deleteNull = (test, recurse) => {
+  for (var i in test) {
+    if (test[i] == null) {
+      delete test[i];
+    } else if (recurse && typeof test[i] === 'object') {
+      deleteNull(test[i], recurse);
+    }
+  }
+}
+
 const parse = (subsystem, style, messages) => {
   subsystems.indexOf(subsystem) === -1 && subsystems.push(subsystem);
   const ssLength = 6 + _.maxBy(subsystems, (ss) => ss.length).length - subsystem.length;
@@ -31,6 +42,8 @@ const parse = (subsystem, style, messages) => {
 
   const logMessages = [];
   [].concat(toProcess).filter(msg => !_.isEmpty(msg)).forEach((msg, i) => {
+    // if (msg.method === 'POST') debugger;
+    deleteNull(msg, true);
     let rendered = [];
     if (_.isArray(msg) && msg[0].split('%c').length === msg.length) {
       // if has own color code formatting, don't send it through json parser

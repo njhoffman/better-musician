@@ -12,7 +12,6 @@ const RenderAutoComplete = ({
   return (
     <TextField
       label={label}
-      errorText={meta && meta.touched && meta.error}
       {...custom}
     />
   );

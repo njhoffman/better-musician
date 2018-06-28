@@ -1,8 +1,5 @@
-import spacing from 'material-ui/styles/spacing';
 import {
-  blueGrey,
-  grey,
-  yellow
+  grey
 } from 'material-ui/colors';
 
 export default {

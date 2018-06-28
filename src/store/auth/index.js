@@ -1,8 +1,8 @@
 import authentication from "./authenticate";
 // import configure from "./configure";
 // import user from "./user";
-import ui from "./ui";
-import emailSignIn from "./emailSignIn";
+// import ui from "./ui";
+// import emailSignIn from "./emailSignIn";
 import emailSignUp from "./emailSignUp";
 import oAuthSignIn from "./oAuthSignIn";
 import requestPasswordReset from "./requestPasswordReset";
@@ -16,7 +16,7 @@ import {combineReducers} from "redux-immutablejs";
 /* reducers */
 export const authStateReducer = combineReducers({
   // configure,
-  emailSignIn,
+  // emailSignIn,
   emailSignUp,
   signOut,
   authentication,
@@ -26,7 +26,7 @@ export const authStateReducer = combineReducers({
   updatePasswordModal,
   destroyAccount,
   server,
-  ui,
+  // ui,
   // user
 });
 

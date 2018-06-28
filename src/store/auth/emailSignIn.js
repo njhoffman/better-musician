@@ -17,7 +17,7 @@ export default createReducer(Immutable.fromJS({}), {
 
   [A.EMAIL_SIGN_IN_START]: (state, {endpoint}) => state.setIn([endpoint, "loading"], true),
 
-  [A.EMAIL_SIGN_IN_COMPLETE]: (state, {endpoint}) => state.merge({[endpoint]: initialState}),
+  [A.EMAIL_SIGN_IN_COMPLETE]: (state, { payload: { endpoint } }) => state.merge({[endpoint]: initialState}),
 
   [A.EMAIL_SIGN_IN_ERROR]: (state, {endpoint, errors}) => state.mergeDeep({
     [endpoint]: {

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, withTheme } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 import MaterialButton from '@material-ui/core/Button';
 import MaterialIconButton from '@material-ui/core/IconButton';
 // import ActionFavorite from 'material-ui-icons/Favorite';
@@ -12,6 +13,9 @@ import Spinners from 'react-spinners';
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit
+  },
+  buttonLabel: {
+    justifyContent: 'space-around'
   },
   loaderIcon: {
     // color: theme.palette.secondary.main,
@@ -27,17 +31,20 @@ const styles = theme => ({
   },
   rightWrapper: {
     marginRight: theme.spacing.unit,
-    fontSize: 'inherit',
+    fontSize: 'inherit'
   },
   leftWrapper: {
     marginLeft: theme.spacing.unit,
-    fontSize: 'inherit',
+    fontSize: 'inherit'
   },
   centerIcon: {
     fontSize: 'inherit',
     transform: 'none'
   },
-})
+  linkText: {
+    textDecoration: 'none'
+  }
+});
 
 export class Button extends React.Component {
   static propTypes = {
@@ -93,6 +100,7 @@ export class Button extends React.Component {
     const color = this.getColor();
     const { icon: Icon, classes, spinnerType }  = this.props;
     const loading = this.props.loading || this.props.override.loading;
+    const height = this.props.iconHeight || 1.0;
     if (loading) {
       const loaderName = this.ucFirst(`${spinnerType}Loader`);
       const LoaderIcon = Spinners[loaderName] ? Spinners[loaderName] : Spinners.RingLoader;
@@ -100,20 +108,22 @@ export class Button extends React.Component {
         <LoaderIcon
           color={this.props.theme.palette.secondary.light}
           loading={loading}
-          size={1.0}
-          sizeUnit="em" />
+          size={height}
+          sizeUnit='em' />
       );
     } else if (typeof Icon === 'object') {
       return {
         ...Icon,
         props: {
           ...Icon.props,
+          style: { height: `${height}em` },
           className: `${classes.icon}`
         }
       };
     } else if (Icon) {
       return (
         <Icon
+          style={{ height: `${height}em` }}
           className={`${classes.icon}`}
         />
       );
@@ -122,21 +132,14 @@ export class Button extends React.Component {
     }
   }
 
-  componentWillReceiveProps(props, state) {
-    // TODO: update props on props.override or find better way to propogate changes
-    return true;
-  }
-
-  render() {
-
+  renderLabel() {
     const props = {
+      className: this.props.className,
       disabled:  this.props.disabled || this.props.loading,
-      href:      this.props.href,
       variant:   this.props.variant,
       color:     this.props.primary ? 'primary' : this.props.secondary ? 'secondary' : this.props.color,
       style:     this.props.style
     };
-
     const iconClass = `${this.props.label ? this.props.iconAlign : 'center'}Icon`;
 
     if (this.props.icon && !this.props.label) {
@@ -157,9 +160,11 @@ export class Button extends React.Component {
               {this.props.label}
             </span>
           )}
-          <span className={this.props.classes.iconWrapper}>
-            {this.renderIcon()}
-          </span>
+          {this.props.icon && (
+            <span className={this.props.classes.iconWrapper}>
+              {this.renderIcon()}
+            </span>
+          )}
           {this.props.iconAlign === 'left' && (
             <span className={this.props.classes.leftWrapper}>
               {this.props.label}
@@ -169,6 +174,20 @@ export class Button extends React.Component {
       );
     }
   }
+
+  render() {
+    if (this.props.href) {
+      return (
+        <Link
+          to={this.props.href}
+          className={`${this.props.classes.linkText}`}>
+          {this.renderLabel()}
+        </Link>
+      );
+    } else {
+      return this.renderLabel();
+    }
+  }
 }
 
-export default withTheme()(withStyles(styles)(Button))
+export default withTheme()(withStyles(styles)(Button));

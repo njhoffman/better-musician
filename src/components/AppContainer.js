@@ -33,7 +33,7 @@ class AppContainer extends Component {
               <Header />
               <div className={css.contentWrapper} style={{ background: theme.backgroundColor }}>
                 <Row horizontalAlignment='center'>
-                  <Routes store={this.props.store} />
+                  <Routes store={this.props.store} history={this.props.history} />
                 </Row>
               </div>
               <Footer />

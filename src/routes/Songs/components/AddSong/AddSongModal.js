@@ -10,10 +10,11 @@ import {
   DialogActions,
   Tabs,
   Tab,
-  Typography
+  Typography,
+  withMobileDialog
 } from '@material-ui/core';
 import { Row, Column } from 'react-foundation';
-import withTheme from 'material-ui/styles/withTheme';
+import withTheme from '@material-ui/core/styles/withTheme';
 
 import { uiHideModal, MODAL_ADD_SONG } from 'store/ui';
 import {
@@ -30,7 +31,7 @@ let lastActiveField = 'artist';
 
 function TabContainer(props) {
   return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
+    <Typography component='div' style={{ padding: 8 * 3 }}>
       {props.children}
     </Typography>
   );
@@ -52,7 +53,7 @@ export class AddSongModal extends Component {
   };
 
   state = {
-    value: 'main'
+    value: 0
   };
 
   handleChange(event, value) {
@@ -76,7 +77,7 @@ export class AddSongModal extends Component {
     const textStyle      = modalView.isView() ? { cursor: 'default' } : {};
 
     const styleObj = {
-      dialog       : { maxWidth: '650px', width: 'initial' },
+      dialog       : { maxWidth: '650px', width: 'initial', top: '25%' },
       dialogBody   : { padding: '5px', overflowY: 'auto' },
       tabContainer : { paddingTop: '20px' }
     };
@@ -96,45 +97,48 @@ export class AddSongModal extends Component {
       <Dialog open={this.props.isOpen} className={css.addSongModal}>
         <DialogContent>
           <form>
-            <AppBar position="static" >
-              <Tabs value={value} onChange={() => this.handleChange}>
-                <Tab value='main' label='Main Fields' />
+            <AppBar position='static' >
+              <Tabs value={value} onChange={(event, value) => this.handleChange(event, value)}>
+                <Tab label='Main Fields' />
+                {this.props.savedTabs.map((tab, tabIdx) =>
+                  <Tab label={tab.name} />
+                )}
               </Tabs>
             </AppBar>
-            {this.props.savedTabs.map((tab, tabIdx) =>
-              <TabContainer
-                key={tabIdx}
-                label={tab.name}>
-                <Row>
-                  <Column>
-                    {modal.props.errors && [].concat(modal.props.errors).map((error, i) =>
-                      <p key={i} className='error'>{error}</p>
-                    )}
-                  </Column>
-                </Row>
-                {/* {chunk(tab.fields, 2).map((fields, fieldIdx) => */}
-                {/*   <Row */}
-                {/*     style={{ textAlign: 'center' }} */}
-                {/*     key={fieldIdx}> */}
-                {/*     {fields.map((field) => */}
-                {/*       <CustomField */}
-                {/*         key={field.idx} */}
-                {/*         style={textStyle} */}
-                {/*         labelStyle={labelStyle} */}
-                {/*         disabled={modalView.isView()} */}
-                {/*         underlineShow={!modalView.isView()} */}
-                {/*         inputStyle={textInputStyle} */}
-                {/*         field={field} */}
-                {/*         initialValues={this.props.initialValues} */}
-                {/*         centerOnSmall */}
-                {/*         small={fields.length === 1 ? 12 : 6} */}
-                {/*       /> */}
-                {/*     )} */}
-                {/*   </Row> */}
-                {/* )} */}
-              </TabContainer>
+            {value === 0 && <TabContainer><AddSongMainTab {...mainTabProps} /></TabContainer>}
+            {this.props.savedTabs.map((tab, tabIdx) => (
+              value === (tabIdx + 1) && (
+                <TabContainer key={tabIdx}>
+                  <Row>
+                    <Column>
+                      {modal.props.errors && [].concat(modal.props.errors).map((error, i) =>
+                        <p key={i} className='error'>{error}</p>
+                      )}
+                    </Column>
+                  </Row>
+                  {chunk(tab.fields, 2).map((fields, fieldIdx) =>
+                    <Row
+                      style={{ textAlign: 'center' }}
+                      key={fieldIdx}>
+                      {fields.map((field) =>
+                        <CustomField
+                          key={field.idx}
+                          style={textStyle}
+                          labelStyle={labelStyle}
+                          disabled={modalView.isView()}
+                          underlineShow={!modalView.isView()}
+                          inputStyle={textInputStyle}
+                          field={field}
+                          initialValues={this.props.initialValues}
+                          centerOnSmall
+                          small={fields.length === 1 ? 12 : 6}
+                        />
+                      )}
+                    </Row>
+                  )}
+                </TabContainer>
+              ))
             )}
-            {value === 'main' && <AddSongMainTab {...mainTabProps} />}
           </form>
         </DialogContent>
         <DialogActions>
@@ -189,4 +193,4 @@ const addSongForm = withTheme()(reduxForm({
   // validate
 })(AddSongModal));
 
-export default connect(mapStateToProps, mapDispatchToProps)(addSongForm);
+export default connect(mapStateToProps, mapDispatchToProps)(withMobileDialog()(addSongForm));

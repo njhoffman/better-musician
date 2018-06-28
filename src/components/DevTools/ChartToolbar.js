@@ -227,7 +227,7 @@ class ChartToolbar extends Component {
       ...this.state[stateKey],
       deltaPosition: {
         x: x + ui.deltaX,
-        y: y + ui.deltaY,
+        y: y + ui.deltaY
       }
     };
     this.setState(stateObj);

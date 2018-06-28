@@ -1,58 +1,45 @@
 import React, { Component }  from 'react';
 import { connect } from 'react-redux';
-import { Row, Column, Breakpoints } from 'react-foundation';
-import { withTheme } from '@material-ui/core/styles';
+// import { withStyles } from '@material-ui/core/styles';
+import {
+  withStyles,
+  AppBar,
+  Toolbar
+} from '@material-ui/core';
+// import AppBar from '@material-ui/core/AppBar';
+// import Toolbar from '@material-ui/core/Toolbar';
 
-import config from 'data/config';
 import HeaderLeft from './HeaderLeftContainer';
 import HeaderMiddle from './HeaderMiddleContainer';
 import HeaderRight from './HeaderRightContainer';
-import css from './Header.scss';
+
+const styles = {
+  Toolbar: {
+    alignItems: 'stretch'
+  }
+};
 
 export class Header extends Component {
   render() {
-    const { ...props } = this.props;
-    const headerStyle = {
-      background: props.theme.instrumental.headerBackground,
-      color: props.theme.instrumental.headerLinksColor
-    };
+    const { classes, ...props } = this.props;
     if (props.isSignedIn) {
       return (
-        <div
-          style={headerStyle}
-          className={`${css.header} ${config.prefix}header`}>
-          <Row className={css.wrapper}>
-            <Column small={6} medium={3} className={css.headerLeft}>
-              <HeaderLeft {...props} />
-            </Column>
-            <Column medium={6} className={css.headerMiddle} showFor={Breakpoints.MEDIUM}>
-              <HeaderMiddle {...props} />
-            </Column>
-            <Column small={6} medium={3} className={css.headerRight}>
-              <HeaderRight {...props} />
-            </Column>
-          </Row>
-          <Row className={css.wrapper} showOnlyFor={Breakpoints.SMALL}>
-            <Column className={css.headerMiddle}>
-              <HeaderMiddle {...props} />
-            </Column>
-          </Row>
-        </div>
+        <AppBar position='static'>
+          <Toolbar className={classes.Toolbar}>
+            <HeaderLeft {...props} />
+            <HeaderMiddle  {...props} />
+            <HeaderRight {...props} />
+          </Toolbar>
+        </AppBar>
       );
     } else {
       return (
-        <div
-          style={headerStyle}
-          className={`${css.header} ${config.prefix}header`}>
-          <Row className={css.wrapper}>
-            <Column small={6} className={css.headerLeft}>
-              <HeaderLeft {...props} />
-            </Column>
-            <Column small={6} className={css.headerRight}>
-              <HeaderRight {...props} />
-            </Column>
-          </Row>
-        </div>
+        <AppBar position='static'>
+          <Toolbar>
+            <HeaderLeft {...props} />
+            <HeaderRight {...props} />
+          </Toolbar>
+        </AppBar>
       );
     }
   }
@@ -62,4 +49,4 @@ const mapStateToProps = (state) => ({
   isSignedIn: state.user.isSignedIn
 });
 
-export default connect(mapStateToProps)(withTheme()(Header));
+export default connect(mapStateToProps)(withStyles(styles)(Header));

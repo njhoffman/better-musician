@@ -4,26 +4,24 @@ import {
   Typography
 } from '@material-ui/core';
 
-import ComponentLayout from 'utils/dev/ComponentLayout';
+import ComponentLayout from 'components/DevTools/Cosmos/ComponentLayout';
 import buttonGroups from './ButtonLoader.props.js';
 import Button from 'components/Button';
-
 
 const titleWrapperStyle = {
   width: '100%',
   textAlign: 'center'
 };
 const titleStyle = {
+  width: '100%',
+  textAlign: 'center',
   opacity: 0.8,
-  marginTop: '10px',
-  display: 'inline-block',
-  marginLeft: '5px'
+  marginTop: '10px'
 };
-
 
 const propOverride = { loading: false };
 let modifyCounter = 0;
-const handleLoadStatus = function(count) {
+const handleLoadStatus = function (count) {
   propOverride.loading = !propOverride.loading;
   this.setState({ modifyCounter:  count });
 };
@@ -33,7 +31,7 @@ const drawChild = (buttonGroup) => (
     <Typography variant='body2' style={titleStyle}>
       {buttonGroup.title}
     </Typography>
-    <Grid container justify="center" spacing={16}>
+    <Grid container justify='center' spacing={16}>
       {buttonGroup.props.map((propGroup, i) => (
         <Grid item>
           <Button {...propGroup} override={propOverride} />
@@ -53,6 +51,7 @@ const ButtonLoader = {
   state: {
     modifyCounter
   },
+  url: '/',
   children: buttonGroups.map(drawChild)
 };
 

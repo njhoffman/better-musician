@@ -31,7 +31,7 @@ const processTheme = (key, theme, variation) => {
     processed[key].instrumental,
     _.mapValues(defaults, mVal => _.get(processed[key].palette, mVal))
   );
-}
+};
 
 Object.keys(themes).forEach((key) => {
   const theme = themes[key];

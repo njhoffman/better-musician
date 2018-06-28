@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import ComponentLayout from 'utils/dev/ComponentLayout';
+import ComponentLayout from 'components/DevTools/Cosmos/ComponentLayout';
 import textGroups from './TextField.props.js';
 import TextField from '@material-ui/core/TextField';
 
@@ -22,7 +22,7 @@ export default {
       <Typography variant='body2' style={titleStyle}>
         {textGroup.title}
       </Typography>
-      <Grid container spacing={16} justify="center">
+      <Grid container spacing={16} justify='center'>
         {textGroup.props.map((propGroup, i) => (
           <Grid item key={i}>
             <TextField {...propGroup} />

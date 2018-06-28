@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -10,7 +10,7 @@ import { chunk } from 'lodash';
 
 import themes from 'styles/themes';
 
-const styles ={
+const styles = {
   divider: {
     width: '30%',
     margin: '5px auto 10px auto'
@@ -43,17 +43,17 @@ export class ViewLayout extends React.Component {
 
   componentDidMount() {
     if (this.props.modifyTimer) {
-      this.propModifyTimer = setInterval((() => {
+      this.propModifyTimer = setInterval(() => {
         if (this.state.remainingTime <= 0) {
           this.setState({
             remainingTime: this.state.modifyInterval,
-            modifyCount: ++this.state.modifyCount,
+            modifyCount: ++this.state.modifyCount
           });
           this.props.modifyTimer.call(this, this.state.modifyCount);
         } else {
           this.setState({ remainingTime: this.state.remainingTime - 1000 });
         }
-      }).bind(this), 1000);
+      }, 1000);
     }
   }
 
@@ -97,7 +97,7 @@ export class ViewLayout extends React.Component {
     return (
       <div>
         {Object.keys(themes).map((key, i) => (
-          <Grid container justify="space-around" key={i}>
+          <Grid container justify='space-around' key={i}>
             <Grid item xs={12} md={10}>
               {this.renderThemeGroup(themes[key])}
             </Grid>

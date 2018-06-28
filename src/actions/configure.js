@@ -1,19 +1,11 @@
 import { push } from 'react-router-redux';
 import extend from 'extend';
-import * as C from 'utils/auth/constants';
 import {
   authenticateStart,
   authenticateComplete,
   authenticateError,
   setEndpointKeys
 } from './auth';
-
-import {
-  showFirstTimeLoginSuccessModal,
-  showFirstTimeLoginErrorModal,
-  showPasswordResetSuccessModal,
-  showPasswordResetErrorModal
-} from './ui';
 
 import { ssAuthTokenUpdate } from './server';
 import { applyConfig } from 'utils/auth/clientSettings';

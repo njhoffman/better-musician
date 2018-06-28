@@ -15,14 +15,11 @@ export const SET_PAGINATION_CURRENT   = 'SET_PAGINATION_CURRENT';
 // Action Creators
 // ------------------------------------
 
-export const setCurrentSong = (selectedRow) => (dispatch, getState) => {
+export const setCurrentSong = (song) => (dispatch, getState) => {
   if (getState().ui.modal.type) {
     return;
   }
-  const songsCollection = songsSelector(getState());
-  const currentSongId = selectedRow.length > 0 ? songsCollection[selectedRow[0] - 1].id : null;
-
-  return dispatch({ type: SET_CURRENT_SONG, payload: currentSongId });
+  return dispatch({ type: SET_CURRENT_SONG, payload: song.id });
 };
 
 export const setSort = (sortField) => (dispatch, getState) => {
