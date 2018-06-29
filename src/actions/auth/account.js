@@ -1,4 +1,5 @@
-import { getDestroyAccountUrl
+import {
+  getDestroyAccountUrl,
   setCurrentEndpointKey,
   getDefaultEndpointKey,
   getPasswordUpdateUrl,
