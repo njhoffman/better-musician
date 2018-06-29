@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Drawer, Divider, MenuItem } from 'material-ui';
-import { NavLink } from 'react-router-dom';
 import withStyles from '@material-ui/core/styles/withStyles';
-import config from 'data/config';
 
 import OAuthSignInButton from 'components/OAuthSignInButton';
 import SignOutButton from 'components/SignOutButton';
@@ -28,10 +26,11 @@ const styles = (theme) => ({
 
 export class DrawerMenu extends Component {
   static propTypes = {
-    hideDrawerMenu: PropTypes.func.isRequired,
-    isOpen:         PropTypes.bool.isRequired,
-    user:           PropTypes.object,
-    classes:        PropTypes.object
+    hideDrawerMenu : PropTypes.func.isRequired,
+    isOpen         : PropTypes.bool.isRequired,
+    user           : PropTypes.object,
+    classes        : PropTypes.object,
+    isSignedIn     : PropTypes.bool.isRequired
   };
 
   renderSignedIn() {
@@ -96,7 +95,7 @@ export class DrawerMenu extends Component {
   }
 
   render() {
-    const { isSignedIn, theme } = this.props;
+    const { isSignedIn } = this.props;
     if (isSignedIn) {
       return this.renderSignedIn();
     } else {

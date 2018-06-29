@@ -1,4 +1,4 @@
-import * as C from './constants';
+import * as A from 'constants/auth';
 import extend from 'extend';
 
 // base endpoint that other endpoints extend from
@@ -31,7 +31,7 @@ export default function parseEndpointConfig(endpoint, defaultEndpointKey = null)
   if (endpoint.constructor !== Array) {
     // single config will always be called 'default' unless set
     // by previous session
-    defaultEndpointKey = C.INITIAL_CONFIG_KEY;
+    defaultEndpointKey = A.INITIAL_CONFIG_KEY;
 
     // config should look like {default: {...}}
     var defaultConfig = {};

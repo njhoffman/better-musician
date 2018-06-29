@@ -4,10 +4,10 @@ import {
   authenticateStart,
   authenticateComplete,
   authenticateError,
-  setEndpointKeys
+  setEndpointKeys,
+  ssAuthTokenUpdate
 } from './auth';
 
-import { ssAuthTokenUpdate } from './server';
 import { applyConfig } from 'utils/auth/clientSettings';
 import { destroySession } from 'utils/auth/sessionStorage';
 import verifyAuth from 'utils/auth/verifyAuth';

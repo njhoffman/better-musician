@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { uiHideSnackbar } from 'store/ui';
+import { uiHideSnackbar } from 'actions/ui';
 import Snackbar from './Snackbar';
 
 const mapDispatchToProps = { uiHideSnackbar };

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { uiToggleDrawerMenu } from 'store/ui';
+import { uiToggleDrawerMenu } from 'actions/ui';
 import HeaderLeft from './HeaderLeft';
 
 const mapActionCreators = {

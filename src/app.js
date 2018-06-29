@@ -7,10 +7,11 @@ import createHistory from 'history/createBrowserHistory';
 import ErrorBoundary from 'components/ErrorBoundaries/Main';
 import initDevTools from 'components/DevTools/DevTools';
 
-import { configureStart, configureComplete } from './actions/auth';
+import { configureStart, configureComplete } from 'actions/auth';
+import { configure as authConfigure } from 'actions/auth/configure';
+
 import createStore from './store/createStore';
 
-import { configure as authConfigure } from './actions/configure';
 import { loadConfig } from './store/config';
 
 import { init as initLog } from 'shared/logger';

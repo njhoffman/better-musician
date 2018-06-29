@@ -10,7 +10,7 @@ import ContentSend from 'material-ui-icons/Send';
 
 import Button from 'components/Button';
 import FormField from 'components/Field';
-import { emailSignUp } from 'actions/emailSignUp';
+import { emailSignUp } from 'actions/auth/register';
 import css from './EmailSignUpForm.scss';
 
 const styles = theme => ({

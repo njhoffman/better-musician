@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import cookie from 'cookie';
 import getRedirectInfo from './parseUrl';
-import * as C from './constants';
+import * as A from 'constants/auth';
 import { addAuthorizationHeader } from '../fetch';
 import parseEndpointConfig from './parseEndpointConfig';
 import url from 'url';
@@ -52,7 +52,7 @@ export const fetchToken = ({ rawEndpoints, cookies, currentLocation }) => {
         firstTimeLogin = JSON.parse(authRedirectHeaders.account_confirmation_success || 'false');
       } else if (rawCookies && parsedCookies) {
         headers = parsedCookies;
-        currentEndpointKey = JSON.parse(rawCookies[C.SAVED_CONFIG_KEY] || 'null');
+        currentEndpointKey = JSON.parse(rawCookies[A.SAVED_CONFIG_KEY] || 'null');
         mustResetPassword = JSON.parse(parsedCookies.mustResetPassword || 'false');
         firstTimeLogin = JSON.parse(parsedCookies.firstTimeLogin || 'false');
       }

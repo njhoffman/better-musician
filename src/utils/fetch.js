@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import originalFetch from 'isomorphic-fetch';
-import * as C from './auth/constants';
+import * as C from 'constants/auth';
 import extend from 'extend';
 import {
   getApiUrl,

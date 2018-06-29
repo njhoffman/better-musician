@@ -9,7 +9,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 import Button from 'components/Button';
 import FormField from 'components/Field';
-import { emailSignIn } from 'actions/auth/login';
+import { emailSignIn } from 'actions/auth/signin';
 
 import config from 'data/config';
 

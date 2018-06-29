@@ -1,52 +1,4 @@
-// ------------------------------------
-// Constants
-// ------------------------------------
-export const UI_SHOW_SNACKBAR      = 'UI_SHOW_SNACKBAR';
-export const UI_HIDE_SNACKBAR      = 'UI_HIDE_SNACKBAR';
-export const UI_TOGGLE_DRAWER_MENU = 'UI_TOGGLE_DRAWER_MENU';
-export const UI_SHOW_DRAWER_MENU   = 'UI_SHOW_DRAWER_MENU';
-export const UI_HIDE_DRAWER_MENU   = 'UI_HIDE_DRAWER_MENU';
-export const UI_SHOW_MODAL         = 'UI_SHOW_MODAL';
-export const UI_HIDE_MODAL         = 'UI_HIDE_MODAL';
-export const UI_UPDATE_MODAL       = 'UI_UPDATE_MODAL';
-
-export const MODAL_ADD_SONG     = 'MODAL_ADD_SONG';
-export const MODAL_FILTER_SONGS = 'MODAL_FILTER_SONGS';
-
-export const INIT_VIEW = 'INIT_VIEW';
-
-// ------------------------------------
-// Action Creators
-// ------------------------------------
-
-export const uiHideDrawerMenu = () => {
-  return { type: UI_HIDE_DRAWER_MENU };
-};
-
-export const uiToggleDrawerMenu = () => {
-  return { type: UI_TOGGLE_DRAWER_MENU };
-};
-
-export const uiShowSnackbar = () => {
-  return { type: UI_SHOW_SNACKBAR };
-};
-
-export const uiHideSnackbar = () => {
-  return { type: UI_HIDE_SNACKBAR };
-};
-
-// TODO: get this integrated with redux auth's modals
-export const uiShowModal = (type, viewType) => {
-  return { type: UI_SHOW_MODAL, meta: { type, props: { action: viewType } } };
-};
-
-export const uiHideModal = () => {
-  return { type: UI_HIDE_MODAL };
-};
-
-// ------------------------------------
-// Action Handlers
-// ------------------------------------
+import * as A from 'constants/ui';
 
 const toggleDrawerMenu = (state) =>
   ({ ...state, drawer: { ...state.drawer, isOpen: !state.isOpen } });
@@ -81,20 +33,16 @@ const initView = (state, { payload }) =>
   ({ ...state, currentView: payload.currentView });
 
 const ACTION_HANDLERS = {
-  [UI_TOGGLE_DRAWER_MENU]: toggleDrawerMenu,
-  [UI_SHOW_DRAWER_MENU]:   showDrawerMenu,
-  [UI_HIDE_DRAWER_MENU]:   hideDrawerMenu,
-  [UI_SHOW_SNACKBAR]:      showSnackbar,
-  [UI_HIDE_SNACKBAR]:      hideSnackbar,
-  [UI_SHOW_MODAL]:         showModal,
-  [UI_HIDE_MODAL]:         hideModal,
-  [UI_UPDATE_MODAL]:       updateModal,
-  [INIT_VIEW]: initView
+  [A.UI_TOGGLE_DRAWER_MENU]: toggleDrawerMenu,
+  [A.UI_SHOW_DRAWER_MENU]:   showDrawerMenu,
+  [A.UI_HIDE_DRAWER_MENU]:   hideDrawerMenu,
+  [A.UI_SHOW_SNACKBAR]:      showSnackbar,
+  [A.UI_HIDE_SNACKBAR]:      hideSnackbar,
+  [A.UI_SHOW_MODAL]:         showModal,
+  [A.UI_HIDE_MODAL]:         hideModal,
+  [A.UI_UPDATE_MODAL]:       updateModal,
+  [A.INIT_VIEW]: initView
 };
-
-// ------------------------------------
-// Reducer
-// ------------------------------------
 
 export const initialState = {
   currentView: null,

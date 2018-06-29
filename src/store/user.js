@@ -1,21 +1,6 @@
 import { getCurrentEndpointKey } from 'utils/auth/sessionStorage.js';
 
-import {
-  AUTHENTICATE_COMPLETE,
-  AUTHENTICATE_FAILURE,
-  AUTHENTICATE_ERROR,
-  EMAIL_SIGN_IN_COMPLETE,
-  EMAIL_SIGN_UP_COMPLETE,
-  OAUTH_SIGN_IN_COMPLETE,
-  SIGN_OUT_COMPLETE,
-  SIGN_OUT_ERROR,
-  DESTROY_ACCOUNT_COMPLETE,
-  SS_AUTH_TOKEN_UPDATE,
-  SS_TOKEN_VALIDATION_COMPLETE,
-  SS_TOKEN_VALIDATION_ERROR,
-  STORE_CURRENT_ENDPOINT_KEY,
-  SET_ENDPOINT_KEYS
-} from 'constants/auth';
+import * as A from 'constants/auth';
 
 const initialState = {
   attributes: null,
@@ -26,7 +11,7 @@ const initialState = {
 };
 
 const ACTION_HANDLERS = {
-  [AUTHENTICATE_COMPLETE]: (state, { payload }) => ({
+  [A.AUTHENTICATE_COMPLETE]: (state, { payload }) => ({
     ...state,
     ...{
       isSignedIn: true,
@@ -36,12 +21,12 @@ const ACTION_HANDLERS = {
     }
   }),
 
-  [AUTHENTICATE_ERROR]: (state, { payload }) => ({
+  [A.AUTHENTICATE_ERROR]: (state, { payload }) => ({
     ...state,
     endpoints: payload.endpoints
   }),
 
-  [SS_TOKEN_VALIDATION_COMPLETE]: (state, { user, mustResetPassword, firstTimeLogin }) => ({
+  [A.SS_TOKEN_VALIDATION_COMPLETE]: (state, { user, mustResetPassword, firstTimeLogin }) => ({
     ...state,
     ...{
       attributes: user,
@@ -51,13 +36,13 @@ const ACTION_HANDLERS = {
     }
   }),
 
-  [STORE_CURRENT_ENDPOINT_KEY]: (state, { currentEndpointKey }) =>
+  [A.STORE_CURRENT_ENDPOINT_KEY]: (state, { currentEndpointKey }) =>
     ({ ...state, ...{ currentEndpointKey } }),
 
-  [SET_ENDPOINT_KEYS]: (state, { currentEndpointKey }) =>
+  [A.SET_ENDPOINT_KEYS]: (state, { currentEndpointKey }) =>
     ({ ...state, ...{ endpointKey: currentEndpointKey } }),
 
-  [EMAIL_SIGN_IN_COMPLETE]: (state, { payload }) =>
+  [A.EMAIL_SIGN_IN_COMPLETE]: (state, { payload }) =>
     ({ ...state,
       ...{
         attributes: payload.user,
@@ -66,7 +51,7 @@ const ACTION_HANDLERS = {
       } }),
 
   // if registration does not require confirmation, user will be signed in at this point.
-  [EMAIL_SIGN_UP_COMPLETE]: (state, { endpoint, user }) => {
+  [A.EMAIL_SIGN_UP_COMPLETE]: (state, { endpoint, user }) => {
     return (user.uid) ? ({ ...state,
       ...{
         attributes: user,
@@ -75,7 +60,7 @@ const ACTION_HANDLERS = {
       } }) : state;
   },
 
-  [OAUTH_SIGN_IN_COMPLETE]: (state, { payload }) =>
+  [A.OAUTH_SIGN_IN_COMPLETE]: (state, { payload }) =>
     ({ ...state,
       ...{
         attributes: payload.user,
@@ -83,7 +68,7 @@ const ACTION_HANDLERS = {
         endpointKey: payload.endpoint
       } }),
 
-  [SS_AUTH_TOKEN_UPDATE]: (state, { user, mustResetPassword, firstTimeLogin }) =>
+  [A.SS_AUTH_TOKEN_UPDATE]: (state, { user, mustResetPassword, firstTimeLogin }) =>
     ({ ...state,
       ...{
         mustResetPassword,
@@ -92,11 +77,11 @@ const ACTION_HANDLERS = {
         attributes: user
       } }),
 
-  [AUTHENTICATE_FAILURE]:     state => ({ ...state, ...initialState }),
-  [SS_TOKEN_VALIDATION_ERROR]:  state => ({ ...state, ...initialState }),
-  [SIGN_OUT_COMPLETE]:        state => ({ ...state, ...initialState }),
-  [SIGN_OUT_ERROR]:           state => ({ ...state, ...initialState }),
-  [DESTROY_ACCOUNT_COMPLETE]: state => ({ ...state, ...initialState })
+  [A.AUTHENTICATE_FAILURE]:     state => ({ ...state, ...initialState }),
+  [A.SS_TOKEN_VALIDATION_ERROR]:  state => ({ ...state, ...initialState }),
+  [A.SIGN_OUT_COMPLETE]:        state => ({ ...state, ...initialState }),
+  [A.SIGN_OUT_ERROR]:           state => ({ ...state, ...initialState }),
+  [A.DESTROY_ACCOUNT_COMPLETE]: state => ({ ...state, ...initialState })
 };
 
 export default function userReducer(state = initialState, action) {

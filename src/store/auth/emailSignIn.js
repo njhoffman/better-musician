@@ -1,7 +1,6 @@
 import Immutable from "immutable";
 import { createReducer } from "redux-immutablejs";
-import * as A from "constants/auth";
-import { SET_ENDPOINT_KEYS } from "actions/configure";
+import * as A from 'constants/auth';
 
 const initialState = {
   loading: false,
@@ -10,7 +9,7 @@ const initialState = {
 };
 
 export default createReducer(Immutable.fromJS({}), {
-  [SET_ENDPOINT_KEYS]: (state, {endpoints}) => state.merge(endpoints.reduce((coll, k) => {
+  [A.SET_ENDPOINT_KEYS]: (state, {endpoints}) => state.merge(endpoints.reduce((coll, k) => {
     coll[k] = Immutable.fromJS(initialState);
     return coll;
   }, {})),

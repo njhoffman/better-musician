@@ -1,4 +1,4 @@
-import * as A from "actions/auth";
+import * as A from "constants/auth";
 
 const initialState = {
   loading: false,

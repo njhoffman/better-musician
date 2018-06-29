@@ -1,6 +1,6 @@
-import * as C from './constants';
+import * as A from 'constants/auth';
 import extend from 'extend';
-import fetch from '../fetch';
+import fetch from 'utils/fetch';
 import parseEndpointConfig from './parseEndpointConfig';
 
 import { setEndpointKeys } from 'actions/auth';
@@ -78,12 +78,12 @@ export const applyConfig = ({ dispatch, endpoints = {}, settings = {}, reset = f
   dispatch(setEndpointKeys(Object.keys(currentEndpoint), currentEndpointKey, defaultEndpointKey));
   setCurrentEndpointKey(currentEndpointKey);
 
-  let savedCreds = retrieveData(C.SAVED_CREDS_KEY);
+  let savedCreds = retrieveData(A.SAVED_CREDS_KEY);
 
   if (getCurrentSettings().initialCredentials) {
     // skip initial headers check (i.e. check was already done server-side)
     let { user, headers } = getCurrentSettings().initialCredentials;
-    persistData(C.SAVED_CREDS_KEY, headers);
+    persistData(A.SAVED_CREDS_KEY, headers);
     return Promise.resolve(user);
   } else if (savedCreds) {
     // verify session credentials with API
@@ -92,7 +92,7 @@ export const applyConfig = ({ dispatch, endpoints = {}, settings = {}, reset = f
         if (response.status >= 200 && response.status < 300) {
           return response.json().then(({ data }) => (data));
         }
-        removeData(C.SAVED_CREDS_KEY);
+        removeData(A.SAVED_CREDS_KEY);
         return Promise.reject({ reason: 'No credentials.' });
       });
   } else {

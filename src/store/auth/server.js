@@ -1,6 +1,6 @@
 import Immutable from "immutable";
 import { createReducer } from "redux-immutablejs";
-import * as A from "actions/server";
+import * as A from 'constants/auth';
 
 const initialState = Immutable.fromJS({
   user: null,

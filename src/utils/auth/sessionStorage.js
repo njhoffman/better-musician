@@ -1,5 +1,5 @@
 import Cookies from 'browser-cookies';
-import * as C from './constants';
+import * as A from 'constants/auth';
 
 import { init as initLog } from 'shared/logger';
 const { debug } = initLog('auth-session');
@@ -26,37 +26,38 @@ export const getSessionEndpointKey = (k) => {
   return key;
 };
 
-export const getCurrentSettings = () => window.authState.currentSettings;
-export const setCurrentSettings = (s) => (window.authState.currentSettings = s);
-
-export const getCurrentEndpoint = () => window.authState.currentEndpoint;
-export const setCurrentEndpoint = (e) => (window.authState.currentEndpoint = e);
-
-export const getCurrentEndpointKey = () => (retrieveData(C.SAVED_CONFIG_KEY) || getDefaultEndpointKey());
-export const setCurrentEndpointKey = (k) => (persistData(C.SAVED_CONFIG_KEY, k || getDefaultEndpointKey()));
-
-export const getDefaultEndpointKey = () => retrieveData(C.DEFAULT_CONFIG_KEY);
-export const setDefaultEndpointKey = (k) => (persistData(C.DEFAULT_CONFIG_KEY, k));
+export const getCurrentSettings    = ()  => window.authState.currentSettings;
+export const setCurrentSettings    = (s) => (window.authState.currentSettings = s);
+export const getCurrentEndpoint    = ()  => window.authState.currentEndpoint;
+export const setCurrentEndpoint    = (e) => (window.authState.currentEndpoint = e);
+export const getCurrentEndpointKey = ()  => (retrieveData(A.SAVED_CONFIG_KEY) || getDefaultEndpointKey());
+export const setCurrentEndpointKey = (k) => (persistData(A.SAVED_CONFIG_KEY, k || getDefaultEndpointKey()));
+export const getDefaultEndpointKey = ()  => retrieveData(A.DEFAULT_CONFIG_KEY);
+export const setDefaultEndpointKey = (k) => (persistData(A.DEFAULT_CONFIG_KEY, k));
+export const getSessionEndpoint    = (k) => getCurrentEndpoint()[getSessionEndpointKey(k)];
 
 export const getInitialEndpointKey = () =>
   unescapeQuotes(
-    Cookies.get(C.SAVED_CONFIG_KEY) ||
-    (window.localStorage && window.localStorage.getItem(C.SAVED_CONFIG_KEY))
+    Cookies.get(A.SAVED_CONFIG_KEY) ||
+    (window.localStorage && window.localStorage.getItem(A.SAVED_CONFIG_KEY))
   );
 
-export const getSessionEndpoint = (k) => getCurrentEndpoint()[getSessionEndpointKey(k)];
 
 // only should work for current session
 const getUrl = (endpointKey, path) =>
   `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey)[path]}`;
 
-export const getDestroyAccountUrl = (ek) => getUrl(ek, 'accountDeletePath');
-export const getSignOutUrl = (ek) => getUrl(ek, 'signOutPath');
-export const getEmailSignInUrl = (ek) => getUrl(ek, 'emailSignInPath');
-export const getEmailSignUpUrl = (ek) => getUrl(ek, 'emailRegistrationPath') + `?config_name=${ek}`;
-export const getPasswordResetUrl = (ek) => getUrl(ek, 'passwordResetPath') + `?config_name=${ek}`;
-export const getPasswordUpdateUrl = (ek) => getUrl(ek, 'passwordUpdatePath');
-export const getTokenValidationPath = (ek) => getUrl(ek, 'tokenValidationPath');
+export const getDestroyAccountUrl        = (ek)  => getUrl(ek, 'accountDeletePath');
+export const getSignOutUrl               = (ek)  => getUrl(ek, 'signOutPath');
+export const getEmailSignInUrl           = (ek)  => getUrl(ek, 'emailSignInPath');
+export const getEmailSignUpUrl           = (ek)  => getUrl(ek, 'emailRegistrationPath') + `?config_name=${ek}`;
+export const getPasswordResetUrl         = (ek)  => getUrl(ek, 'passwordResetPath') + `?config_name=${ek}`;
+export const getPasswordUpdateUrl        = (ek)  => getUrl(ek, 'passwordUpdatePath');
+export const getTokenValidationPath      = (ek)  => getUrl(ek, 'tokenValidationPath');
+export const getConfirmationSuccessUrl   = ()    => window.authState.currentSettings.confirmationSuccessUrl();
+export const getPasswordResetRedirectUrl = ()    => window.authState.currentSettings.confirmationSuccessUrl();
+export const getApiUrl                   = (key) => window.authState.currentEndpoint[getSessionEndpointKey(key)].apiUrl;
+export const getTokenFormat              = ()    => window.authState.currentSettings.tokenFormat;
 
 export const getOAuthUrl = ({ provider, params, endpointKey }) => {
   let oAuthUrl = getApiUrl(endpointKey) + getSessionEndpoint(endpointKey).authProviderPaths[provider] +
@@ -75,10 +76,6 @@ export const getOAuthUrl = ({ provider, params, endpointKey }) => {
   return oAuthUrl;
 };
 
-export const getConfirmationSuccessUrl = () => window.authState.currentSettings.confirmationSuccessUrl();
-export const getPasswordResetRedirectUrl = () => window.authState.currentSettings.confirmationSuccessUrl();
-export const getApiUrl = (key) => window.authState.currentEndpoint[getSessionEndpointKey(key)].apiUrl;
-export const getTokenFormat = () => window.authState.currentSettings.tokenFormat;
 
 // reset stateful variables
 export const resetConfig = () => {
@@ -90,8 +87,8 @@ export const resetConfig = () => {
 
 export const destroySession = () => {
   var sessionKeys = [
-    C.SAVED_CREDS_KEY,
-    C.SAVED_CONFIG_KEY
+    A.SAVED_CREDS_KEY,
+    A.SAVED_CONFIG_KEY
   ];
 
   debug('Destroying session');

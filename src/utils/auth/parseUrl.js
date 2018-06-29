@@ -1,7 +1,7 @@
 import querystring from 'querystring';
 import extend from 'extend';
 
-export function normalizeTokenKeys(params) {
+export const normalizeTokenKeys = (params) => {
   // normalize keys
   if (params.token) {
     params['access-token'] = params.token;
