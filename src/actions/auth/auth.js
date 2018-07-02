@@ -15,10 +15,10 @@ export const authenticateError = (errors, endpoints) => ({
 });
 
 export const setEndpointKeys = (endpointKeys, currentEndpointKey, defaultEndpointKey) => ({
-  type: A.SET_ENDPOINT_KEYS, endpointKeys, currentEndpointKey, defaultEndpointKey
+  type: A.ENDPOINT_KEYS,
+  payload: { endpointKeys, currentEndpointKey, defaultEndpointKey }
 });
 
 export const storeCurrentEndpointKey = (currentEndpointKey) => ({
-  type: A.STORE_CURRENT_ENDPOINT_KEY, currentEndpointKey
+  type: A.CURRENT_ENDPOINT_KEY, currentEndpointKey
 });
-

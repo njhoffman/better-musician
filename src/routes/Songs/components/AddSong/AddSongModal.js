@@ -16,7 +16,8 @@ import {
 import { Row, Column } from 'react-foundation';
 import withTheme from '@material-ui/core/styles/withTheme';
 
-import { uiHideModal, MODAL_ADD_SONG } from 'store/ui';
+import { uiHideModal } from 'actions/ui';
+import { MODAL_ADD_SONG } from 'constants/ui';
 import {
   currentSong as currentSongSelector,
   savedTabs as savedTabsSelector
@@ -101,7 +102,7 @@ export class AddSongModal extends Component {
               <Tabs value={value} onChange={(event, value) => this.handleChange(event, value)}>
                 <Tab label='Main Fields' />
                 {this.props.savedTabs.map((tab, tabIdx) =>
-                  <Tab label={tab.name} />
+                  <Tab key={tabIdx} label={tab.name} />
                 )}
               </Tabs>
             </AppBar>

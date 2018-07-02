@@ -64,7 +64,7 @@ class DevToolsChart extends Component {
           style={chartStyle}
           {...this.props}
           theme={theme}
-          ref={(node) => this.chartMonitor = node}
+          ref={(node) => (this.chartMonitor = node)}
         />
         <ChartToolbar {...this.props} theme='twilight' />
       </div>
@@ -73,21 +73,3 @@ class DevToolsChart extends Component {
 }
 
 export default DevToolsChart;
-
-// logger.browser.js?999c:94                              atelierForest
-// logger.browser.js?999c:94                              atelierHeath
-// logger.browser.js?999c:94                              atelierLakeside
-// logger.browser.js?999c:94                              bespin
-// logger.browser.js?999c:94                              brewer
-// logger.browser.js?999c:94                              bright
-// logger.browser.js?999c:94                              chalk
-// logger.browser.js?999c:94                              colors
-// logger.browser.js?999c:94                              eighties
-// logger.browser.js?999c:94                              flat
-// logger.browser.js?999c:94                              grayscale
-// logger.browser.js?999c:94                              hopscotch
-// logger.browser.js?999c:94                              marrakesh
-// logger.browser.js?999c:94                              monokai
-// logger.browser.js?999c:94                              paraiso
-// logger.browser.js?999c:94                              railscasts
-// logger.browser.js?999c:94                              tomorrow

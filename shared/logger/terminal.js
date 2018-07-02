@@ -1,7 +1,7 @@
 const bunyan = require('bunyan');
 const uuid = require('node-uuid');
 const _ = require('lodash');
-const { serializers } = require('./logger.utils');
+const { serializers } = require('./utils');
 
 let loggerInstance, logParent;
 

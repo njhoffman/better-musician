@@ -12,7 +12,7 @@ const parseHeaders = (headers) => {
 
   // set flag to ensure that we don't accidentally nuke the headers
   // if the response tokens aren't sent back from the API
-  var blankHeaders = true;
+  let blankHeaders = true;
 
   // set header key + val for each key in `tokenFormat` config
   // TODO: get actual config value
@@ -40,10 +40,8 @@ export const fetchToken = ({ rawEndpoints, cookies, currentLocation }) => {
     if (cookies || authRedirectHeaders) {
       let rawCookies = cookie.parse(cookies || '{}');
       let parsedCookies = JSON.parse(rawCookies.authHeaders || 'false');
-      let firstTimeLogin,
-        mustResetPassword,
-        currentEndpointKey,
-        headers;
+      let firstTimeLogin, mustResetPassword, currentEndpointKey, headers;
+      let newHeaders, { currentEndpoint, defaultEndpointKey } = parseEndpointConfig(rawEndpoints);
 
       if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders['access-token']) {
         headers = parseHeaders(authRedirectHeaders);
@@ -65,9 +63,8 @@ export const fetchToken = ({ rawEndpoints, cookies, currentLocation }) => {
         });
       }
 
-      var newHeaders, { currentEndpoint, defaultEndpointKey } = parseEndpointConfig(rawEndpoints);
-      var { apiUrl, tokenValidationPath } = currentEndpoint[currentEndpointKey || defaultEndpointKey];
-      var validationUrl = `${apiUrl}${tokenValidationPath}?unbatch=true`;
+      const { apiUrl, tokenValidationPath } = currentEndpoint[currentEndpointKey || defaultEndpointKey];
+      const validationUrl = `${apiUrl}${tokenValidationPath}?unbatch=true`;
 
       return fetch(validationUrl, {
         headers: addAuthorizationHeader(headers['access-token'], headers)

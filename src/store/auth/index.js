@@ -16,14 +16,14 @@ import {combineReducers} from "redux-immutablejs";
 export const authStateReducer = combineReducers({
   // configure,
   // emailSignIn,
-  emailSignUp,
-  signOut,
-  authentication,
-  requestPasswordReset,
-  oAuthSignIn,
-  updatePassword,
-  destroyAccount,
-  server,
+  // emailSignUp,
+  // signOut,
+  // authentication,
+  // requestPasswordReset,
+  // oAuthSignIn,
+  // updatePassword,
+  // destroyAccount,
+  // server,
   // ui,
   // user
 });

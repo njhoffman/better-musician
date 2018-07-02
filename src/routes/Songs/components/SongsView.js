@@ -1,28 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Column } from 'react-foundation';
-import { Paper } from 'material-ui';
+import { withStyles } from '@material-ui/core';
+
 import SongsPagination from './SongsPagination';
 import SongsList from './SongsList';
 import FiltersModal from './Filters/FiltersModal';
 import AddSongModal from './AddSong/AddSongModal';
 
-import css from './SongsView.scss';
+const styles = (theme) => ({
+  loginContainer: {
+    textAlign: 'center',
+    margin: '30px',
+    padding: '30px'
+  }
+});
 
-export const SongsView = (props) => (
-  <Column small={12} className='songsView'>
-    <Paper elevation={5}>
-      <div className={css.songsContainer}>
-        <AddSongModal />
-        <SongsList {...props} />
-        <SongsPagination />
-        <FiltersModal />
-      </div>
-    </Paper>
-  </Column>
+export const SongsView = ({ classes, ...props }) => (
+  <div className={classes.songsContainer}>
+    <AddSongModal />
+    <SongsList {...props} />
+    <SongsPagination />
+    <FiltersModal />
+  </div>
 );
 
 const mapActionCreators = {};
 const mapStateToProps = (state) => ({});
 
-export default connect(mapStateToProps, mapActionCreators)(SongsView);
+const withConnect = connect(mapStateToProps, mapActionCreators);
+const decorators = (View) => withConnect(withStyles(styles)(View));
+export default decorators(SongsView);

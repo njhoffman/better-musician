@@ -19,7 +19,7 @@ export default function createComponent(MaterialUIComponent, mapProps) {
     render() {
       return createElement(MaterialUIComponent, {
         ...mapProps(this.props),
-        ref: (!isStateLess(MaterialUIComponent) ? el => this.component = el : null)
+        ref: (!isStateLess(MaterialUIComponent) ? el => (this.component = el) : null)
       });
     }
   }

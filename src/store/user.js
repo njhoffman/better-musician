@@ -36,10 +36,10 @@ const ACTION_HANDLERS = {
     }
   }),
 
-  [A.STORE_CURRENT_ENDPOINT_KEY]: (state, { currentEndpointKey }) =>
+  [A.CURRENT_ENDPOINT_KEY]: (state, { currentEndpointKey }) =>
     ({ ...state, ...{ currentEndpointKey } }),
 
-  [A.SET_ENDPOINT_KEYS]: (state, { currentEndpointKey }) =>
+  [A.ENDPOINT_KEYS]: (state, { payload: { currentEndpointKey } }) =>
     ({ ...state, ...{ endpointKey: currentEndpointKey } }),
 
   [A.EMAIL_SIGN_IN_COMPLETE]: (state, { payload }) =>

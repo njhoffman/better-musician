@@ -130,7 +130,7 @@ class NewWindow extends React.PureComponent {
     } else {
       // Handle error on opening of new window.
       if (typeof onBlock === 'function') {
-        onBlock.call(null);
+        onBlock();
       } else {
         console.warn('A new window could not be opened. Maybe it was blocked.');
       }
@@ -163,7 +163,7 @@ class NewWindow extends React.PureComponent {
     const { onUnload } = this.props;
 
     if (typeof onUnload === 'function') {
-      onUnload.call(null);
+      onUnload();
     }
   }
 }
@@ -199,7 +199,8 @@ function createNewStyleElement(source, rules) {
   Array.from(rules).forEach(cssRule => {
     const { cssText, type } = cssRule;
     let returnText = cssText;
-    // Check if the cssRule type is CSSImportRule (3) or CSSFontFaceRule (5) to handle local imports on a about:blank page
+    // Check if the cssRule type is CSSImportRule (3) or CSSFontFaceRule (5)
+    // to handle local imports on a about:blank page
     // '/custom.css' turns to 'http://my-site.com/custom.css'
     if ([3, 5].includes(type)) {
       returnText = cssText

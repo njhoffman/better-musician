@@ -4,4 +4,3 @@ node_modules/**
 dist/**
 src/index.html
 src/store/auth/**
-src/redux-auth/**

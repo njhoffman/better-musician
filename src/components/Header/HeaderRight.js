@@ -15,7 +15,7 @@ const styles = {
   headerRight: {
     display: 'flex',
     alignItems: 'center'
-  },
+  }
 };
 
 class HeaderRight extends Component {

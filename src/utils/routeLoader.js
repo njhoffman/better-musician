@@ -9,7 +9,7 @@ import { injectReducer } from 'store/reducers';
 import { init as initLog } from 'shared/logger';
 const { info, warn } = initLog('loader');
 
-const LoadRoute = (route) => ({ /* dispatch, */ isAuthenticated }) => {
+const LoadRoute = (route) => ({ isAuthenticated }) => {
   class ViewInjector extends React.Component {
     componentWillMount() {
       const { store } = this.context;
@@ -24,6 +24,7 @@ const LoadRoute = (route) => ({ /* dispatch, */ isAuthenticated }) => {
         store
       });
     }
+
     render() {
       info(`Loading route: ${route} (${isAuthenticated ? 'authenticated' : 'not authenticated'})`);
       const Loader = Loadable({
@@ -33,11 +34,16 @@ const LoadRoute = (route) => ({ /* dispatch, */ isAuthenticated }) => {
       return <Loader />;
     }
   }
+
   ViewInjector.contextTypes = {
     store: PropTypes.object.isRequired
   };
 
   return <ViewInjector />;
+};
+
+LoadRoute.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired
 };
 
 export default LoadRoute;

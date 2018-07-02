@@ -22,7 +22,7 @@ const styles = (theme) => ({
   headerLeft: {
     display: 'flex',
     alignItems: 'center'
-  },
+  }
 });
 
 class HeaderLeft extends Component {

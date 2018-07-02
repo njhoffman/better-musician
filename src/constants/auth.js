@@ -10,13 +10,16 @@ export const EMAIL_SIGN_UP_START          = 'EMAIL_SIGN_UP_START';
 export const EMAIL_SIGN_UP_COMPLETE       = 'EMAIL_SIGN_UP_COMPLETE';
 export const EMAIL_SIGN_UP_ERROR          = 'EMAIL_SIGN_UP_ERROR';
 export const EMAIL_SIGN_UP_FORM_UPDATE    = 'EMAIL_SIGN_UP_FORM_UPDATE';
+export const OAUTH_SIGN_UP_START          = 'OAUTH_SIGN_UP_START';
+export const OAUTH_SIGN_UP_COMPLETE       = 'OAUTH_SIGN_UP_COMPLETE';
+export const OAUTH_SIGN_UP_ERROR          = 'OAUTH_SIGN_UP_ERROR';
 
 export const AUTHENTICATE_START           = 'AUTHENTICATE_START';
 export const AUTHENTICATE_COMPLETE        = 'AUTHENTICATE_COMPLETE';
 export const AUTHENTICATE_ERROR           = 'AUTHENTICATE_ERROR';
 
-export const SET_ENDPOINT_KEYS            = 'SET_ENDPOINT_KEYS';
-export const STORE_CURRENT_ENDPOINT_KEY   = 'STORE_CURRENT_ENDPOINT_KEY';
+export const ENDPOINT_KEYS                = 'ENDPOINT_KEYS';
+export const CURRENT_ENDPOINT_KEY         = 'CURRENT_ENDPOINT_KEY';
 
 export const LOAD_CONFIG                  = 'LOAD_CONFIG';
 export const CONFIGURE_START              = 'CONFIGURE_START';

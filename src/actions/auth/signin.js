@@ -14,12 +14,12 @@ import _openPopup from 'utils/popup';
 import * as A from 'constants/auth';
 
 export const emailSignInFormUpdate = (endpoint, key, value) => ({ type: A.EMAIL_SIGN_IN_FORM_UPDATE, endpoint, key, value });
-export const emailSignInStart      = (endpoint)             => ({ type: A.EMAIL_SIGN_IN_START, endpoint });
-export const emailSignInComplete   = (endpoint, user)       => ({ type: A.EMAIL_SIGN_IN_COMPLETE, payload: { user, endpoint } });
-export const emailSignInError      = (endpoint, errors)     => ({ type: A.EMAIL_SIGN_IN_ERROR, errors, endpoint });
-export const oAuthSignInStart      = (provider, endpoint)   => ({ type: A.OAUTH_SIGN_IN_START, provider, endpoint });
-export const oAuthSignInComplete   = (user, endpoint)       => ({ type: A.OAUTH_SIGN_IN_COMPLETE, user, endpoint });
-export const oAuthSignInError      = (errors, endpoint)     => ({ type: A.OAUTH_SIGN_IN_ERROR, errors, endpoint });
+export const emailSignInStart      = (endpoint) => ({ type: A.EMAIL_SIGN_IN_START, endpoint });
+export const emailSignInComplete   = (endpoint, user) => ({ type: A.EMAIL_SIGN_IN_COMPLETE, payload: { user, endpoint } });
+export const emailSignInError      = (endpoint, errors) => ({ type: A.EMAIL_SIGN_IN_ERROR, errors, endpoint });
+export const oAuthSignInStart      = (provider, endpoint) => ({ type: A.OAUTH_SIGN_IN_START, provider, endpoint });
+export const oAuthSignInComplete   = (user, endpoint) => ({ type: A.OAUTH_SIGN_IN_COMPLETE, user, endpoint });
+export const oAuthSignInError      = (errors, endpoint) => ({ type: A.OAUTH_SIGN_IN_ERROR, errors, endpoint });
 
 export function emailSignIn(body, endpointKey) {
   return dispatch => {
@@ -85,13 +85,13 @@ const listenForCredentials = (endpointKey, popup, provider, resolve, reject) => 
       }, 0);
     }
   }
-}
+};
 
 const authenticate = ({ endpointKey, provider, url, tab = false }) => {
   let name = (tab) ? '_blank' : provider;
   let popup = openPopup(provider, url, name);
   return listenForCredentials(endpointKey, popup, provider);
-}
+};
 
 const oAuthSignIn = ({ provider, params, endpointKey }) => {
   return dispatch => {
@@ -118,4 +118,4 @@ const oAuthSignIn = ({ provider, params, endpointKey }) => {
         throw errors;
       });
   };
-}
+};

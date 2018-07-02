@@ -15,7 +15,7 @@ const { info, debug, error } = initLog('createStore');
 let store;
 
 // make webpack config
-const useDevExtension = __DEV__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ && false;
+const useDevExtension = __DEV__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 const composeEnhancers = useDevExtension
   ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
     name: 'instrumental',

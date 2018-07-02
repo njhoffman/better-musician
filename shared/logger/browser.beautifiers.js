@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const { padRight } = require('./util');
+const { padRight } = require('../util');
 
 const ignoredActions = ['@@redux-form/BLUR', '@@redux-form/CHANGE', '@@redux-form/FOCUS'];
 module.exports = {

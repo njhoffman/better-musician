@@ -27,7 +27,7 @@ export class Header extends Component {
         <AppBar position='static'>
           <Toolbar className={classes.Toolbar}>
             <HeaderLeft {...props} />
-            <HeaderMiddle  {...props} />
+            <HeaderMiddle {...props} />
             <HeaderRight {...props} />
           </Toolbar>
         </AppBar>

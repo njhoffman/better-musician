@@ -51,16 +51,16 @@ const monitorStyles = [{
   width: '100%'
 }];
 
-export default class MultipleMonitors extends Component {
+class MultipleMonitors extends Component {
   static update = reducer;
 
-  staticPropTypes = {
-    monitorState: PropTypes.object.isRequired,
+  static propTypes = {
+    monitorState: PropTypes.object,
     changeMonitorKey: PropTypes.string,
     changePositionKey: PropTypes.string,
-    defaultPosition: PropTypes.object,
-    defaultSize: PropTypes.object,
-    toggleVisibilityKey: PropTypes.bool,
+    defaultPosition: PropTypes.string,
+    defaultSize: PropTypes.number,
+    toggleVisibilityKey: PropTypes.string,
     children: PropTypes.array.isRequired,
     style: PropTypes.object
   };
@@ -68,7 +68,7 @@ export default class MultipleMonitors extends Component {
   render() {
     const {
       monitorState, children, style = baseStyle, changeMonitorKey, changePositionKey,
-      defaultPosition, defaultSize, toggleVisibilityKey, ...rest
+      defaultPosition, defaultSize, toggleVisibilityKey, ...props
     } = this.props;
 
     // if (this.props.theme && !style.backgroundColor) {
@@ -91,14 +91,13 @@ export default class MultipleMonitors extends Component {
               key={'cell-' + j}
               style={{ ...cellStyle, ...monitorStyles[n] }}>
               {cloneElement(child, {
-                ...rest,
+                ...props,
                 monitorState: monitorState.childrenMonitorState[n],
                 key: 'monitor-' + n
               })}
             </div>
           );
-        }
-        )}
+        })}
       </div>
     );
 
@@ -109,3 +108,5 @@ export default class MultipleMonitors extends Component {
     );
   }
 }
+
+export default MultipleMonitors;

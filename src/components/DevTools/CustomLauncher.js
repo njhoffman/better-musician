@@ -64,7 +64,7 @@ export default class CustomLauncher extends Component {
     this.toggleChart = this.toggleChart.bind(this);
     this.popupUnload = this.popupUnload.bind(this);
     this.state = {
-      showChart : false
+      showChart : true
     };
   }
 

@@ -1,6 +1,6 @@
 import {
   getSignOutUrl,
-  destroySession,
+  destroySession
 } from 'utils/auth/sessionStorage';
 
 import * as A from 'constants/auth';

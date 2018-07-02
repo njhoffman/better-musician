@@ -1,8 +1,8 @@
 const pjson = require('prettyjson-256');
 const _ = require('lodash');
-const { padRight } = require('./util');
+const { padRight } = require('../util');
 
-const beautifiers = require('./logger.browser.beautifiers');
+const beautifiers = require('./browser.beautifiers');
 
 //  console.log('%cBlue! %cRed!', 'color: blue;', 'color: red;');
 const results = pjson.init({ browser: true, showEmpty: false });

@@ -23,7 +23,8 @@ export const SongsList = ({
   showViewSongModal,
   setCurrentSong,
   setSort,
-  currentSongId }) => (
+  currentSongId
+}) => (
   <Tappable onPress={showViewSongModal}>
     <Table className={css.songsList}>
       <TableBody>
@@ -49,15 +50,13 @@ export const SongsList = ({
             name='difficulty'
             displayName='Difficulty' />
         </TableRow>
-        {songsCollection && songsCollection.map(song => {
-          return (
-            <Song
-              onClick={(e) => setCurrentSong(song)}
-              key={song.id}
-              songValues={song}
-            />
-          );
-        })}
+        {songsCollection && songsCollection.map(song => (
+          <Song
+            onClick={(e) => setCurrentSong(song)}
+            key={song.id}
+            songValues={song}
+          />
+        ))}
       </TableBody>
     </Table>
   </Tappable>

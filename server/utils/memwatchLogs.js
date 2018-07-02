@@ -68,7 +68,8 @@ const stats = (logger, memStats) => {
 
 const leak = (sdc, logger, memInfo) => {
   const { humanMemorySize } = sUtils;
-  const bph = memInfo.reason.match(/(\d+) bytes\/hr/)[1];
+  const bphMatch = memInfo.reason.match(/(\d+) bytes\/hr/);
+  const bph = bphMatch && bphMatch.length > 0 ? bphMatch[1] : '???';
   logger.warn(
     `Memory Leak: (+${humanMemorySize(memInfo.growth)}) ` +
     `${memInfo.reason.replace(`${bph} bytes/hr`, '')} ${humanMemorySize(bph)} bytes/hr`

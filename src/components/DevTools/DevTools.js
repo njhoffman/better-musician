@@ -7,7 +7,6 @@ import SliderMonitor from 'redux-slider-monitor';
 import DockMonitor from 'redux-devtools-dock-monitor';
 
 import MultipleMonitors from './MultipleMonitors';
-import css from './DevTools.scss';
 
 import { twilight } from 'redux-devtools-themes';
 

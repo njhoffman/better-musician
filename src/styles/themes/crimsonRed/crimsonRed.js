@@ -1,14 +1,8 @@
-import {
-  blueGrey,
-  grey,
-  yellow,
-  red,
-  pink
-} from '@material-ui/core/colors';
+import { red } from '@material-ui/core/colors';
 
-import { fade, darken, lighten } from '@material-ui/core/styles/colorManipulator';
+import { darken } from '@material-ui/core/styles/colorManipulator';
 import spacing from '@material-ui/core/styles/spacing';
-const fullWhite = '#ffffff';
+// const fullWhite = '#ffffff';
 
 export default {
   spacing:              spacing,

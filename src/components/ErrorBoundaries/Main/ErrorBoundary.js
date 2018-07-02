@@ -25,6 +25,11 @@ if (process.env.NODE_ENV === 'development' || process.env.ERROR_ENV === 'develop
   // production or other env (not development)
   // NOOP ErrorBoundary
   class ErrorBoundary extends React.Component {
+    static propTypes = {
+      onError: PropTypes.function.isRequired,
+      children: PropTypes.array.isRequired
+    }
+
     componentDidCatch(error, info) {
       const { onError, ..._props } = this.props;
       if (typeof onError === 'function') {

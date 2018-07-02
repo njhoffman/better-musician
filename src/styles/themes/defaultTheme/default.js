@@ -9,6 +9,12 @@ export default {
   spacing:                spacing,
   // fontFamily:             'Roboto, sans-serif',
   themeName:              'Default',
+  breakpoints:            {
+    sm:                   450,
+    md:                   600,
+    lg:                   960,
+    xl:                   1280
+  },
   instrumental:           {
     starColor:            yellow['A200'],
     headerLinksColor:     blueGrey['300'],

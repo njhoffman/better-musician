@@ -10,12 +10,12 @@ import { storeCurrentEndpointKey } from './configure';
 import * as A from 'constants/auth';
 
 export const updatePasswordFormUpdate = (endpoint, key, value) => ({ type: A.UPDATE_PASSWORD_FORM_UPDATE, endpoint, key, value });
-export const updatePasswordStart      = (endpoint)             => ({ type: A.UPDATE_PASSWORD_START, endpoint });
-export const updatePasswordComplete   = (endpoint, user)       => ({ type: A.UPDATE_PASSWORD_COMPLETE, endpoint, user });
-export const updatePasswordError      = (endpoint, errors)     => ({ type: A.UPDATE_PASSWORD_ERROR, endpoint, errors });
-export const destroyAccountStart      = (endpoint)             => ({ type: A.DESTROY_ACCOUNT_START, endpoint });
-export const destroyAccountComplete   = (message, endpoint)    => ({ type: A.DESTROY_ACCOUNT_COMPLETE, endpoint, message });
-export const destroyAccountError      = (errors, endpoint)     => ({ type: A.DESTROY_ACCOUNT_ERROR, endpoint, errors });
+export const updatePasswordStart      = (endpoint) => ({ type: A.UPDATE_PASSWORD_START, endpoint });
+export const updatePasswordComplete   = (endpoint, user) => ({ type: A.UPDATE_PASSWORD_COMPLETE, endpoint, user });
+export const updatePasswordError      = (endpoint, errors) => ({ type: A.UPDATE_PASSWORD_ERROR, endpoint, errors });
+export const destroyAccountStart      = (endpoint) => ({ type: A.DESTROY_ACCOUNT_START, endpoint });
+export const destroyAccountComplete   = (message, endpoint) => ({ type: A.DESTROY_ACCOUNT_COMPLETE, endpoint, message });
+export const destroyAccountError      = (errors, endpoint) => ({ type: A.DESTROY_ACCOUNT_ERROR, endpoint, errors });
 
 export const updatePassword = (body, endpoint) => {
   return dispatch => {
@@ -33,7 +33,7 @@ export const updatePassword = (body, endpoint) => {
       .then(({ user }) => dispatch(updatePasswordComplete(endpoint, user)))
       .catch(({ errors }) => dispatch(updatePasswordError(endpoint, errors)));
   };
-}
+};
 
 export const destroyAccount = (endpoint) => {
   return dispatch => {
@@ -55,4 +55,4 @@ export const destroyAccount = (endpoint) => {
       })
       .catch(({ errors }) => dispatch(destroyAccountError(errors, endpoint)));
   };
-}
+};
