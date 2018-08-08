@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import FallbackView from './ErrorHandlerFallback';
+import { init as initLog } from 'shared/logger';
+const logger = initLog('error-handler');
 
-class ErrorBoundary extends React.PureComponent {
+class ErrorBoundary extends PureComponent {
   constructor() {
     super();
 
@@ -22,16 +25,18 @@ class ErrorBoundary extends React.PureComponent {
     this.setState({ hasError: true, error, errorInfo: info });
 
     // Report errors here
-    const { onError, FallbackComponent, ..._props } = this.props;
+    const { onError, ..._props } = this.props;
     if (typeof onError === 'function') {
       try {
         onError.call(this, error, info, _props);
-      } catch (e) {}
+      } catch (e) {
+        logger.error(e);
+      }
     }
   }
 
   render() {
-    const { onError, FallbackComponent, children, ..._props } = this.props;
+    const { FallbackComponent, children, ..._props } = this.props;
     // if state contains error and in development environment we render fallback component
     if (this.state.hasError) {
       const { error, errorInfo } = this.state;
@@ -47,8 +52,15 @@ class ErrorBoundary extends React.PureComponent {
     return children;
   }
 }
+
 ErrorBoundary.defaultProps = {
   FallbackComponent: FallbackView
+};
+
+ErrorBoundary.propTypes = {
+  children:          PropTypes.any.isRequired,
+  FallbackComponent: PropTypes.func.isRequired,
+  onError:           PropTypes.func.isRequired
 };
 
 export { ErrorBoundary, FallbackView };

@@ -24,7 +24,7 @@ function getFirstObjectKey(obj) {
   for (var key in obj) {
     return key;
   }
-};
+}
 
 export default function parseEndpointConfig(endpoint, defaultEndpointKey = null) {
   // normalize so opts is always an array of objects

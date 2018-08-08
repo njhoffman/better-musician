@@ -1,4 +1,6 @@
 import * as A from 'constants/ui';
+import { injectReducer } from 'store/reducers';
+import { fetchSongs } from 'store/api';
 
 export const uiHideDrawerMenu   = () => ({ type: A.UI_HIDE_DRAWER_MENU });
 export const uiToggleDrawerMenu = () => ({ type: A.UI_TOGGLE_DRAWER_MENU });
@@ -9,6 +11,21 @@ export const uiShowModal        = (type, viewType) => ({
   type: A.UI_SHOW_MODAL,
   meta: { type, props: { action: viewType } }
 });
+
+export const initView = (store, history, route) => {
+  store.dispatch({ type: A.INIT_VIEW_START, payload: route });
+  injectReducer({
+    key: `${route}View`,
+    reducer: require(`routes/${route}/modules/reducer`).default,
+    store,
+    history
+  });
+  // TODO: have this as upstream route property
+  if (['songs', 'fields', 'settings', 'stats'].indexOf(route.toLowerCase()) !== -1) {
+    fetchSongs(store);
+  }
+  store.dispatch({ type: A.INIT_VIEW_COMPLETE, payload: route });
+};
 
 export const hideEmailSignInSuccessModal          = () => ({ type: A.HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL });
 export const hideEmailSignInErrorModal            = () => ({ type: A.HIDE_EMAIL_SIGN_IN_ERROR_MODAL });

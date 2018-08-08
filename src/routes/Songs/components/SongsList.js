@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Table,
+  TableHead,
   TableBody,
   TableRow
 } from '@material-ui/core';
@@ -27,7 +28,7 @@ export const SongsList = ({
 }) => (
   <Tappable onPress={showViewSongModal}>
     <Table className={css.songsList}>
-      <TableBody>
+      <TableHead>
         <TableRow>
           <SongsListHeader
             className={css.title}
@@ -50,6 +51,8 @@ export const SongsList = ({
             name='difficulty'
             displayName='Difficulty' />
         </TableRow>
+      </TableHead>
+      <TableBody>
         {songsCollection && songsCollection.map(song => (
           <Song
             onClick={(e) => setCurrentSong(song)}

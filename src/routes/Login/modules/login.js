@@ -9,7 +9,7 @@ export const COUNTER_INCREMENT = 'COUNTER_INCREMENT';
 // Actions
 // ------------------------------------
 
-export const handleLoginSuccess = () => (dispatch, getState) => {
+export const handleLoginSuccess = () => () => {
   browserHistory.push('/songs');
 };
 

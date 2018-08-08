@@ -1,11 +1,15 @@
-import React, { Component }  from 'react';
+import React  from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { MdAccountCircle as AvatarIcon } from 'react-icons/lib/md';
-import { withStyles, Avatar } from '@material-ui/core';
+import { withStyles, Avatar, Typography } from '@material-ui/core';
+import { NavLink } from 'react-router-dom';
+
 import Button from 'components/Button';
-import { Link } from 'react-router-dom';
-import css from './Header.scss';
-import { Row, Column } from 'react-foundation';
+import {
+  userDisplay as userDisplaySelector,
+  userPoints as userPointsSelector
+} from 'selectors/users';
 
 const styles = {
   flex: {
@@ -14,55 +18,88 @@ const styles = {
   },
   headerRight: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  profileDisplay: {
+    width: 'calc(100% - 55px)',
+    textDecoration: 'none'
+  },
+  profilePoints: {
+    fontSize: '1.3em',
+    lineHeight: '1.3em',
+    textDecoration: 'none'
+  },
+  profileName: {
+    fontSize: '0.8em',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    lineHeight: '0.8em',
+  },
+  profileAvatar: {
+    width: '1.5em',
+    marginLeft: '5px',
+  },
+  loginButton:  {
+    marginRight: '5px',
   }
 };
 
-class HeaderRight extends Component {
-  static propTypes = {
-    getUserPoints   : PropTypes.string,
-    userDisplayName : PropTypes.string,
-    isSignedIn      : PropTypes.bool.isRequired
-  }
+const SignedIn = ({ classes, getUserPoints, userDisplayName }) => (
+  <div className={classes.headerRight}>
+    <div className={classes.profileDisplay}>
+      <NavLink to='/profile' className={classes.profilePoints}>
+        <Typography variant='body1'>{ getUserPoints }</Typography>
+      </NavLink>
+      <NavLink to='/stats' className={classes.profileName}>
+        <Typography variant='caption'>{ userDisplayName }</Typography>
+      </NavLink>
+    </div>
+    <div className={classes.profileAvatar}>
+      <NavLink to='/profile'>
+        <Avatar>
+          <AvatarIcon />
+        </Avatar>
+      </NavLink>
+    </div>
+  </div>
+);
 
-  renderSignedIn() {
-    return (
-      <div className={this.props.classes.headerRight}>
-        <div className={css.profileDisplay}>
-          <Link to='/profile'>
-            <div className={css.profilePoints}>
-              { this.props.getUserPoints }
-            </div>
-            <div className={css.profileName}>
-              { this.props.userDisplayName }
-            </div>
-          </Link>
-        </div>
-        <div className={css.profileAvatar}>
-          <Link to='/profile'>
-            <Avatar
-              icon={<AvatarIcon />}
-              size={35} />
-          </Link>
-        </div>
-      </div>
-    );
-  }
+SignedIn.propTypes = {
+  getUserPoints   : PropTypes.string,
+  userDisplayName : PropTypes.string,
+  classes         : PropTypes.object.isRequired
+};
 
-  renderSignedOut() {
-    return (
-      <div className={this.props.classes.flex}>
-        <Button label='Login' href='/login' primary />
-        <Button label='Register' href='/register' secondary />
-      </div>
-    );
-  }
+const SignedOut = ({ classes }) => (
+  <div className={classes.flex}>
+    <Button label='Login' href='/login' primary />
+    <Button label='Register' href='/register' secondary />
+  </div>
+);
 
-  render() {
-    if (this.props.isSignedIn) {
-      return this.renderSignedIn();
-    }
-    return this.renderSignedOut();
+SignedOut.propTypes = {
+  classes         : PropTypes.object.isRequired
+};
+
+const HeaderRight = ({ isSignedIn, ...props }) => {
+  if (isSignedIn) {
+    return SignedIn(props);
   }
-}
-export default withStyles(styles)(HeaderRight);
+  return SignedOut(props);
+};
+
+HeaderRight.propTypes = {
+  isSignedIn      : PropTypes.bool.isRequired,
+};
+
+const mapActionCreators = { };
+
+const mapStateToProps = (state) => ({
+  userDisplayName: userDisplaySelector(state),
+  getUserPoints:   userPointsSelector(state),
+  isSignedIn: state.user.isSignedIn
+});
+
+export default connect(mapStateToProps, mapActionCreators)(withStyles(styles)(HeaderRight));

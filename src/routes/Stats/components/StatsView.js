@@ -1,51 +1,51 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Paper, Tabs, Tab } from 'material-ui';
+import { Paper, Tabs, Tab, AppBar, Typography } from '@material-ui/core';
 import { Column } from 'react-foundation';
-import { browserHistory } from 'react-router';
-import withTheme from 'material-ui/styles/withTheme';
 import css from './StatsView.scss';
+import { withRouter } from 'react-router';
 
-export const StatsView = (props) => {
-  // const user = props.user && props.user.get('attributes') ? props.user.get('attributes') : null;
-  // let disabled = props.api.isFetching;
-  const redirectSettings = () => browserHistory.push('/settings');
-  const redirectFields = () => browserHistory.push('/fields');
-  const redirectProfile = () => browserHistory.push('/profile');
-
+export const StatsView = ({ history }) => {
   return (
     <Column centerOnSmall small={12} medium={10} large={8}>
-      <Paper zDepth={5}>
+      <Paper elevation={5}>
         <div className={css.statsContainer}>
-          <Tabs value='stats'>
-            <Tab
-              data-route='/profile'
-              value='profile'
-              onActive={redirectProfile}
-              label='Profile' />
-            <Tab
-              value='stats'
-              data-route='/stats'
-              label='Stats'>
-              <form className={css.statsForm}>
-                <h3>These Are Your Stats</h3>
-              </form>
-            </Tab>
-            <Tab
-              data-route='/settings'
-              onActive={redirectSettings}
-              value='settings'
-              label='Settings' />
-            <Tab
-              data-route='/fields'
-              onActive={redirectFields}
-              value='fields'
-              label='Fields' />
-          </Tabs>
+          <AppBar position='static'>
+            <Tabs
+              centered={true}
+              fullWidth={true}
+              onChange={(e, value) => history.push(value)}
+              value='stats'>
+              <Tab
+                data-route='/profile'
+                value='profile'
+                label='Profile' />
+              <Tab
+                value='stats'
+                data-route='/stats'
+                label='Stats' />
+              <Tab
+                data-route='/settings'
+                value='settings'
+                label='Settings' />
+              <Tab
+                data-route='/fields'
+                value='fields'
+                label='Fields' />
+            </Tabs>
+          </AppBar>
+          <form className={css.statsForm}>
+            <Typography>These Are Your Stats</Typography>
+          </form>
         </div>
       </Paper>
     </Column>
   );
+};
+
+StatsView.propTypes = {
+  history: PropTypes.object.isRequired
 };
 
 const mapActionCreators = {};
@@ -55,4 +55,4 @@ const mapStateToProps = (state) => {
   });
 };
 
-export default connect(mapStateToProps, mapActionCreators)(withTheme()(StatsView));
+export default withRouter(connect(mapStateToProps, mapActionCreators)(StatsView));

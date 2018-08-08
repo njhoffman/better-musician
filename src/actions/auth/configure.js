@@ -3,15 +3,14 @@ import extend from 'extend';
 import {
   authenticateStart,
   authenticateComplete,
-  authenticateError,
-  setEndpointKeys,
-  ssAuthTokenUpdate
+  authenticateError
 } from './auth';
 
 import { applyConfig } from 'utils/auth/clientSettings';
 import { destroySession } from 'utils/auth/sessionStorage';
-import verifyAuth from 'utils/auth/verifyAuth';
 import getRedirectInfo from 'utils/auth/parseUrl';
+import { init as initLog } from 'shared/logger';
+const { debug } = initLog('auth-configure');
 
 export const configure = (endpoints = {}, settings = {}) => {
   return dispatch => {
@@ -22,11 +21,11 @@ export const configure = (endpoints = {}, settings = {}) => {
 
     dispatch(authenticateStart());
 
-    let promise, firstTimeLogin, mustResetPassword, user, headers;
-
+    // let mustResetPassword, firstTimeLogin
     let { authRedirectPath, authRedirectHeaders } = getRedirectInfo(window.location);
 
     if (authRedirectPath) {
+      debug(`auth redirecting: ${authRedirectPath}`);
       dispatch(push({ pathname: authRedirectPath }));
     }
 
@@ -40,7 +39,7 @@ export const configure = (endpoints = {}, settings = {}) => {
       destroySession();
     }
 
-    promise = Promise.resolve(applyConfig({ dispatch, endpoints, settings }));
+    let promise = Promise.resolve(applyConfig({ dispatch, endpoints, settings }));
 
     return promise
       .then(user => {

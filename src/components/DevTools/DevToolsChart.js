@@ -49,11 +49,11 @@ class DevToolsChart extends Component {
         stroke: '#223344'
       },
       node: {
-        opacity: { empty: 0.5 }
+        opacity: { empty: 0.4 }
       },
       text: {
         colors: { 'default': '#779cc1' },
-        opacity: { empty: 0.5 }
+        opacity: { empty: 0.4 }
       }
     };
     return (
@@ -62,6 +62,8 @@ class DevToolsChart extends Component {
           defaultIsVisible
           size={1000}
           style={chartStyle}
+          heightBetweenNodesCoeff={1.5}
+          diffStates={true}
           {...this.props}
           theme={theme}
           ref={(node) => (this.chartMonitor = node)}

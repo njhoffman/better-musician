@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
+import {
+  MuiThemeProvider, withStyles, Grid, Paper,
+  Typography, Divider
+} from '@material-ui/core';
 
 import { chunk } from 'lodash';
-
 import themes from 'styles/themes';
 
 const styles = {
@@ -28,17 +26,19 @@ export class ComponentLayout extends React.Component {
     children: PropTypes.array.isRequired,
     classes: PropTypes.object.isRequired,
     timerProp: PropTypes.bool,
-    modifyCounter: PropTypes.number
+    modifyCounter: PropTypes.number,
+    modifyTimerInterval: PropTypes.number,
+    modifyTimer: PropTypes.object
   }
 
   constructor(props) {
     super(props);
-    this.state = {
+    this.setState({
       modifyInterval: props.modifyTimerInterval || 6000,
       modifyCount: 0,
       remainingTime: 0,
       modifyCounter: 0
-    };
+    });
   }
 
   componentDidMount() {
@@ -47,7 +47,7 @@ export class ComponentLayout extends React.Component {
         if (this.state.remainingTime <= 0) {
           this.setState({
             remainingTime: this.state.modifyInterval,
-            modifyCount: ++this.state.modifyCount
+            modifyCount: this.state.modifyCount + 1
           });
           this.props.modifyTimer.call(this, this.state.modifyCount);
         } else {
@@ -93,7 +93,6 @@ export class ComponentLayout extends React.Component {
   }
 
   render() {
-    const { title } = this.props;
     return (
       <div>
         {chunk(Object.keys(themes), 2).map((key, i) => (
@@ -109,6 +108,6 @@ export class ComponentLayout extends React.Component {
       </div>
     );
   }
-};
+}
 
 export default withStyles(styles)(ComponentLayout);

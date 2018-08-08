@@ -17,8 +17,8 @@ export default {
   namespace: 'TextInput',
   name: 'Types',
   component: ComponentLayout,
-  children: textGroups.map(textGroup => (
-    <Grid item>
+  children: textGroups.map((textGroup, i) => (
+    <Grid item key={i}>
       <Typography variant='body2' style={titleStyle}>
         {textGroup.title}
       </Typography>

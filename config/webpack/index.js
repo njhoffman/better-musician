@@ -86,4 +86,8 @@ module.exports = (config) => {
   _.merge(config.webpack, webpackEnv, { plugins: [].concat(webpackEnv.plugins, config.webpack.plugins) });
 
   return config.webpack;
+
+  // const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+  // const smp = new SpeedMeasurePlugin({ outputFormat: 'human' });
+  // return smp.wrap(config.webpack);
 };

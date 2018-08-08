@@ -1,8 +1,8 @@
 const { HotModuleReplacementPlugin } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
+// const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 // const StatsPlugin = require('stats-webpack-plugin');
-// const HappyPack = require('happypack');
 
 module.exports = (config) => ({
   plugins: [
@@ -12,6 +12,7 @@ module.exports = (config) => ({
     // new HappyPack({
     //   loaders: [ 'babel?presets[]=' + project.compiler_babel.presets.join(',presets[]=') ]
     // }),
+    // new HardSourceWebpackPlugin(),
     new HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template : config.paths.client('index.html'),

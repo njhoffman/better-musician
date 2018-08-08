@@ -1,8 +1,8 @@
 {
   "parser": "babel-eslint",
   "extends": [
-    "standard",
-    "standard-react"
+    "eslint:recommended",
+    "plugin:react/recommended"
   ],
   "plugins": [
     "babel",
@@ -10,7 +10,10 @@
     "promise"
   ],
   "env": {
-    "browser" : true
+    "browser" : true,
+    "node"    : true,
+    "es6"     : true,
+    "mocha"   : true
   },
   "globals": {
     "__DEV__"      : false,
@@ -21,12 +24,14 @@
     "__API_PATH__" : false
   },
   "rules": {
+    "max-len":                     [1, 120, 2, { ignoreComments: true} ],
     "key-spacing":                 [0, { align: "value" }],
     "jsx-quotes":                  [2, "prefer-single"],
-    "max-len":                     [2, 120, 2],
-    "object-curly-spacing":        [2, "always"],
     "no-multi-spaces":             ["error", { exceptions: { "VariableDeclarator": true, "ImportDeclaration" : true } }],
     "space-before-function-paren": ["error", {"anonymous": "always", "named": "never", "asyncArrow" : "always"}],
-    "semi":                        [2, "always" ]
+    "semi":                        [2, "always" ],
+    "react/no-typos":              "error",
+    "no-console":                  "warn",
+    "no-unused-vars":                ["error", { "args" : "none" }]
   }
 }

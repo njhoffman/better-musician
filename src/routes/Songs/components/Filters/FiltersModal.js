@@ -8,12 +8,14 @@ import { uiHideModal } from 'store/ui';
 export const FiltersModal = (props) => {
   const actions = [
     <Button
+      key={0}
       label='Cancel'
       variant='flat'
       primary
       onTouchTap={props.uiHideModal}
     />,
     <Button
+      key={1}
       label='Submit'
       variant='flat'
       primary

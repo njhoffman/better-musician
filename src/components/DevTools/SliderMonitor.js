@@ -11,10 +11,7 @@ import SliderButton from './SliderButton';
 const { reset, jumpToState } = ActionCreators;
 
 export default class SliderMonitor extends (PureComponent || Component) {
-  static update = () => {
-    console.info('slider update');
-    return {};
-  };
+  static update = () => {};
 
   static propTypes = {
     dispatch: PropTypes.func,

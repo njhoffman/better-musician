@@ -1,107 +1,113 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Drawer, Divider, MenuItem } from 'material-ui';
-import withStyles from '@material-ui/core/styles/withStyles';
+import {
+  Drawer,
+  Divider,
+  MenuItem,
+  withStyles,
+  ListItemIcon,
+  ListItemText
+} from '@material-ui/core';
 
-import OAuthSignInButton from 'components/OAuthSignInButton';
-import SignOutButton from 'components/SignOutButton';
-import Button from 'components/Button';
 import facebookIcon from 'assets/fb-icon.png';
 import googleIcon from 'assets/google-icon.png';
 import EmailIcon from 'material-ui-icons/Email';
+import SignOutIcon from 'material-ui-icons/Lock';
+import { uiHideDrawerMenu } from 'actions/ui';
 
 import DrawerMenuLink from './DrawerMenuLink';
 import css from './DrawerMenu.scss';
 
-const googleIconComponent = <img src={googleIcon} />;
+const GoogleIcon = () => (<img src={googleIcon} style={{ height: '1.75em' }} />);
+const FacebookIcon = () => (<img src={facebookIcon} style={{ height: '1.25em'}} />);
 
-const facebookIconComponent = <img src={facebookIcon} />;
-
-const styles = (theme) => ({
+const styles = (/* theme */) => ({
   buttonLink: {
     width: 'calc(100% - 6px)',
     margin: '3px'
   }
 });
 
-export class DrawerMenu extends Component {
-  static propTypes = {
-    hideDrawerMenu : PropTypes.func.isRequired,
-    isOpen         : PropTypes.bool.isRequired,
-    user           : PropTypes.object,
-    classes        : PropTypes.object,
-    isSignedIn     : PropTypes.bool.isRequired
-  };
+const SignedOut = ({ isOpen, hideDrawerMenu }) => (
+  <Drawer open={isOpen} onClose={hideDrawerMenu}>
+    <DrawerMenuLink link='/' label='Home' />
+    <DrawerMenuLink link='/register' label='Register' />
+    <DrawerMenuLink link='/reset' label='Reset' />
+    <DrawerMenuLink link='/contact' label='Contact' />
+    <Divider />
+    <MenuItem>
+      <ListItemIcon>
+        <FacebookIcon />
+      </ListItemIcon>
+      <ListItemText inset primary='Facebook Sign In' />
+    </MenuItem>
+    <MenuItem>
+      <ListItemIcon>
+        <GoogleIcon />
+      </ListItemIcon>
+      <ListItemText inset primary='Google Sign In' />
+    </MenuItem>
+    <MenuItem>
+      <ListItemIcon>
+        <EmailIcon />
+      </ListItemIcon>
+      <ListItemText inset primary='Email Sign In' />
+    </MenuItem>
+  </Drawer>
+);
 
-  renderSignedIn() {
-    return (
-      <div className={css.drawerMenuContainer} >
-        <Drawer open={this.props.isOpen} onClose={this.props.hideDrawerMenu}>
-          <DrawerMenuLink link='/' label='Home' />
-          <DrawerMenuLink link='/songs' label='Songs' />
-          <DrawerMenuLink link='/profile' label='Profile' />
-          <DrawerMenuLink link='/stats' label='Stats' />
-          <DrawerMenuLink link='/settings' label='Settings' />
-          <DrawerMenuLink link='/fields' label='Fields' />
-          <Divider />
-          <MenuItem>
-            <SignOutButton
-              label='LOGOUT'
-              next={() => {
-                this.props.hideDrawerMenu();
-              }}
-              style={{ backgroundColor: 'transparent', width: '100%' }} />
-          </MenuItem>
-        </Drawer>
-      </div>
-    );
-  }
+SignedOut.propTypes = {
+  hideDrawerMenu : PropTypes.func.isRequired,
+  isOpen         : PropTypes.bool.isRequired
+};
 
-  renderSignedOut() {
-    return (
-      <div className={css.drawerMenuContainer} >
-        <Drawer open={this.props.isOpen} onClose={this.props.hideDrawerMenu}>
-          <DrawerMenuLink link='/' label='Home' />
-          <DrawerMenuLink link='/register' label='Register' />
-          <DrawerMenuLink link='/reset' label='Reset' />
-          <DrawerMenuLink link='/contact' label='Contact' />
-          <Divider />
-          <OAuthSignInButton
-            label='Sign In With Facebook'
-            iconAlign='left'
-            className={this.props.classes.buttonLink}
-            icon={facebookIconComponent}
-            provider='facebook' />
-          <OAuthSignInButton
-            label='Sign In With Google'
-            icon={googleIconComponent}
-            className={this.props.classes.buttonLink}
-            iconHeight={1.5}
-            iconAlign='left'
-            provider='google' />
-          <Button
-            href='/login'
-            className={this.props.classes.buttonLink}
-            onClick={this.props.hideDrawerMenu}
-            primary
-            icon={<EmailIcon />}
-            iconAlign='left'
-            label='Sign In With Email'
-            variant='raised'
-          />
-        </Drawer>
-      </div>
-    );
-  }
 
-  render() {
-    const { isSignedIn } = this.props;
-    if (isSignedIn) {
-      return this.renderSignedIn();
-    } else {
-      return this.renderSignedOut();
-    }
-  }
-}
+const SignedIn = ({ hideDrawerMenu, isOpen }) => (
+  <Drawer open={isOpen} onClose={hideDrawerMenu}>
+    <DrawerMenuLink link='/' label='Home' />
+    <DrawerMenuLink link='/songs' label='Songs' />
+    <DrawerMenuLink link='/profile' label='Profile' />
+    <DrawerMenuLink link='/stats' label='Stats' />
+    <DrawerMenuLink link='/settings' label='Settings' />
+    <DrawerMenuLink link='/fields' label='Fields' />
+    <Divider />
+    <MenuItem>
+      <ListItemIcon>
+        <SignOutIcon />
+      </ListItemIcon>
+      <ListItemText inset primary='SIGN OUT' />
+    </MenuItem>
+  </Drawer>
+);
 
-export default withStyles(styles)(DrawerMenu);
+SignedIn.propTypes = {
+  hideDrawerMenu : PropTypes.func.isRequired,
+  isOpen         : PropTypes.bool.isRequired
+};
+
+
+const DrawerMenu = ({
+  isSignedIn,
+  ...props
+}) => (
+  <div className={css.drawerMenuContainer}>
+    {isSignedIn && SignedIn(props)}
+    {!isSignedIn && SignedOut(props)}
+  </div>
+);
+
+DrawerMenu.propTypes = {
+  isSignedIn     : PropTypes.bool.isRequired
+};
+
+const mapDispatchToProps = {
+  hideDrawerMenu : uiHideDrawerMenu
+};
+
+const mapStateToProps = (state) => ({
+  isOpen: state.ui.drawer.isOpen,
+  isSignedIn: state.user.isSignedIn
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(DrawerMenu));

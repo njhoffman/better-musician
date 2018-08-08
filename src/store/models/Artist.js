@@ -2,29 +2,36 @@ import BaseModel from './BaseModel';
 import { FETCH_SONGS, LOAD_ARTISTS } from 'store/api';
 
 class Artist extends BaseModel {
+
   static findByFullName(name) {
     return this.all().toModelArray().filter(artist => {
-      return artist.fullName === name;
+      return artist.fullName() === name;
     })[0];
   }
-  static reducer(action, Artist, session) {
+
+  static reducer(action, Artist/* , session */) {
     const { type } = action;
     switch (type) {
       case FETCH_SONGS:
         // remove all songs when fetching
-        this.all().delete();
+        Artist.all().delete();
         break;
       case LOAD_ARTISTS:
-        this.loadData(action.payload, Artist);
+        Artist.loadData(action.payload, Artist);
         break;
       default:
         break;
     }
   }
+
   constructor(artist) {
-    artist.fullName = artist.lastName + ', ' + artist.firstName;
     super(artist);
   }
+
+  fullName() {
+    return this.lastName + ', ' + this.firstName;
+  }
+
   toString() {
     return `Artist: ${this.lastName}`;
   }

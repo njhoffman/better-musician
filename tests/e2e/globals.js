@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 export default {
   after : (client) => {
     if (client.globals.env && client.globals.env === 'local') {
@@ -10,3 +11,4 @@ export default {
   },
   waitForConditionTimeout: 10000
 };
+/* eslint-enable no-console */

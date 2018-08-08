@@ -2,7 +2,7 @@ const _ = require('lodash');
 
 module.exports = (config, sharedUtils, outputHeap) =>
   (mwStats, buildStats) => {
-    const { state, stats, log, filename } = buildStats;
+    const { state, stats, log } = buildStats;
     const { numCommas, padLeft, padRight, humanMemorySize } = sharedUtils;
     // compilation, hash, starttime
     // stats.compilation: hooks, options, profile, outputOptions, performance, chunks, chunkGroupos,

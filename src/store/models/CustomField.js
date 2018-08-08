@@ -1,7 +1,7 @@
 import BaseModel from './BaseModel';
 
 class CustomField extends BaseModel {
-  static reducer(action, Field, session) {
+  static reducer(action, Field/* , session */) {
     const { type } = action;
     switch (type) {
       case 'LOAD_FIELDS':
@@ -9,7 +9,6 @@ class CustomField extends BaseModel {
         break;
       case 'ADD_FIELD':
         if (action.payload) {
-          console.info('payload', action.payload);
           this.create(action.payload);
         }
         break;

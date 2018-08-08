@@ -1,15 +1,15 @@
 import BaseModel from './BaseModel';
 
 class Genre extends BaseModel {
-  static reducer(action, Genre, session) {
+  static reducer(action, Genre/* , session */) {
     const { type } = action;
     switch (type) {
       case 'SONGS_REQUEST':
         // remove all songs when fetching
-        this.all().delete();
+        Genre.all().delete();
         break;
       case 'LOAD_GENRES':
-        this.loadData(action.payload, this);
+        Genre.loadData(action.payload, this);
         break;
       default:
         break;

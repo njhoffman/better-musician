@@ -22,7 +22,7 @@ export const DevTools = (store) =>
       changePositionKey='ctrl-q'>
       <MultipleMonitors className='multi-monitor'>
         <CustomLauncher theme={twilightMod} inline />
-        <SliderMonitor theme={twilightMod} inline />
+        <SliderMonitor theme={twilightMod} preserveScrollTop={false} inline />
         <Inspector
           theme='twilight'
           expandDiffs

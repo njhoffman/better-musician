@@ -40,18 +40,20 @@ export const loadAuthConfig = (store) => {
   );
 };
 
-export const startMemoryStats = (interval = 120000) => {
-  let lastHeapSize = 0;
+let lastHeapSize = 0;
+export const startMemoryStats = (interval = 10000) => {
   const memoryStats = () => {
     if (window.performance && window.performance.memory) {
       const { totalJSHeapSize, usedJSHeapSize } = window.performance.memory;
       const used = humanMemorySize(usedJSHeapSize, true);
       const total = humanMemorySize(totalJSHeapSize, true);
-      lastHeapSize !== used && debug(`-- JS Heap Size: ${used} / ${total}`);
-      lastHeapSize = used;
+      if (Math.abs(usedJSHeapSize - lastHeapSize) > 10485760) {
+        debug(`-- JS Heap Size: ${used} / ${total} ${usedJSHeapSize} ${lastHeapSize}`);
+        lastHeapSize = usedJSHeapSize;
+      }
     }
   };
-  setInterval(memoryStats, interval);
+  setTimeout(memoryStats, interval);
 };
 
 export const domStats = () => {

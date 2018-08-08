@@ -29,8 +29,12 @@ const showModal = (state, action) =>
 const hideModal = (state) =>
   ({ ...state, modal: { ...initialState.modal } });
 
-const initView = (state, { payload }) =>
-  ({ ...state, currentView: payload.currentView });
+const initViewStart = (state, { payload: route } ) =>
+  ({ ...state, initializing: route });
+
+const initViewEnd = (state, { payload: route }) =>
+  ({ ...state, initializing: null, currentView: route });
+
 
 const ACTION_HANDLERS = {
   [A.UI_TOGGLE_DRAWER_MENU]: toggleDrawerMenu,
@@ -41,11 +45,13 @@ const ACTION_HANDLERS = {
   [A.UI_SHOW_MODAL]:         showModal,
   [A.UI_HIDE_MODAL]:         hideModal,
   [A.UI_UPDATE_MODAL]:       updateModal,
-  [A.INIT_VIEW]: initView
+  [A.INIT_VIEW_START]:       initViewStart,
+  [A.INIT_VIEW_COMPLETE]:    initViewEnd
 };
 
 export const initialState = {
   currentView: null,
+  initializing: null,
   snackbar: {
     isOpen: false,
     message: '',

@@ -287,13 +287,9 @@ const getSheetFromColorMap = map => ({
   },
 
   inspectedPathKeyLink: {
-    cursor: 'pointer',
-    '&:hover': {
-      'text-decoration': 'underline'
-    },
-
     color: map.LINK_COLOR,
     '&:hover': {
+      'text-decoration': 'underline',
       color: map.LINK_HOVER_COLOR
     }
   },

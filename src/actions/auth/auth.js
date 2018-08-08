@@ -1,5 +1,4 @@
 import * as A from 'constants/auth';
-import fetch, { parseResponse } from 'utils/fetch';
 
 export const configureStart = () => ({ type: A.CONFIGURE_START });
 export const configureComplete = (config) => ({ type: A.CONFIGURE_COMPLETE, payload: config });
@@ -20,5 +19,5 @@ export const setEndpointKeys = (endpointKeys, currentEndpointKey, defaultEndpoin
 });
 
 export const storeCurrentEndpointKey = (currentEndpointKey) => ({
-  type: A.CURRENT_ENDPOINT_KEY, currentEndpointKey
+  type: A.CURRENT_ENDPOINT_KEY, payload: currentEndpointKey
 });

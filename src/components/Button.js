@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, withTheme } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import MaterialButton from '@material-ui/core/Button';
 import MaterialIconButton from '@material-ui/core/IconButton';
 // import ActionFavorite from 'material-ui-icons/Favorite';
@@ -48,23 +48,24 @@ const styles = theme => ({
 
 export class Button extends React.Component {
   static propTypes = {
-    // backgroundColor:         PropTypes.string,
-    // className:               PropTypes.string,
+    className:               PropTypes.string,
+    classes:                 PropTypes.object.isRequired,
     color:                   PropTypes.string,
     disabled:                PropTypes.bool,
-    // fullWidth:               PropTypes.string,
     href:                    PropTypes.string,
     icon:                    PropTypes.any,
     iconAlign:               PropTypes.string,
+    iconHeight:              PropTypes.number,
     label:                   PropTypes.string,
     loading:                 PropTypes.bool,
     onClick:                 PropTypes.func,
     override:                PropTypes.object,
+    primary:                 PropTypes.bool,
+    secondary:               PropTypes.bool,
+    spinnerType:             PropTypes.string.isRequired,
     style:                   PropTypes.object,
     theme:                   PropTypes.object,
-    variant:                 PropTypes.string,
-    primary:                 PropTypes.bool,
-    secondary:               PropTypes.bool
+    variant:                 PropTypes.string
   };
 
   static defaultProps = {
@@ -82,22 +83,11 @@ export class Button extends React.Component {
     this.props.onClick && this.props.onClick(ev);
   }
 
-  getColor() {
-    if (this.props.disabled) {
-      return this.props.spinColorDisabled;
-    } else if (this.props.primary || this.props.secondary) {
-      return this.props.spinColorLight;
-    } else {
-      return this.props.spinColorDark;
-    }
-  }
-
   ucFirst(str) {
     return str.toLowerCase().replace(/^\w/, c => c.toUpperCase());
   }
 
   renderIcon() {
-    const color = this.getColor();
     const { icon: Icon, classes, spinnerType }  = this.props;
     const loading = this.props.loading || this.props.override.loading;
     const height = this.props.iconHeight || 1.0;
@@ -140,7 +130,6 @@ export class Button extends React.Component {
       color:     this.props.primary ? 'primary' : this.props.secondary ? 'secondary' : this.props.color,
       style:     this.props.style
     };
-    const iconClass = `${this.props.label ? this.props.iconAlign : 'center'}Icon`;
 
     if (this.props.icon && !this.props.label) {
       return (
@@ -178,11 +167,11 @@ export class Button extends React.Component {
   render() {
     if (this.props.href) {
       return (
-        <Link
+        <NavLink
           to={this.props.href}
           className={`${this.props.classes.linkText}`}>
           {this.renderLabel()}
-        </Link>
+        </NavLink>
       );
     } else {
       return this.renderLabel();

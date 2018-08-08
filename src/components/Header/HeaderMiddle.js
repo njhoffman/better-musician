@@ -1,18 +1,17 @@
 import React, { Component }  from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Row, Column } from 'react-foundation';
+import { Column } from 'react-foundation';
 import SearchPopover from './SearchPopover';
 import SongPopover from './SongPopover';
-import { withStyles } from '@material-ui/core';
+import { withStyles, MenuItem, ListItemIcon, ListItemText } from '@material-ui/core';
 
-/* eslint-disable no-multi-spaces */
-import {
-  MdFilterList    as FilterIcon,
-  MdSearch        as SearchIcon
-} from 'react-icons/lib/md';
-/* eslint-enable no-multi-spaces */
+import { uiShowModal } from 'actions/ui';
+import { MODAL_FILTER_SONGS } from 'constants/ui';
 
-import css from './Header.scss';
+import { MdFilterList as FilterIcon } from 'react-icons/lib/md';
+
+// import css from './Header.scss';
 const styles = {
   headerMiddle: {
     width: '100%',
@@ -22,118 +21,142 @@ const styles = {
     textAlign: 'center'
   },
   headerLink: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
     height: '100%',
-    display: 'table',
-    textDecoration: 'none',
     cursor: 'pointer',
-    verticalAlign: 'middle',
-    '&:hover' : {
-      backgroundColor: 'rgba(255, 255, 255, 0.078430)'
-    }
-  }
+    textDecoration: 'none'
+  },
+  headerLinkActive: { },
+  iconWrapper: { },
+  icon: { },
+  iconText: { }
 };
 
 const popoverStyle = {
-  anchor: { horizontal: 'left', vertical: 'bottom' },
-  target: { horizontal: 'left', vertical: 'top' }
+  anchor: { horizontal: 'center', vertical: 'bottom' },
+  transform: { horizontal: 'center', vertical: 'top' }
 };
 
 class HeaderMiddle extends Component {
   static propTypes = {
     showFiltersModal: PropTypes.func.isRequired,
     currentSong:      PropTypes.string,
-    modal:            PropTypes.object.isRequired
+    modal:            PropTypes.object.isRequired,
+    classes:          PropTypes.object.isRequired
   }
+
+  defaultState = {
+    search: {
+      isOpen: false,
+      anchor: null,
+      width: 0
+    },
+    song: {
+      isOpen: false,
+      anchor: null,
+      width: 0
+    }
+  };
 
   constructor(props) {
     super(props);
-    this.state = {
-      searchPopoverOpen:   false,
-      searchPopoverAnchor: {},
-      songPopoverOpen:     false,
-      songPopoverAnchor:   {}
+    this.state = Object.assign({}, this.defaultState);
+    this.popoverActions = {
+      toggle:   this.togglePopover.bind(this),
+      open:     this.openPopover.bind(this),
+      close:    this.closePopover.bind(this),
+      closeAll: this.closeAll.bind(this),
     };
-    this.toggleSongPopover = this.toggleSongPopover.bind(this);
-    this.toggleSearchPopover = this.toggleSearchPopover.bind(this);
-    this.onRequestClose = this.onRequestClose.bind(this);
-  };
+  }
 
-  toggleSearchPopover(e) {
-    e.preventDefault();
+  openPopover = (name, e) => {
     this.setState({
-      searchPopoverOpen:   !this.state.searchPopoverOpen,
-      searchPopoverAnchor: e.currentTarget.parentElement
+      [`${name}`]: {
+        isOpen: true,
+        anchor: e.currentTarget,
+        width:  e.currentTarget.clientWidth
+      }
     });
   }
 
-  toggleSongPopover(e) {
-    e.preventDefault();
-    e.stopPropagation();
+  togglePopover = (name, e) => {
     this.setState({
-      songPopoverOpen:   true,
-      songPopoverAnchor: e.currentTarget.parentElement
+      [`${name}`]: {
+        isOpen: !this.state[`${name}`]['isOpen'],
+        anchor: !this.state[`${name}`]['isOpen'] ? null : e.currentTarget
+      }
     });
   }
 
-  onRequestClose() {
+  closePopover = (name) => {
     this.setState({
-      searchPopoverOpen: false,
-      songPopoverOpen:   false
+      [`${name}`]: {
+        isOpen:  false,
+        anchor: null
+      }
     });
+  }
+
+  closeAll = () => {
+    this.setState(this.defaultState);
   }
 
   renderFiltersButton() {
-    const isActive = this.props.modal && this.props.modal.type === 'MODAL_FILTER_SONGS';
+    const { modal, classes, showFiltersModal } = this.props;
+    const isActive = modal && modal.type === 'MODAL_FILTER_SONGS';
     return (
       <a
-        className={this.props.classes.headerLink + ' ' + (isActive ? css.headerLinkActive : '')}
-        onClick={this.props.showFiltersModal} >
-        <span className={css.iconWrapper}>
-          <FilterIcon className={css.icon} />
-          <span className={css.iconText}>Filters</span>
-        </span>
-      </a>
-    );
-  }
-
-  renderSearchButton() {
-    return (
-      <a className={this.props.classes.headerLink}
-        onClick={(e) => this.toggleSearchPopover(e)}>
-        <span className={css.iconWrapper}>
-          <SearchIcon className={css.icon} />
-          <span className={css.iconText}>Search</span>
-          <SearchPopover
-            isOpen={this.state.searchPopoverOpen}
-            anchorEl={this.state.searchPopoverAnchor}
-            anchorOrigin={popoverStyle.anchor}
-            targetOrigin={popoverStyle.target}
-            onRequestClose={this.onRequestClose} />
-        </span>
+        className={`${classes.headerLink} ${isActive ? classes.headerLinkActive : ''}`}
+        onClick={showFiltersModal} >
+        <MenuItem className={classes.iconWrapper}>
+          <ListItemIcon>
+            <FilterIcon className={classes.icon} />
+          </ListItemIcon>
+          <ListItemText>Filters</ListItemText>
+        </MenuItem>
       </a>
     );
   }
 
   render() {
+    const { classes, currentSong } = this.props;
     return (
-      <Row className={this.props.classes.headerMiddle}>
+      <div className={classes.headerMiddle}>
         <Column style={{ padding: '0px', height: '100%' }}>
           <SongPopover
-            songPopoverOpen={this.state.songPopoverOpen}
-            songPopoverAnchor={this.state.songPopoverAnchor}
-            onRequestClose={this.onRequestClose}
-            currentSong={this.props.currentSong}
-            toggleSongPopover={this.toggleSongPopover} />
+            anchorOrigin={popoverStyle.anchor}
+            transformOrigin={popoverStyle.transform}
+            currentSong={currentSong}
+            {...this.state.song }
+            {...this.popoverActions} />
         </Column>
         <Column style={{ padding: '0px', height: '100%' }}>
           { this.renderFiltersButton() }
         </Column>
         <Column style={{ padding: '0px', height: '100%' }}>
-          { this.renderSearchButton() }
+          <SearchPopover
+            anchorOrigin={popoverStyle.anchor}
+            transformOrigin={popoverStyle.transform}
+            {...this.state.search }
+            {...this.popoverActions} />
         </Column>
-      </Row>
+      </div>
     );
   }
 }
-export default withStyles(styles)(HeaderMiddle);
+
+export const showFiltersModal = () => uiShowModal(MODAL_FILTER_SONGS);
+
+const mapActionCreators = {
+  showFiltersModal
+};
+
+const mapStateToProps = (state) => ({
+  modal        : state.ui.modal,
+  currentSong  : state.SongsView ? state.SongsView.currentSong : null
+});
+
+export default connect(mapStateToProps, mapActionCreators)(withStyles(styles)(HeaderMiddle));

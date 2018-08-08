@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { Button } from 'material-ui';
 import { MdDelete as DeleteIcon } from 'react-icons/lib/md';
 
-import { uiShowModal, uiHideModal, MODAL_ADD_SONG } from 'store/ui';
+import { uiShowModal, uiHideModal } from 'actions/ui';
+import { MODAL_ADD_SONG } from 'constants/ui';
 import { addSong } from 'store/api';
 
 export const AddSongButtons = (props) => {

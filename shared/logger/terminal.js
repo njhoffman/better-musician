@@ -1,5 +1,5 @@
 const bunyan = require('bunyan');
-const uuid = require('node-uuid');
+const uuidv4 = require('uuid/v4');
 const _ = require('lodash');
 const { serializers } = require('./utils');
 
@@ -20,12 +20,12 @@ const preprocess = (log, level, ...message) => {
   // add global properties
 
   const msg = _.cloneDeep(message);
-  const logId = uuid.v4();
+  const logId = uuidv4();
   if (_.isObjectLike(msg[0])) {
-    msg[0]._logId = uuid.v4();
+    msg[0]._logId = uuidv4();
   } else {
     msg.unshift({
-      _logId: uuid.v4()
+      _logId: uuidv4()
     });
   }
 

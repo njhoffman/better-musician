@@ -1,4 +1,33 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
+// TODO: put this in utils
+const curry = (fn) => {
+  if (typeof fn !== 'function') {
+    throw Error('curry only receive function params!');
+  }
+  let _len = fn.length, _args = [];
+
+  const _curry = () => {
+    const args = [].concat(_args);
+    /* eslint-disable no-undef */
+    if (arguments.length >= _len) {
+      _args = [];
+    } else if (arguments.length + _args.length > _len) {
+      _args = [];
+    }
+    _args = _args.concat([].slice.call(arguments));
+    /* eslint-enable no-undef */
+    if (_args.length === _len) {
+      const rst = fn.apply(null, _args);
+      _args = args;
+      return rst;
+    }
+    return _curry;
+  };
+  _curry.toString = () => fn.toString();
+  return _curry;
+};
 
 let __ErrorBoundary;
 if (process.env.NODE_ENV === 'development' || process.env.ERROR_ENV === 'development') {
@@ -14,6 +43,7 @@ if (process.env.NODE_ENV === 'development' || process.env.ERROR_ENV === 'develop
       );
     };
     WithErrorHandler.displayName = `WithErrorHandler(${Component.displayName || Component.name || 'Component'})`;
+    WithErrorHandler.propTypes = { onError: PropTypes.func.isRequired };
     return WithErrorHandler;
   });
   __ErrorBoundary = ErrorBoundary;
@@ -26,8 +56,8 @@ if (process.env.NODE_ENV === 'development' || process.env.ERROR_ENV === 'develop
   // NOOP ErrorBoundary
   class ErrorBoundary extends React.Component {
     static propTypes = {
-      onError: PropTypes.function.isRequired,
-      children: PropTypes.array.isRequired
+      onError:  PropTypes.func.isRequired,
+      children: PropTypes.any.isRequired
     }
 
     componentDidCatch(error, info) {
@@ -35,7 +65,7 @@ if (process.env.NODE_ENV === 'development' || process.env.ERROR_ENV === 'develop
       if (typeof onError === 'function') {
         try {
           onError.call(this, error, info, _props);
-        } catch (e) {}
+        } catch (e) { throw e; }
       }
     }
 
@@ -53,39 +83,13 @@ if (process.env.NODE_ENV === 'development' || process.env.ERROR_ENV === 'develop
         </ErrorBoundary>
       );
     };
+    WithErrorHandler.propTypes = { onError: PropTypes.func.isRequired };
     return WithErrorHandler;
   });
   __ErrorBoundary = ErrorBoundary;
   exports.ErrorBoundary = ErrorBoundary;
   exports.withErrorHandler = withErrorHandler;
   exports.errorHandlerDecorator = withErrorHandler(void 0);
-}
-
-function curry(fn) {
-  if (typeof fn !== 'function') {
-    throw Error('curry only receive function params!');
-  }
-  let _len = fn.length, _args = [];
-
-  function _curry() {
-    var args = [].concat(_args);
-    if (arguments.length >= _len) {
-      _args = [];
-    } else if (arguments.length + _args.length > _len) {
-      _args = [];
-    }
-    _args = _args.concat([].slice.call(arguments));
-    if (_args.length === _len) {
-      var rst = fn.apply(null, _args);
-      _args = args;
-      return rst;
-    }
-    return _curry;
-  }
-  _curry.toString = function () {
-    return fn.toString();
-  };
-  return _curry;
 }
 
 export default __ErrorBoundary;

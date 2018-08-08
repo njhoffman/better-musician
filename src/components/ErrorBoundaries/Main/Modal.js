@@ -1,7 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { PureComponent }from 'react';
+import { createPortal }from 'react-dom';
+import PropTypes from 'prop-types';
 
-export default class Modal extends React.PureComponent {
+export default class Modal extends PureComponent {
+  static propTypes = {
+    children: PropTypes.any.isRequired
+  };
+
   constructor(props) {
     super(props);
     // Create a div that we'll render the modal into. Because each
@@ -23,7 +28,7 @@ export default class Modal extends React.PureComponent {
 
   render() {
     // Use a portal to render the children into the element
-    return ReactDOM.createPortal(
+    return createPortal(
       // Any valid React child: JSX, strings, arrays, etc.
       this.props.children,
       // A DOM element

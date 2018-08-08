@@ -130,7 +130,7 @@ export class Footer extends Component {
         </Row>
       </div>
     );
-  };
+  }
 
   render() {
     const { song, stats, isSignedIn, theme } = this.props;
@@ -144,7 +144,7 @@ export class Footer extends Component {
       return this.renderBlankFooter(backgroundColor);
     }
   }
-};
+}
 
 Footer.propTypes = {
 };

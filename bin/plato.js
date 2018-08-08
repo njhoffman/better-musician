@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 
 const plato = require('es6-plato');
 const fs = require('fs');
@@ -46,3 +47,4 @@ fileList = fileList.filter(file => {
 console.log(fileList.length);
 mkdirSync(outputDir);
 plato.inspect(fileList, outputDir, platoOptions, platoFinished);
+/* eslint-enable no-console */

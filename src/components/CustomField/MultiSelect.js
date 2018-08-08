@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { RenderSelect, RenderMultiSelect } from '../Field';
-import { Field, FieldArray } from 'redux-form';
+// import { RenderSelect, RenderMultiSelect } from '../Field';
+// import { Field, FieldArray } from 'redux-form';
 
 const RenderCustomMultiSelect = ({
   field,

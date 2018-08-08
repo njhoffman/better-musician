@@ -1,11 +1,10 @@
-import { songs as songsSelector } from 'routes/Songs/modules/selectors';
-import { LOCATION_CHANGE } from 'store/location';
+import * as UI from 'constants/ui';
+// import { songs as songsSelector } from 'routes/Songs/modules/selectors';
 
 // ------------------------------------
 // Constants
 // ------------------------------------
 
-export const INIT_SONG_VIEW           = 'INIT_SONG_VIEW';
 export const SET_CURRENT_SONG         = 'SET_CURRENT_SONG';
 export const SET_SORT                 = 'SET_SORT';
 export const SET_PAGINATION_PER_PAGE  = 'SET_PAGINATION_PER_PAGE';
@@ -26,12 +25,6 @@ export const setSort = (sortField) => (dispatch, getState) => {
   return dispatch({ type: SET_SORT, payload: sortField });
 };
 
-// const nextAvailableId = (songCollection) =>
-//   songCollection
-//     .map((song) => song.id)
-//     .sort((a, b) => a - b)
-//     .pop() + 1;
-
 export const actions = {
   setSort, setCurrentSong
 };
@@ -41,10 +34,10 @@ export const actions = {
 // ------------------------------------
 
 const ACTION_HANDLERS = {
+  [UI.INIT_VIEW_COMPLETE]: (state, action) =>
+    ({ ...state, initialized: true }),
   [SET_CURRENT_SONG]: (state, action) =>
     ({ ...state, currentSong: action.payload }),
-  [LOCATION_CHANGE]: (state, action) =>
-    ({ ...state, currentSong: null }),
   [SET_PAGINATION_PER_PAGE]: (state, action) =>
     ({ ...state, paginationPerPage: action.payload }),
   [SET_PAGINATION_CURRENT]: (state, action) =>

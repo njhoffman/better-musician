@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { RaisedButton } from 'material-ui';
 import { Row, Column } from 'react-foundation';
-import { Field } from 'redux-form';
-import { RenderChip, RenderSelect } from 'components/Field';
+// import { Field } from 'redux-form';
+// import { RenderChip, RenderSelect } from 'components/Field';
 
 const addOption = (fields) => {
   fields.push('testing');
@@ -24,18 +24,18 @@ const RenderMultiSelect = ({
         <Column centerOnSmall small={6}>
           <Row>
             <Column centerOnSmall small={disabled ? 12 : 8}>
-              {/* <Field */}
-              {/*   label={label} */}
-              {/*   onChange={(e) => (e)} */}
-              {/*   component={RenderSelect} */}
-              {/*   disabled={disabled} */}
-              {/*   underlineShow={disabled} */}
-              {/*   labelStyle={inputStyle} */}
-              {/*   floatingLabelStyle={{ ...labelStyle, ...(disabled ? { textAlign: 'center', width: '100%' } : {}) }} */}
-              {/*   iconStyle={{ visibility: disabled ? 'hidden' : 'visible' }} */}
-              {/*   dataSource={dataSource} */}
-              {/*   name='optionText' */}
-              {/* /> */}
+          {/* <Field */}
+          {/*   label={label} */}
+          {/*   onChange={(e) => (e)} */}
+          {/*   component={RenderSelect} */}
+          {/*   disabled={disabled} */}
+          {/*   underlineShow={disabled} */}
+          {/*   labelStyle={inputStyle} */}
+          {/*   floatingLabelStyle={{ ...labelStyle, ...(disabled ? { textAlign: 'center', width: '100%' } : {}) }} */}
+          {/*   iconStyle={{ visibility: disabled ? 'hidden' : 'visible' }} */}
+          {/*   dataSource={dataSource} */}
+          {/*   name='optionText' */}
+          {/* /> */}
             </Column>
             <Column centerOnSmall small={disabled ? 0 : 4}>
               {!disabled &&

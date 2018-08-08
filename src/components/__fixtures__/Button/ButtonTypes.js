@@ -18,8 +18,8 @@ export default {
   name: 'Types',
   url: '/',
   component: ComponentLayout,
-  children: buttonGroups.map(buttonGroup => (
-    <Grid item>
+  children: buttonGroups.map((buttonGroup, i) => (
+    <Grid item key={i}>
       <Typography variant='body2' style={titleStyle}>
         {buttonGroup.title}
       </Typography>

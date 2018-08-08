@@ -36,7 +36,7 @@ const songsSelector = ormCreateSelector(orm, (Session, SongsView) => {
 const currentSongSelector = ormCreateSelector(orm, (Session, SongsView) => {
   if (!isEmpty(SongsView) && !isEmpty(SongsView.currentSong)) {
     const song = Session.Song.withId(SongsView.currentSong);
-    song.customFields = Session.CustomField.all().toModelArray().map((cf, idx) => {
+    song.customFields = Session.CustomField.all().toModelArray().map((cf/* , idx */) => {
       const found = find(song.customFields, { id: cf.id });
       return found ? found.value : '';
     });

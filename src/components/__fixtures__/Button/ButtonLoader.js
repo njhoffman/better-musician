@@ -8,10 +8,11 @@ import ComponentLayout from 'components/DevTools/Cosmos/ComponentLayout';
 import buttonGroups from './ButtonLoader.props.js';
 import Button from 'components/Button';
 
-const titleWrapperStyle = {
-  width: '100%',
-  textAlign: 'center'
-};
+// const titleWrapperStyle = {
+//   width: '100%',
+//   textAlign: 'center'
+// };
+
 const titleStyle = {
   width: '100%',
   textAlign: 'center',
@@ -33,7 +34,7 @@ const drawChild = (buttonGroup) => (
     </Typography>
     <Grid container justify='center' spacing={16}>
       {buttonGroup.props.map((propGroup, i) => (
-        <Grid item>
+        <Grid key={i} item>
           <Button {...propGroup} override={propOverride} />
         </Grid>
       ))}

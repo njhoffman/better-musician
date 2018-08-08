@@ -10,7 +10,8 @@ export const UI_UPDATE_MODAL       = 'UI_UPDATE_MODAL';
 export const MODAL_ADD_SONG        = 'MODAL_ADD_SONG';
 export const MODAL_FILTER_SONGS    = 'MODAL_FILTER_SONGS';
 
-export const INIT_VIEW             = 'INIT_VIEW';
+export const INIT_VIEW_START       = 'INIT_VIEW_START';
+export const INIT_VIEW_COMPLETE    = 'INIT_VIEW_COMPLETE';
 
 // auth ui
 export const HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL          = 'HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL';

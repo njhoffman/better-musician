@@ -71,7 +71,7 @@ const ACTION_HANDLERS = {
     auth: { ...state.auth, loading: true }
   }),
 
-  [A.CURRENT_ENDPOINT_KEY]: (state, { currentEndpointKey }) => ({ ...state,
+  [A.CURRENT_ENDPOINT_KEY]: (state, { payload: { currentEndpointKey } }) => ({ ...state,
     auth: { ...state.auth, currentEndpointKey } }),
 
   [A.ENDPOINT_KEYS]: (state, { payload: { endpointKeys, defaultEndpointKey, currentEndpointKey } }) => ({ ...state,

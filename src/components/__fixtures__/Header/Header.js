@@ -14,7 +14,7 @@ export default {
   namespace: 'Header',
   name: 'SignedOut',
   component: ViewLayout,
-  children: [ <Header /> ],
+  children: [ <Header key={0} /> ],
   reduxState: {},
   props: {
     isSignedIn: false

@@ -1,6 +1,8 @@
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { routerMiddleware } from 'react-router-redux';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
+import reduxFreeze from 'redux-freeze';
+
 // import { createLogger } from 'redux-logger';
 // import generateReduxReport from 'redux-usage-report';
 
@@ -15,12 +17,15 @@ const { info, debug, error } = initLog('createStore');
 let store;
 
 // make webpack config
-const useDevExtension = __DEV__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+// https://github.com/reduxjs/redux-devtools/issues/167
+// https://medium.com/@zalmoxis/improve-your-development-workflow-with-redux-devtools-extension-f0379227ff83
+const useDevExtension = __DEV__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ && false;
+
 const composeEnhancers = useDevExtension
   ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
     name: 'instrumental',
-    actionsBlacklist: ['@@redux-form/REGISTER_FIELD', '@@redux-form/UNREGISTER_FIELD'],
-    theme: 'monokai'
+    // actionsBlacklist: ['@@redux-form/REGISTER_FIELD', '@@redux-form/UNREGISTER_FIELD'],
+    theme: 'twilight'
   })
   : compose;
 
@@ -37,28 +42,32 @@ export default (initialState = {}, history) => {
     debug(`returning store`);
     return store;
   }
+
+  if (initialState) {
+    info(`Initial State`, initialState);
+  }
+
   // TODO: why does thunk need to be after apimiddleware?
   const middleware = [apiMiddleware, thunkMiddleware, actionLogger, routerMiddleware(history)];
-  const enhancers = useDevExtension ? []
-    : [DevTools().instrument({ shouldCatchErrors: true })];
+  if (__DEV__) {
+    middleware.push(reduxFreeze);
+  }
+  const enhancers = useDevExtension ? [] : [DevTools().instrument({ shouldCatchErrors: true })];
 
   store = createStore(
-    makeRootReducer(),
+    connectRouter(history)(makeRootReducer()),
     composeEnhancers(
       applyMiddleware(...middleware),
       ...enhancers
     )
   );
   store.asyncReducers = {};
-  // to unsubscribe, invoke `store.unsubscribeHistory()` anytime
 
   if (module.hot) {
     module.hot.accept('./reducers', () => {
       info('HMR replace reducers');
-      // const nextReducer = makeRootReducer(require('./reducers'));
       const nextReducer = require('./reducers').makeRootReducer;
       store.replaceReducer(nextReducer(store.asyncReducers));
-      // store.replaceReducer(reducers(store.asyncReducers));
     });
   }
 

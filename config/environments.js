@@ -7,13 +7,18 @@ module.exports = {
     },
     webpack: {
       mode: 'development',
-      devtool: 'eval-source-map',
-      // devtool: 'inline-source-map',
+      devtool: 'cheap-module-eval-source-map',
+      // inline-source-map
+      // eval-source-map
+      // cheap-module-eval-source-map (original)
+      // cheap-eval-source-map (transformed)
+      // eval
       performance: {
         hints: false
       },
       output: {
-        publicPath: `http://localhost:3000/`
+        publicPath: `http://localhost:3000/`,
+        pathinfo: false
       },
       entry: {
         bundle: [

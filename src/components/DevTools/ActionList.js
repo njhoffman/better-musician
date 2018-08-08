@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import ActionListRow from './ActionListRow';
 import ActionListHeader from './ActionListHeader';
 
@@ -14,22 +14,45 @@ function getTimestamps(actions, actionIds, actionId) {
 }
 
 export default class ActionList extends PureComponent {
+  static propTypes = {
+    styling:          PropTypes.object,
+    actions:          PropTypes.array,
+    actionIds:        PropTypes.array,
+    isWideLayout:     PropTypes.bool,
+    onToggleAction:   PropTypes.func,
+    skippedActionIds: PropTypes.func,
+    selectedActionId: PropTypes.number,
+    startActionId:    PropTypes.number,
+    onSelect:         PropTypes.func,
+    onSearch:         PropTypes.func,
+    searchValue:      PropTypes.string,
+    currentActionId:  PropTypes.number,
+    onCommit:         PropTypes.func,
+    onSweep:          PropTypes.func,
+    onJumpToState:    PropTypes.func
+  };
   render() {
-    const { styling, actions, actionIds, isWideLayout, onToggleAction, skippedActionIds,
+    const {
+      styling, actions, actionIds, isWideLayout, onToggleAction, skippedActionIds,
       selectedActionId, startActionId, onSelect, onSearch, searchValue, currentActionId,
-      onCommit, onSweep, onJumpToState } = this.props;
+      onCommit, onSweep, onJumpToState
+    } = this.props;
     const lowerSearchValue = searchValue && searchValue.toLowerCase();
 
     const blacklistedActions = ['@@redux-form/BLUR', '@@redux-form/FOCUS'];
     const styledActions = {
-      'CONFIGURE_COMPLETE' :  { color: '#00ffaa' },
-      'EMAIL_SIGN_IN_ERROR' : { color: 'red', border: 'solid 1px #660000' },
-      'EMAIL_SIGN_IN_START' : { color: 'rgba(200, 255, 255, 1)' }
+      'CONFIGURE_COMPLETE':            { color: '#88eeaa' },
+      'EMAIL_SIGN_IN_ERROR':           { color: 'red', border: 'solid 1px #660000' },
+      'EMAIL_SIGN_IN_START':           { color: 'rgba(200, 255, 255, 1)' },
+      'EMAIL_SIGN_IN_SUCCESS':         { color: '#00ffaa' },
+      '@@redux-form/REGISTER_FIELD':   { color: '#838383' },
+      '@@redux-form/UNREGISTER_FIELD': { color: '#838383' },
     };
 
     const filteredActionIds = (searchValue ? actionIds.filter(id =>
       actions[id].action.type.toLowerCase().indexOf(lowerSearchValue) !== -1) : actionIds);
 
+    /* eslint-disable react/no-string-refs */
     return (
       <div
         key='actionList'
@@ -71,5 +94,6 @@ export default class ActionList extends PureComponent {
         </div>
       </div>
     );
+    /* eslint-enable react/no-string-refs */
   }
 }

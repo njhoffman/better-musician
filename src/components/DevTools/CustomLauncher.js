@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import * as themes from 'redux-devtools-themes';
 import Button from 'devui/lib/Button';
-import debounce from 'lodash.debounce';
-import { createDevTools } from 'redux-devtools';
 
 import NewWindow from 'components/NewWindow';
 import DevToolsChart  from 'components/DevTools/DevToolsChart';
 import { reducer as chartToolbarReducer } from 'components/DevTools/ChartToolbar';
+import { init as initLog } from 'shared/logger';
+const { info, warn } = initLog('custom-launcher');
 
 const styles = {
   container: {
@@ -64,15 +64,8 @@ export default class CustomLauncher extends Component {
     this.toggleChart = this.toggleChart.bind(this);
     this.popupUnload = this.popupUnload.bind(this);
     this.state = {
-      showChart : true
+      showChart : false
     };
-  }
-
-  componentDidMount() {
-    const node = this.node;
-    if (!node || !this.props.monitorState) {
-
-    }
   }
 
   getTheme() {
@@ -85,7 +78,7 @@ export default class CustomLauncher extends Component {
       return themes[theme];
     }
 
-    console.warn('DevTools theme ' + theme + ' not found, defaulting to nicinabox');
+    warn('DevTools theme ' + theme + ' not found, defaulting to nicinabox');
     return themes.nicinabox;
   }
 
@@ -101,7 +94,7 @@ export default class CustomLauncher extends Component {
   }
 
   popupUnload() {
-    console.info('popup unloading...');
+    info('popup unloading...');
     this.setState(state => ({
       ...state,
       showChart: false

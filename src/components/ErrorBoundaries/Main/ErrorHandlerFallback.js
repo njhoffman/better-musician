@@ -1,8 +1,10 @@
 // Fallback.jsx
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import Modal from './Modal';
 
-const containerStyl = {
+const containerStyle = {
   // opacity: 0.9,
   boxSizing: 'border-box',
   backgroundColor: 'rgba(0,0,0,1.0)',
@@ -15,7 +17,7 @@ const containerStyl = {
   overflowY: 'auto',
   padding: '50px'
 };
-const btnStyl = {
+const btnStyle = {
   position: 'absolute',
   right: '16px',
   top: '35px',
@@ -25,7 +27,7 @@ const btnStyl = {
   borderRadius: '5px',
   outlineStyle: 'none'
 };
-const preSty = {
+const preStyle = {
   fontFamily: 'monospace, monospace',
   whiteSpace: 'pre-wrap',
   wordWrap: 'break-word',
@@ -33,28 +35,22 @@ const preSty = {
   padding: '0 6px',
   fontSize: '0.8em'
 };
-const detailSty = {
-  outline: 'none',
-  WebkitTapHighlightColor: 'transparent',
-  WebkitHighlight: 'none'
-};
-
-const componentTableSty = {
+const componentTableStyle = {
   marginLeft: '30px',
   marginTop: '15px',
   width: 'auto'
 };
 
-const componentNameSty = {
+const componentNameStyle = {
   paddingRight: '15px',
   color: 'rgba(255, 215, 215, 1)'
 };
 
-const componentSourceSty = {
+const componentSourceStyle = {
   color: '#888888'
 };
 
-export default function Fallback(props) {
+const ErrorHandlerFallback = (props) => {
   const { error, errorInfo, closeErrorModal } = props;
   const errorTitle = error.message.split('\n')[0];
   let errorComponents = [];
@@ -73,13 +69,13 @@ export default function Fallback(props) {
   const stackLines = error.stack
     .replace(stackTitle, '')
     .split('\n')
-    .map(sl => {
+    .map((sl, i) => {
       const matches = sl.match(stackLineRE);
       if (matches &&
         matches.length === 6 &&
         matches[3].indexOf('node_modules') === -1) {
         return (
-          <span>
+          <span key={i}>
             <span style={{ color: '#ffffff' }}>{matches[1]}</span>
             <span>{matches[2]}</span>
             <span style={{ color: '#ffffff' }}>{matches[3]}</span>:
@@ -88,24 +84,24 @@ export default function Fallback(props) {
           </span>
         );
       }
-      return <span>{sl}</span>;
+      return <span key={i}>{sl}</span>;
     });
 
   return (
     <Modal>
-      <div style={containerStyl}>
-        <button style={btnStyl} onClick={closeErrorModal}>Close</button>
+      <div style={containerStyle}>
+        <button style={btnStyle} onClick={closeErrorModal}>Close</button>
         <div>
-          <pre style={{ ...preSty, color: '#ff0404', fontSize: '1.0em' }}>
+          <pre style={{ ...preStyle, color: '#ff0404', fontSize: '1.0em' }}>
             {errorTitle}
           </pre>
-          <div style={{ ...preSty }}>
-            <table style={{ ...componentTableSty }}>
+          <div style={{ ...preStyle }}>
+            <table style={{ ...componentTableStyle }}>
               <tbody>
                 {errorComponents && errorComponents.map((ec, i) =>
                   <tr key={i}>
-                    <td style={{ ...componentNameSty }}>{ec.component}</td>
-                    <td style={{ ...componentSourceSty }}>{ec.source}</td>
+                    <td style={{ ...componentNameStyle }}>{ec.component}</td>
+                    <td style={{ ...componentSourceStyle }}>{ec.source}</td>
                   </tr>
                 )}
               </tbody>
@@ -115,10 +111,10 @@ export default function Fallback(props) {
           <p>
             Stack
           </p>
-          <pre style={{ ...preSty, color: 'rgba(255, 215, 215, 1)' }}>
+          <pre style={{ ...preStyle, color: 'rgba(255, 215, 215, 1)' }}>
             {stackTitle}
           </pre>
-          <pre style={{ ...preSty, color: '#888888' }}>
+          <pre style={{ ...preStyle, color: '#888888' }}>
             <code>
               {stackLines.map((sl, i) => (
                 <div key={i}>
@@ -131,10 +127,18 @@ export default function Fallback(props) {
           <p>
             ComponentStack
           </p>
-          <pre style={{ ...preSty, color: '#f3d429' }}>{errorInfo.componentStack}</pre>
+          <pre style={{ ...preStyle, color: '#f3d429' }}>{errorInfo.componentStack}</pre>
           <hr />
         </div>
       </div>
     </Modal>
   );
-}
+};
+
+ErrorHandlerFallback.propTypes = {
+  error:           PropTypes.object.isRequired,
+  errorInfo:       PropTypes.object,
+  closeErrorModal: PropTypes.func.isRequired
+};
+
+export default ErrorHandlerFallback;

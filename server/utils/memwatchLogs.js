@@ -1,4 +1,4 @@
-const memwatch = require('memwatch-next');
+const memwatch = require('node-memwatch');
 
 let sUtils;
 let hd = new memwatch.HeapDiff();

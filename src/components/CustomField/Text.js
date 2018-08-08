@@ -29,7 +29,7 @@ const RenderCustomText = ({
           name={field.name}
           disabled={disabled}
           component={RenderText}
-          name={field.label} />
+          label={field.label} />
       </Column>
     );
   }

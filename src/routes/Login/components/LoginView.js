@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Typography, withStyles } from '@material-ui/core';
-import { withRouter } from 'react-router';
+import { Typography, withStyles, Paper } from '@material-ui/core';
+import { Column } from 'react-foundation';
 
 import EmailSignInForm from './EmailSignInForm';
 import { handleLoginSuccess } from '../modules/reducer';
@@ -17,23 +17,27 @@ const styles = (theme) => ({
 });
 
 export const LoginView = ({ classes, ...props }) => (
-  <div className={classes.loginContainer}>
-    <Typography variant='title'>This is the Login Page</Typography>
-    {props.isSignedIn && (
-      <div>
-        <Typography variant='body2'>
-          You are already logged in.  Would you like to log out?
-        </Typography>
-        <SignOutButton
-          label='LOGOUT'
-          next={() => { }}
-          style={{ backgroundColor: 'transparent', width: '100%' }} />
+  <Column small={12} medium={10} large={8}>
+    <Paper elevation={5} className={classes.contentContainer}>
+      <div className={classes.loginContainer}>
+        <Typography variant='title'>This is the Login Page</Typography>
+        {props.isSignedIn && (
+          <div>
+            <Typography variant='body2'>
+              You are already logged in.  Would you like to log out?
+            </Typography>
+            <SignOutButton
+              label='LOGOUT'
+              next={() => { }}
+              style={{ backgroundColor: 'transparent', width: '100%' }} />
+          </div>
+        )}
+        {!props.isSignedIn && (
+          <EmailSignInForm next={handleLoginSuccess} />
+        )}
       </div>
-    )}
-    {!props.isSignedIn && (
-      <EmailSignInForm next={handleLoginSuccess} />
-    )}
-  </div>
+    </Paper>
+  </Column>
 );
 
 LoginView.propTypes = {
@@ -51,5 +55,5 @@ const mapStateToProps = (state) => ({
 });
 
 const withConnect = connect(mapStateToProps, mapActionCreators);
-const decorators = (View) => withRouter(withConnect(withStyles(styles)(View)));
+const decorators = (View) => withConnect(withStyles(styles)(View));
 export default decorators(LoginView);

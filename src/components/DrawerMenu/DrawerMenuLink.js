@@ -25,8 +25,8 @@ export const DrawerMenuLink = ({
 }) => (
   <MenuItem>
     <NavLink
-      to={link}
       onClick={hideDrawerMenu}
+      to={link}
       className={classes.navLink}>
       {label}
     </NavLink>
@@ -34,8 +34,10 @@ export const DrawerMenuLink = ({
 );
 
 DrawerMenuLink.propTypes = {
-  link: PropTypes.string.isRequired,
-  label: PropTypes.string
+  hideDrawerMenu: PropTypes.func.isRequired,
+  classes:        PropTypes.object.isRequired,
+  link:           PropTypes.string.isRequired,
+  label:          PropTypes.string
 };
 
 const mapStateToProps = (state) => ({});

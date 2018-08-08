@@ -50,22 +50,20 @@ class Song extends BaseModel {
     };
   }
 
-  static reducer(action, Song, session) {
+  static reducer(action, Song/* , session */) {
     const { payload, type } = action;
     switch (type) {
       case ADD_SONG:
-        const newSong = action.payload.song;
-        const props = Object.assign({}, payload, { newSong });
-        Song.create(props);
+        Song.create(Object.assign({}, payload, { newSong: payload.song }));
         break;
       case FETCH_SONGS:
         // remove all songs when fetching
-        if (this.all().count() > 0) {
-          this.all().delete();
+        if (Song.all().count() > 0) {
+          Song.all().delete();
         }
         break;
       case LOAD_SONGS:
-        this.loadData(action.payload, Song);
+        Song.loadData(action.payload, Song);
         break;
       case DELETE_SONG:
         Song.withId(payload).delete();

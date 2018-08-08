@@ -3,39 +3,85 @@ import { Switch, Route } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import LoadRoute from 'utils/routeLoader';
+import Loadable from 'react-loadable';
+import LoadingIndicator from 'components/LoadingIndicator';
+import { initView } from 'actions/ui';
 
-import { userIsAuthRedir, userNotAuthRedir, userIsAdminRedir,
-  userIsAuth, userNotAuth, userNoAuthentication } from './auth';
+import { init as initLog } from 'shared/logger';
+const { info } = initLog('router');
+
+import {
+  userIsAuthRedir,
+  userNotAuthRedir,
+  // userIsAdminRedir,
+  // userIsAuth,
+  // userNotAuth,
+  userNoAuthentication
+} from './auth';
 
 // Need to apply the hocs here to avoid applying them inside the render method
 
-const HomeRoute = userNoAuthentication(LoadRoute('Home'));
-const LoginRoute = userNoAuthentication(LoadRoute('Login'));
-const RegisterRoute = userNotAuthRedir(LoadRoute('Register'));
+const LoadComponent = ({ store, history }, route, importRoute) => {
+  return Loadable({
+    loader: () => {
+      info(`Loading component  ${route}View`);
+      initView(store, history, route);
+      return importRoute
+        .then((View) => {
+          info(`Returning view ${route}`);
+          return View;
+        });
+    },
+    loading: LoadingIndicator
+  });
+};
 
-const ResetRoute = userIsAuthRedir(LoadRoute('Reset'));
-
-const SongsRoute = userIsAuthRedir(LoadRoute('Songs'));
-const SettingsRoute = userIsAuthRedir(LoadRoute('Settings'));
-const ProfileRoute = userIsAuthRedir(LoadRoute('Profile'));
-const StatsRoute = userIsAuthRedir(LoadRoute('Stats'));
-const FieldsRoute = userIsAuthRedir(LoadRoute('Fields'));
 // const Admin = userIsAuthenticatedRedir(userIsAdminRedir(AdminComponent));
 
 class Routes extends Component {
+  constructor(props) {
+    super(props);
+    this.HomeRoute = userNoAuthentication(LoadComponent(props, 'Home',
+      import(/* webpackChunkName: "HomeView" */ `routes/Home/components/HomeView`))
+    );
+    this.LoginRoute = userNoAuthentication(LoadComponent(props, 'Login',
+      import(/* webpackChunkName: "LoginView" */ `routes/Login/components/LoginView`))
+    );
+    this.RegisterRoute = userNotAuthRedir(LoadComponent(props, 'Register',
+      import(/* webpackChunkName: "RegisterView" */ `routes/Register/components/RegisterView`))
+    );
+    this.SongsRoute = userIsAuthRedir(LoadComponent(props, 'Songs',
+      import(/* webpackChunkName: "SongsView" */ `routes/Songs/components/SongsView`))
+    );
+    this.ProfileRoute = userIsAuthRedir(LoadComponent(props, 'Profile',
+      import(/* webpackChunkName: "ProfileView" */ `routes/Profile/components/ProfileView`))
+    );
+    this.SettingsRoute = userIsAuthRedir(LoadComponent(props, 'Settings',
+      import(/* webpackChunkName: "SettingsView" */ `routes/Settings/components/SettingsView`))
+    );
+    this.FieldsRoute = userIsAuthRedir(LoadComponent(props, 'Fields',
+      import(/* webpackChunkName: "FieldsView" */ `routes/Fields/components/FieldsView`))
+    );
+    this.StatsRoute = userIsAuthRedir(LoadComponent(props, 'Stats',
+      import(/* webpackChunkName: "StatsView" */ `routes/Stats/components/StatsView`))
+    );
+    this.ResetRoute = userNoAuthentication(LoadComponent(props, 'Reset',
+      import(/* webpackChunkName: "ResetView" */ `routes/Reset/components/ResetView`))
+    );
+  }
+
   render() {
     return (
       <Switch>
-        <Route exact path='/' component={HomeRoute} store={this.props.store} />
-        <Route path='/reset' component={ResetRoute} store={this.props.store} />
-        <Route path='/login' component={LoginRoute} store={this.props.store} />
-        <Route path='/register' component={RegisterRoute} store={this.props.store} />
-        <Route path='/fields' component={FieldsRoute} store={this.props.store} />
-        <Route path='/songs' component={SongsRoute} store={this.props.store} />
-        <Route path='/stats' component={StatsRoute} store={this.props.store} />
-        <Route path='/profile' component={ProfileRoute} store={this.props.store} />
-        <Route path='/settings' component={SettingsRoute} store={this.props.store} />
+        <Route exact path='/' component={this.HomeRoute} />
+        <Route path='/reset' component={this.ResetRoute} />
+        <Route path='/login' component={this.LoginRoute} />
+        <Route path='/register' component={this.RegisterRoute} />
+        <Route path='/fields' component={this.FieldsRoute} />
+        <Route path='/songs' component={this.SongsRoute} />
+        <Route path='/stats' component={this.StatsRoute} />
+        <Route path='/profile' component={this.ProfileRoute} />
+        <Route path='/settings' component={this.SettingsRoute} />
       </Switch>
     );
   }
@@ -52,7 +98,9 @@ const mapStateToProps = state => ({
 });
 
 const mapActionCreators = ({
-  logout
+  logout,
+  initView
 });
+
 
 export default withRouter(connect(mapStateToProps, mapActionCreators)(Routes));

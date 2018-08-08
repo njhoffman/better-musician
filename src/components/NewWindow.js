@@ -1,21 +1,11 @@
-/**
- * Component dependencies.
- * @private
- */
-
-import React from 'react';
+import React, { PureComponent}  from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-/**
- * The NewWindow class object.
- * @public
- */
+import { init as initLog } from 'shared/logger';
+const { warn } = initLog('newWindow');
 
-class NewWindow extends React.PureComponent {
-  /**
-   * NewWindow default props.
-   */
+class NewWindow extends PureComponent {
   static defaultProps = {
     url: '',
     name: '',
@@ -27,10 +17,6 @@ class NewWindow extends React.PureComponent {
     copyStyles: true
   }
 
-  /**
-   * The NewWindow function constructor.
-   * @param {Object} props
-   */
   constructor(props) {
     super(props);
     this.container = document.createElement('div');
@@ -42,9 +28,6 @@ class NewWindow extends React.PureComponent {
     };
   }
 
-  /**
-   * Render the NewWindow component.
-   */
   render() {
     if (!this.state.mounted) return null;
     const children = React.Children.map(this.props.children, child =>
@@ -69,7 +52,7 @@ class NewWindow extends React.PureComponent {
       typeof center === 'string' &&
       (features.width === undefined || features.height === undefined)
     ) {
-      console.warn(
+      warn(
         'width and height window features must be present when a center prop is provided'
       );
     } else if (center === 'parent') {
@@ -132,25 +115,20 @@ class NewWindow extends React.PureComponent {
       if (typeof onBlock === 'function') {
         onBlock();
       } else {
-        console.warn('A new window could not be opened. Maybe it was blocked.');
+        warn('A new window could not be opened. Maybe it was blocked.');
       }
     }
   }
 
-  /**
-   * Close the opened window (if any) when NewWindow will unmount.
-   */
   componentWillUnmount() {
+    // close the opened window (if any) when NewWindow will unmount.
     if (this.window) {
       this.window.close();
     }
   }
 
-  /**
-   * Release the new window and anything that was bound to it.
-   */
   release() {
-    // This method can be called once.
+    // Release the new window and anything that was bound to it.
     if (this.released) {
       return;
     }
@@ -181,15 +159,7 @@ NewWindow.propTypes = {
 };
 
 /**
- * Utility functions.
- * @private
- */
-
-/**
  * Copy styles from a source document to a target.
- * @param {Object} source
- * @param {Object} target
- * @private
  */
 
 function createNewStyleElement(source, rules) {
@@ -257,9 +227,6 @@ function copyStyles(source, target) {
 
 /**
  * Convert features props to window features format (name=value,other=value).
- * @param {Object} obj
- * @return {String}
- * @private
  */
 
 function toWindowFeatures(obj) {
@@ -278,7 +245,6 @@ function toWindowFeatures(obj) {
 
 /**
  * Component export.
- * @private
  */
 
 export default NewWindow;

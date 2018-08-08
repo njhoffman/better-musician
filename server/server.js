@@ -3,7 +3,8 @@ const webpack = require('webpack');
 // TODO: make logger for happypack
 // import compress from 'compression';
 const StatsD = require('node-statsd');
-const memwatch = require('memwatch-next');
+// const memwatch = require('memwatch-next');
+const memwatch = require('node-memwatch');
 
 const express = require('express');
 const responseTime = require('response-time');

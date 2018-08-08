@@ -13,7 +13,8 @@ module.exports = {
   },
   output: {
     publicPath : '/',
-    filename : `[name].[hash].js`
+    filename : `[name].[hash].js`,
+    chunkFilename: `[name].[hash].js`
   },
   node: {
     console: false,
@@ -52,8 +53,7 @@ module.exports = {
       'redux-thunk',
       'redux-orm',
       'material-ui',
-      '@material-ui',
-      'redux-immutablejs'
+      '@material-ui/core'
     ]
   },
   externals: {

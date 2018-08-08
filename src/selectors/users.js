@@ -4,7 +4,7 @@ import { createSelector } from 'reselect';
 
 export const ormSelector = state => state.orm;
 
-const userPointsSelector = ormCreateSelector(orm, (session, user) => {
+const userPointsSelector = ormCreateSelector(orm, (session/*, user */) => {
   const points = session.Song && session.Song.getPointTotal();
   return isNaN(points) ? '0' : points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 });
@@ -20,7 +20,7 @@ const userDisplaySelector = ormCreateSelector(orm, (session, user) => {
   return userName;
 });
 
-const maxDifficultySelector = ormCreateSelector(orm, (session, user) => {
+const maxDifficultySelector = ormCreateSelector(orm, (session/*, user*/) => {
   // set default as 20 if it isn't set
   return session.Song ? session.Song.getMaxDifficulty() : 20;
 });

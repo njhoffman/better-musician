@@ -27,6 +27,7 @@ export class EmailSignUpForm extends React.Component {
     next:                   PropTypes.func.isRequired,
     emailSignUp:            PropTypes.func.isRequired,
     dispatch:               PropTypes.func.isRequired,
+    isSignedIn:             PropTypes.bool,
     registerForm:           PropTypes.object,
     inputProps:             PropTypes.shape({
       email:                PropTypes.object,
@@ -80,8 +81,8 @@ export class EmailSignUpForm extends React.Component {
         onSubmit={this.handleSubmit}>
         <Row>
           <Column>
-            {errors && errors.map(error =>
-              <p className='error'>{error}</p>
+            {errors && errors.map((error, i) =>
+              <p key={i} className='error'>{error}</p>
             )}
           </Column>
         </Row>

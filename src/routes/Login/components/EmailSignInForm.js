@@ -12,6 +12,8 @@ import FormField from 'components/Field';
 import { emailSignIn } from 'actions/auth/signin';
 
 import config from 'data/config';
+import { init as initLog } from 'shared/logger';
+const { error } = initLog('emailSignInForm');
 
 const styles = theme => ({
   divider: {
@@ -21,7 +23,10 @@ const styles = theme => ({
 
 export class EmailSignInForm extends React.Component {
   static propTypes = {
+    api:         PropTypes.object.isRequired,
+    classes:     PropTypes.object.isRequired,
     config:      PropTypes.object.isRequired,
+    isLoading:   PropTypes.bool.isRequired,
     auth:        PropTypes.object,
     dispatch:    PropTypes.func.isRequired,
     endpoint:    PropTypes.string,
@@ -58,8 +63,10 @@ export class EmailSignInForm extends React.Component {
     );
   }
 
-  getFormValue(key, formData = {}) {
-    formData[key] = formData[key] || $(`input[name="${key}"]`).value || '';
+  getFormValue(key, formData= {}) {
+    if (!formData[key]) {
+      formData[key] = document.querySelector(`input[name="${key}"]`).value || '';
+    }
   }
 
   handleSubmit(event) {
@@ -71,12 +78,13 @@ export class EmailSignInForm extends React.Component {
     this.getFormValue('email-sign-in-password', formData);
     this.props.dispatch(this.props.emailSignIn(formData, this.getEndpoint()))
       .then(() => this.props.next(this.props.dispatch))
-      .catch((e) => { console.error(e); });
+      .catch((e) => { error(e); });
   }
 
   render() {
     let disabled = (this.props.isSignedIn || this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'loading']));
-    const errors = this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'errors']);
+    // const errors = this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'errors']);
+    const { errors } = this.props.api.endpoints.login;
 
     return (
       <form className='redux-auth email-sign-in-form'
@@ -134,6 +142,7 @@ const mapStateToProps = (state) => {
   return {
     config:      state.config,
     auth:        state.auth,
+    api:         state.api,
     isSignedIn:  state.user.isSignedIn,
     loginForm:   state.form.login,
     isLoading:   state.api.endpoints.login.loading,

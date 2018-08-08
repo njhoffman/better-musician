@@ -1,29 +1,20 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { ConnectedRouter } from 'react-router-redux';
-import {
-  MuiThemeProvider,
-  withStyles,
-  Paper
-} from '@material-ui/core';
-import { Row, Column } from 'react-foundation';
+import { withStyles } from '@material-ui/core';
+import { Row } from 'react-foundation';
 
 import 'coreStyles';
 import Routes from 'routes';
-import themes from 'styles/themes';
-import ErrorBoundary from 'components/ErrorBoundaries/Main';
-import css from './AppContainer.scss';
-import Header from 'components/Header/HeaderContainer';
+import Header from 'components/Header/Header';
 import Footer from 'components/Footer/FooterContainer';
-import DrawerMenu from 'components/DrawerMenu/DrawerMenuContainer';
+import DrawerMenu from 'components/DrawerMenu/DrawerMenu';
 import Snackbar from 'components/Snackbar/SnackbarContainer';
 
-import { init as initLog } from 'shared/logger';
-const { info } = initLog('AppContainer');
+// import { init as initLog } from 'shared/logger';
+// const { info } = initLog('AppContainer');
 
-const theme = themes['steelBlue-dark'];
-const styles = {
+const styles = (theme) => ({
   appWrapper: {
     width: '100%',
     minHeight: '100vh',
@@ -36,9 +27,7 @@ const styles = {
     maxHeight: 'calc(100vh - 90px - 75px)',
     overflowY: 'auto',
     position: 'relative',
-    // form {
-    //   margin: 10px;
-    // }
+    background: theme.backgroundColor
   },
   contentContainer: {
     margin: '0px',
@@ -50,39 +39,42 @@ const styles = {
     }
   },
   footerFiller: {
-    flexGrow: 1
+    flexGrow: 1,
+    background: theme.instrumental.footerFiller
   }
-};
+});
 
-const AppContainer = ({ history, classes, store, ...props }) => (
-  <MuiThemeProvider theme={theme} >
-    <ConnectedRouter history={history}>
-      <div className={classes.appWrapper}>
-        <ErrorBoundary>
-          <DrawerMenu />
-          <Snackbar />
-          <Header />
-          <div className={classes.contentWrapper} style={{ background: theme.backgroundColor }}>
-            <Row horizontalAlignment='center'>
-              <Column small={12} medium={10} large={8}>
-                <Paper elevation={5} className={classes.contentContainer}>
-                  <Routes store={store} history={history} />
-                </Paper>
-              </Column>
-            </Row>
-          </div>
-          <Footer />
-          <div style={{ background: theme.instrumental.footerFiller }} className={classes.footerFiller} />
-        </ErrorBoundary>
-      </div>
-    </ConnectedRouter>
-  </MuiThemeProvider>
+const AppContainer = ({
+  history,
+  classes: { appWrapper, contentWrapper, contentContainer, footerFiller },
+  store,
+  ...props
+}) => (
+  <div className={appWrapper}>
+    <DrawerMenu />
+    <Snackbar />
+    <Header />
+    <div className={contentWrapper}>
+      <Row horizontalAlignment='center'>
+        <Routes store={store} history={history} classes={ contentContainer } />
+      </Row>
+    </div>
+    <Footer />
+    <div className={footerFiller} />
+  </div>
 );
+
+AppContainer.propTypes = {
+  history: PropTypes.object.isRequired,
+  store:   PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
+};
 
 const mapStateToProps = (state) => ({
   theme: state.auth && state.auth.get('user') && state.auth.get('user').get('attributes')
     ? state.auth.get('user').get('attributes').get('visualTheme')
     : 'steelBlue'
 });
+import { withRouter } from 'react-router';
 
-export default connect(mapStateToProps)(withStyles(styles)(AppContainer));
+export default withRouter(connect(mapStateToProps)(withStyles(styles)(AppContainer)));

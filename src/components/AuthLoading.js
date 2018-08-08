@@ -1,5 +1,10 @@
 import React from 'react';
+import { Typography } from '@material-ui/core';
 
-export default () => {
-  return <div>Logging you in...</div>;
+const AuthLoading = () => {
+  return (
+    <Typography>Logging you in...</Typography>
+  );
 };
+
+export default AuthLoading;

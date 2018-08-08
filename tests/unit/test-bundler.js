@@ -21,22 +21,22 @@ global.should = chai.should();
 // ---------------------------------------
 
 // require all `tests/**/*.spec.js`
-const testsContext = require.context('./', true, /\.spec\.js$/);
+// const testsContext = require.context('./', true, /\.spec\.js$/);
 
 // When a test file changes, only rerun that spec file. If something outside of a
 // test file changed, rerun all tests.
 // https://www.npmjs.com/package/karma-webpack-with-fast-source-maps
-const __karmaWebpackManifest__ = [];
-const allTests = testsContext.keys();
-const changedTests = allTests.filter(path => {
-  return __karmaWebpackManifest__.indexOf(path) !== -1;
-})
-
-;(changedTests.length ? changedTests : allTests).forEach(testsContext);
+// const __karmaWebpackManifest__ = [];
+// const allTests = testsContext.keys();
+// const changedTests = allTests.filter(path => {
+//   return __karmaWebpackManifest__.indexOf(path) !== -1;
+// })
+//
+// ;(changedTests.length ? changedTests : allTests).forEach(testsContext);
 
 // require all `src/**/*.js` except for `main.js` (for isparta coverage reporting)
 if (__COVERAGE__) {
-  const componentsContext = (ctx) => {
+  const componentsContext = (/* ctx */) => {
     require.context('../../src/', true, /^((?!main|interfaces).)*\.js$/);
   };
   componentsContext.keys().forEach(componentsContext);

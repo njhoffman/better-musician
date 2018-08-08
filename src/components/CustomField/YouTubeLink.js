@@ -73,7 +73,7 @@ class RenderCustomYouTubeLink extends Component {
         </Column>
       );
     }
-  };
+  }
 }
 
 export default RenderCustomYouTubeLink;

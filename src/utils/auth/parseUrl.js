@@ -52,7 +52,7 @@ const stripKeys = function (obj, keys) {
 
 export function getAllParams(location) {
   return extend({}, getAnchorQs(location), getSearchQs(location));
-};
+}
 
 const buildCredentials = function (location, keys) {
   const params = getAllParams(location);

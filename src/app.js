@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { ConnectedRouter } from 'react-router-redux';
 import { Provider } from 'react-redux';
-import createHistory from 'history/createBrowserHistory';
+import { createBrowserHistory } from 'history';
+import { MuiThemeProvider } from '@material-ui/core';
+import themes from 'styles/themes';
 
 import ErrorBoundary from 'components/ErrorBoundaries/Main';
 import initDevTools from 'components/DevTools/DevTools';
 import { configureStart, configureComplete } from 'actions/auth';
-import createStore from './store/createStore';
+import createStore from 'store/createStore';
 
 import {
   loadAppConfig,
@@ -16,26 +19,26 @@ import {
 } from 'utils/app';
 
 import { init as initLog } from 'shared/logger';
-const { info } = initLog('app');
+const { info, warn } = initLog('app');
 
 const initialState = window.___INITIAL_STATE__;
 
-export const history = createHistory();
-export const store = createStore(initialState, history);
+const theme = themes['steelBlue-dark'];
+const history = createBrowserHistory();
+const store = createStore(initialState, history);
 
 const DevTools = initDevTools(store);
 const MOUNT_NODE = document.getElementById('root');
 
 const configApp = () => {
-  store.dispatch(configureStart());
-  loadAppConfig(store)
-    .then(() => loadAuthConfig(store))
-    .then((userData) => {
-      store.dispatch(configureComplete());
-      const AppContainer = require('./components/AppContainer').default;
-      render(AppContainer);
-      domStats();
-    });
+store.dispatch(configureStart());
+loadAppConfig(store)
+  .then(() => loadAuthConfig(store))
+  .then((userData) => {
+    store.dispatch(configureComplete());
+    renderDev();
+    domStats();
+  });
 };
 
 configApp();
@@ -44,7 +47,14 @@ const render = (Component) => {
   ReactDOM.render(
     <Provider store={store}>
       <ErrorBoundary onError={onError}>
-        <Component history={history} store={store} />
+        <ErrorBoundary onError={onError}>
+          <MuiThemeProvider theme={theme} >
+            <ConnectedRouter history={history}>
+              <Component history={history} store={store} />
+            </ConnectedRouter>
+          </MuiThemeProvider>
+        </ErrorBoundary>
+        <DevTools />
       </ErrorBoundary>
     </Provider>,
     MOUNT_NODE
@@ -53,7 +63,7 @@ const render = (Component) => {
 };
 
 const onError = (error, errorInfo, props) => {
-  console.warn('App.onError:', error, errorInfo, props);
+  warn('App.onError:', error, errorInfo, props);
 };
 
 const RedBox = require('redbox-react').default;
@@ -63,8 +73,7 @@ const renderError = (error) => {
 
 const renderDev = () => {
   try {
-    const NextApp = require('./components/AppContainer').default;
-    console.info('RenderDev');
+    const NextApp = require('components/AppContainer').default;
     render(NextApp);
   } catch (error) {
     renderError(error);

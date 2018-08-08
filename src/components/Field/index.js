@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import RenderSelect from './Select';
 // import RenderMultiSelect from './MultiSelect';
@@ -13,48 +13,44 @@ import RenderChip from './Chip';
 import { Field } from 'redux-form';
 import { Column } from 'react-foundation';
 
-class RenderFormField extends Component {
-  render() {
-    const {
-      type,
-      small,
-      medium,
-      large,
-      style,
-      centerOnSmall,
-      ...props } = this.props;
+const renderType = (type) => (
+  type === 'select' ? RenderSelect
+  : type === 'text' ? RenderText
+  : type === 'number' ? RenderNumber
+  : type === 'slider' ? RenderSlider
+  : type === 'autocomplete' ? RenderAutoComplete
+  : RenderCheckbox
+);
 
-    const renderType = type === 'select'
-      ? RenderSelect
-      : type === 'text'
-        ? RenderText
-        : type === 'number'
-          ? RenderNumber
-          : type === 'slider'
-            ? RenderSlider
-            : type === 'autocomplete'
-              ? RenderAutoComplete
-              : RenderCheckbox;
-
-    return (
-      <Column small={small} medium={medium} large={large} >
-        <Field
-          component={renderType}
-          style={{ ...style, ...{ maxWidth: '100%' } }}
-          {...props}
-        />
-      </Column>
-    );
-  }
-};
+const RenderFormField = ({
+  type,
+  small,
+  medium,
+  large,
+  style,
+  centerOnSmall,
+  ...props
+}) => (
+  <Column
+    small={small}
+    medium={medium}
+    large={large}
+    centerOnSmall={centerOnSmall}>
+    <Field
+      component={renderType(type)}
+      style={{ ...style, ...{ maxWidth: '100%' } }}
+      {...props}
+    />
+  </Column>
+);
 
 RenderFormField.propTypes = {
+  centerOnSmall: PropTypes.bool,
   type:          PropTypes.string.isRequired,
   style:         PropTypes.object,
   small:         PropTypes.number,
   medium:        PropTypes.number,
-  large:         PropTypes.number,
-  centerOnSmall: PropTypes.bool
+  large:         PropTypes.number
 };
 
 export {

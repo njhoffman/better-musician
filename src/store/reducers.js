@@ -9,32 +9,42 @@ import ormReducer from './orm';
 
 // selectors need access to ORM
 // TODO: put orm in own module
-import { LOCATION_CHANGE } from 'react-router-redux';
+import { connectRouter } from 'connected-react-router';
+import { LOCATION_CHANGE } from 'constants/router';
+// import { routerReducer } from 'react-router-redux';
 import { init as initLog } from 'shared/logger';
 
 const { info } = initLog('reducers');
 
-// Initial routing state
-const routeInitialState = {
-  location: null
+const getInitialState = {
+  action: '',
+  location: {
+    pathname: window.location.pathname || '/',
+    search: '',
+    hash: ''
+  }
 };
 
-const routeReducer = (state = routeInitialState, action) => {
+export const routerReducer = (state = getInitialState, action) => {
   switch (action.type) {
     case LOCATION_CHANGE:
-      return ({ ...state, location: action.payload });
+      return {
+        ...state,
+        location: action.payload,
+      };
     default:
       return state;
   }
 };
 
 export const makeRootReducer = (asyncReducers, injectedModels = []) => {
-  // if (injectedModels.length > 0) {
-  //   orm.register(...injectedModels);
-  // }
+  if (injectedModels.length > 0) {
+    info(`Injecting models into reducer: ${injectedModels.join(' ,')}$`);
+    // orm.register(...injectedModels);
+  }
   const reducers = {
     orm:            ormReducer,
-    route:          routeReducer,
+    router:         routerReducer,
     form:           formReducer,
     ui:             uiReducer,
     api:            apiReducer,
@@ -48,14 +58,14 @@ export const makeRootReducer = (asyncReducers, injectedModels = []) => {
   return combineReducers(reducers);
 };
 
-export const injectReducer = ({ key, reducer, store, clearOld = true }, models = []) => {
+export const injectReducer = ({ key, history, reducer, store, clearOld = true }, models = []) => {
   info(`Injecting reducer: ${key}`);
   if (Object.hasOwnProperty.call(store.asyncReducers, key)) {
     return;
   }
   store.asyncReducers = clearOld ? {} : store.asyncReducers;
   store.asyncReducers[key] = reducer;
-  const newReducer = exports.makeRootReducer(store.asyncReducers, models);
+  const newReducer = connectRouter(history)(makeRootReducer(store.asyncReducers, models));
   store.replaceReducer(newReducer);
 };
 

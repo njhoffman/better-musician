@@ -63,9 +63,7 @@ function getFromState(actionIndex, stagedActionIds, computedStates, monitorState
 function createIntermediateState(props, monitorState) {
   const { supportImmutable, computedStates, stagedActionIds,
     actionsById: actions, diffObjectHash, diffPropertyFilter } = props;
-  if (!monitorState) {
 
-  }
   const { inspectedStatePath, inspectedActionPath } = monitorState;
   const currentActionId = getCurrentActionId(props, monitorState);
   const currentAction = actions[currentActionId] && actions[currentActionId].action;
@@ -134,13 +132,21 @@ const positionState = {
 
 class ChartToolbar extends Component {
   static propTypes = {
-    state: PropTypes.object,
-    theme: PropTypes.string,
-    computedStates: PropTypes.array,
-    actions: PropTypes.object,
+    state:             PropTypes.object,
+    theme:             PropTypes.string,
+    computedStates:    PropTypes.array,
+    actions:           PropTypes.object,
     currentStateIndex: PropTypes.number,
-    selectedActionId: PropTypes.number,
-    diffedStates: PropTypes.array
+    selectedActionId:  PropTypes.number,
+    diffedStates:      PropTypes.array,
+    tabs:              PropTypes.array,
+    isWideLayout:      PropTypes.bool,
+    monitorState:      PropTypes.object,
+    invertTheme:       PropTypes.bool,
+    stagedActionIds:   PropTypes.array,
+    skippedActionIds:  PropTypes.array,
+    dispatch:          PropTypes.func,
+    actionsById:       PropTypes.array
   };
 
   static defaultProps = {
@@ -160,6 +166,7 @@ class ChartToolbar extends Component {
       actionPreviewPosition: { ...positionState }
     };
   }
+
   toolbarWrapperStyle() {
     return {
       fontFamily: 'monaco, Consolas, "Lucida Console", monospace',
@@ -167,7 +174,7 @@ class ChartToolbar extends Component {
       width: '100%',
       bottom: '0px'
     };
-  };
+  }
 
   sliderStyle() {
     return {
@@ -183,7 +190,7 @@ class ChartToolbar extends Component {
       bottom: '0px',
       left: '25%'
     };
-  };
+  }
 
   actionPreviewStyle() {
     return {
@@ -197,9 +204,9 @@ class ChartToolbar extends Component {
       bottom: '0px',
       right: '0%'
     };
-  };
+  }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     let nextMonitorState = nextProps.monitorState;
     const monitorState = this.props.monitorState;
 
@@ -234,23 +241,23 @@ class ChartToolbar extends Component {
   }
 
   onStart(panel) {
-    const stateObj = {};
-    const stateKey = `${panel}Position`;
-    stateObj[stateKey] = {
-      ...this.state[stateKey],
-      activeDrags: ++this.state[stateKey].activeDrags
-    };
-    this.setState(stateObj);
+    const stateKey = `${panel}Position}`;
+    this.setState({
+      [stateKey] :  {
+        ...this.state[stateKey],
+        activeDrags: this.state[stateKey].activeDrags + 1
+      }
+    });
   }
 
   onStop(panel) {
-    const stateObj = {};
-    const stateKey = `${panel}Position`;
-    stateObj[stateKey] = {
-      ...this.state[stateKey],
-      activeDrags: --this.state[stateKey].activeDrags
-    };
-    this.setState(stateObj);
+    const stateKey = `${panel}Position}`;
+    this.setState({
+      [stateKey] :  {
+        ...this.state[stateKey],
+        activeDrags: this.state[stateKey].activeDrags - 1
+      }
+    });
   }
 
   render() {
@@ -273,7 +280,7 @@ class ChartToolbar extends Component {
     Object.keys(flatDelta).forEach(fieldKey => {
       const { fields } = parsedDelta;
       const parts = fieldKey.split(/\.(\d+)(?:\.|$)/);
-      let [ base, num, val ] = parts;
+      let [ base, num ] = parts;
       num = parseInt(num);
       if (!fields[base]) {
         fields[base] = { num, old: 0, new: 0 };
@@ -307,6 +314,7 @@ class ChartToolbar extends Component {
     const theme = themes.twilight;
     theme.base01 = '#000000';
 
+    /* eslint-disable react/no-string-refs */
     return (
       <div style={this.toolbarWrapperStyle()}>
         <Draggable
@@ -392,15 +400,12 @@ class ChartToolbar extends Component {
         </Draggable>
       </div>
     );
+    /* eslint-enable react/no-string-refs */
   }
 
-  updateMonitorState = (monitorState) => {
-    this.props.dispatch(updateMonitorState(monitorState));
-  }
+  updateMonitorState = (monitorState) => this.props.dispatch(updateMonitorState(monitorState));
 
-  handleToggleAction = (actionId) => {
-    this.props.dispatch(toggleAction(actionId));
-  };
+  handleToggleAction = (actionId) => this.props.dispatch(toggleAction(actionId));
 
   handleJumpToState = (actionId) => {
     if (jumpToAction) {
@@ -461,6 +466,6 @@ class ChartToolbar extends Component {
     const { monitorState } = this.props;
     this.updateMonitorState({ tabName, selectedActionId: monitorState.selectedActionId });
   };
-};
+}
 
 export default ChartToolbar;

@@ -1,15 +1,15 @@
 import BaseModel from './BaseModel';
 
 class Instrument extends BaseModel {
-  static reducer(action, Instrument, session) {
+  static reducer(action, Instrument/* , session */) {
     const { type } = action;
     switch (type) {
       case 'SONGS_REQUEST':
         // remove all songs when fetching
-        this.all().delete();
+        Instrument.all().delete();
         break;
       case 'LOAD_INSTRUMENTS':
-        this.loadData(action.payload, this);
+        Instrument.loadData(action.payload, this);
         break;
       default:
         break;

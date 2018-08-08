@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import dateformat from 'dateformat';
 import debounce from 'lodash.debounce';
 import RightSlider from './RightSlider';
@@ -7,14 +8,37 @@ const BUTTON_SKIP = 'Skip';
 const BUTTON_JUMP = 'Jump';
 
 export default class ActionListRow extends PureComponent {
-  state: State = { hover: false };
+  static propTypes = {
+    styling:       PropTypes.object,
+    isSelected:    PropTypes.bool,
+    action:        PropTypes.object,
+    isInitAction:  PropTypes.bool,
+    onSelect:      PropTypes.func,
+    onJumpClick:   PropTypes.func,
+    onToggleClick: PropTypes.func,
+    timestamps:    PropTypes.bool,
+    isSkipped:     PropTypes.bool,
+    isInFuture:    PropTypes.bool,
+    isActive:      PropTypes.bool,
+    isHidden:      PropTypes.bool,
+    customStyling: PropTypes.object,
+    actionId:      PropTypes.number
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = { hover: false };
+  }
 
   render() {
-    const { styling, isSelected, action, isInitAction, onSelect, onJumpClick,
+    const {
+      styling, isSelected, action, isInitAction, onSelect, onJumpClick,
       timestamps, isSkipped, isInFuture, isActive,
-      isHidden, customStyling, actionId } = this.props;
+      isHidden, customStyling, actionId
+    } = this.props;
 
     const { hover } = this.state;
+    const showActionId = false;
     const timeDelta = timestamps.current - timestamps.previous;
     const showButtons = hover && !isInitAction || isSkipped;
 
@@ -52,10 +76,9 @@ export default class ActionListRow extends PureComponent {
         <div {...styling('actionListItemButtons')}>
           <RightSlider styling={styling} shown={!showButtons} rotate>
             <div {...styling('actionListItemTime')}>
-              {false
-                ? (timeDelta === 0 ? '+00:00:00'
-                  : dateformat(timeDelta, timestamps.previous ? '+MM:ss.L' : 'h:MM:ss.L')
-                ) : actionId}
+              {showActionId ? (timeDelta === 0
+                ? '+00:00:00' : dateformat(timeDelta, timestamps.previous ? '+MM:ss.L' : 'h:MM:ss.L')
+              ) : actionId}
             </div>
           </RightSlider>
           <RightSlider styling={styling} shown={showButtons} rotate>

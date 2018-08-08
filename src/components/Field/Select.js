@@ -1,25 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { MenuItem } from 'material-ui';
+// import { MenuItem } from '@material-ui/core';
 import { Field } from 'redux-form';
 import { Select } from 'redux-form-material-ui';
 
-const generateMenu = (dataSource) => {
-  let items = [];
-  const isArray = Array.isArray(dataSource);
-  // assign value to key if dataSource is an object, otherwise assign scalar value
-  Object.keys(dataSource).forEach(key => {
-    items.push(
-      <MenuItem
-        value={isArray ? dataSource[key] : key}
-        key={isArray ? dataSource[key] : key}
-        primaryText={dataSource[key]}
-      />
-    );
-  });
-  return items;
-};
-
+// const generateMenu = (dataSource) => {
+//   let items = [];
+//   const isArray = Array.isArray(dataSource);
+//   // assign value to key if dataSource is an object, otherwise assign scalar value
+//   Object.keys(dataSource).forEach(key => {
+//     items.push(
+//       <MenuItem
+//         value={isArray ? dataSource[key] : key}
+//         key={isArray ? dataSource[key] : key}
+//         primaryText={dataSource[key]}
+//       />
+//     );
+//   });
+//   return items;
+// };
+//
 const RenderSelect = ({
   label,
   viewType,

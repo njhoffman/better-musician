@@ -55,25 +55,24 @@ class MultipleMonitors extends Component {
   static update = reducer;
 
   static propTypes = {
-    monitorState: PropTypes.object,
-    changeMonitorKey: PropTypes.string,
-    changePositionKey: PropTypes.string,
-    defaultPosition: PropTypes.string,
-    defaultSize: PropTypes.number,
+    monitorState:        PropTypes.object,
+    changeMonitorKey:    PropTypes.string,
+    changePositionKey:   PropTypes.string,
+    defaultPosition:     PropTypes.string,
+    defaultSize:         PropTypes.number,
     toggleVisibilityKey: PropTypes.string,
-    children: PropTypes.array.isRequired,
-    style: PropTypes.object
+    children:            PropTypes.array.isRequired,
+    style:               PropTypes.object
   };
 
   render() {
+    /* eslint-disable no-unused-vars */
     const {
       monitorState, children, style = baseStyle, changeMonitorKey, changePositionKey,
       defaultPosition, defaultSize, toggleVisibilityKey, ...props
     } = this.props;
+    /* eslint-enable no-unused-vars */
 
-    // if (this.props.theme && !style.backgroundColor) {
-    //   baseStyle.backgroundColor = this.props.theme.base00
-    // }
     const monitors = [];
     children.forEach(c => c.props.inline && _.isArray(_.last(monitors))
       ? _.last(monitors).push(c)

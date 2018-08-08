@@ -4,6 +4,7 @@ const PKG = require('../../package.json'); // so we can get the version of the p
 const BINPATH = '../../node_modules/nightwatch/bin/'; // change if required.
 const SCREENSHOT_PATH = './screenshots/' + PKG.version + '/';
 
+/* eslint-disable no-console */
 const config = { // we use a nightwatch.conf.js file so we can include comments and helper functions
   'src_folders': [
     './integration/tests' // we use '/test' as the name of our test directory by default. So 'test/e2e' for 'e2e'.
@@ -157,6 +158,8 @@ function imgpath(browser, desc = '') {
   return SCREENSHOT_PATH + browser.currentTest.module + '/' +
     meta.toLowerCase() + padLeft(FILECOUNT++) + ' - ' + desc + '.png';
 }
+/* eslint-enable no-console */
+
 
 module.exports.imgpath = imgpath;
 module.exports.SCREENSHOT_PATH = SCREENSHOT_PATH;

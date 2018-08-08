@@ -31,7 +31,7 @@ module.exports = (config) => [{
       loader: 'css-loader',
       options: { modules: true }
     },
-    'sass-loader'
+    'fast-sass-loader'
   ]
 }, {
   // css modules off for vendors
@@ -41,7 +41,7 @@ module.exports = (config) => [{
   use: [
     'style-loader',
     'css-loader',
-    'sass-loader'
+    'fast-sass-loader'
   ]
 }, {
   test: /\.css$/,
@@ -56,23 +56,23 @@ module.exports = (config) => [{
 }, {
   test: /\.(jpg|png|gif)$/,
   use: [
-    'file-loader', {
+    'file-loader',
+    {
       loader: 'image-webpack-loader',
       options: {
-        query: {
-          gifsicle: {
-            interlaced: true
-          },
-          mozjpeg: {
-            progressive: true
-          },
-          optipng: {
-            optimizationLevel: 7
-          },
-          pngquant: {
-            quality: '65-90',
-            speed: 4
-          }
+        disable: true,
+        gifsicle: {
+          interlaced: true
+        },
+        mozjpeg: {
+          progressive: true
+        },
+        optipng: {
+          optimizationLevel: 7
+        },
+        pngquant: {
+          quality: '65-90',
+          speed: 4
         }
       }
     }

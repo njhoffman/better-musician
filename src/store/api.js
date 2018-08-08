@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { CALL_API } from 'middleware/api';
 import { init as initLog } from 'shared/logger';
 
+
 const { info } = initLog('api-store');
 
 // ------------------------------------
@@ -138,7 +139,7 @@ const ACTION_HANDLERS = {
 
   [LOAD_CONFIG] : (state, { payload: { api } }) => ({
     ...state,
-    endpoints: _.mapValues(api.endpoints, ep => ({
+    endpoints: _.mapValues(api.endpoints, () => ({
       loading: false,
       errors: false,
       success: false
@@ -153,12 +154,15 @@ const ACTION_HANDLERS = {
   [EMAIL_SIGN_IN_COMPLETE] : (state) => ({
     ...state,
     loading: false,
-    endpoints: { ...state.endpoints, login: { ...state.endpoints.login, loading: false, success: true, errors: [] } }
+    endpoints: { ...state.endpoints,
+      login: { ...state.endpoints.login, loading: false, success: true, errors: [] }
+    }
   }),
-  [EMAIL_SIGN_IN_ERROR] : (state, { errors }) => ({
-    ...state,
+  [EMAIL_SIGN_IN_ERROR] : (state, { payload: { errors } }) => ({ ...state,
     loading: false,
-    endpoints: { ...state.endpoints, login: { ...state.endpoints.login, loading: false, success: false, errors } }
+    endpoints: { ...state.endpoints,
+      login: { ...state.endpoints.login, loading: false, success: false, errors }
+    }
   }),
 
   [SONGS_REQUEST] : (state) => ({ ...state, loading: true }),

@@ -17,7 +17,6 @@ const TextField = createComponent(
 const RenderText = ({
   meta,
   inputStyle,
-  errorText,
   style,
   ...props
 }) => (

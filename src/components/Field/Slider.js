@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Slider } from 'redux-form-material-ui';
+import Slider from '@material-ui/lab/Slider';
 
 class RenderSlider extends Component {
   static propTypes = {
@@ -18,7 +18,7 @@ class RenderSlider extends Component {
   render() {
     const {
       input,
-      viewType,
+      // viewType,
       label,
       textColor,
       valueDisplay,
@@ -29,12 +29,10 @@ class RenderSlider extends Component {
         <label style={{ color: textColor, marginBottom: '-15px', marginTop: '20px' }}>
           <span>{label}</span>
           { valueDisplay && valueDisplay(this.state.value) }
-          { !valueDisplay &&
-            <span style={{ float: 'right' }}>{this.state.value}</span>
-          }
+          { !valueDisplay && <span style={{ float: 'right' }}>{this.state.value}</span> }
         </label>
         <Slider
-          onChange={(value) => this.setState({ value: value })}
+          onChange={(e, value) => this.setState({ value: value })}
           input={input}
           value={parseInt(this.state.value)}
           {...custom}
@@ -42,6 +40,6 @@ class RenderSlider extends Component {
       </div>
     );
   }
-};
+}
 
 export default RenderSlider;

@@ -1,10 +1,10 @@
-import React, { Component }  from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { MdMenu as MenuIcon } from 'react-icons/lib/md';
 import { Link } from 'react-router-dom';
-import css from './Header.scss';
-import config from 'data/config';
+import { uiToggleDrawerMenu } from 'actions/ui';
 
 import Button from 'components/Button';
 
@@ -25,22 +25,25 @@ const styles = (theme) => ({
   }
 });
 
-class HeaderLeft extends Component {
-  static propTypes = {
-    toggleDrawerMenu: PropTypes.func.isRequired
-  }
+const HeaderLeft = ({ classes, toggleDrawerMenu }) => (
+  <div className={classes.headerLeft}>
+    <Button
+      icon={<MenuIcon onClick={toggleDrawerMenu} />}
+    />
+    <Link className={classes.homeLink} to='/'>
+      instrumental.io
+    </Link>
+  </div>
+);
 
-  render() {
-    return (
-      <div className={this.props.classes.headerLeft}>
-        <Button
-          icon={<MenuIcon onClick={this.props.toggleDrawerMenu} />}
-        />
-        <Link className={this.props.classes.homeLink} to='/'>
-          instrumental.io
-        </Link>
-      </div>
-    );
-  }
-}
-export default withStyles(styles)(HeaderLeft);
+HeaderLeft.propTypes = {
+  toggleDrawerMenu: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired
+};
+
+const mapStateToProps = () => ({ });
+const mapActionCreators = {
+  toggleDrawerMenu : uiToggleDrawerMenu
+};
+
+export default connect(mapStateToProps, mapActionCreators)(withStyles(styles)(HeaderLeft));

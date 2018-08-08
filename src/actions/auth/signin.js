@@ -13,13 +13,28 @@ import { getAllParams, normalizeTokenKeys } from 'utils/auth/parseUrl';
 import _openPopup from 'utils/popup';
 import * as A from 'constants/auth';
 
-export const emailSignInFormUpdate = (endpoint, key, value) => ({ type: A.EMAIL_SIGN_IN_FORM_UPDATE, endpoint, key, value });
-export const emailSignInStart      = (endpoint) => ({ type: A.EMAIL_SIGN_IN_START, endpoint });
-export const emailSignInComplete   = (endpoint, user) => ({ type: A.EMAIL_SIGN_IN_COMPLETE, payload: { user, endpoint } });
-export const emailSignInError      = (endpoint, errors) => ({ type: A.EMAIL_SIGN_IN_ERROR, errors, endpoint });
-export const oAuthSignInStart      = (provider, endpoint) => ({ type: A.OAUTH_SIGN_IN_START, provider, endpoint });
-export const oAuthSignInComplete   = (user, endpoint) => ({ type: A.OAUTH_SIGN_IN_COMPLETE, user, endpoint });
-export const oAuthSignInError      = (errors, endpoint) => ({ type: A.OAUTH_SIGN_IN_ERROR, errors, endpoint });
+export const emailSignInFormUpdate = (endpoint, key, value) => ({
+  type: A.EMAIL_SIGN_IN_FORM_UPDATE,
+  endpoint,
+  key,
+  value
+});
+
+export const emailSignInStart = (endpoint) => ({
+  type: A.EMAIL_SIGN_IN_START,
+  endpoint
+});
+
+export const emailSignInComplete = (endpoint, user) => ({
+  type: A.EMAIL_SIGN_IN_COMPLETE,
+  payload: { user, endpoint }
+});
+
+export const emailSignInError = (endpoint, errors) => ({
+  type: A.EMAIL_SIGN_IN_ERROR,
+  payload: { errors },
+  meta: { endpoint }
+});
 
 export function emailSignIn(body, endpointKey) {
   return dispatch => {
@@ -43,8 +58,8 @@ export function emailSignIn(body, endpointKey) {
         [CALL_API]: {
           types: [
             A.EMAIL_SIGN_IN_START,
-            (user) => dispatch(emailSignInComplete(currentEndpointKey, user)),
-            (errors) => signInError
+            (user) => emailSignInComplete(currentEndpointKey, user),
+            (errors) => signInError(errors)
           ],
           method: 'POST',
           payload: JSON.stringify(body),
@@ -55,7 +70,11 @@ export function emailSignIn(body, endpointKey) {
     return callApi();
   };
 }
+
 // oAuth signin
+export const oAuthSignInStart      = (provider, endpoint) => ({ type: A.OAUTH_SIGN_IN_START, provider, endpoint });
+export const oAuthSignInComplete   = (user, endpoint) => ({ type: A.OAUTH_SIGN_IN_COMPLETE, user, endpoint });
+export const oAuthSignInError      = (errors, endpoint) => ({ type: A.OAUTH_SIGN_IN_ERROR, errors, endpoint });
 // hook for rewire
 var openPopup = _openPopup;
 const listenForCredentials = (endpointKey, popup, provider, resolve, reject) => {
@@ -68,7 +87,7 @@ const listenForCredentials = (endpointKey, popup, provider, resolve, reject) => 
 
     try {
       creds = getAllParams(popup.location);
-    } catch (err) {}
+    } catch (err) { throw Error(err); }
 
     if (creds && creds.uid) {
       popup.close();
@@ -93,7 +112,7 @@ const authenticate = ({ endpointKey, provider, url, tab = false }) => {
   return listenForCredentials(endpointKey, popup, provider);
 };
 
-const oAuthSignIn = ({ provider, params, endpointKey }) => {
+export const oAuthSignIn = ({ provider, params, endpointKey }) => {
   return dispatch => {
     // save previous endpoint key in case of failure
     var prevEndpointKey = getCurrentEndpointKey();

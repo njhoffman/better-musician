@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { TableCell } from 'material-ui';
-import withTheme from 'material-ui/styles/withTheme';
-import SortIcon from 'react-icons/lib/md/import-export';
+import { TableCell, Tooltip, TableSortLabel, withTheme } from '@material-ui/core';
 
 export class SongsListHeader extends Component {
   static propTypes = {
@@ -24,12 +22,17 @@ export class SongsListHeader extends Component {
         style={{ textAlign: 'center' }}
         variant='head'
         className={this.props.className}>
-        <a
-          style={{ color: this.props.theme.textColor }}
-          onClick={this.setSort}>
-          {this.props.displayName}
-          <SortIcon />
-        </a>
+        <Tooltip
+          title='Sort'
+          placement='bottom-end'
+          enterDelay={300}>
+          <TableSortLabel
+            active={true}
+            style={{ color: this.props.theme.textColor }}
+            onClick={this.setSort}>
+            {this.props.displayName}
+          </TableSortLabel>
+        </Tooltip>
       </TableCell>
     );
   }
