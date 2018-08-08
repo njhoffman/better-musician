@@ -14,7 +14,7 @@ import FieldOptions from './FieldOptions';
 import {
   MdSave as SaveIcon,
   MdAdd as AddIcon
-} from 'react-icons/lib/md';
+} from 'react-icons/md';
 
 import {
   updateField,

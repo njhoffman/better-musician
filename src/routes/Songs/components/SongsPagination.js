@@ -8,7 +8,7 @@ import Button from 'components/Button';
 import {
   MdNavigateBefore as BeforeIcon,
   MdNavigateNext as NextIcon
-} from 'react-icons/lib/md';
+} from 'react-icons/md';
 import {
   paginationTotal as paginationTotalSelector,
   paginationStart as paginationStartSelector,

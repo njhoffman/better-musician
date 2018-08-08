@@ -11,7 +11,7 @@ import {
   MdDelete        as DeleteIcon,
   MdDashboard     as ViewIcon,
   MdArrowDropDown as ArrowDropDownIcon
-} from 'react-icons/lib/md';
+} from 'react-icons/md';
 /* eslint-enable no-multi-spaces */
 
 import { uiShowModal } from 'actions/ui';

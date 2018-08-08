@@ -35,7 +35,6 @@ export const AddSongMainTab = (props) => {
   const {
     lastActiveField,
     textStyle,
-    textInputStyle,
     modalView,
     matchedArtist,
     activeField,
@@ -84,8 +83,7 @@ export const AddSongMainTab = (props) => {
 
   const textProps = {
     disabled       : modalView.isView(),
-    style          : textStyle,
-    inputStyle     : textInputStyle
+    style          : textStyle
   };
 
   const className = classes[`${modalView.getName()}Field`];
@@ -191,7 +189,6 @@ export const AddSongMainTab = (props) => {
 AddSongMainTab.propTypes = {
   lastActiveField : PropTypes.string.isRequired,
   textStyle       : PropTypes.object.isRequired,
-  textInputStyle  : PropTypes.object.isRequired,
   modalView       : PropTypes.object.isRequired,
   matchedArtist   : PropTypes.object,
   activeField     : PropTypes.string,

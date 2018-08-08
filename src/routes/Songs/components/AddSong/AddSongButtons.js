@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button } from 'material-ui';
-import { MdDelete as DeleteIcon } from 'react-icons/lib/md';
+import { MdDelete as DeleteIcon } from 'react-icons/md';
 
 import { uiShowModal, uiHideModal } from 'actions/ui';
 import { MODAL_ADD_SONG } from 'constants/ui';

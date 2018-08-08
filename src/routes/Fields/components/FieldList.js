@@ -8,7 +8,7 @@ import {
   MdModeEdit as EditIcon,
   MdClose as CancelIcon,
   MdDelete as DeleteIcon
-} from 'react-icons/lib/md';
+} from 'react-icons/md';
 import css from './FieldsView.scss';
 
 export const FieldList = (props) => {

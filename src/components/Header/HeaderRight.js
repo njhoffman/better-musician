@@ -1,7 +1,7 @@
 import React  from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { MdAccountCircle as AvatarIcon } from 'react-icons/lib/md';
+import { MdAccountCircle as AvatarIcon } from 'react-icons/md';
 import { withStyles, Avatar, Typography } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
 

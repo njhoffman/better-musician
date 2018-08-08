@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { MdMenu as MenuIcon } from 'react-icons/lib/md';
+import { MdMenu as MenuIcon } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { uiToggleDrawerMenu } from 'actions/ui';
 

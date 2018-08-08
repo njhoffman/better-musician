@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { MdSearch as SearchIcon } from 'react-icons/lib/md';
+import { MdSearch as SearchIcon } from 'react-icons/md';
 import { withStyles, MenuItem, ListItemIcon, ListItemText } from '@material-ui/core';
 
 const styles = {

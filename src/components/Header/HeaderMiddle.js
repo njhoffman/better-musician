@@ -9,7 +9,7 @@ import { withStyles, MenuItem, ListItemIcon, ListItemText } from '@material-ui/c
 import { uiShowModal } from 'actions/ui';
 import { MODAL_FILTER_SONGS } from 'constants/ui';
 
-import { MdFilterList as FilterIcon } from 'react-icons/lib/md';
+import { MdFilterList as FilterIcon } from 'react-icons/md';
 
 // import css from './Header.scss';
 const styles = {

@@ -8,7 +8,7 @@ import { withRouter } from 'react-router';
 import {
   MdClose as ResetIcon,
   MdSave as SaveIcon
-} from 'react-icons/lib/md';
+} from 'react-icons/md';
 
 import {
   Paper, Tabs, Tab, AppBar, Typography

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import StarIcon from 'react-icons/lib/md/star';
+import { MdStar as StarIcon } from 'react-icons/md';
 
 const RenderStars = ({ number, starColor, style }) => (
   <div style={style}>

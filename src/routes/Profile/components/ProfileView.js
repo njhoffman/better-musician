@@ -8,7 +8,7 @@ import { withRouter } from 'react-router';
 import {
   MdAccountCircle as AvatarIcon,
   MdSave as SaveIcon
-} from 'react-icons/lib/md';
+} from 'react-icons/md';
 import {
   Avatar, Paper, Tabs, Tab,
   Button as MatButton, AppBar, Typography
