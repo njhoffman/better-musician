@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/routes/Songs/components/SongsPagination.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/routes/Songs/components/SongsPagination.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">77.47</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">173</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">26.77</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.14</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import React from &#039;react&#039;;
+import { connect } from &#039;react-redux&#039;;
+import PropTypes from &#039;prop-types&#039;;
+import withTheme from &#039;material-ui/styles/withTheme&#039;;
+import { Row, Column } from &#039;react-foundation&#039;;
+import { TextField, Typography } from &#039;@material-ui/core&#039;;
+import Button from &#039;components/Button&#039;;
+import {
+  MdNavigateBefore as BeforeIcon,
+  MdNavigateNext as NextIcon
+} from &#039;react-icons/lib/md&#039;;
+import {
+  paginationTotal as paginationTotalSelector,
+  paginationStart as paginationStartSelector,
+  paginationPages as paginationPagesSelector,
+  paginationEnd as paginationEndSelector
+} from &#039;routes/Songs/modules/selectors&#039;;
+
+import css from &#039;./SongsPagination.scss&#039;;
+
+const styleObj = {
+  buttons: {
+    minWidth: &#039;25px&#039;,
+    fontSize: &#039;1.4em&#039;,
+    margin: &#039;0px 5px&#039;,
+    minHeight: &#039;unset&#039;,
+    padding: &#039;0px 16px&#039;
+  }
+};
+export const SongsPagination = ({
+  paginationCurrent,
+  paginationPerPage,
+  paginationTotal,
+  paginationStart,
+  paginationPages,
+  paginationEnd,
+  setPaginationCurrent,
+  setPaginationPerPage,
+  setPaginationIncrement,
+  setPaginationDecrement,
+  setPaginationStart,
+  setPaginationEnd,
+  theme
+}) =&gt; (
+  &lt;Row className={css.paginationRow}&gt;
+    &lt;Column small={3} &gt;
+      &lt;Typography className={css.paginationText}&gt;
+        &lt;span&gt;
+          &lt;strong&gt;{paginationStart}&lt;/strong&gt; -
+          &lt;strong&gt; {paginationEnd}&lt;/strong&gt; of
+          &lt;strong&gt;{paginationTotal}&lt;/strong&gt; Songs
+        &lt;/span&gt;
+      &lt;/Typography&gt;
+    &lt;/Column&gt;
+    &lt;Column small={6} &gt;
+      &lt;div className={css.buttonWrapper}&gt;
+        &lt;Button
+          style={styleObj.buttons}
+          className={css.beginning}
+          variant=&#039;raised&#039;
+          color=&#039;secondary&#039;
+          icon={&lt;BeforeIcon /&gt;}
+          onClick={setPaginationStart} /&gt;
+        &lt;Button
+          style={styleObj.buttons}
+          variant=&#039;raised&#039;
+          className={css.prev}
+          onClick={setPaginationDecrement}
+          icon={&lt;BeforeIcon /&gt;}
+          color=&#039;secondary&#039; /&gt;
+        &lt;TextField
+          type=&#039;number&#039;
+          name=&#039;paginationCurrent&#039;
+          value={paginationCurrent}
+          onChange={setPaginationCurrent}
+          style={{ width: &#039;40px&#039; }} /&gt;
+        &lt;span className={css.centerPageTotal}&gt; / &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; {paginationPages} &lt;/span&gt;
+        &lt;Button
+          style={styleObj.buttons}
+          variant=&#039;raised&#039;
+          className={css.next}
+          color=&#039;secondary&#039;
+          icon={&lt;NextIcon /&gt;}
+          onClick={setPaginationIncrement} /&gt;
+        &lt;Button
+          style={styleObj.buttons}
+          className={css.end}
+          variant=&#039;raised&#039;
+          color=&#039;secondary&#039;
+          icon={&lt;NextIcon /&gt;}
+          onClick={setPaginationEnd} /&gt;
+      &lt;/div&gt;
+    &lt;/Column&gt;
+    &lt;Column small={3}&gt;
+      &lt;div className={css.buttonWrapper}&gt;
+        &lt;TextField
+          type=&#039;number&#039;
+          name=&#039;paginationPage&#039;
+          defaultValue={paginationPerPage}
+          onChange={setPaginationPerPage}
+          style={{ width: &#039;50px&#039; }} /&gt;
+        &lt;Typography variant=&#039;caption&#039;&gt;Per Page&lt;/Typography&gt;
+      &lt;/div&gt;
+    &lt;/Column&gt;
+  &lt;/Row&gt;
+);
+
+SongsPagination.propTypes = {
+  paginationCurrent:      PropTypes.number,
+  paginationPerPage:      PropTypes.number,
+  paginationTotal:        PropTypes.number,
+  paginationStart:        PropTypes.number,
+  paginationPages:        PropTypes.number,
+  paginationEnd:          PropTypes.number,
+  setPaginationCurrent:   PropTypes.func,
+  setPaginationPerPage:   PropTypes.func,
+  setPaginationIncrement: PropTypes.func,
+  setPaginationDecrement: PropTypes.func,
+  setPaginationStart:     PropTypes.func,
+  setPaginationEnd:       PropTypes.func,
+  theme:                  PropTypes.object.isRequired
+};
+
+const setPaginationCurrent = (e, val) =&gt; (dispatch) =&gt; {
+  dispatch({ type: &#039;SET_PAGINATION_CURRENT&#039;, payload: parseInt(val) });
+};
+
+const setPaginationPerPage = (e, val) =&gt; (dispatch) =&gt; {
+  dispatch({ type: &#039;SET_PAGINATION_PER_PAGE&#039;, payload: parseInt(val) });
+};
+
+const setPaginationIncrement = () =&gt; (dispatch, getState) =&gt; {
+  const curr = parseInt(getState().SongsView.paginationCurrent);
+  const val = curr + 1 &gt; paginationEndSelector(getState())
+    ? paginationEndSelector(getState())
+    : curr + 1;
+  dispatch({ type: &#039;SET_PAGINATION_CURRENT&#039;, payload: val });
+};
+
+const setPaginationDecrement = () =&gt; (dispatch, getState) =&gt; {
+  const curr = parseInt(getState().SongsView.paginationCurrent);
+  const val = curr - 1 &lt;= 1 ? 1 : curr - 1;
+  dispatch({ type: &#039;SET_PAGINATION_CURRENT&#039;, payload: val });
+};
+
+const setPaginationStart = () =&gt; (dispatch, getState) =&gt; {
+  dispatch({ type: &#039;SET_PAGINATION_CURRENT&#039;, payload: 1 });
+};
+
+const setPaginationEnd = () =&gt; (dispatch, getState) =&gt; {
+  dispatch({ type: &#039;SET_PAGINATION_CURRENT&#039;, payload: paginationEndSelector(getState()) });
+};
+
+const mapStateToProps = (state, action) =&gt; ({
+  paginationCurrent: state.SongsView.paginationCurrent,
+  paginationPerPage: state.SongsView.paginationPerPage,
+  paginationTotal:   paginationTotalSelector(state),
+  paginationPages:   paginationPagesSelector(state),
+  paginationStart:   paginationStartSelector(state),
+  paginationEnd:     paginationEndSelector(state)
+});
+
+const mapActionCreators = ({
+  setPaginationCurrent,
+  setPaginationPerPage,
+  setPaginationIncrement,
+  setPaginationDecrement,
+  setPaginationStart,
+  setPaginationEnd
+});
+
+export default connect(mapStateToProps, mapActionCreators)(withTheme()(SongsPagination));
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

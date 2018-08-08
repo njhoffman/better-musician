@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/components/DevTools/ChartToolbar.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/components/DevTools/ChartToolbar.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">66.01</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">472</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">71.84</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">4.64</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import React, { Component } from &#039;react&#039;;
+import PropTypes from &#039;prop-types&#039;;
+import Draggable from &#039;react-draggable&#039;;
+import { ActionCreators } from &#039;redux-devtools&#039;;
+import { getBase16Theme } from &#039;react-base16-styling&#039;;
+import * as themes from &#039;redux-devtools-themes&#039;;
+import flatten from &#039;flat&#039;;
+
+import ActionPreview from &#039;redux-devtools-inspector/lib/ActionPreview&#039;;
+import createDiffPatcher from &#039;redux-devtools-inspector/lib/createDiffPatcher&#039;;
+import getInspectedState from &#039;redux-devtools-inspector/lib/utils/getInspectedState&#039;;
+
+import { createStylingFromTheme } from &#039;./createStylingFromTheme&#039;;
+import SliderMonitor from &#039;./SliderMonitor&#039;;
+import ActionList from &#039;./ActionList&#039;;
+
+const { commit, sweep, toggleAction, jumpToAction, jumpToState } = ActionCreators;
+
+const UPDATE_MONITOR_STATE = &#039;@@redux-devtools-inspector/UPDATE_MONITOR_STATE&#039;;
+const DEFAULT_STATE = {
+  selectedActionId: null,
+  startActionId: null,
+  inspectedActionPath: [],
+  inspectedStatePath: [],
+  tabName: &#039;Diff&#039;
+};
+
+export function updateMonitorState(monitorState) {
+  return { type: UPDATE_MONITOR_STATE, monitorState };
+}
+
+function reduceUpdateState(state, action) {
+  return (action.type === UPDATE_MONITOR_STATE) ? {
+    ...state,
+    ...action.monitorState
+  } : state;
+}
+
+export function reducer(props, state = DEFAULT_STATE, action) {
+  return {
+    ...reduceUpdateState(state, action)
+  };
+}
+function getLastActionId(props) {
+  return props.stagedActionIds[props.stagedActionIds.length - 1];
+}
+
+function getCurrentActionId(props, monitorState) {
+  return monitorState.selectedActionId === null
+    ? props.stagedActionIds[props.currentStateIndex] : monitorState.selectedActionId;
+}
+
+function getFromState(actionIndex, stagedActionIds, computedStates, monitorState) {
+  const { startActionId } = monitorState;
+  if (startActionId === null) {
+    return actionIndex &gt; 0 ? computedStates[actionIndex - 1] : null;
+  }
+  let fromStateIdx = stagedActionIds.indexOf(startActionId - 1);
+  if (fromStateIdx === -1) fromStateIdx = 0;
+  return computedStates[fromStateIdx];
+}
+
+function createIntermediateState(props, monitorState) {
+  const { supportImmutable, computedStates, stagedActionIds,
+    actionsById: actions, diffObjectHash, diffPropertyFilter } = props;
+
+  const { inspectedStatePath, inspectedActionPath } = monitorState;
+  const currentActionId = getCurrentActionId(props, monitorState);
+  const currentAction = actions[currentActionId] &amp;&amp; actions[currentActionId].action;
+
+  const actionIndex = stagedActionIds.indexOf(currentActionId);
+  const fromState = getFromState(actionIndex, stagedActionIds, computedStates, monitorState);
+  const toState = computedStates[actionIndex];
+  const error = toState ? toState.error : null;
+
+  const fromInspectedState = !error &amp;&amp; fromState
+    ? getInspectedState(fromState.state, inspectedStatePath, supportImmutable) : null;
+  const toInspectedState = !error &amp;&amp; toState
+    ? getInspectedState(toState.state, inspectedStatePath, supportImmutable) : null;
+
+  const delta = fromInspectedState &amp;&amp; toInspectedState
+    ? createDiffPatcher(diffObjectHash, diffPropertyFilter).diff(
+      fromInspectedState,
+      toInspectedState
+    ) : null;
+
+  const stateFlat = flatten(toState);
+  const stateFields = {};
+  Object.keys(stateFlat).forEach(fieldKey =&gt; {
+    const base = fieldKey.split(&#039;.&#039;).slice(0, -1).join(&#039;.&#039;);
+    if (!stateFields[base]) {
+      stateFields[base] = 1;
+    } else {
+      stateFields[base] = stateFields[base] + 1;
+    }
+  });
+
+  const stateCount = {
+    keys: Object.keys(stateFields).length,
+    primitives: Object.keys(stateFlat).length
+  };
+
+  return {
+    stateCount,
+    delta,
+    nextState: toState &amp;&amp; getInspectedState(toState.state, inspectedStatePath, false),
+    action: getInspectedState(currentAction, inspectedActionPath, false),
+    error
+  };
+}
+
+function createThemeState(props) {
+  const base16Theme = getBase16Theme(props.theme);
+  if (props.theme === &#039;twilight&#039;) {
+    base16Theme.base00 = &#039;#0e0e0e&#039;;
+    base16Theme.base01 = &#039;#222527&#039;;
+  }
+  const styling = createStylingFromTheme(props.theme, props.invertTheme);
+
+  return { base16Theme, styling };
+}
+
+const positionState = {
+  activeDrags: 0,
+  deltaPosition: {
+    x: 0, y: 0
+  },
+  controlledPosition: {
+    x: -400, y: 200
+  }
+};
+
+class ChartToolbar extends Component {
+  static propTypes = {
+    state:             PropTypes.object,
+    theme:             PropTypes.string,
+    computedStates:    PropTypes.array,
+    actions:           PropTypes.object,
+    currentStateIndex: PropTypes.number,
+    selectedActionId:  PropTypes.number,
+    diffedStates:      PropTypes.array,
+    tabs:              PropTypes.array,
+    isWideLayout:      PropTypes.bool,
+    monitorState:      PropTypes.object,
+    invertTheme:       PropTypes.bool,
+    stagedActionIds:   PropTypes.array,
+    skippedActionIds:  PropTypes.array,
+    dispatch:          PropTypes.func,
+    actionsById:       PropTypes.array
+  };
+
+  static defaultProps = {
+    invertTheme: false,
+    theme: &#039;twilight&#039;
+  };
+
+  static update = reducer;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      ...createIntermediateState(props, props.monitorState),
+      themeState: createThemeState(props),
+      actionListPosition: { ...positionState },
+      sliderPosition: { ...positionState },
+      actionPreviewPosition: { ...positionState }
+    };
+  }
+
+  toolbarWrapperStyle() {
+    return {
+      fontFamily: &#039;monaco, Consolas, &quot;Lucida Console&quot;, monospace&#039;,
+      position: &#039;fixed&#039;,
+      width: &#039;100%&#039;,
+      bottom: &#039;0px&#039;
+    };
+  }
+
+  sliderStyle() {
+    return {
+      color: &#039;white&#039;,
+      margin: &#039;auto&#039;,
+      textAlign: &#039;center&#039;,
+      paddingTop: &#039;10px&#039;,
+      paddingBottom: &#039;10px&#039;,
+      border: &#039;solid 1px #333&#039;,
+      background: &#039;rgba(0, 0, 0, 0.8)&#039;,
+      width: &#039;50%&#039;,
+      position: &#039;absolute&#039;,
+      bottom: &#039;0px&#039;,
+      left: &#039;25%&#039;
+    };
+  }
+
+  actionPreviewStyle() {
+    return {
+      color: &#039;white&#039;,
+      paddingBottom: &#039;10px&#039;,
+      border: &#039;solid 1px #333&#039;,
+      background: &#039;rgba(0, 0, 0, 0.8)&#039;,
+      width: &#039;25%&#039;,
+      margin: &#039;auto&#039;,
+      position: &#039;absolute&#039;,
+      bottom: &#039;0px&#039;,
+      right: &#039;0%&#039;
+    };
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    let nextMonitorState = nextProps.monitorState;
+    const monitorState = this.props.monitorState;
+
+    if (
+      getCurrentActionId(this.props, monitorState) !==
+      getCurrentActionId(nextProps, nextMonitorState) ||
+      monitorState.startActionId !== nextMonitorState.startActionId ||
+      monitorState.inspectedStatePath !== nextMonitorState.inspectedStatePath ||
+      monitorState.inspectedActionPath !== nextMonitorState.inspectedActionPath
+    ) {
+      this.setState(createIntermediateState(nextProps, nextMonitorState));
+    }
+
+    if (this.props.theme !== nextProps.theme ||
+        this.props.invertTheme !== nextProps.invertTheme) {
+      this.setState({ themeState: createThemeState(nextProps) });
+    }
+  }
+
+  handleDrag(panel, e, ui) {
+    const stateKey = `${panel}Position`;
+    const { x, y } = this.state[stateKey].deltaPosition;
+    const stateObj = {};
+    stateObj[stateKey] = {
+      ...this.state[stateKey],
+      deltaPosition: {
+        x: x + ui.deltaX,
+        y: y + ui.deltaY
+      }
+    };
+    this.setState(stateObj);
+  }
+
+  onStart(panel) {
+    const stateKey = `${panel}Position}`;
+    this.setState({
+      [stateKey] :  {
+        ...this.state[stateKey],
+        activeDrags: this.state[stateKey].activeDrags + 1
+      }
+    });
+  }
+
+  onStop(panel) {
+    const stateKey = `${panel}Position}`;
+    this.setState({
+      [stateKey] :  {
+        ...this.state[stateKey],
+        activeDrags: this.state[stateKey].activeDrags - 1
+      }
+    });
+  }
+
+  render() {
+    const { stagedActionIds: actionIds, actionsById: actions, computedStates, tabs,
+      invertTheme, skippedActionIds, currentStateIndex, monitorState, isWideLayout
+    } = this.props;
+    const { selectedActionId, startActionId, searchValue, tabName } = monitorState;
+
+    const {
+      themeState, action, nextState, delta, stateCount, error
+    } = this.state;
+
+    const flatDelta = delta ? flatten(delta) : {};
+    const parsedDelta = {
+      fields: {},
+      totals: { added: 0, changed: 0, removed: 0 },
+      primitives: { added: 0, changed: 0, removed: 0 }
+    };
+
+    Object.keys(flatDelta).forEach(fieldKey =&gt; {
+      const { fields } = parsedDelta;
+      const parts = fieldKey.split(/\.(\d+)(?:\.|$)/);
+      let [ base, num ] = parts;
+      num = parseInt(num);
+      if (!fields[base]) {
+        fields[base] = { num, old: 0, new: 0 };
+      }
+      fields[base].num = num &gt; fields[base].num ? num : fields[base].num;
+      if (num === 0) {
+        fields[base].new += 1;
+      } else if (num === 1) {
+        fields[base].old += 1;
+      }
+    });
+
+    Object.keys(parsedDelta.fields).forEach(key =&gt; {
+      const { fields, totals, primitives } = parsedDelta;
+      if (fields[key].num === 0) {
+        totals.added += 1;
+        primitives.added += fields[key].new;
+      } else if (fields[key].num === 1) {
+        totals.changed += 1;
+        primitives.changed += fields[key].new;
+      } else if (fields[key].num === 2) {
+        totals.removed += 1;
+        primitives.removed += fields[key].old;
+      }
+    });
+
+    const { styling } = themeState;
+
+    const inspectedPathType = tabName === &#039;Action&#039; ? &#039;inspectedActionPath&#039; : &#039;inspectedStatePath&#039;;
+
+    const theme = themes.twilight;
+    theme.base01 = &#039;#000000&#039;;
+
+    /* eslint-disable react/no-string-refs */
+    return (
+      &lt;div style={this.toolbarWrapperStyle()}&gt;
+        &lt;Draggable
+          onStart={() =&gt; this.onStart(&#039;actionList&#039;)}
+          onStop={() =&gt; this.onStop(&#039;actionList&#039;)}
+          onDrag={(e, ui) =&gt; this.handleDrag(&#039;actionList&#039;, e, ui)}&gt;
+          &lt;div
+            key=&#039;inspector&#039;
+            ref=&#039;inspector&#039;
+            style={{
+              width: &#039;25%&#039;,
+              borderTop: &#039;solid 1px #333&#039;,
+              position: &#039;absolute&#039;,
+              bottom: &#039;0px&#039;
+            }}
+            {...styling([&#039;inspector&#039;])}&gt;
+            &lt;ActionList
+              {...{
+                actions,
+                actionIds,
+                searchValue,
+                selectedActionId,
+                startActionId
+              }}
+              styling={styling}
+              onSearch={this.handleSearch}
+              onSelect={this.handleSelectAction}
+              onToggleAction={this.handleToggleAction}
+              onJumpToState={this.handleJumpToState}
+              onCommit={this.handleCommit}
+              onSweep={this.handleSweep}
+              skippedActionIds={skippedActionIds}
+              currentActionId={actionIds[currentStateIndex]}
+              lastActionId={getLastActionId(this.props)}
+            /&gt;
+          &lt;/div&gt;
+        &lt;/Draggable&gt;
+        &lt;Draggable
+          onStart={() =&gt; this.onStart(&#039;slider&#039;)}
+          onStop={() =&gt; this.onStop(&#039;slider&#039;)}
+          onDrag={(e, ui) =&gt; this.handleDrag(&#039;slider&#039;, e, ui)}&gt;
+          &lt;div
+            className=&#039;timeline-controls&#039;
+            style={this.sliderStyle()}&gt;
+            &lt;div className=&#039;slider&#039;&gt;
+              &lt;SliderMonitor
+                {...this.props}
+                theme={theme}
+                parsedDelta={parsedDelta}
+                stateCount={stateCount} /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/Draggable&gt;
+        &lt;Draggable
+          onStart={() =&gt; this.onStart(&#039;actionPreview&#039;)}
+          onStop={() =&gt; this.onStop(&#039;actionPreview&#039;)}
+          onDrag={(e, ui) =&gt; this.handleDrag(&#039;actionPreview&#039;, e, ui)}&gt;
+          &lt;div
+            className=&#039;action-preview&#039;
+            style={this.actionPreviewStyle()}&gt;
+            &lt;ActionPreview
+              {...{
+                base16Theme: themeState.base16Theme,
+                invertTheme,
+                expandDiffs: true,
+                isWideLayout,
+                tabs,
+                tabName,
+                delta,
+                error,
+                nextState,
+                computedStates,
+                action,
+                actions,
+                selectedActionId,
+                startActionId
+              }}
+              styling={styling}
+              onInspectPath={this.handleInspectPath.bind(this, inspectedPathType)}
+              inspectedPath={monitorState[inspectedPathType]}
+              onSelectTab={this.handleSelectTab} /&gt;
+          &lt;/div&gt;
+        &lt;/Draggable&gt;
+      &lt;/div&gt;
+    );
+    /* eslint-enable react/no-string-refs */
+  }
+
+  updateMonitorState = (monitorState) =&gt; this.props.dispatch(updateMonitorState(monitorState));
+
+  handleToggleAction = (actionId) =&gt; this.props.dispatch(toggleAction(actionId));
+
+  handleJumpToState = (actionId) =&gt; {
+    if (jumpToAction) {
+      this.props.dispatch(jumpToAction(actionId));
+    } else { // Fallback for redux-devtools-instrument &lt; 1.5
+      const index = this.props.stagedActionIds.indexOf(actionId);
+      if (index !== -1) this.props.dispatch(jumpToState(index));
+    }
+  };
+
+  handleCommit = () =&gt; {
+    this.props.dispatch(commit());
+  };
+
+  handleSweep = () =&gt; {
+    this.props.dispatch(sweep());
+  };
+
+  handleSearch = (val) =&gt; {
+    this.updateMonitorState({ searchValue: val });
+  };
+
+  handleSelectAction = (e, actionId) =&gt; {
+    const { monitorState } = this.props;
+    let startActionId;
+    let selectedActionId;
+
+    if (e.shiftKey &amp;&amp; monitorState.selectedActionId !== null) {
+      if (monitorState.startActionId !== null) {
+        if (actionId &gt;= monitorState.startActionId) {
+          startActionId = Math.min(monitorState.startActionId, monitorState.selectedActionId);
+          selectedActionId = actionId;
+        } else {
+          selectedActionId = Math.max(monitorState.startActionId, monitorState.selectedActionId);
+          startActionId = actionId;
+        }
+      } else {
+        startActionId = Math.min(actionId, monitorState.selectedActionId);
+        selectedActionId = Math.max(actionId, monitorState.selectedActionId);
+      }
+    } else {
+      startActionId = null;
+      if (actionId === monitorState.selectedActionId || monitorState.startActionId !== null) {
+        selectedActionId = null;
+      } else {
+        selectedActionId = actionId;
+      }
+    }
+
+    this.updateMonitorState({ startActionId, selectedActionId, tabName: monitorState.tabName });
+  };
+
+  handleInspectPath = (pathType, path) =&gt; {
+    this.updateMonitorState({ [pathType]: path });
+  };
+
+  handleSelectTab = (tabName) =&gt; {
+    const { monitorState } = this.props;
+    this.updateMonitorState({ tabName, selectedActionId: monitorState.selectedActionId });
+  };
+}
+
+export default ChartToolbar;
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>
