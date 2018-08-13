@@ -50,7 +50,7 @@ export const AddSongMainTab = (props) => {
         return (
           <Column>
             <img className={classes.image} src={artistPicture} />
-            <div>{matchedArtist.fullName}</div>
+            <div>{matchedArtist.fullName()}</div>
             { !modalView.isView() && <Button variant='raised' secondary label='Change Picture' /> }
           </Column>
         );

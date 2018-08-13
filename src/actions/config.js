@@ -1,10 +1,14 @@
-import _ from 'lodash';
 import * as A from 'constants/auth';
-import { defaultConfig } from 'store/config';
+import { configure as authConfigure } from 'actions/auth/configure';
 
-export const loadConfig = (config) => (dispatch) => {
+export const loadAppConfig = ({ dispatch, getState }) => {
   return Promise.resolve(dispatch({
     type: A.LOAD_CONFIG,
-    payload: _.defaultsDeep(config, defaultConfig)
+    payload: getState().config.endpoints.default
   }));
 };
+
+export const loadAuthConfig = ({ dispatch, getState }) =>
+  dispatch(
+    authConfigure(getState().config.endpoints, getState().config.settings)
+  );

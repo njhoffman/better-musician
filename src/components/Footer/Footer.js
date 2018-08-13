@@ -1,152 +1,150 @@
-import React, { Component }  from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Row, Column } from 'react-foundation';
 import { RenderStars, RenderDifficulty } from 'components/Field';
-import withTheme from 'material-ui/styles/withTheme';
+import { withStyles, Typography } from '@material-ui/core';
+
+import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
+import {
+  currentSong as currentSongSelector,
+  songStats as songStatsSelector
+} from 'routes/Songs/modules/selectors';
 
 import css from './Footer.scss';
 
-export class Footer extends Component {
-  static propTypes = {
-    song: PropTypes.object,
-    theme: PropTypes.object.isRequired,
-    stats: PropTypes.object,
-    isSignedIn: PropTypes.bool.isRequired,
-    maxDifficulty: PropTypes.number
+const styles = (theme) => ({
+  root: {
+    backgroundColor: theme.instrumental.canvasColor || theme.palette.background.default
+  },
+  stars: {
+    color: theme.instrumental.starColor
   }
+});
 
-  renderBlankFooter(backgroundColor) {
-    return (
-      <div
-        style={{ backgroundColor }}
-        className={css.footerWrapper}>
-        <Row className={css.footer} />
-      </div>
-    );
-  }
+const BlankFooter = ({ classes }) => (
+  <div className={classes.root}>
+    <Row className={css.footer} />
+  </div>
+);
 
-  renderSongStatsFooter(stats, backgroundColor) {
-    return (
-      <div
-        style={{ backgroundColor }}
-        className={css.footerWrapper}>
-        <Row className={css.footerStats}>
-          <Column
-            small={3}
-            centerOnSmall
-            className={css.leftColumn}>
-            <div className={css.fieldWrapper}>
-              <div className={css.field}>
-                <span>No Filters</span>
-              </div>
-            </div>
-          </Column>
-          <Column
-            small={6}
-            centerOnSmall
-            className={css.middleColumn}>
-            <div className={css.fieldWrapper}>
-              <div className={css.field}>
-                <span>Total {stats.songCount} songs</span>
-                <span>from {stats.artistCount} artists</span>
-                <span> in {stats.genreCount} genres </span>
-              </div>
-            </div>
-          </Column>
-          <Column
-            small={3}
-            centerOnSmall
-            className={css.rightColumn}>
-            <div className={css.fieldWrapper}>
-              <div className={css.field}>
-                <span>Average Difficulty</span>
-                <span>Average Progress</span>
-                <span>Progress Rate</span>
-              </div>
-            </div>
-          </Column>
-        </Row>
-      </div>
-    );
-  }
-
-  renderSongFooter(song, backgroundColor) {
-    const artistPicture = song.artist.pictures && song.artist.pictures[0]
-      ? 'artists/' + song.artist.pictures[0]
-      : 'artists/unknown_artist.png';
-    return (
-      <div
-        style={{ backgroundColor }}
-        className={css.footerWrapper}>
-        <Row className={css.footerSong}>
-          <Column
-            small={3}
-            className={css.leftColumn}>
-            <img
-              className={css.instrumentPicture}
-              src={'instruments/' + song.instrument.picture} />
-            <img
-              className={css.artistPicture}
-              src={artistPicture} />
-          </Column>
-          <Column
-            small={7}
-            className={css.middleColumn}>
-            <Row className={css.middleTop}>
-              <Column>
-                <div className={css.songTitle}>
-                  { song.title }
-                </div>
-              </Column>
-            </Row>
-            <Row className={css.middleBottom}>
-              <Column>
-                <div className={css.artistName}>
-                  { song.artist.fullName }
-                </div>
-                <div className={css.genreName}>
-                  { song.genre.name }
-                </div>
-              </Column>
-            </Row>
-          </Column>
-          <Column
-            small={2}
-            className={css.rightColumn}>
-            <Row>
-              <Column>
-                <RenderDifficulty
-                  difficulty={song.difficulty}
-                  maxDifficulty={this.props.maxDifficulty} />
-
-              </Column>
-            </Row>
-            <Row>
-              <Column>
-                <RenderStars number={song.progress} starColor={this.props.theme.starColor} />
-              </Column>
-            </Row>
-          </Column>
-        </Row>
-      </div>
-    );
-  }
-
-  render() {
-    const { song, stats, isSignedIn, theme } = this.props;
-    const backgroundColor = theme.instrumental ? theme.instrumental.canvasColor : theme.palette.background.default;
-    // TODO: figure out why this is double firing
-    if (song && song.artist) {
-      return this.renderSongFooter(song, backgroundColor);
-    } else if (isSignedIn) {
-      return this.renderSongStatsFooter(stats, backgroundColor);
-    } else {
-      return this.renderBlankFooter(backgroundColor);
-    }
-  }
-}
-
-Footer.propTypes = {
+BlankFooter.propTypes = {
+  classes: PropTypes.object.isRequired
 };
 
-export default withTheme()(Footer);
+const SongStatsFooter = ({ classes, stats }) => (
+  <div className={classes.root}>
+    <Row className={css.footerStats}>
+      <Column small={3} centerOnSmall className={css.leftColumn}>
+        <div className={css.fieldWrapper}>
+          <div className={css.field}>
+            <Typography>No Filters</Typography>
+          </div>
+        </div>
+      </Column>
+      <Column small={6} centerOnSmall className={css.middleColumn}>
+        <div className={css.fieldWrapper}>
+          <div className={css.field}>
+            <Typography>Total {stats.songCount} songs</Typography>
+            <Typography>from {stats.artistCount} artists</Typography>
+            <Typography> in {stats.genreCount} genres </Typography>
+          </div>
+        </div>
+      </Column>
+      <Column small={3} centerOnSmall className={css.rightColumn}>
+        <div className={css.fieldWrapper}>
+          <div className={css.field}>
+            <Typography>Average Difficulty</Typography>
+            <Typography>Average Progress</Typography>
+            <Typography>Progress Rate</Typography>
+          </div>
+        </div>
+      </Column>
+    </Row>
+  </div>
+);
+
+SongStatsFooter.propTypes = {
+  classes: PropTypes.object.isRequired,
+  stats: PropTypes.object.isRequired
+};
+
+const SongFooter = ({ classes, maxDifficulty, artistPicture, song }) => (
+  <div className={classes.root}>
+    <Row className={css.footerSong}>
+      <Column small={3} className={css.leftColumn}>
+        <img
+          className={css.instrumentPicture}
+          src={`instruments/${song.instrument.picture}`} />
+        <img
+          className={css.artistPicture}
+          src={`artists/${artistPicture}`} />
+      </Column>
+      <Column small={7} className={css.middleColumn}>
+        <Row className={css.middleTop}>
+          <Column>
+            <div className={css.songTitle}>
+              <Typography>{song.title}</Typography>
+            </div>
+          </Column>
+        </Row>
+        <Row className={css.middleBottom}>
+          <Column>
+            <div className={css.artistName}>
+              <Typography>{song.artist.fullName()}</Typography>
+            </div>
+            <div className={css.genreName}>
+              <Typography>{song.genre.name}</Typography>
+            </div>
+          </Column>
+        </Row>
+      </Column>
+      <Column small={2} className={css.rightColumn}>
+        <Row>
+          <Column>
+            <RenderDifficulty difficulty={song.difficulty} maxDifficulty={maxDifficulty} />
+          </Column>
+        </Row>
+        <Row>
+          <Column>
+            <RenderStars number={song.progress} className={classes.stars} />
+          </Column>
+        </Row>
+      </Column>
+    </Row>
+  </div>
+);
+
+SongFooter.propTypes = {
+  artistPicture: PropTypes.string.isRequired,
+  classes:       PropTypes.object.isRequired,
+  song:          PropTypes.object.isRequired,
+  maxDifficulty: PropTypes.number.isRequired
+};
+
+const Footer = ({ song, isSignedIn, ...props }) => {
+  if (song && song.artist) {
+    const artistPicture = song.artist && song.artist.pictures && song.artist.pictures[0]
+      ? song.artist.pictures[0] : 'unknown_artist.png';
+    return SongFooter({ song, artistPicture, ...props });
+  } else if (isSignedIn) {
+    return SongStatsFooter({ ...props });
+  } else {
+    return BlankFooter({ ...props });
+  }
+};
+
+Footer.propTypes = {
+  song:          PropTypes.object,
+  isSignedIn:    PropTypes.bool.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  song:          currentSongSelector(state),
+  isSignedIn:    state.user.isSignedIn,
+  stats:         songStatsSelector(state),
+  maxDifficulty: maxDifficultySelector(state)
+});
+
+const mapActionCreators  = {};
+export default connect(mapStateToProps, mapActionCreators)(withStyles(styles)(Footer));

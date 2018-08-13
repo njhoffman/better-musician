@@ -62,10 +62,7 @@ export const applyConfig = ({ dispatch, endpoints = {}, settings = {}, reset = f
 
   setCurrentSettings(extend({}, defaultSettings, settings));
 
-  let {
-    defaultEndpointKey,
-    currentEndpoint
-  } = parseEndpointConfig(endpoints, getInitialEndpointKey());
+  let { defaultEndpointKey, currentEndpoint } = parseEndpointConfig(endpoints, getInitialEndpointKey());
 
   if (!currentEndpointKey) {
     currentEndpointKey = defaultEndpointKey;

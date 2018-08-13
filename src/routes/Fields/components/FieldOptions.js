@@ -5,7 +5,7 @@ import {
   RenderText
 } from 'components/Field';
 import { Field } from 'redux-form';
-import { RaisedButton } from 'material-ui';
+import { Button } from '@material-ui/core';
 import css from './FieldsView.scss';
 
 export class FieldOptions extends Component {
@@ -36,7 +36,8 @@ export class FieldOptions extends Component {
             value={this.state.optionText}
             name='optionText'
           />
-          <RaisedButton
+          <Button
+            variant='raised'
             onTouchTap={() => this.addOption(this.props.fields)}
             secondary
             style={{ display: 'inline-block', minWidth: '30%', marginLeft: '10px' }}

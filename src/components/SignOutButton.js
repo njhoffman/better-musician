@@ -1,7 +1,7 @@
 import React  from 'react';
 import PropTypes from 'prop-types';
 import Button from './Button';
-import ActionLock from 'material-ui-icons/Lock';
+import { Lock as ActionLock } from '@material-ui/icons/Lock';
 import { connect } from 'react-redux';
 import { signOut } from 'actions/auth/signout';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { RaisedButton } from 'material-ui';
+import { Button } from '@#material-ui/core';
 import { Row, Column } from 'react-foundation';
 // import { Field } from 'redux-form';
 // import { RenderChip, RenderSelect } from 'components/Field';
@@ -39,9 +39,10 @@ const RenderMultiSelect = ({
             </Column>
             <Column centerOnSmall small={disabled ? 0 : 4}>
               {!disabled &&
-                <RaisedButton
+                <Button
+                  variant='raised'
+                  color='secondary'
                   onTouchTap={() => addOption(fields)}
-                  secondary
                   label='Add' />
               }
             </Column>

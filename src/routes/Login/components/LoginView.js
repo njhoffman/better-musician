@@ -24,7 +24,7 @@ export const LoginView = ({ classes, ...props }) => (
         {props.isSignedIn && (
           <div>
             <Typography variant='body2'>
-              You are already logged in.  Would you like to log out?
+              You are already logged in.  Would you like to log out?!
             </Typography>
             <SignOutButton
               label='LOGOUT'

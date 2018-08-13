@@ -2,13 +2,12 @@ import * as Themes from 'redux-devtools-themes';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ChartMonitor from 'redux-devtools-chart-monitor';
-import ChartToolbar from './ChartToolbar';
+import ChartToolbar from './Toolbar';
 
 // import { init as initLog } from 'shared/logger';
 // const { info } = initLog('devToolsChart');
 //
 const theme = Themes.marrakesh;
-
 theme.base07 = '#000000';
 // stroke 226688
 

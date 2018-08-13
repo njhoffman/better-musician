@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button } from 'material-ui';
+import { Button } from '@material-ui/core';
 import { MdDelete as DeleteIcon } from 'react-icons/md';
 
 import { uiShowModal, uiHideModal } from 'actions/ui';

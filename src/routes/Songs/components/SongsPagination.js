@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import withTheme from 'material-ui/styles/withTheme';
 import { Row, Column } from 'react-foundation';
-import { TextField, Typography } from '@material-ui/core';
+import { TextField, Typography, withTheme } from '@material-ui/core';
 import Button from 'components/Button';
 import {
   MdNavigateBefore as BeforeIcon,
   MdNavigateNext as NextIcon
 } from 'react-icons/md';
+
 import {
   paginationTotal as paginationTotalSelector,
   paginationStart as paginationStartSelector,

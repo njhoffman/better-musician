@@ -79,8 +79,8 @@ const ErrorHandlerFallback = (props) => {
             <span style={{ color: '#ffffff' }}>{matches[1]}</span>
             <span>{matches[2]}</span>
             <span style={{ color: '#ffffff' }}>{matches[3]}</span>:
-            <span style={{ color: '#aaccff', fontWeight: 'bold' }}>{matches[4]}</span>:
-            <span style={{ color: '#ccddff' }}>{matches[5]}</span>
+            <span style={{ color: '#aaccff', fontWeight: 'bold' }}>{matches[5]}</span>:
+            <span style={{ color: '#ccddff' }}>{matches[4]}</span>
           </span>
         );
       }

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Button from './Button';
-import ActionExitToApp from 'material-ui-icons/ExitToApp';
+import { ExitToApp } from '@material-ui/icons';
 // import { oAuthSignIn as _oAuthSignIn } from 'redux-auth';
 
 // hook for rewire
@@ -23,7 +23,7 @@ class OAuthSignInButton extends React.Component {
   static defaultProps = {
     signInParams: {},
     label: 'OAuth Sign In',
-    icon: ActionExitToApp
+    icon: ExitToApp
   };
 
   getEndpoint() {

@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
-import { authStateReducer } from './auth';
 import uiReducer from './ui';
 import apiReducer from './api';
 import userReducer from './user';
@@ -50,7 +49,6 @@ export const makeRootReducer = (asyncReducers, injectedModels = []) => {
     api:            apiReducer,
     user:           userReducer,
     config:         configReducer,
-    auth:           authStateReducer,
     ...asyncReducers
   };
   info(`Combining reducers: ${Object.keys(reducers).join(' - ')}`);

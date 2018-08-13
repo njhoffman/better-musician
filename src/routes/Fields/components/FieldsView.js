@@ -1,11 +1,10 @@
 import React  from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { RaisedButton, Paper, Tabs, Tab } from 'material-ui';
 import { Row, Column } from 'react-foundation';
 import { FieldArray, reduxForm } from 'redux-form';
 import { browserHistory } from 'react-router';
-import withTheme from 'material-ui/styles/withTheme';
+import { Button as MatButton, Paper, Tabs, Tab, withStyles } from '@material-ui/core';
 
 import Button from 'components/Button';
 import FieldList from './FieldList';
@@ -23,9 +22,12 @@ import {
   deleteField,
   cancelEdit
 } from '../modules/reducer';
+
 import { savedTabs as savedTabsSelector } from '../modules/selectors';
 
 import css from './FieldsView.scss';
+
+const styles = {};
 
 export const FieldsView = (props) => {
   // const user = props.settings.get('attributes');
@@ -33,7 +35,6 @@ export const FieldsView = (props) => {
   const redirectProfile = () => browserHistory.push('/profile');
   const redirectStats = () => browserHistory.push('/stats');
   const redirectSettings = () => browserHistory.push('/settings');
-  const textColor = props.muiTheme ? props.muiTheme.palette.textColor : 'black';
 
   const {
     updateField,
@@ -68,14 +69,14 @@ export const FieldsView = (props) => {
       <Button
         type='submit'
         label='Update'
-        labelStyle={{ color: textColor, paddingRight: '5px' }}
+        labelStyle={{ paddingRight: '5px' }}
         style={{ width: '100px', marginRight: '15px' }}
         onClick={updateField}
         primary
-        icon={<SaveIcon style={{ marginTop: '-10px', color: textColor }} />}
+        icon={<SaveIcon style={{ marginTop: '-10px' }} />}
         className='update-fields-submit'
         disabled={disabled} />
-      <RaisedButton label='Cancel' secondary />
+      <MatButton variant='raised' label='Cancel' color='secondary' />
     </div>
   );
 
@@ -83,11 +84,11 @@ export const FieldsView = (props) => {
     <Button
       type='submit'
       label='Add Field'
-      labelStyle={{ color: textColor, paddingRight: '5px' }}
+      labelStyle={{ paddingRight: '5px' }}
       style={{ width: '160px', marginRight: '15px' }}
       onClick={addField}
       primary
-      icon={<AddIcon style={{ marginTop: '-10px', color: textColor }} />}
+      icon={<AddIcon style={{ marginTop: '-10px' }} />}
       className='update-fields-submit'
       disabled={disabled} />
   );
@@ -163,14 +164,15 @@ export const FieldsView = (props) => {
 };
 
 FieldsView.propTypes = {
-  muiTheme:     PropTypes.object.isRequired,
   editingField: PropTypes.bool,
   formValues:   PropTypes.object,
   updateField:  PropTypes.func.isRequired,
   addField:     PropTypes.func.isRequired
 };
 
-const updateFieldsForm = reduxForm({ form: 'updateFieldsForm', enableReinitialize: true })(withTheme()(FieldsView));
+const updateFieldsForm = reduxForm({
+  form: 'updateFieldsForm', enableReinitialize: true
+})(withStyles(styles)(FieldsView));
 
 const mapActionCreators = {
   addField,

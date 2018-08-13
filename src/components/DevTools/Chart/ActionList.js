@@ -15,12 +15,12 @@ function getTimestamps(actions, actionIds, actionId) {
 
 export default class ActionList extends PureComponent {
   static propTypes = {
-    styling:          PropTypes.object,
-    actions:          PropTypes.array,
+    styling:          PropTypes.func,
+    actions:          PropTypes.object,
     actionIds:        PropTypes.array,
     isWideLayout:     PropTypes.bool,
     onToggleAction:   PropTypes.func,
-    skippedActionIds: PropTypes.func,
+    skippedActionIds: PropTypes.array,
     selectedActionId: PropTypes.number,
     startActionId:    PropTypes.number,
     onSelect:         PropTypes.func,
@@ -29,25 +29,17 @@ export default class ActionList extends PureComponent {
     currentActionId:  PropTypes.number,
     onCommit:         PropTypes.func,
     onSweep:          PropTypes.func,
-    onJumpToState:    PropTypes.func
+    onJumpToState:    PropTypes.func,
+    excludedActions:  PropTypes.array,
+    styledActions:    PropTypes.object
   };
   render() {
     const {
       styling, actions, actionIds, isWideLayout, onToggleAction, skippedActionIds,
       selectedActionId, startActionId, onSelect, onSearch, searchValue, currentActionId,
-      onCommit, onSweep, onJumpToState
+      onCommit, onSweep, onJumpToState, excludedActions, styledActions
     } = this.props;
     const lowerSearchValue = searchValue && searchValue.toLowerCase();
-
-    const blacklistedActions = ['@@redux-form/BLUR', '@@redux-form/FOCUS'];
-    const styledActions = {
-      'CONFIGURE_COMPLETE':            { color: '#88eeaa' },
-      'EMAIL_SIGN_IN_ERROR':           { color: 'red', border: 'solid 1px #660000' },
-      'EMAIL_SIGN_IN_START':           { color: 'rgba(200, 255, 255, 1)' },
-      'EMAIL_SIGN_IN_SUCCESS':         { color: '#00ffaa' },
-      '@@redux-form/REGISTER_FIELD':   { color: '#838383' },
-      '@@redux-form/UNREGISTER_FIELD': { color: '#838383' },
-    };
 
     const filteredActionIds = (searchValue ? actionIds.filter(id =>
       actions[id].action.type.toLowerCase().indexOf(lowerSearchValue) !== -1) : actionIds);
@@ -81,7 +73,7 @@ export default class ActionList extends PureComponent {
               }
               isActive={actionId === currentActionId}
               isInFuture={actionId > currentActionId}
-              isHidden={blacklistedActions.indexOf(actions[actionId].action.type) !== -1}
+              isHidden={excludedActions.indexOf(actions[actionId].action.type) !== -1}
               customStyling={styledActions[actions[actionId].action.type] || {}}
               onSelect={(e) => onSelect(e, actionId)}
               timestamps={getTimestamps(actions, actionIds, actionId)}

@@ -440,7 +440,7 @@ const getDefaultThemeStyling = theme => {
 reduxThemes.twilight.base00 = '#0e0e0e';
 reduxThemes.twilight.base01 = '#222527';
 
-export const base16Themes = { ...reduxThemes, ...{ inspector } };
+export const base16Themes = { ...reduxThemes, ...inspector };
 
 export const createStylingFromTheme = createStyling(getDefaultThemeStyling, {
   base16Themes,

@@ -12,8 +12,8 @@ import {
 
 import facebookIcon from 'assets/fb-icon.png';
 import googleIcon from 'assets/google-icon.png';
-import EmailIcon from 'material-ui-icons/Email';
-import SignOutIcon from 'material-ui-icons/Lock';
+import { Email as EmailIcon, Lock as SignOutIcon } from '@material-ui/icons';
+
 import { uiHideDrawerMenu } from 'actions/ui';
 
 import DrawerMenuLink from './DrawerMenuLink';

@@ -4,7 +4,6 @@ import { withStyles, withTheme } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
 import MaterialButton from '@material-ui/core/Button';
 import MaterialIconButton from '@material-ui/core/IconButton';
-// import ActionFavorite from 'material-ui-icons/Favorite';
 import Spinners from 'react-spinners';
 // BarLoader, BeatLoader, BounceLoader, CircleLoader, ClipLoader, ClimbingBoxLoader, DotLoader,
 // FadeLoader, GridLoader, HashLoader, MoonLoader, PacManLoader, PropogateLoader, PulseLoader, RingLoader

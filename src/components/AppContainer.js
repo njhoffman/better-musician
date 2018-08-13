@@ -7,7 +7,7 @@ import { Row } from 'react-foundation';
 import 'coreStyles';
 import Routes from 'routes';
 import Header from 'components/Header/Header';
-import Footer from 'components/Footer/FooterContainer';
+import Footer from 'components/Footer/Footer';
 import DrawerMenu from 'components/DrawerMenu/DrawerMenu';
 import Snackbar from 'components/Snackbar/SnackbarContainer';
 

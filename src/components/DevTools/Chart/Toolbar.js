@@ -146,7 +146,8 @@ class ChartToolbar extends Component {
     stagedActionIds:   PropTypes.array,
     skippedActionIds:  PropTypes.array,
     dispatch:          PropTypes.func,
-    actionsById:       PropTypes.array
+    actionsById:       PropTypes.object,
+    devConfig:         PropTypes.object
   };
 
   static defaultProps = {
@@ -241,7 +242,7 @@ class ChartToolbar extends Component {
   }
 
   onStart(panel) {
-    const stateKey = `${panel}Position}`;
+    const stateKey = `${panel}Position`;
     this.setState({
       [stateKey] :  {
         ...this.state[stateKey],
@@ -251,7 +252,7 @@ class ChartToolbar extends Component {
   }
 
   onStop(panel) {
-    const stateKey = `${panel}Position}`;
+    const stateKey = `${panel}Position`;
     this.setState({
       [stateKey] :  {
         ...this.state[stateKey],
@@ -261,14 +262,14 @@ class ChartToolbar extends Component {
   }
 
   render() {
-    const { stagedActionIds: actionIds, actionsById: actions, computedStates, tabs,
-      invertTheme, skippedActionIds, currentStateIndex, monitorState, isWideLayout
-    } = this.props;
-    const { selectedActionId, startActionId, searchValue, tabName } = monitorState;
-
     const {
-      themeState, action, nextState, delta, stateCount, error
-    } = this.state;
+      stagedActionIds: actionIds, actionsById: actions, computedStates, tabs, invertTheme,
+      skippedActionIds, currentStateIndex, monitorState, isWideLayout, devConfig
+    } = this.props;
+
+    const { selectedActionId, startActionId, searchValue, tabName } = monitorState;
+    const { themeState, action, nextState, delta, stateCount, error } = this.state;
+    const { actions: actionsConfig } = devConfig.chart;
 
     const flatDelta = delta ? flatten(delta) : {};
     const parsedDelta = {
@@ -349,6 +350,8 @@ class ChartToolbar extends Component {
               skippedActionIds={skippedActionIds}
               currentActionId={actionIds[currentStateIndex]}
               lastActionId={getLastActionId(this.props)}
+              excludedActions={actionsConfig.exclude}
+              styledActions={actionsConfig.style}
             />
           </div>
         </Draggable>

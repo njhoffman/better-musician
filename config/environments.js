@@ -16,15 +16,15 @@ module.exports = {
       performance: {
         hints: false
       },
-      output: {
-        publicPath: `http://localhost:3000/`,
-        pathinfo: false
-      },
       entry: {
-        bundle: [
+        app: [
           'eventsource-polyfill',
           'webpack-hot-middleware/client?reload=true'
         ]
+      },
+      output: {
+        publicPath: `http://localhost:3000/`,
+        pathinfo: false
       }
     },
     middleware: {

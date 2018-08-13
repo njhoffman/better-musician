@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
-import withStyles from 'material-ui/styles/withStyles';
+import { withStyles }  from '@material-ui/core';
 import { Row, Column } from 'react-foundation';
 
 import { MdHelp as HelpIcon } from 'react-icons/md';
-import ContentSend from 'material-ui-icons/Send';
+import { Send as ContentSend } from '@material-ui/icons';
 
 import Button from 'components/Button';
 import FormField from 'components/Field';

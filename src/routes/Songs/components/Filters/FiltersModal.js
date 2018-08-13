@@ -1,8 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Button from 'material-ui/Button';
-import Dialog from 'material-ui/Dialog';
+import { Button, Dialog } from '@material-ui/core';
 import { uiHideModal } from 'store/ui';
 
 export const FiltersModal = (props) => {

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import withTheme from 'material-ui/styles/withTheme';
-import { FlatButton, List, ListItem } from 'material-ui';
+import { Button, List, ListItem } from '@material-ui/core';
 import { Row, Column } from 'react-foundation';
 import CustomField from 'components/CustomField';
 import {
@@ -16,7 +15,6 @@ export const FieldList = (props) => {
     editingField,
     editField,
     cancelEdit,
-    muiTheme,
     deleteField,
     savedTabs
   } = props;
@@ -33,7 +31,6 @@ export const FieldList = (props) => {
             <Row>
               <Column
                 small={4}
-                style={{ color: muiTheme.instrumental.fieldsViewLabelColor }}
                 className={css.fieldLabel}>
                 Label:
               </Column>
@@ -46,7 +43,6 @@ export const FieldList = (props) => {
             <Row>
               <Column
                 small={4}
-                style={{ color: muiTheme.instrumental.fieldsViewLabelColor }}
                 className={css.fieldLabel}>
                 Type:
               </Column>
@@ -59,7 +55,6 @@ export const FieldList = (props) => {
           <Column centerOnSmall small={4}>
             <Row>
               <Column
-                style={{ color: muiTheme.instrumental.fieldsViewLabelColor }}
                 className={css.fieldPreviewLabel}>
                 Field Preview
               </Column>
@@ -70,7 +65,8 @@ export const FieldList = (props) => {
           </Column>
           <Column centerOnSmall small={1}>
             <Row>
-              <FlatButton
+              <Button
+                variant='flat'
                 onTouchTap={field.id === editingId ? cancelEdit : () => editField(field)}
                 style={{ minWidth: '35px', width: '35px', float: 'right', color: '#bbbbff' }}
                 icon={field.id === editingId ? <CancelIcon onTouchTap={cancelEdit} /> : <EditIcon />}
@@ -78,7 +74,8 @@ export const FieldList = (props) => {
             </Row>
             <Row>
               {!(field.id === editingId) &&
-                <FlatButton
+                <Button
+                  variant='flat'
                   onTouchTap={() => deleteField(field.id)}
                   style={{ minWidth: '35px', width: '35px', float: 'right', color: '#FFBBBB' }}
                   icon={<DeleteIcon />}
@@ -104,9 +101,6 @@ export const FieldList = (props) => {
             </div>
           }
           hoverColor='rgba(0, 151, 167, 0.4'
-          innerDivStyle={{
-            backgroundColor: muiTheme.palette.primary3Color
-          }}
           style={{ marginTop: '5px' }}
           initiallyOpen={i === 0}
           primaryTogglesNestedList
@@ -119,11 +113,10 @@ export const FieldList = (props) => {
 
 FieldList.propTypes = {
   savedTabs    : PropTypes.array.isRequired,
-  muiTheme     : PropTypes.object,
   cancelEdit   : PropTypes.func.isRequired,
   editingField : PropTypes.object,
   editField    : PropTypes.func.isRequired,
   deleteField  : PropTypes.func.isRequired
 };
 
-export default withTheme()(FieldList);
+export default FieldList;

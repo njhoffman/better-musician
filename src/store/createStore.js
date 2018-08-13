@@ -2,15 +2,14 @@ import { applyMiddleware, compose, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import reduxFreeze from 'redux-freeze';
-
 // import { createLogger } from 'redux-logger';
 // import generateReduxReport from 'redux-usage-report';
 
 import makeRootReducer from './reducers';
 import apiMiddleware, { actionLogger }  from 'middleware/api';
+import DevTools from 'components/DevTools/DevTools';
 
-import { DevTools } from 'components/DevTools/DevTools';
-
+import config from 'config';
 import { init as initLog } from 'shared/logger';
 const { info, debug, error } = initLog('createStore');
 
@@ -19,15 +18,6 @@ let store;
 // make webpack config
 // https://github.com/reduxjs/redux-devtools/issues/167
 // https://medium.com/@zalmoxis/improve-your-development-workflow-with-redux-devtools-extension-f0379227ff83
-const useDevExtension = __DEV__ && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ && false;
-
-const composeEnhancers = useDevExtension
-  ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-    name: 'instrumental',
-    // actionsBlacklist: ['@@redux-form/REGISTER_FIELD', '@@redux-form/UNREGISTER_FIELD'],
-    theme: 'twilight'
-  })
-  : compose;
 
 export const getStore = () => {
   if (!store) {
@@ -43,16 +33,27 @@ export default (initialState = {}, history) => {
     return store;
   }
 
-  if (initialState) {
+  if (Object.keys(initialState).length > 0) {
     info(`Initial State`, initialState);
   }
 
   // TODO: why does thunk need to be after apimiddleware?
   const middleware = [apiMiddleware, thunkMiddleware, actionLogger, routerMiddleware(history)];
+  __DEV__ && middleware.push(reduxFreeze);
+
+  let composeEnhancers = compose;
+  let enhancers = [];
+
   if (__DEV__) {
-    middleware.push(reduxFreeze);
+    const devExt = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+    const { enableExtension, showPanel, extensionOptions } = config.dev;
+    if (devExt && !showPanel && enableExtension) {
+      composeEnhancers = devExt(extensionOptions);
+      enhancers.push(DevTools.instrument({ shouldCatchErrors: true }));
+    } else if (showPanel) {
+      enhancers.push(DevTools.instrument({ shouldCatchErrors: true }));
+    }
   }
-  const enhancers = useDevExtension ? [] : [DevTools().instrument({ shouldCatchErrors: true })];
 
   store = createStore(
     connectRouter(history)(makeRootReducer()),

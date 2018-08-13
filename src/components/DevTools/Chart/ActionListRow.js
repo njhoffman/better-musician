@@ -9,14 +9,14 @@ const BUTTON_JUMP = 'Jump';
 
 export default class ActionListRow extends PureComponent {
   static propTypes = {
-    styling:       PropTypes.object,
+    styling:       PropTypes.func,
     isSelected:    PropTypes.bool,
     action:        PropTypes.object,
     isInitAction:  PropTypes.bool,
     onSelect:      PropTypes.func,
     onJumpClick:   PropTypes.func,
     onToggleClick: PropTypes.func,
-    timestamps:    PropTypes.bool,
+    timestamps:    PropTypes.object,
     isSkipped:     PropTypes.bool,
     isInFuture:    PropTypes.bool,
     isActive:      PropTypes.bool,

@@ -41,20 +41,7 @@ module.exports = {
     }
   },
   entry: {
-    bundle: [],
-    vendor : [
-      'lodash',
-      'react',
-      'react-dom',
-      'react-redux',
-      'react-router',
-      'react-foundation',
-      'redux',
-      'redux-thunk',
-      'redux-orm',
-      'material-ui',
-      '@material-ui/core'
-    ]
+    app: []
   },
   externals: {
     'react/lib/ExecutionEnvironment' : true,
@@ -65,9 +52,6 @@ module.exports = {
   module: {},
   optimization: {
     namedModules: true,
-    splitChunks: {
-      name: 'vendor',
-      minChunks: 2
-    }
+    // splitChunks: { chunks: 'all' }
   }
 };

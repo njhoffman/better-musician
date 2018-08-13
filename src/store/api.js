@@ -137,9 +137,9 @@ const ACTION_HANDLERS = {
     initialized: state.initialized.indexOf('user') === -1 ? state.initialized.concat('user') : state.initialized
   }),
 
-  [LOAD_CONFIG] : (state, { payload: { api } }) => ({
+  [LOAD_CONFIG] : (state, { payload }) => ({
     ...state,
-    endpoints: _.mapValues(api.endpoints, () => ({
+    endpoints: _.mapValues(payload, () => ({
       loading: false,
       errors: false,
       success: false

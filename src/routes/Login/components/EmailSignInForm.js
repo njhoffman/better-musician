@@ -11,7 +11,6 @@ import Button from 'components/Button';
 import FormField from 'components/Field';
 import { emailSignIn } from 'actions/auth/signin';
 
-import config from 'data/config';
 import { init as initLog } from 'shared/logger';
 const { error } = initLog('emailSignInForm');
 
@@ -82,8 +81,9 @@ export class EmailSignInForm extends React.Component {
   }
 
   render() {
-    let disabled = (this.props.isSignedIn || this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'loading']));
+    // let disabled = (this.props.isSignedIn || this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'loading']));
     // const errors = this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'errors']);
+    const disabled = this.props.isSignedIn;
     const { errors } = this.props.api.endpoints.login;
 
     return (
@@ -126,7 +126,6 @@ export class EmailSignInForm extends React.Component {
             <Button
               label='Sign In'
               primary
-              className={`email-sign-in-submit ${config.prefix}sign_in_button`}
               icon={<ExitToAppIcon />}
               disabled={disabled}
               loading={this.props.isLoading}

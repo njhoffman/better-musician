@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Paper } from 'material-ui';
+import { Paper } from '@material-ui/core';
 import { Column } from 'react-foundation';
 
 export const ResetView = (props) => (

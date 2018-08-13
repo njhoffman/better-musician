@@ -3,14 +3,17 @@ import PropTypes from 'prop-types';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 import * as themes from 'redux-devtools-themes';
 import Button from 'devui/lib/Button';
+import SegmentedControl from 'devui/lib/SegmentedControl';
+import { withStyles } from '@material-ui/core';
 
 import NewWindow from 'components/NewWindow';
-import DevToolsChart  from 'components/DevTools/DevToolsChart';
-import { reducer as chartToolbarReducer } from 'components/DevTools/ChartToolbar';
+import DevToolsChart  from 'components/DevTools/Chart';
+import { reducer as chartToolbarReducer } from 'components/DevTools/Chart/Toolbar';
+
 import { init as initLog } from 'shared/logger';
 const { info, warn } = initLog('custom-launcher');
 
-const styles = {
+const styles = (theme) => ({
   container: {
     fontFamily: 'monaco, Consolas, Lucida Console, monospace',
     fontSize: '0.8em',
@@ -29,14 +32,20 @@ const styles = {
     top: 30,
     height: '100%',
     alignItems: 'center'
+  },
+  buttonActive: {
+    backgroundColor: '#838184',
+    color: '#0e0e0e'
   }
-};
+});
 
-export default class CustomLauncher extends Component {
+class Launcher extends Component {
   static update = chartToolbarReducer
 
   static propTypes = {
     dispatch: PropTypes.func,
+    classes: PropTypes.object.isRequired,
+    devConfig: PropTypes.object.isRequired,
     computedStates: PropTypes.array,
     actionsById: PropTypes.object,
     stagedActionIds: PropTypes.array,
@@ -64,7 +73,7 @@ export default class CustomLauncher extends Component {
     this.toggleChart = this.toggleChart.bind(this);
     this.popupUnload = this.popupUnload.bind(this);
     this.state = {
-      showChart : false
+      showChart : props.devConfig && props.devConfig.showChart
     };
   }
 
@@ -103,6 +112,7 @@ export default class CustomLauncher extends Component {
 
   render() {
     const theme = this.getTheme();
+    const { container, elements } = this.props.classes;
 
     const winOptions =  {
       menubar: 'no',
@@ -119,17 +129,19 @@ export default class CustomLauncher extends Component {
     };
 
     return (
-      <div style={{ ...styles.container, backgroundColor: theme.base01 }}>
+      <div className={container} style={{ backgroundColor: theme.base01 }}>
         <div
-          style={{ ...styles.elements, backgroundColor: theme.base01 }}
+          className={elements}
+          style={{ backgroundColor: theme.base01 }}
           ref={this.getRef}>
           <Button theme={theme}>Actions</Button>
           <Button theme={theme}>Fixtures</Button>
-          <Button
+          <SegmentedControl
             theme={theme}
-            onClick={this.toggleChart}>
-            Chart
-          </Button>
+            values={['Chart']}
+            onClick={this.toggleChart}
+            selected={this.state.showChart ? 'Chart' : ''}
+            />
         </div>
         {this.state.showChart && (
           <NewWindow
@@ -143,3 +155,5 @@ export default class CustomLauncher extends Component {
     );
   }
 }
+
+export default withStyles(styles)(Launcher);

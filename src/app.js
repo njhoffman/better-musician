@@ -7,41 +7,37 @@ import { MuiThemeProvider } from '@material-ui/core';
 import themes from 'styles/themes';
 
 import ErrorBoundary from 'components/ErrorBoundaries/Main';
-import initDevTools from 'components/DevTools/DevTools';
+// TODO: does this bring DevTools into production bundle?
+import DevTools from 'components/DevTools/DevTools';
 import { configureStart, configureComplete } from 'actions/auth';
 import createStore from 'store/createStore';
 
-import {
-  loadAppConfig,
-  loadAuthConfig,
-  startMemoryStats,
-  domStats
-} from 'utils/app';
+import { loadAppConfig, loadAuthConfig } from 'actions/config';
+import { startMemoryStats, domStats } from 'utils/app';
 
 import { init as initLog } from 'shared/logger';
 const { info, warn } = initLog('app');
 
-const initialState = window.___INITIAL_STATE__;
-
-const theme = themes['steelBlue-dark'];
+const initialState = window.__INITIAL_STATE__;
 const history = createBrowserHistory();
 const store = createStore(initialState, history);
 
-const DevTools = initDevTools(store);
 const MOUNT_NODE = document.getElementById('root');
 
 const configApp = () => {
-store.dispatch(configureStart());
-loadAppConfig(store)
-  .then(() => loadAuthConfig(store))
-  .then((userData) => {
-    store.dispatch(configureComplete());
-    renderDev();
-    domStats();
-  });
+  store.dispatch(configureStart());
+  loadAppConfig(store)
+    .then(() => loadAuthConfig(store))
+    .then((userData) => {
+      store.dispatch(configureComplete());
+      renderDev();
+      domStats();
+    });
 };
 
 configApp();
+
+const theme = themes['steelBlue-dark'];
 
 const render = (Component) => {
   ReactDOM.render(

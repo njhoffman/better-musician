@@ -39,7 +39,7 @@ const ActionListHeader = ({
 );
 
 ActionListHeader.propTypes = {
-  styling:           PropTypes.object,
+  styling:           PropTypes.func,
   onSearch:          PropTypes.func,
   hasSkippedActions: PropTypes.bool,
   hasStagedActions:  PropTypes.bool,

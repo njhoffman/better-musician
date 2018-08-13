@@ -1,12 +1,9 @@
 const argv = require('yargs').argv;
 const webpack = require('webpack');
 const _ = require('lodash');
-//
-// const autoprefixer = require('autoprefixer');
 
 const logger = require('../../shared/logger')('app:config:webpack');
 const baseConfig = require('./base.js');
-const pkg = require('../../package.json');
 
 module.exports = (config) => {
   const { __TEST__, __API_URL__ } = config.globals;
@@ -18,21 +15,11 @@ module.exports = (config) => {
 
   config.webpack.mode = config.env === 'production' ? 'production' : 'development';
 
-  config.webpack.entry.vendor = config.webpack.entry.vendor.filter(dep => {
-    if (pkg.dependencies[dep]) return true;
-    logger.warn(
-      `Package "${dep}" was not found as an npm dependency in package.json; ` +
-      `it won't be included in the webpack vendor bundle.`
-    );
-  });
-
   const APP_ENTRY = config.paths.client('app.js');
-  config.webpack.entry.bundle.push(APP_ENTRY);
+  config.webpack.entry.app.push(APP_ENTRY);
   config.webpack.output.path = config.paths.dist();
 
-  _.merge(config.webpack.externals.webpackVariables, {
-    apiUrl: `${__API_URL__}` }
-  );
+  _.merge(config.webpack.externals.webpackVariables, { apiUrl: `${__API_URL__}` });
 
   config.webpack.plugins = [
     new webpack.DefinePlugin(config.globals),
@@ -52,29 +39,7 @@ module.exports = (config) => {
         }
       });
     });
-  }
-
-  // Don't split bundles during testing, since we only want import one bundle
-  if (!__TEST__) {
-    config.webpack.optimization.splitChunks = {
-      chunks: 'async',
-      minSize: 30000,
-      minChunks: 1,
-      maxAsyncRequests: 5,
-      maxInitialRequests: 3,
-      name: true,
-      cacheGroups: {
-        default: {
-          minChunks: 2,
-          priority: -20,
-          reuseExistingChunk: true
-        },
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          priority: -10
-        }
-      }
-    };
+    // TODO: Don't split bundles during testing, since we only want import one bundle
   }
 
   config.webpack.module.rules = loaders;
@@ -84,7 +49,6 @@ module.exports = (config) => {
     : require('./development')(config);
 
   _.merge(config.webpack, webpackEnv, { plugins: [].concat(webpackEnv.plugins, config.webpack.plugins) });
-
   return config.webpack;
 
   // const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');

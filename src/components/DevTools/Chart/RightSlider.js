@@ -13,10 +13,10 @@ const RightSlider = ({ styling, shown, children, rotate }) => (
 );
 
 RightSlider.propTypes = {
-  styling:  PropTypes.object,
+  styling:  PropTypes.func.isRequired,
   shown:    PropTypes.bool,
   rotate:   PropTypes.bool,
-  children: PropTypes.array
+  children: PropTypes.any
 };
 
 export default RightSlider;

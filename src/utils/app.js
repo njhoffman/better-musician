@@ -1,44 +1,6 @@
-import { loadConfig } from 'actions/config';
-import { configure as authConfigure } from 'actions/auth/configure';
 import { humanMemorySize } from 'shared/util';
 import { init as initLog } from 'shared/logger';
 const { debug } = initLog('app');
-
-export const loadAppConfig = (store) => {
-  return store.dispatch(
-    loadConfig({
-      api: {
-        url: __API_URL__
-      }
-    })
-  );
-};
-
-export const loadAuthConfig = (store) => {
-  return store.dispatch(
-    authConfigure({
-      apiUrl                : __API_URL__,
-      signOutPath           : '/users/logout',
-      emailSignInPath       : '/users/login',
-      emailRegistrationPath : '/users/register',
-      accountUpdatePath     : '/users/update',
-      accountDeletePath     : '/users/delete',
-      passwordResetPath     : '/users/password_reset',
-      passwordUpdatePath    : '/users/password_update',
-      tokenValidationPath   : '/users/validate_token',
-      authProviderPaths     : {
-        github   : '/users/login/github',
-        facebook : '/users/login/facebook',
-        google   : '/users/login/google_oauth2'
-      }
-    }, {
-      serverSideRendering : false,
-      clientOnly          : true
-      // cleanSession:        true
-    }
-    )
-  );
-};
 
 let lastHeapSize = 0;
 export const startMemoryStats = (interval = 10000) => {
@@ -48,7 +10,7 @@ export const startMemoryStats = (interval = 10000) => {
       const used = humanMemorySize(usedJSHeapSize, true);
       const total = humanMemorySize(totalJSHeapSize, true);
       if (Math.abs(usedJSHeapSize - lastHeapSize) > 10485760) {
-        debug(`-- JS Heap Size: ${used} / ${total} ${usedJSHeapSize} ${lastHeapSize}`);
+        debug(`-- JS Heap Size: ${used} / ${total}`);
         lastHeapSize = usedJSHeapSize;
       }
     }

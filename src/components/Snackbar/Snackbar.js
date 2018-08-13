@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Snackbar as MdSnackbar } from 'material-ui';
+import { Snackbar as MdSnackbar } from '@material-ui/core';
 
 class Snackbar extends Component {
   static propTypes = {

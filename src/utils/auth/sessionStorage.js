@@ -43,8 +43,7 @@ export const getInitialEndpointKey = () =>
   );
 
 // only should work for current session
-const getUrl = (endpointKey, path) =>
-  `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey)[path]}`;
+const getUrl = (endpointKey, path) => `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey)[path]}`;
 
 export const getDestroyAccountUrl        = (ek) => getUrl(ek, 'accountDeletePath');
 export const getSignOutUrl               = (ek) => getUrl(ek, 'signOutPath');

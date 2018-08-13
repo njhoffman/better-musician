@@ -1,6 +1,7 @@
 .DS_STORE
 *.log
 
+.eslintcache
 node_modules
 rethinkdb_data
 .happypack
