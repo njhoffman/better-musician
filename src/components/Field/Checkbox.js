@@ -1,22 +1,32 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Checkbox } from 'redux-form-material-ui';
+import { FormControlLabel, Checkbox as MaterialCheckbox } from '@material-ui/core';
+import createComponent from './createFormField';
 
-const RenderCheckbox = ({
-  viewType,
-  meta: { touched, error },
-  ...custom
+export const CheckboxForm = createComponent(MaterialCheckbox, ({
+  input: { onChange, value, ...inputProps },
+  meta,
+  onChange: ignoredOnChange,
+  defaultChecked,
+  ...props
+}) => ({
+  ...inputProps,
+  ...props,
+  checked: value ? true : false,
+  onChange: (event, isInputChecked) => {
+    onChange(isInputChecked);
+  }
+}));
+
+const Checkbox = ({
+  ...props
 }) => (
-  <Checkbox
-    style={{ textAlign: 'left', marginLeft: 'auto', marginRight: 'auto', width: 'initial' }}
-    labelStyle={{ width: '100%' }}
-    {...custom}
+  <FormControlLabel
+    control={
+      <CheckboxForm {...props} style={{ ...props.style, width: 'auto' }} />
+    }
+    style={{ margin: '0px' }}
+    {...props}
   />
 );
 
-RenderCheckbox.propTypes = {
-  viewType: PropTypes.string,
-  meta: PropTypes.object
-};
-
-export default RenderCheckbox;
+export default Checkbox;

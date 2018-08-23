@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core';
-import FormField, { RenderStars } from 'components/Field';
+import FormField, { FormRow, Stars } from 'components/Field';
 import { Row, Column } from 'react-foundation';
 import PropTypes from 'prop-types';
 
@@ -27,14 +27,23 @@ const styles = (theme) => ({
   progressStars: theme.instrumental.starColor,
   row: {
     marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit
-  }
+    marginBottom: theme.spacing.unit,
+    flexWrap: 'wrap'
+  },
+  flexTwo: {
+    flex: '0 0 250px',
+    width: '250px'
+  },
+  flexThree:  {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: '250px'
+  },
 });
 
 export const AddSongMainTab = (props) => {
   const {
     lastActiveField,
-    textStyle,
     modalView,
     matchedArtist,
     activeField,
@@ -75,100 +84,79 @@ export const AddSongMainTab = (props) => {
   };
 
   const renderStars = (number) => (
-    <RenderStars
+    <Stars
       className={classes.progressStars}
-      number={number}
-      style={{ float: 'right', display: 'inline-block' }} />
+      number={parseInt(number)}
+      />
   );
 
-  const textProps = {
-    disabled       : modalView.isView(),
-    style          : textStyle
-  };
-
-  const className = classes[`${modalView.getName()}Field`];
-
   const renderViewFields = () => (
-    <Row className={classes.row}>
+    <FormRow>
       <FormField
         name='title'
         type='text'
-        className={className}
-        {...textProps}
         label='Song Title' />
       <FormField
         name='artist.fullName'
         type='text'
-        className={className}
-        {...textProps}
         label='Song Artist' />
-    </Row>
+    </FormRow>
   );
 
   const renderEditFields = ({ artistLastNames }) => (
     <div>
-      <Row className={classes.row}>
+      <FormRow>
         <FormField
           name='title'
           type='text'
-          className={className}
-          {...textProps}
-          small={8}
+          small={12}
+          medium={8}
           centerOnSmall
-          style={{ ...textStyle, ...{ width: '100%' } }}
           label='Song Title' />
-      </Row>
-      <Row className={classes.row}>
+      </FormRow>
+      <FormRow>
         <FormField
           name='artist.lastName'
           type='autocomplete'
-          className={className}
           options={artistLastNames}
-          label='Last Name / Band'
-          {...textProps} />
+          label='Last Name / Band' />
         <FormField
           name='artist.firstName'
           type='text'
-          label='First Name'
-          {...textProps} />
-      </Row>
+          label='First Name' />
+      </FormRow>
     </div>
   );
   return (
     <div>
-      <Row className={classes.row}>
+      <FormRow>
         <Column>
           <Row className={classes.imageFrame}>
             { renderImage() }
           </Row>
         </Column>
-      </Row>
+      </FormRow>
       {modalView.isView() && renderViewFields()}
       {!modalView.isView() && renderEditFields(props)}
-      <Row className={classes.row}>
+      <FormRow>
         <FormField
           name='genre.name'
           type='autocomplete'
           label='Song Genre'
-          options={props.genres}
-          className={className}
-          {...textProps} />
+          options={props.genres} />
         <FormField
           name='instrument.name'
           type='autocomplete'
           label='Instrument'
-          options={props.instruments}
-          className={className}
-          {...textProps} />
-      </Row>
-      <Row className={classes.row}>
+          options={props.instruments} />
+      </FormRow>
+      <FormRow>
         <FormField
           name='difficulty'
           type='slider'
           min={1}
           max={props.maxDifficulty}
           step={1}
-          className={className}
           disabled={modalView.isView()}
           label='Difficulty' />
         <FormField
@@ -177,11 +165,10 @@ export const AddSongMainTab = (props) => {
           min={0}
           max={4}
           step={1}
-          className={className}
           valueDisplay={renderStars}
           disabled={modalView.isView()}
           label='Progress' />
-      </Row>
+      </FormRow>
     </div>
   );
 };

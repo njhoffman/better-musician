@@ -14,9 +14,14 @@ const styles = {
     cursor: 'pointer',
     textDecoration: 'none'
   },
-  icon : {
-    marginLeft: 'auto',
-    marginRight: 'auto'
+  iconWrapper: {
+    width: '100%',
+    justifyContent: 'center'
+  },
+  icon: { },
+  iconText: {
+    flex: 'none',
+    padding: 0
   },
   paper: {
     paddingTop: '0',
@@ -31,12 +36,13 @@ const SearchPopover = ({
 }) => (
   <a className={classes.headerLink}>
     <MenuItem
+      className={classes.iconWrapper}
       selected={Boolean(isOpen)}
       onMouseEnter={(e) => open('search', e)}>
       <ListItemIcon>
         <SearchIcon className={classes.icon} />
       </ListItemIcon>
-      <ListItemText>Search</ListItemText>
+      <ListItemText className={classes.iconText}>Search</ListItemText>
     </MenuItem>
   </a>
 );

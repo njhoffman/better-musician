@@ -1,14 +1,17 @@
 import React  from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Row, Column } from 'react-foundation';
+import { Column } from 'react-foundation';
 import { FieldArray, reduxForm } from 'redux-form';
-import { browserHistory } from 'react-router';
-import { Button as MatButton, Paper, Tabs, Tab, withStyles } from '@material-ui/core';
+import {
+  Button as MatButton, AppBar,
+  Paper, Tabs, Tab, Typography, withStyles
+} from '@material-ui/core';
 
+import { withRouter } from 'react-router';
 import Button from 'components/Button';
 import FieldList from './FieldList';
-import FormField from 'components/Field';
+import FormField, { FormRow } from 'components/Field';
 import FieldOptions from './FieldOptions';
 import {
   MdSave as SaveIcon,
@@ -27,14 +30,15 @@ import { savedTabs as savedTabsSelector } from '../modules/selectors';
 
 import css from './FieldsView.scss';
 
-const styles = {};
+const styles = (theme) => ({
+  root: {
+    textAlign: 'center'
+  }
+});
 
 export const FieldsView = (props) => {
   // const user = props.settings.get('attributes');
   let disabled =  false;
-  const redirectProfile = () => browserHistory.push('/profile');
-  const redirectStats = () => browserHistory.push('/stats');
-  const redirectSettings = () => browserHistory.push('/settings');
 
   const {
     updateField,
@@ -95,69 +99,53 @@ export const FieldsView = (props) => {
 
   return (
     <Column centerOnSmall small={12} medium={10} large={8}>
-      <Paper zDepth={5}>
-        <div className={css.fieldsContainer}>
-          <Tabs value='fields'>
-            <Tab
-              data-route='/profile'
-              value='profile'
-              onActive={redirectProfile}
-              label='Profile' />
-            <Tab
-              data-route='/stats'
-              value='stats'
-              onActive={redirectStats}
-              label='Stats' />
-            <Tab
-              data-route='/settings'
-              value='settings'
-              onActive={redirectSettings}
-              label='Settings' />
-            <Tab
-              data-route='/fields'
-              value='fields'
-              label='Fields'>
-              <form className={css.fieldsForm}>
-                <h3>Build Your Custom Fields</h3>
-                <Row className={css.fieldAdd}>
-                  <FormField
-                    large={4}
-                    medium={6}
-                    small={12}
-                    label='Field Type'
-                    name='type'
-                    type='select'
-                    dataSource={fieldOptions}
-                  />
-                  <FormField
-                    large={4}
-                    medium={6}
-                    small={12}
-                    label='Field Label'
-                    name='label'
-                    type='text'
-                  />
-                  <FormField
-                    large={4}
-                    medium={12}
-                    small={12}
-                    label='Tab Name'
-                    name='tabName'
-                    type='text'
-                  />
-                </Row>
-                <div className={css.extraFields}>
-                  {formValues && renderExtraFields(formValues)}
-                </div>
-                <div className={css.buttons}>
-                  {editingField && renderEditButtons()}
-                  {!editingField && renderAddButtons()}
-                </div>
-                <FieldList {...props} />
-              </form>
-            </Tab>
+      <Paper elevation={5}>
+        <AppBar position='static'>
+          <Tabs value='fields' centered={true} fullWidth={true}
+            onChange={(e, val) => props.history.push(val)}>
+            <Tab data-route='/profile' value='profile' label='Profile' />
+            <Tab data-route='/settings' value='settings' label='Settings' />
+            <Tab data-route='/fields' value='fields' label='Fields' />
           </Tabs>
-        </div>
+        </AppBar>
+        <form>
+          <Typography>Build Your Custom Fields</Typography>
+          <FormRow>
+            <FormField
+              large={4}
+              medium={6}
+              small={12}
+              label='Field Type'
+              name='type'
+              type='select'
+              options={fieldOptions}
+            />
+            <FormField
+              large={4}
+              medium={6}
+              small={12}
+              label='Field Label'
+              name='label'
+              type='text'
+            />
+            <FormField
+              large={4}
+              medium={12}
+              small={12}
+              label='Tab Name'
+              name='tabName'
+              type='text'
+            />
+          </FormRow>
+          <div className={css.extraFields}>
+            {formValues && renderExtraFields(formValues)}
+          </div>
+          <FormRow>
+            {editingField && renderEditButtons()}
+            {!editingField && renderAddButtons()}
+          </FormRow>
+          <FieldList {...props} />
+        </form>
       </Paper>
     </Column>
   );
@@ -170,10 +158,6 @@ FieldsView.propTypes = {
   addField:     PropTypes.func.isRequired
 };
 
-const updateFieldsForm = reduxForm({
-  form: 'updateFieldsForm', enableReinitialize: true
-})(withStyles(styles)(FieldsView));
-
 const mapActionCreators = {
   addField,
   updateField,
@@ -183,10 +167,16 @@ const mapActionCreators = {
 };
 
 const mapStateToProps = (state) => ({
-  initialValues: state.fieldsView.editingField,
-  editingField:  state.fieldsView.editingField,
+  initialValues: state.FieldsView.editingField,
+  editingField:  state.FieldsView.editingField,
   savedTabs:     savedTabsSelector(state),
   formValues:    state.form.updateFieldsForm ? state.form.updateFieldsForm.values : null
 });
 
-export default connect(mapStateToProps, mapActionCreators)(updateFieldsForm);
+const updateFieldsForm = reduxForm({
+  form: 'updateFieldsForm',
+  enableReinitialize: true
+})(withStyles(styles)(FieldsView));
+
+
+export default withRouter(connect(mapStateToProps, mapActionCreators)(updateFieldsForm));

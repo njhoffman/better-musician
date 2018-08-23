@@ -46,11 +46,11 @@ export default (initialState = {}, history) => {
 
   if (__DEV__) {
     const devExt = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
-    const { enableExtension, showPanel, extensionOptions } = config.dev;
-    if (devExt && !showPanel && enableExtension) {
+    const { enableExtension, showPanel, showChart, extensionOptions } = config.dev;
+    if (devExt && enableExtension) {
       composeEnhancers = devExt(extensionOptions);
       enhancers.push(DevTools.instrument({ shouldCatchErrors: true }));
-    } else if (showPanel) {
+    } else if (showPanel || showChart) {
       enhancers.push(DevTools.instrument({ shouldCatchErrors: true }));
     }
   }

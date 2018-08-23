@@ -26,8 +26,8 @@ export default {
     }
   },
   typography:         {
-    fontFamily:       '"Roboto", "Helvetica", "Arial", sans-serif',
-    fontSize:         14
+    fontFamily:       '"Roboto", "Open Sans", sans-serif',
+    fontSize:         13
   },
   backgroundColor:    'linear-gradient(135deg, #141a1e 0%,#627c91 50%,#627c91 52%,#141a1e 100%)',
   instrumental:       {

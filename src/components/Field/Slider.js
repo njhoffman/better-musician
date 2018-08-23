@@ -1,12 +1,34 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Slider from '@material-ui/lab/Slider';
+import MaterialSlider from '@material-ui/lab/Slider';
+import { FormLabel } from '@material-ui/core';
 
-class RenderSlider extends Component {
+import createComponent from './createFormField';
+
+const SliderForm = createComponent(
+  MaterialSlider, ({
+    input: { onDragStart, onChange, name, value },
+    onChange: onChangeFromField,
+    defaultValue,
+    meta,
+    ...props
+  }) => ({
+    ...props,
+    name,
+    value,
+    onChange: (event, value) => {
+      onChange(value);
+      if (onChangeFromField) {
+        onChangeFromField(value);
+      }
+    }
+  })
+);
+
+class Slider extends Component {
   static propTypes = {
     input:        PropTypes.object,
     label:        PropTypes.string,
-    textColor:    PropTypes.string,
     valueDisplay: PropTypes.func,
     viewType:     PropTypes.string
   };
@@ -20,26 +42,31 @@ class RenderSlider extends Component {
       input,
       // viewType,
       label,
-      textColor,
       valueDisplay,
-      ...custom } = this.props;
+      ...props
+    } = this.props;
 
     return (
       <div>
-        <label style={{ color: textColor, marginBottom: '-15px', marginTop: '20px' }}>
-          <span>{label}</span>
-          { valueDisplay && valueDisplay(this.state.value) }
-          { !valueDisplay && <span style={{ float: 'right' }}>{this.state.value}</span> }
-        </label>
-        <Slider
-          onChange={(e, value) => this.setState({ value: value })}
+        <FormLabel>
+          <div style={{ display: 'inline-block', width: '50%', textAlign: 'left' }}>
+            {label}
+          </div>
+          <div style={{ display: 'inline-block', width: '50%', textAlign: 'right' }}>
+            { valueDisplay && valueDisplay(this.state.value) }
+            { !valueDisplay && this.state.value }
+          </div>
+        </FormLabel>
+        <SliderForm
+          onChange={(value) => this.setState({ value })}
           input={input}
           value={parseInt(this.state.value)}
-          {...custom}
+          style={{ padding: '8px 0px' }}
+          {...props}
         />
       </div>
     );
   }
 }
 
-export default RenderSlider;
+export default Slider;

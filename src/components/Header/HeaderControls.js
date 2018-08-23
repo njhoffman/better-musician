@@ -14,11 +14,14 @@ import { MdFilterList as FilterIcon } from 'react-icons/md';
 // import css from './Header.scss';
 const styles = {
   headerMiddle: {
-    width: '100%',
+    width: 'fit-content',
     display: 'flex',
+    flex: 3,
     alignItems: 'stretch',
     justifyContent: 'space-around',
-    textAlign: 'center'
+    textAlign: 'center',
+    float: 'left',
+    // when width < 450px, set width to 100% and headerRight to absolute position
   },
   headerLink: {
     display: 'flex',
@@ -27,12 +30,19 @@ const styles = {
     width: '100%',
     height: '100%',
     cursor: 'pointer',
-    textDecoration: 'none'
+    textDecoration: 'none',
+    minWidth: '0px'
   },
   headerLinkActive: { },
-  iconWrapper: { },
+  iconWrapper: {
+    width: '100%',
+    justifyContent: 'center'
+  },
   icon: { },
-  iconText: { }
+  iconText: {
+    flex: 'none',
+    padding: 0
+  }
 };
 
 const popoverStyle = {
@@ -40,7 +50,7 @@ const popoverStyle = {
   transform: { horizontal: 'center', vertical: 'top' }
 };
 
-class HeaderMiddle extends Component {
+class HeaderControls extends Component {
   static propTypes = {
     showFiltersModal: PropTypes.func.isRequired,
     currentSong:      PropTypes.string,
@@ -115,7 +125,7 @@ class HeaderMiddle extends Component {
           <ListItemIcon>
             <FilterIcon className={classes.icon} />
           </ListItemIcon>
-          <ListItemText>Filters</ListItemText>
+          <ListItemText className={classes.iconText}>Filters</ListItemText>
         </MenuItem>
       </a>
     );
@@ -159,4 +169,4 @@ const mapStateToProps = (state) => ({
   currentSong  : state.SongsView ? state.SongsView.currentSong : null
 });
 
-export default connect(mapStateToProps, mapActionCreators)(withStyles(styles)(HeaderMiddle));
+export default connect(mapStateToProps, mapActionCreators)(withStyles(styles)(HeaderControls));

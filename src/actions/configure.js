@@ -1,24 +1,27 @@
+import * as A from 'constants/auth';
 import { push } from 'react-router-redux';
 import extend from 'extend';
 import {
   authenticateStart,
   authenticateComplete,
   authenticateError
-} from './auth';
+} from 'actions/auth';
 
 import { applyConfig } from 'utils/auth/clientSettings';
 import { destroySession } from 'utils/auth/sessionStorage';
 import getRedirectInfo from 'utils/auth/parseUrl';
-import { init as initLog } from 'shared/logger';
-const { debug } = initLog('auth-configure');
 
-export const configure = (endpoints = {}, settings = {}) => {
+import { init as initLog } from 'shared/logger';
+const { debug } = initLog('config');
+
+const loadConfiguration = (endpoints = {}, settings = {}) => {
   return dispatch => {
     // don't render anything for OAuth redirects
     if (settings.currentLocation && settings.currentLocation.match(/blank=true/)) {
       return Promise.resolve({ blank: true });
     }
 
+    dispatch({ type: A.CONFIGURE_LOAD, payload: endpoints });
     dispatch(authenticateStart());
 
     // let mustResetPassword, firstTimeLogin
@@ -60,3 +63,8 @@ export const configure = (endpoints = {}, settings = {}) => {
       });
   };
 };
+
+export default ({ dispatch, getState }) =>
+  dispatch(
+    loadConfiguration(getState().config.endpoints, getState().config.settings)
+  );

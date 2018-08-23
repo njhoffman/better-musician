@@ -1,62 +1,20 @@
-import * as A from 'constants/auth';
-import extend from 'extend';
+import _ from 'lodash';
 
-// base endpoint that other endpoints extend from
-const defaultEndpoint = {
-  apiUrl:                '/api',
-  signOutPath:           '/auth/sign_out',
-  emailSignInPath:       '/auth/sign_in',
-  emailRegistrationPath: '/auth',
-  accountUpdatePath:     '/auth',
-  accountDeletePath:     '/auth',
-  passwordResetPath:     '/auth/password',
-  passwordUpdatePath:    '/auth/password',
-  tokenValidationPath:   '/auth/validate_token',
-
-  authProviderPaths: {
-    github:    '/auth/github',
-    facebook:  '/auth/facebook',
-    google:    '/auth/google_oauth2'
+export default (endpoints, defaultEndpointKey = null) => {
+  const allEndpoints = {};
+  if (!defaultEndpointKey) {
+    defaultEndpointKey = _.first(_.keys(endpoints));
   }
-};
-
-function getFirstObjectKey(obj) {
-  for (var key in obj) {
-    return key;
-  }
-}
-
-export default function parseEndpointConfig(endpoint, defaultEndpointKey = null) {
-  // normalize so opts is always an array of objects
-  if (endpoint.constructor !== Array) {
-    // single config will always be called 'default' unless set
-    // by previous session
-    defaultEndpointKey = A.INITIAL_CONFIG_KEY;
-
-    // config should look like {default: {...}}
-    var defaultConfig = {};
-    defaultConfig[defaultEndpointKey] = endpoint;
-
-    // endpoint should look like [{default: {...}}]
-    endpoint = [defaultConfig];
-  }
-
-  let currentEndpoint = {};
-
-  // iterate over config items, extend each from defaults
-  for (var i = 0; i < endpoint.length; i++) {
-    var configName = getFirstObjectKey(endpoint[i]);
-
-    // set first as default config
-    if (!defaultEndpointKey) {
-      defaultEndpointKey = configName;
+  _.keys(endpoints).forEach((key, i) => {
+    if (i === 0 && !defaultEndpointKey) {
+      defaultEndpointKey = key;
     }
 
-    // save config to `configs` hash
-    currentEndpoint[configName] = extend(
-      {}, defaultEndpoint, endpoint[i][configName]
-    );
-  }
+    allEndpoints[key] = { ...endpoints[defaultEndpointKey], ...endpoints[key] };
+    if (endpoints[key].extends) {
+      _.merge(allEndpoints[key], endpoints[endpoints[key].extends]);
+    }
+  });
 
-  return { defaultEndpointKey, currentEndpoint };
-}
+  return { defaultEndpointKey, currentEndpoints: allEndpoints };
+};

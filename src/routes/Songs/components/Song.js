@@ -3,15 +3,18 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import withTheme from '@material-ui/core/styles/withTheme';
 import { TableRow, TableCell } from '@material-ui/core';
-import css from './Song.scss';
-import { RenderStars, RenderDifficulty } from 'components/Field';
+import { Stars, Difficulty } from 'components/Field';
 import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
 import { uiShowModal, MODAL_ADD_SONG } from 'store/ui';
 
 const rowStyle = { };
 const colStyle = {
-  textAlign: 'center'
+  // textAlign: 'center',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden'
 };
+
 export const Song = ({
   songValues,
   currentSongId,
@@ -26,27 +29,17 @@ export const Song = ({
       onDoubleClick={showViewSongModal}
       style={rowStyle}
       {...custom}>
-      <TableCell
-        style={colStyle}
-        className={css.title}>
+      <TableCell style={colStyle}>
         { songValues.title }
       </TableCell>
-      <TableCell
-        style={colStyle}
-        className={css.artist}>
+      <TableCell style={colStyle}>
         {songValues.artist.lastName}
       </TableCell>
-      <TableCell
-        style={colStyle}
-        className={css.progress}>
-        <RenderStars number={songValues.progress} starColor={theme.instrumental.starColor} />
+      <TableCell style={colStyle}>
+        <Stars number={songValues.progress} starColor={theme.instrumental.starColor} />
       </TableCell>
-      <TableCell
-        style={colStyle}
-        className={css.difficulty}>
-        <RenderDifficulty
-          difficulty={songValues.difficulty}
-          maxDifficulty={maxDifficulty} />
+      <TableCell style={colStyle}>
+        <Difficulty difficulty={songValues.difficulty} maxDifficulty={maxDifficulty} />
       </TableCell>
     </TableRow>
   );

@@ -1,5 +1,12 @@
 // devtools overrides
 
+@media (max-width: 450px) {
+  .action-preview,
+  .time-line-controls {
+    display: none;
+  }
+}
+
 .action-preview {
   width: 30%;
   font-size: 0.75em;

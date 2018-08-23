@@ -9,11 +9,13 @@ const showDrawerMenu = (state) =>
 const hideDrawerMenu = (state) =>
   ({ ...state, drawer: { ...state.drawer, isOpen: false } });
 
-const showSnackbar = (state, action) => ({ ...state,
+const showSnackbar = (state, { payload, meta }) => ({
+  ...state,
   snackbar: {
     ...state.snackbar,
     isOpen: true,
-    message: (action.meta ? action.meta.message : null)
+    message: payload,
+    variant: meta.variant
   }
 });
 

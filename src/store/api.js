@@ -9,7 +9,7 @@ const { info } = initLog('api-store');
 // Constants
 // ------------------------------------
 
-export const LOAD_CONFIG           = 'LOAD_CONFIG';
+export const CONFIGURE_LOAD        = 'CONFIGURE_LOAD';
 export const FETCH_SONGS           = 'FETCH_SONGS';
 export const SONGS_REQUEST         = 'SONGS_REQUEST';
 export const SONGS_SUCCESS         = 'SONGS_SUCCESS';
@@ -41,8 +41,9 @@ export const EMAIL_SIGN_IN_ERROR       = 'EMAIL_SIGN_IN_ERROR';
 // ------------------------------------
 
 export const fetchSongs = ({ dispatch, getState }) => {
+  // TODO: make this better dumbass
   const state = getState();
-  if (state.api.initialized.indexOf('songs') !== -1) {
+  if (_.has(state, 'orm.Song.items') && _.get(state, 'orm.Song.items').length > 0) {
     info('Songs already initialized, skipping');
     return false;
   }
@@ -88,9 +89,13 @@ export const updateUser = () => (dispatch, getState) => {
 export const userUpdateSuccess = (response) => (dispatch) => {
   info('updateUserSuccess', response);
   dispatch({ type: USER_UPDATE_SUCCESS, user: response });
-  dispatch({ type: 'UI_SHOW_SNACKBAR', meta: { message: 'Profile Updated' } });
+  dispatch({
+    type: 'UI_SHOW_SNACKBAR',
+    payload: 'Profile Successfully Updated',
+    meta: { variant: 'success' }
+  });
   // reloads user attributes
-  dispatch({ type: AUTHENTICATE_COMPLETE, user: response });
+  dispatch({ type: AUTHENTICATE_COMPLETE, payload: { user: response } });
 };
 
 export const addSong = () => (dispatch, getState) => {
@@ -121,71 +126,89 @@ export const songsAddFailure = (response) => (dispatch) => {
 // Action Handlers
 // ------------------------------------
 
+const loadApiEndpoints = (endpoints, level) => {
+  // TODO: make api endpoint extension and nesting recursive
+  const apiEndpoints = endpoints.default;
+  if (level) {
+    if (apiEndpoints[level].extends) {
+      _.merge(apiEndpoints, endpoints[endpoints[level].extends]);
+    }
+    _.merge(apiEndpoints, endpoints[level]);
+  }
+
+  const results = _.mapValues(apiEndpoints, ep1 => {
+    // apiURL
+    if (_.isString(ep1)) {
+      return ep1;
+    }
+    return _.mapValues(ep1, ep2 => {
+      // first order route
+      if (_.isString(ep2)) {
+       return {
+          loading: false,
+          errors: false,
+          success: false
+        };
+      }
+      return _.mapValues(ep2, () => ({
+        loading: false,
+        errors: false,
+        success: false
+      }));
+    });
+  });
+  return results;
+};
+
 const ACTION_HANDLERS = {
 
-  [AUTHENTICATE_START] : (state) => ({
+  [CONFIGURE_LOAD] : (state, { payload }) => ({
     ...state,
-    loading: true
-  }),
-  [AUTHENTICATE_ERROR] : (state) => ({
-    ...state,
-    loading: false
-  }),
-  [AUTHENTICATE_COMPLETE] : (state) => ({
-    ...state,
-    loading: false,
-    initialized: state.initialized.indexOf('user') === -1 ? state.initialized.concat('user') : state.initialized
-  }),
-
-  [LOAD_CONFIG] : (state, { payload }) => ({
-    ...state,
-    endpoints: _.mapValues(payload, () => ({
-      loading: false,
-      errors: false,
-      success: false
-    }))
+    ...loadApiEndpoints(payload)
   }),
 
   [EMAIL_SIGN_IN_START] : (state) => ({
     ...state,
-    loading: true,
-    endpoints: { ...state.endpoints, login: { ...state.endpoints.login, loading: true } }
-  }),
-  [EMAIL_SIGN_IN_COMPLETE] : (state) => ({
-    ...state,
-    loading: false,
-    endpoints: { ...state.endpoints,
-      login: { ...state.endpoints.login, loading: false, success: true, errors: [] }
-    }
-  }),
-  [EMAIL_SIGN_IN_ERROR] : (state, { payload: { errors } }) => ({ ...state,
-    loading: false,
-    endpoints: { ...state.endpoints,
-      login: { ...state.endpoints.login, loading: false, success: false, errors }
+    auth: {
+      ...state.auth,
+      login: { loading: true, success: false, errors: [] }
     }
   }),
 
-  [SONGS_REQUEST] : (state) => ({ ...state, loading: true }),
-  [SONGS_SUCCESS] : (state) =>
-    ({ ...state,
-      loading: false,
-      initialized: state.initialized.indexOf('songs') === -1 ? state.initialized.concat('songs') : state.initialized }),
-  [USER_UPDATE] : (state) => ({ ...state, loading: true }),
-  [USER_UPDATE_SUCCESS] : (state) => ({ ...state, loading: false }),
-  [USER_UPDATE_FAILURE] : (state) => ({ ...state, loading: false }),
-  [SONGS_ADD] : (state) => ({ ...state, loading: true }),
-  [SONGS_ADD_SUCCESS] : (state) => ({ ...state, loading: false }),
-  [SONGS_ADD_FAILURE] : (state) => ({ ...state, loading: false })
+  [EMAIL_SIGN_IN_COMPLETE] : (state) => ({
+    ...state,
+    auth: {
+      ...state.auth,
+      login: { loading: false, success: true, errors: [] }
+    }
+  }),
+
+  [EMAIL_SIGN_IN_ERROR] : (state, { payload: { errors } }) => ({
+    ...state,
+    auth: {
+      ...state.auth,
+      login: { ...state.auth.login, loading: false, success: false, errors }
+    }
+  }),
+
+  // [SONGS_REQUEST] : (state) => ({ ...state, loading: true }),
+  // [SONGS_SUCCESS] : (state) => ({
+  //   ...state,
+  //   loading: false,
+  //   initialized: state.initialized.indexOf('songs') === -1 ? state.initialized.concat('songs') : state.initialized
+  // }),
+  // [USER_UPDATE] : (state) => ({ ...state, loading: true }),
+  // [USER_UPDATE_SUCCESS] : (state) => ({ ...state, loading: false }),
+  // [USER_UPDATE_FAILURE] : (state) => ({ ...state, loading: false }),
+  // [SONGS_ADD] : (state) => ({ ...state, loading: true }),
+  // [SONGS_ADD_SUCCESS] : (state) => ({ ...state, loading: false }),
+  // [SONGS_ADD_FAILURE] : (state) => ({ ...state, loading: false })
 };
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-export const initialState = {
-  loading: false,
-  initialized: [],
-  errors: []
-};
+export const initialState = { };
 
 export default function apiReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];

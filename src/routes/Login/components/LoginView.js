@@ -16,23 +16,26 @@ const styles = (theme) => ({
   }
 });
 
-export const LoginView = ({ classes, ...props }) => (
+export const LoginView = ({
+  classes,
+  isSignedIn,
+  ...props
+}) => (
   <Column small={12} medium={10} large={8}>
     <Paper elevation={5} className={classes.contentContainer}>
       <div className={classes.loginContainer}>
-        <Typography variant='title'>This is the Login Page</Typography>
-        {props.isSignedIn && (
+        <Typography variant='title'>
+          This is the Login Page
+        </Typography>
+        {isSignedIn && (
           <div>
             <Typography variant='body2'>
               You are already logged in.  Would you like to log out?!
             </Typography>
-            <SignOutButton
-              label='LOGOUT'
-              next={() => { }}
-              style={{ backgroundColor: 'transparent', width: '100%' }} />
+            <SignOutButton label='LOGOUT' next={() => { }} />
           </div>
         )}
-        {!props.isSignedIn && (
+        {!isSignedIn && (
           <EmailSignInForm next={handleLoginSuccess} />
         )}
       </div>

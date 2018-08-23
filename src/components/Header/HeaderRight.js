@@ -14,12 +14,17 @@ import {
 const styles = {
   flex: {
     flex: 1,
-    textAlign: 'right'
+    textAlign: 'right',
   },
   headerRight: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    width: 'fit-content',
+    flex: 1,
+    float: 'right',
+    paddingLeft: '10px',
+    textAlign: 'right'
   },
   profileDisplay: {
     width: 'calc(100% - 55px)',
@@ -38,7 +43,6 @@ const styles = {
     lineHeight: '0.8em',
   },
   profileAvatar: {
-    width: '1.5em',
     marginLeft: '5px',
   },
   loginButton:  {

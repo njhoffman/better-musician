@@ -1,12 +1,50 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  RenderChip,
-  RenderText
+  Chip,
+  FormRow
 } from 'components/Field';
 import { Field } from 'redux-form';
-import { Button } from '@material-ui/core';
-import css from './FieldsView.scss';
+import { TextField } from '@material-ui/core';
+import { Column } from 'react-foundation';
+import Button from 'components/Button';
+  // .fieldsForm {
+  //   margin-left: auto;
+  //   margin-right: auto;
+  //   margin: 25px 5px 5px 5px;
+  //   text-align: center;
+  //
+  //   .fieldAdd,
+  //   .buttons,
+  //   .extraFields,
+  //   .tabbedField {
+  //     display: flex;
+  //     max-width: none;
+  //     flex-wrap: wrap;
+  //     box-align: stretch;
+  //     align-items: center;
+  //     justify-content: space-around;
+  //   }
+  //   .fieldAdd {
+  //     padding: 0px 20px;
+  //   }
+  //   .extraFields {
+  //     margin-left: auto;
+  //     margin-right: auto;
+  //     .selectOptions {
+  //       margin-top: 10px;
+  //       max-width: 550px;
+  //       max-height: 400px;
+  //       overflow-y: auto;
+  //       display: flex;
+  //       flex-wrap: wrap;
+  //       justify-content: center;
+  //     }
+  //     .flexThree {
+  //       margin-left: auto;
+  //       margin-right: auto;
+  //     }
+  //   }
 
 export class FieldOptions extends Component {
   static propTypes = {
@@ -27,33 +65,32 @@ export class FieldOptions extends Component {
   render() {
     return (
       <div>
-        <div className={css.flexThree}>
-          <RenderText
-            label='Option Text'
-            onChange={(e) => this.setState({ optionText: e.target.value })}
-            autoComplete='off'
-            style={{ width: '60%', display: 'inline-block' }}
-            value={this.state.optionText}
-            name='optionText'
-          />
-          <Button
-            variant='raised'
-            onTouchTap={() => this.addOption(this.props.fields)}
-            secondary
-            style={{ display: 'inline-block', minWidth: '30%', marginLeft: '10px' }}
-            label='Add' />
-        </div>
-        <div className={css.selectOptions}>
-          {this.props.fields.map((option, index, fields) =>
-            <Field
-              key={index}
-              name={`${option}`}
-              component={RenderChip}
-              onRequestDelete={() => fields.remove(index)}
-              style={{ margin: '5px 2px', fontSize: '0.8em' }}
-            />
-          )}
-        </div>
+        <FormRow>
+          <Column small={8}>
+            <TextField
+              label='Option Text'
+              onChange={(e) => this.setState({ optionText: e.target.value })}
+              value={this.state.optionText}
+              name='optionText' />
+            <Button
+              variant='raised'
+              onClick={() => this.addOption(this.props.fields)}
+              secondary
+              label='Add' />
+          </Column>
+        </FormRow>
+        <FormRow>
+          <Column small={6}>
+            {this.props.fields.map((option, index, fields) =>
+              <Field
+                key={index}
+                name={`${option}`}
+                component={Chip}
+                onDelete={() => fields.remove(index)}
+              />
+            )}
+          </Column>
+        </FormRow>
       </div>
     );
   }

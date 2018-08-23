@@ -12,7 +12,8 @@ import Button from 'components/Button';
 const styles = (theme) => ({
   homeLink: {
     color: theme.palette.text.primary,
-    marginLeft: '5px',
+    fontSize: '0.8rem',
+    marginLeft: '-5px',
     textDecoration: 'none',
     '&:hover':  {
       textShadow: '0px 0px 3px rgba(255,255,255,0.3), 0px -0px 3px rgba(255,255,255,0.5)'
@@ -22,6 +23,7 @@ const styles = (theme) => ({
   },
   headerLeft: {
     display: 'flex',
+    flex: 1,
     alignItems: 'center'
   }
 });
@@ -29,8 +31,7 @@ const styles = (theme) => ({
 const HeaderLeft = ({ classes, toggleDrawerMenu }) => (
   <div className={classes.headerLeft}>
     <Button
-      icon={<MenuIcon onClick={toggleDrawerMenu} />}
-    />
+      icon={<MenuIcon className={classes.menuIcon} onClick={toggleDrawerMenu} />} />
     <Link className={classes.homeLink} to='/'>
       instrumental.io
     </Link>

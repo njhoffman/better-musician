@@ -25,7 +25,8 @@ const styles = {
     width: '100%',
     height: '100%',
     cursor: 'pointer',
-    textDecoration: 'none'
+    textDecoration: 'none',
+    minWidth: '0px'
   },
   downArrow : {
     '&:hover' : {
@@ -34,9 +35,14 @@ const styles = {
     fontSize: '1.5em',
     marginLeft: '5px'
   },
-  icon : {
-    marginLeft: 'auto',
-    marginRight: 'auto'
+  iconWrapper: {
+    width: '100%',
+    justifyContent: 'center'
+  },
+  icon : { },
+  iconText: {
+    flex: 'none',
+    padding: 0
   },
   paper: {
     paddingTop: '0',
@@ -51,12 +57,12 @@ const popoverStyle = {
 
 const SongButtonOther = ({ classes }) => (
   <Link className={classes.headerLink} to='/songs'>
-    <MenuItem>
+    <MenuItem className={classes.iconWrapper}>
       <ListItemIcon>
         <ViewIcon className={classes.icon} />
       </ListItemIcon>
-      <ListItemText>
-        View Songs
+      <ListItemText className={classes.iconText}>
+        Songs
       </ListItemText>
     </MenuItem>
   </Link>
@@ -69,11 +75,11 @@ SongButtonOther.propTypes = {
 const SongButtonAdd = ({ classes, ...props }) => (
   <a onClick={() => showAddDialog({ ...props })}
     className={classes.headerLink}>
-    <MenuItem>
+    <MenuItem className={classes.iconWrapper}>
       <ListItemIcon>
         <AddIcon className={classes.icon} />
       </ListItemIcon>
-      <ListItemText>
+      <ListItemText className={classes.iconText}>
         Add Song
       </ListItemText>
     </MenuItem>
@@ -92,12 +98,13 @@ const SongButtonView = ({
   <a className={classes.headerLink}
     onClick={() => showEditDialog({ ...props, closeAll })} >
     <MenuItem
+      className={classes.iconWrapper}
       selected={Boolean(isOpen)}
       onMouseEnter={(e) => open('song', e)}>
       <ListItemIcon>
         <EditIcon className={classes.icon} />
       </ListItemIcon>
-      <ListItemText>
+      <ListItemText className={classes.iconText}>
         Edit Song
         <ArrowDropDownIcon
           className={classes.downArrow}
@@ -118,20 +125,23 @@ const SongButtonView = ({
       disableRestoreFocus={true}
       onClose={() => close('song')}>
       <MenuItem
+        className={classes.iconWrapper}
         style={{ width }}
         onClick={() => showAddDialog({ ...props, closeAll})}>
         <ListItemIcon>
           <AddIcon className={classes.icon} />
         </ListItemIcon>
-        <ListItemText>
+        <ListItemText className={classes.iconText}>
           Add Song
         </ListItemText>
       </MenuItem>
-      <MenuItem style={{ width }}>
+      <MenuItem
+        className={classes.iconWrapper}
+        style={{ width }}>
         <ListItemIcon>
           <DeleteIcon className={classes.icon} />
         </ListItemIcon>
-        <ListItemText>
+        <ListItemText className={classes.iconText}>
           Delete Song
         </ListItemText>
       </MenuItem>

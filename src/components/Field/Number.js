@@ -1,29 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextField } from 'redux-form-material-ui';
+import Textbox from './Textbox';
 
-const RenderNumber = ({
-  viewType,
-  label,
+const NumberField = ({
   meta,
-  ...custom }) => {
-  return (
-    <TextField
-      type='number'
-      floatingLabelText={label}
-      style={{ width: '125px', textAlign: 'center' }}
-      inputStyle={{ textAlign: 'center', boxShadow: 'none' }}
-      min={0}
-      errorText={meta && meta.touched && meta.error}
-      {...custom}
-    />
-  );
-};
+  ...props
+}) => (
+  <Textbox
+    type='number'
+    min={0}
+    error={meta && meta.touched && meta.error}
+    inputProps={{ style: { textAlign: 'center', width: '125px' } }}
+    {...props}
+  />
+);
 
-RenderNumber.propTypes = {
+NumberField.propTypes = {
   label: PropTypes.string,
   meta: PropTypes.object,
   viewType: PropTypes.string
 };
 
-export default RenderNumber;
+export default NumberField;

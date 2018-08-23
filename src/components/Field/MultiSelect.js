@@ -1,22 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from '@#material-ui/core';
+import { Button } from '@material-ui/core';
 import { Row, Column } from 'react-foundation';
-// import { Field } from 'redux-form';
-// import { RenderChip, RenderSelect } from 'components/Field';
+import { Field } from 'redux-form';
+import { Chip, Select } from 'components/Field';
 
 const addOption = (fields) => {
   fields.push('testing');
 };
 
-const RenderMultiSelect = ({
+const MultiSelect = ({
   fields,
   label,
   name,
   disabled,
   labelStyle,
   inputStyle,
-  dataSource,
+  options,
   ...custom }) => {
   return (
     <Column centerOnSmall small={12}>
@@ -24,18 +24,14 @@ const RenderMultiSelect = ({
         <Column centerOnSmall small={6}>
           <Row>
             <Column centerOnSmall small={disabled ? 12 : 8}>
-          {/* <Field */}
-          {/*   label={label} */}
-          {/*   onChange={(e) => (e)} */}
-          {/*   component={RenderSelect} */}
-          {/*   disabled={disabled} */}
-          {/*   underlineShow={disabled} */}
-          {/*   labelStyle={inputStyle} */}
-          {/*   floatingLabelStyle={{ ...labelStyle, ...(disabled ? { textAlign: 'center', width: '100%' } : {}) }} */}
-          {/*   iconStyle={{ visibility: disabled ? 'hidden' : 'visible' }} */}
-          {/*   dataSource={dataSource} */}
-          {/*   name='optionText' */}
-          {/* /> */}
+              <Field
+                label={label}
+                onChange={(e) => (e)}
+                component={Select}
+                disabled={disabled}
+                options={options}
+                name='optionText'
+              />
             </Column>
             <Column centerOnSmall small={disabled ? 0 : 4}>
               {!disabled &&
@@ -54,27 +50,27 @@ const RenderMultiSelect = ({
           centerOnSmall
           style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}
           small={10}>
-          {fields.map((name, idx, fields) => {
-            // if (disabled) {
-            //   return (
-            //     <Field
-            //       key={idx}
-            //       name={name}
-            //       onChange={() => { }}
-            //       component={RenderChip}
-            //       style={{ margin: '5px 2px', fontSize: '0.8em' }} />
-            //   );
-            // } else {
-            //   return (
-            //     <Field
-            //       key={idx}
-            //       name={name}
-            //       onChange={() => { }}
-            //       component={RenderChip}
-            //       onRequestDelete={() => fields.remove(idx)}
-            //       style={{ margin: '5px 2px', fontSize: '0.8em' }} />
-            //   );
-            // }
+          {fields.map((field, idx, fields) => {
+            if (disabled) {
+              return (
+                <Field
+                  key={idx}
+                  label={field.label}
+                  onChange={() => { }}
+                  component={Chip}
+                  style={{ margin: '5px 2px', fontSize: '0.8em' }} />
+              );
+            } else {
+              return (
+                <Field
+                  key={idx}
+                  label={field.label}
+                  onChange={() => { }}
+                  component={Chip}
+                  onDelete={() => fields.remove(idx)}
+                  style={{ margin: '5px 2px', fontSize: '0.8em' }} />
+              );
+            }
           })}
         </Column>
       </Row>
@@ -82,14 +78,14 @@ const RenderMultiSelect = ({
   );
 };
 
-RenderMultiSelect.propTypes = {
+MultiSelect.propTypes = {
   fields:     PropTypes.any.isRequired,
   name:       PropTypes.string,
   disabled:   PropTypes.bool,
   labelStyle: PropTypes.object,
   inputStyle: PropTypes.object,
   label:      PropTypes.string,
-  dataSource: PropTypes.any.isRequired
+  options:    PropTypes.any.isRequired
 };
 
-export default RenderMultiSelect;
+export default MultiSelect;

@@ -12,7 +12,7 @@ import DevTools from 'components/DevTools/DevTools';
 import { configureStart, configureComplete } from 'actions/auth';
 import createStore from 'store/createStore';
 
-import { loadAppConfig, loadAuthConfig } from 'actions/config';
+import configure from 'actions/configure';
 import { startMemoryStats, domStats } from 'utils/app';
 
 import { init as initLog } from 'shared/logger';
@@ -24,10 +24,9 @@ const store = createStore(initialState, history);
 
 const MOUNT_NODE = document.getElementById('root');
 
-const configApp = () => {
+const startApp = () => {
   store.dispatch(configureStart());
-  loadAppConfig(store)
-    .then(() => loadAuthConfig(store))
+  configure(store)
     .then((userData) => {
       store.dispatch(configureComplete());
       renderDev();
@@ -35,7 +34,7 @@ const configApp = () => {
     });
 };
 
-configApp();
+startApp();
 
 const theme = themes['steelBlue-dark'];
 

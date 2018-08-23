@@ -2,10 +2,17 @@ import * as A from 'constants/ui';
 import { injectReducer } from 'store/reducers';
 import { fetchSongs } from 'store/api';
 
-export const uiHideDrawerMenu   = () => ({ type: A.UI_HIDE_DRAWER_MENU });
+export const uiHideDrawerMenu = () => ({ type: A.UI_HIDE_DRAWER_MENU });
 export const uiToggleDrawerMenu = () => ({ type: A.UI_TOGGLE_DRAWER_MENU });
-export const uiShowSnackbar     = () => ({ type: A.UI_SHOW_SNACKBAR });
-export const uiHideSnackbar     = () => ({ type: A.UI_HIDE_SNACKBAR });
+
+export const uiShowSnackbar = (message, variant) => ({
+  type: A.UI_SHOW_SNACKBAR,
+  payload: message,
+  meta: { variant }
+});
+
+export const uiHideSnackbar = () => ({ type: A.UI_HIDE_SNACKBAR });
+
 export const uiHideModal        = () => ({ type: A.UI_HIDE_MODAL });
 export const uiShowModal        = (type, viewType) => ({
   type: A.UI_SHOW_MODAL,

@@ -48,4 +48,5 @@ RenderCustomSelect.propTypes = {
   optionValues: PropTypes.object.isRequired
 };
 
-export default RenderCustomSelect;
+// export default RenderCustomSelect;
+export default RenderSelect;

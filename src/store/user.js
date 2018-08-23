@@ -1,81 +1,55 @@
-import { getCurrentEndpointKey } from 'utils/auth/sessionStorage.js';
-
 import * as A from 'constants/auth';
 
 const initialState = {
   attributes: null,
   isSignedIn: false,
   firstTimeLogin: false,
-  mustResetPassword: false,
-  endpointKey: null
+  mustResetPassword: false
 };
 
 const ACTION_HANDLERS = {
   [A.AUTHENTICATE_COMPLETE]: (state, { payload }) => ({
     ...state,
-    ...{
-      isSignedIn: true,
-      attributes: payload.user,
-      endpointKey: getCurrentEndpointKey(),
-      endpoints: payload.endpoints
-    }
-  }),
-
-  [A.AUTHENTICATE_ERROR]: (state, { payload }) => ({
-    ...state,
-    endpoints: payload.endpoints
+    isSignedIn: true,
+    attributes: payload.user
   }),
 
   [A.SS_TOKEN_VALIDATION_COMPLETE]: (state, { user, mustResetPassword, firstTimeLogin }) => ({
     ...state,
-    ...{
-      attributes: user,
-      isSignedIn: true,
-      firstTimeLogin,
-      mustResetPassword
-    }
+    attributes: user,
+    isSignedIn: true,
+    firstTimeLogin,
+    mustResetPassword
   }),
 
-  [A.CURRENT_ENDPOINT_KEY]: (state, { payload: currentEndpointKey }) =>
-    ({ ...state, ...{ currentEndpointKey } }),
-
-  [A.ENDPOINT_KEYS]: (state, { payload: { currentEndpointKey } }) =>
-    ({ ...state, ...{ endpointKey: currentEndpointKey } }),
-
-  [A.EMAIL_SIGN_IN_COMPLETE]: (state, { payload }) =>
-    ({ ...state,
-      ...{
-        attributes: payload.user,
-        isSignedIn: true,
-        endpointKey: payload.endpoint
-      } }),
+  [A.EMAIL_SIGN_IN_COMPLETE]: (state, { payload }) => ({
+    ...state,
+    attributes: payload.user,
+    isSignedIn: true
+  }),
 
   // if registration does not require confirmation, user will be signed in at this point.
   [A.EMAIL_SIGN_UP_COMPLETE]: (state, { endpoint, user }) => {
-    return (user.uid) ? ({ ...state,
-      ...{
-        attributes: user,
-        isSignedIn: true,
-        endpointKey: endpoint
-      } }) : state;
+    return (user.uid ? ({
+      ...state,
+      attributes: user,
+      isSignedIn: true
+    }) : state);
   },
 
-  [A.OAUTH_SIGN_IN_COMPLETE]: (state, { payload }) =>
-    ({ ...state,
-      ...{
-        attributes: payload.user,
-        isSignedIn: true,
-        endpointKey: payload.endpoint
-      } }),
+  [A.OAUTH_SIGN_IN_COMPLETE]: (state, { payload }) => ({
+    ...state,
+    attributes: payload.user,
+    isSignedIn: true
+  }),
 
-  [A.SS_AUTH_TOKEN_UPDATE]: (state, { user, mustResetPassword, firstTimeLogin }) =>
-    ({ ...state,
-      ...{
-        mustResetPassword,
-        firstTimeLogin,
-        isSignedIn: !!user,
-        attributes: user
-      } }),
+  [A.SS_AUTH_TOKEN_UPDATE]: (state, { user, mustResetPassword, firstTimeLogin }) => ({
+    ...state,
+    mustResetPassword,
+    firstTimeLogin,
+    isSignedIn: Boolean(user),
+    attributes: user
+  }),
 
   [A.AUTHENTICATE_FAILURE]:     state => ({ ...state, ...initialState }),
   [A.SS_TOKEN_VALIDATION_ERROR]:  state => ({ ...state, ...initialState }),

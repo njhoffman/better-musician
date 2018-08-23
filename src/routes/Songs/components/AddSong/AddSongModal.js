@@ -20,7 +20,8 @@ import {
 
 import AddSongMainTab from './AddSongMainTab';
 import AddSongButtons from './AddSongButtons';
-import CustomField from 'components/CustomField';
+//
+import FormField from 'components/Field';
 // import css from './AddSong.scss';
 
 let lastActiveField = 'artist';
@@ -38,7 +39,27 @@ const styles = (theme) => ({
   },
   editField: {
     color: 'red'
+  },
+  flexTwo: {
+    flex: '0 0 250px',
+    width: '250px'
+  },
+  flexThree:  {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: '250px'
+  },
+  fieldGroup: {
+    width: '100%',
+    maxWidth: 'none',
+    display: 'flex',
+    flexWrap: 'wrap',
+    boxAlign: 'stretch',
+    alignItems: 'stretch',
+    justifyContent: 'space-around',
   }
+
+
 //   form {
 //     input {
 //       margin: 0;
@@ -168,7 +189,13 @@ export class AddSongModal extends Component {
                 )}
               </Tabs>
             </AppBar>
-            {value === 0 && <TabContainer><AddSongMainTab {...mainTabProps} /></TabContainer>}
+
+            {value === 0 && (
+              <TabContainer>
+                <AddSongMainTab {...mainTabProps} />
+              </TabContainer>
+            )}
+
             {this.props.savedTabs.map((tab, tabIdx) => (
               value === (tabIdx + 1) && (
                 <TabContainer key={tabIdx}>
@@ -180,19 +207,32 @@ export class AddSongModal extends Component {
                     </Column>
                   </Row>
                   {chunk(tab.fields, 2).map((fields, fieldIdx) => (
-                    <Row style={{ textAlign: 'center' }} key={fieldIdx}>
+                    <Row key={fieldIdx}>
                       {fields.map(field => (
-                        <CustomField
+                        <FormField
                           key={field.idx}
                           style={textStyle}
                           labelStyle={labelStyle}
                           disabled={modalView.isView()}
                           underlineShow={!modalView.isView()}
                           field={field}
+                          fields={fields}
+                          name={field.name}
                           initialValues={this.props.initialValues}
                           centerOnSmall
                           small={fields.length === 1 ? 12 : 6}
                         />
+                        // <CustomField
+                        //   key={field.idx}
+                        //   style={textStyle}
+                        //   labelStyle={labelStyle}
+                        //   disabled={modalView.isView()}
+                        //   underlineShow={!modalView.isView()}
+                        //   field={field}
+                        //   initialValues={this.props.initialValues}
+                        //   centerOnSmall
+                        //   small={fields.length === 1 ? 12 : 6}
+                        // />
                       ))}
                     </Row>
                   ))}

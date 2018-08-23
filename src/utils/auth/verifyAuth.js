@@ -41,7 +41,7 @@ export const fetchToken = ({ rawEndpoints, cookies, currentLocation }) => {
       let rawCookies = cookie.parse(cookies || '{}');
       let parsedCookies = JSON.parse(rawCookies.authHeaders || 'false');
       let firstTimeLogin, mustResetPassword, currentEndpointKey, headers;
-      let newHeaders, { currentEndpoint, defaultEndpointKey } = parseEndpointConfig(rawEndpoints);
+      let newHeaders, { currentEndpoints, defaultEndpointKey } = parseEndpointConfig(rawEndpoints);
 
       if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders['access-token']) {
         headers = parseHeaders(authRedirectHeaders);
@@ -58,13 +58,13 @@ export const fetchToken = ({ rawEndpoints, cookies, currentLocation }) => {
       if (!headers) {
         return reject({
           reason: 'No creds',
-          currentEndpoint,
+          currentEndpoints,
           defaultEndpointKey
         });
       }
 
-      const { apiUrl, tokenValidationPath } = currentEndpoint[currentEndpointKey || defaultEndpointKey];
-      const validationUrl = `${apiUrl}${tokenValidationPath}?unbatch=true`;
+      const { apiUrl, auth: { validateToken } } = currentEndpoints[currentEndpointKey || defaultEndpointKey];
+      const validationUrl = `${apiUrl}${validateToken}?unbatch=true`;
 
       return fetch(validationUrl, {
         headers: addAuthorizationHeader(headers['access-token'], headers)
@@ -79,7 +79,7 @@ export const fetchToken = ({ rawEndpoints, cookies, currentLocation }) => {
               user: json.data,
               mustResetPassword,
               firstTimeLogin,
-              currentEndpoint,
+              currentEndpoints,
               currentEndpointKey,
               defaultEndpointKey
             });
@@ -88,7 +88,7 @@ export const fetchToken = ({ rawEndpoints, cookies, currentLocation }) => {
               reason: json.errors,
               mustResetPassword,
               firstTimeLogin,
-              currentEndpoint,
+              currentEndpoints,
               defaultEndpointKey
             });
           }
@@ -97,15 +97,15 @@ export const fetchToken = ({ rawEndpoints, cookies, currentLocation }) => {
             reason,
             firstTimeLogin,
             mustResetPassword,
-            currentEndpoint,
+            currentEndpoints,
             defaultEndpointKey
           });
         });
     } else {
-      let { currentEndpoint, defaultEndpointKey } = parseEndpointConfig(rawEndpoints);
+      let { currentEndpoints, defaultEndpointKey } = parseEndpointConfig(rawEndpoints);
       reject({
         reason: 'No creds',
-        currentEndpoint,
+        currentEndpoints,
         defaultEndpointKey
       });
     }

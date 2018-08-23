@@ -1,177 +1,134 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
-import {
-  TextField, Typography, MenuItem,
-  withStyles, withTheme
-} from '@material-ui/core';
+import Downshift from 'downshift';
+import { withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-    height: 250,
+    // flexGrow: 1,
+    // height: 250,
   },
-  input: {
-    display: 'flex',
-    padding: 0,
+  container: {
+    // flexGrow: 1,
+    position: 'relative',
   },
-  valueContainer: {
-    display: 'flex',
-    flex: 1,
-    alignItems: 'center',
-  },
-  noOptionsMessage: {
-    fontSize: 16,
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
-  },
-  singleValue: {
-    fontSize: 16,
-  },
-  placeholder: {
+  paper: {
     position: 'absolute',
-    left: 2,
-    fontSize: 16
-  }
+    zIndex: 3,
+    marginTop: theme.spacing.unit,
+    left: 0,
+    right: 0,
+  },
+  chip: {
+    margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
+  },
+
+  inputRoot: {
+    flexWrap: 'wrap',
+  },
+  divider: {
+    height: theme.spacing.unit * 2,
+  },
 });
 
-const rsStyles = (theme) => ({
-  menu: (base) => ({
-    ...base,
-    backgroundColor: theme.palette.background.paper,
-    zIndex: 3
-  })
-});
-
-const NoOptionsMessage = ({ selectProps, children, innerProps }) => (
-  <Typography
-    color='textSecondary'
-    className={selectProps.classes.noOptionsMessage}
-    {...innerProps}>
-    {children}
-  </Typography>
-);
-
-NoOptionsMessage.propTypes = {
-  selectProps:  PropTypes.object.isRequired,
-  innerProps:   PropTypes.object,
-  children:     PropTypes.string
+const getSuggestions = (options, inputValue) => {
+  return options.filter(option => {
+    return (!inputValue || option.label.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1);
+  }).slice(0, 5);
 };
 
-const inputComponent = ({ inputRef, ...props }) => <div ref={inputRef} {...props} />;
-inputComponent.propTypes = { inputRef: PropTypes.func.isRequired };
-
-const Control = ({ selectProps, innerRef, children, innerProps }) => (
+const renderInput = ({
+  InputProps,
+  classes,
+  ref,
+  ...props
+}) => (
   <TextField
-    fullWidth
     InputProps={{
-      inputComponent,
-      inputProps: {
-        className: selectProps.classes.input,
-        ref: innerRef,
-        children: children,
-        ...innerProps,
+      inputRef: ref,
+      classes: {
+        root: classes.inputRoot,
       },
+      ...InputProps,
     }}
+    {...props}
   />
 );
 
-Control.propTypes = {
-  selectProps: PropTypes.object.isRequired,
-  innerProps:  PropTypes.object.isRequired,
-  children:    PropTypes.array.isRequired,
-  innerRef:    PropTypes.func.isRequired
-};
-
-
-const CustomOption = ({ innerRef, isFocused, theme, innerProps, children }) => (
-  <MenuItem
-    buttonRef={innerRef}
-    selected={isFocused}
-    style={{
-      fontWeight: isFocused ? 500 : 400,
-      color: theme.palette.text.primary,
-      padding: '6px'
-    }}
-    {...innerProps}
-  >
-    {children}
-  </MenuItem>
-);
-
-CustomOption.propTypes = {
-  theme:      PropTypes.object.isRequired,
-  innerProps: PropTypes.object.isRequired,
-  children:   PropTypes.string,
-  innerRef:   PropTypes.func,
-  isFocused:  PropTypes.bool.isRequired
-};
-
-const Option = withTheme()(CustomOption);
-
-const Placeholder = ({ selectProps, innerProps, children }) => (
-  <Typography
-    color='textSecondary'
-    className={selectProps.classes.placeholder}
-    {...innerProps}
-  >
-    {children}
-  </Typography>
-);
-
-Placeholder.propTypes = {
-  selectProps: PropTypes.object.isRequired,
-  innerProps:  PropTypes.object,
-  children:    PropTypes.string
-};
-
-const SingleValue = ({ selectProps, innerProps, children }) => (
-  <Typography
-    className={selectProps.classes.singleValue}
-    {...innerProps}>
-    {children}
-  </Typography>
-);
-
-SingleValue.propTypes = {
-  selectProps: PropTypes.object.isRequired,
-  innerProps:  PropTypes.object.isRequired,
-  children:    PropTypes.array
-};
-
-const ValueContainer = ({ selectProps, children }) => (
-  <div className={selectProps.classes.valueContainer}>
-    {children}
-  </div>
-);
-
-ValueContainer.propTypes = {
-  selectProps: PropTypes.object.isRequired,
-  children:    PropTypes.array
-};
-
-const Components = {
-  Placeholder, Control, Option,
-  NoOptionsMessage, SingleValue, ValueContainer
-};
-
-const AutoComplete = ({
-  label,
-  theme,
-  ...props
+const renderSuggestion = ({
+  suggestion,
+  index,
+  itemProps,
+  highlightedIndex,
+  selectedItem
 }) => {
+  const isSelected = (selectedItem || '').indexOf(suggestion.label) > -1;
   return (
-    <Select
-      components={Components}
-      placeholder={label}
-      styles={rsStyles(theme)}
-      {...props}
-    />
+    <MenuItem
+      {...itemProps}
+      key={suggestion.label}
+      selected={highlightedIndex === index}
+      component='div'
+      style={{ fontWeight: isSelected ? 500 : 400 }}>
+      {suggestion.label}
+    </MenuItem>
   );
 };
 
-AutoComplete.propTypes = {
-  label: PropTypes.string,
-  theme: PropTypes.object.isRequired
+renderSuggestion.propTypes = {
+  highlightedIndex: PropTypes.number,
+  index: PropTypes.number,
+  itemProps: PropTypes.object,
+  selectedItem: PropTypes.string,
+  suggestion: PropTypes.shape({ label: PropTypes.string }).isRequired,
 };
 
-export default withTheme()(withStyles(styles)(AutoComplete));
+const AutoComplete = ({
+  classes,
+  label,
+  options,
+  input,
+  ...props
+}) => (
+  <Downshift
+    {...input}
+    onStateChange={({ inputValue }) => input.onChange(inputValue)}
+    selectedItem={input.value}>
+    {({ getInputProps, getItemProps, isOpen, inputValue, selectedItem, highlightedIndex }) => (
+      <div className={classes.container}>
+        {renderInput({
+          fullWidth: false,
+          classes,
+          label,
+          InputProps: getInputProps({
+            // placeholder: 'Search',
+          }),
+        })}
+        {isOpen ? (
+          <Paper className={classes.paper} square>
+            {getSuggestions(options, inputValue).map((suggestion, index) =>
+              renderSuggestion({
+                suggestion,
+                index,
+                itemProps: getItemProps({ item: suggestion.label }),
+                highlightedIndex,
+                selectedItem,
+              }),
+            )}
+          </Paper>
+        ) : null}
+      </div>
+    )}
+  </Downshift>
+);
+
+AutoComplete.propTypes = {
+  label:   PropTypes.string,
+  options: PropTypes.array,
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(AutoComplete);

@@ -11,7 +11,7 @@ export class SignOutButton extends React.Component {
     endpoint: PropTypes.string,
     icon:     PropTypes.func,
     dispatch: PropTypes.func.isRequired,
-    auth:     PropTypes.object.isRequired,
+    config:   PropTypes.object.isRequired,
     user:     PropTypes.object.isRequired
   };
 
@@ -22,8 +22,8 @@ export class SignOutButton extends React.Component {
   getEndpoint() {
     return (
       this.props.endpoint ||
-      this.props.auth.getIn(['configure', 'currentEndpointKey']) ||
-      this.props.auth.getIn(['configure', 'defaultEndpointKey'])
+      this.props.config.auth.currentEndpointKey,
+      this.props.config.auth.defaultEndpointKey
     );
   }
 
@@ -49,4 +49,4 @@ export class SignOutButton extends React.Component {
   }
 }
 
-export default connect(({ auth, user }) => ({ auth, user }))(SignOutButton);
+export default connect(({ config, user }) => ({ config, user }))(SignOutButton);

@@ -23,9 +23,8 @@ export const DrawerMenuLink = ({
   hideDrawerMenu,
   classes
 }) => (
-  <MenuItem>
+  <MenuItem onClick={hideDrawerMenu}>
     <NavLink
-      onClick={hideDrawerMenu}
       to={link}
       className={classes.navLink}>
       {label}

@@ -10,16 +10,13 @@ import {
   setCurrentSettings,
   getInitialEndpointKey,
   setDefaultEndpointKey,
-  setCurrentEndpoint,
+  setCurrentEndpoints,
   setCurrentEndpointKey,
   removeData,
   retrieveData,
   resetConfig,
   persistData
 } from './sessionStorage';
-
-// can't use "window" with node app
-// const root = Function('return this')() || (42, eval)('this');
 
 const defaultSettings = {
   proxyIf:            () => false,
@@ -62,7 +59,7 @@ export const applyConfig = ({ dispatch, endpoints = {}, settings = {}, reset = f
 
   setCurrentSettings(extend({}, defaultSettings, settings));
 
-  let { defaultEndpointKey, currentEndpoint } = parseEndpointConfig(endpoints, getInitialEndpointKey());
+  let { defaultEndpointKey, currentEndpoints } = parseEndpointConfig(endpoints, getInitialEndpointKey());
 
   if (!currentEndpointKey) {
     currentEndpointKey = defaultEndpointKey;
@@ -70,9 +67,9 @@ export const applyConfig = ({ dispatch, endpoints = {}, settings = {}, reset = f
 
   // persist default config key with session storage
   setDefaultEndpointKey(defaultEndpointKey);
-  setCurrentEndpoint(currentEndpoint);
+  setCurrentEndpoints(currentEndpoints);
 
-  dispatch(setEndpointKeys(Object.keys(currentEndpoint), currentEndpointKey, defaultEndpointKey));
+  dispatch(setEndpointKeys(Object.keys(currentEndpoints), currentEndpointKey, defaultEndpointKey));
   setCurrentEndpointKey(currentEndpointKey);
 
   let savedCreds = retrieveData(A.SAVED_CREDS_KEY);
@@ -84,7 +81,8 @@ export const applyConfig = ({ dispatch, endpoints = {}, settings = {}, reset = f
     return Promise.resolve(user);
   } else if (savedCreds) {
     // verify session credentials with API
-    return fetch(`${getApiUrl(currentEndpointKey)}${currentEndpoint[currentEndpointKey].tokenValidationPath}`)
+    // TODO: replace with utility function
+    return fetch(`${getApiUrl(currentEndpointKey)}${currentEndpoints[currentEndpointKey].auth.validateToken}`)
       .then(response => {
         if (response.status >= 200 && response.status < 300) {
           return response.json().then(({ data }) => (data));

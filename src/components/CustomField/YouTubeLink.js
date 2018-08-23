@@ -7,7 +7,7 @@ import { Field } from 'redux-form';
 
 const youtubeRE = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&(amp;)?[\w?=]*)?/;
 
-class RenderCustomYouTubeLink extends Component {
+class CustomYouTubeLink extends Component {
   static propTypes = {
     disabled      : PropTypes.bool,
     preview       : PropTypes.bool,
@@ -22,7 +22,7 @@ class RenderCustomYouTubeLink extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      videoId: this.parseUrl(get(this.props.initialValues, this.props.field.name))
+      videoId: this.parseUrl(get(props.initialValues, props.field.name))
     };
   }
 
@@ -76,4 +76,4 @@ class RenderCustomYouTubeLink extends Component {
   }
 }
 
-export default RenderCustomYouTubeLink;
+export default CustomYouTubeLink;

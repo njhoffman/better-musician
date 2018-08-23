@@ -6,11 +6,11 @@
 
 $body-background: none;
 $breakpoints: (
-  small: 0px,
-  medium: 640px,
-  large: 1024px,
-  xlarge: 1200px,
-  xxlarge: 1440px,
+  small:   0px,
+  medium:  600px,
+  large:   960px,
+  xlarge:  1280px,
+  xxlarge: 1920px,
 );
 
 @include foundation-global-styles;

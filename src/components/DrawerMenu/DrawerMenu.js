@@ -22,19 +22,14 @@ import css from './DrawerMenu.scss';
 const GoogleIcon = () => (<img src={googleIcon} style={{ height: '1.75em' }} />);
 const FacebookIcon = () => (<img src={facebookIcon} style={{ height: '1.25em'}} />);
 
-const styles = (/* theme */) => ({
-  buttonLink: {
-    width: 'calc(100% - 6px)',
-    margin: '3px'
-  }
-});
+const styles = (/* theme */) => ({ });
 
-const SignedOut = ({ isOpen, hideDrawerMenu }) => (
-  <Drawer open={isOpen} onClose={hideDrawerMenu}>
-    <DrawerMenuLink link='/' label='Home' />
-    <DrawerMenuLink link='/register' label='Register' />
-    <DrawerMenuLink link='/reset' label='Reset' />
-    <DrawerMenuLink link='/contact' label='Contact' />
+const SignedOut = ({ isOpen, ...props }) => (
+  <Drawer open={isOpen} onClose={props.hideDrawerMenu}>
+    <DrawerMenuLink link='/' label='Home' {...props} />
+    <DrawerMenuLink link='/register' label='Register' {...props} />
+    <DrawerMenuLink link='/reset' label='Reset' {...props} />
+    <DrawerMenuLink link='/contact' label='Contact' {...props} />
     <Divider />
     <MenuItem>
       <ListItemIcon>
@@ -63,14 +58,14 @@ SignedOut.propTypes = {
 };
 
 
-const SignedIn = ({ hideDrawerMenu, isOpen }) => (
-  <Drawer open={isOpen} onClose={hideDrawerMenu}>
-    <DrawerMenuLink link='/' label='Home' />
-    <DrawerMenuLink link='/songs' label='Songs' />
-    <DrawerMenuLink link='/profile' label='Profile' />
-    <DrawerMenuLink link='/stats' label='Stats' />
-    <DrawerMenuLink link='/settings' label='Settings' />
-    <DrawerMenuLink link='/fields' label='Fields' />
+const SignedIn = ({ isOpen, ...props }) => (
+  <Drawer open={isOpen} onClose={props.hideDrawerMenu}>
+    <DrawerMenuLink link='/' label='Home' {...props} />
+    <DrawerMenuLink link='/songs' label='Songs' {...props} />
+    <DrawerMenuLink link='/profile' label='Profile' {...props} />
+    <DrawerMenuLink link='/stats' label='Stats' {...props} />
+    <DrawerMenuLink link='/settings' label='Settings' {...props} />
+    <DrawerMenuLink link='/fields' label='Fields' {...props} />
     <Divider />
     <MenuItem>
       <ListItemIcon>

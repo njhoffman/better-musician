@@ -4,40 +4,37 @@ import defaultConfig from 'config.default';
 const userConfig = {
   endpoints:   {
     default: {
-      logout: '/users/logout',
-      login: '/users/login',
-      register: '/users/register',
-      userUpdate: '/users/update',
-      userDelete: '/users/delete',
-      passwordReset: '/users/password_reset',
-      passwordUpdate: '/users/password_update',
-      validateToken: '/users/validate_token',
-      loginProviders: {
-        github: '/users/login/github',
-        facebook: '/users/login/facebook'
+      auth: {
+        logout:        '/users/logout',
+        login:         '/users/login',
+        register:      '/users/register',
+        passwordReset: '/users/password_reset',
+        validateToken: '/users/validate_token',
+        providers: {
+          github:      '/users/login/github',
+          facebook:    '/users/login/facebook',
+          google:      '/users/login/google_oauth2'
+        }
+      },
+      help: {
+        contactEmail:   '/contact/email',
+        contactLive:    '/contact/live'
       }
-      // signOutPath           : '/users/logout',
-      // emailSignInPath       : '/users/login',
-      // emailRegistrationPath : '/users/register',
-      // accountUpdatePath     : '/users/update',
-      // accountDeletePath     : '/users/delete',
-      // passwordResetPath     : '/users/password_reset',
-      // passwordUpdatePath    : '/users/password_update',
-      // tokenValidationPath   : '/users/validate_token',
-      // songsPath             : '/songs/',
-      // authProviderPaths     : {
-      //   github   : '/users/login/github',
-      //   facebook : '/users/login/facebook',
-      //   google   : '/users/login/google_oauth2'
-      // },
+    },
+    user: {
+      update:          '/users/update',
+      delete:          '/users/delete',
+      updatePassword:  '/users/password_update',
     },
     admin: {
-      listModels : '/admin/list/models',
-      listAll :    '/admin/list/all'
+      extends:         'user',
+      listModels:      '/admin/list/models',
+      listAll:         '/admin/list/all'
     }
   },
   settings: {},
   dev: {
+    showPanel: true,
     showChart: false,
     extensionOptions: {
       name: 'instrumental',
@@ -70,3 +67,17 @@ const userConfig = {
 };
 
 export default defaultsDeep(userConfig, defaultConfig);
+
+      // signOutPath           : '/users/logout',
+      // emailSignInPath       : '/users/login',
+      // emailRegistrationPath : '/users/register',
+      // accountUpdatePath     : '/users/update',
+      // accountDeletePath     : '/users/delete',
+      // passwordResetPath     : '/users/password_reset',
+      // passwordUpdatePath    : '/users/password_update',
+      // tokenValidationPath   : '/users/validate_token',
+      // authProviderPaths     : {
+      //   github   : '/users/login/github',
+      //   facebook : '/users/login/facebook',
+      //   google   : '/users/login/google_oauth2'
+      // },

@@ -21,7 +21,7 @@ const LoadingIndicator = ({ isLoading, pastDelay, error, theme }) => {
         <Typography>{error.name}</Typography>
         <Typography>{error.message}</Typography>
         <BarLoader
-          color={theme.palette.primary}
+          color={theme.palette.primary.main}
           loading={true} />
       </div>
     );

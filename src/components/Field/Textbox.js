@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import MaterialTextField from '@material-ui/core/TextField';
-import createComponent from './createComponent';
+import TextField from '@material-ui/core/TextField';
+import createComponent from './createFormField';
 import mapError from './mapError';
 
-const TextField = createComponent(
-  MaterialTextField, ({
+const TextboxForm = createComponent(
+ TextField, ({
     defaultValue,
     ...props
   }) => ({
@@ -14,20 +14,20 @@ const TextField = createComponent(
   })
 );
 
-const RenderText = ({
+const Textbox = ({
   meta,
   inputStyle,
   style,
   ...props
 }) => (
-  <TextField
+  <TextboxForm
     error={meta && meta.touched && meta.error}
-    style={{ ...style, ...{ maxWidth: '100%' } }}
+    style={{ ...style, width: '100%' }}
     {...props}
   />
 );
 
-RenderText.propTypes = {
+Textbox.propTypes = {
   inputStyle : PropTypes.object,
   label      : PropTypes.string,
   meta       : PropTypes.object,
@@ -35,4 +35,4 @@ RenderText.propTypes = {
   width      : PropTypes.number
 };
 
-export default RenderText;
+export default Textbox;

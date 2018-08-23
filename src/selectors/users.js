@@ -10,14 +10,12 @@ const userPointsSelector = ormCreateSelector(orm, (session/*, user */) => {
 });
 
 const userDisplaySelector = ormCreateSelector(orm, (session, user) => {
-  let userName = '';
-  const { attributes } = user;
-  if (attributes) {
-    userName += attributes.firstName ? attributes.firstName + ' ' : '';
-    userName += attributes.lastName || '';
-    if (userName.length === 0) { userName = attributes.email; }
+  // TODO: load attributes correctly
+  const attrs = user.attributes && user.attributes.data
+    ? user.attributes.data : user.attributes;
+  if (attrs) {
+    return attrs.lastName ? `${attrs.lastName}, ${attrs.firstName}` : attrs.email;
   }
-  return userName;
 });
 
 const maxDifficultySelector = ormCreateSelector(orm, (session/*, user*/) => {

@@ -22,7 +22,7 @@ export const emailSignInFormUpdate = (endpoint, key, value) => ({
 
 export const emailSignInStart = (endpoint) => ({
   type: A.EMAIL_SIGN_IN_START,
-  endpoint
+  payload: { endpoint }
 });
 
 export const emailSignInComplete = (endpoint, user) => ({
@@ -36,7 +36,7 @@ export const emailSignInError = (endpoint, errors) => ({
   meta: { endpoint }
 });
 
-export function emailSignIn(body, endpointKey) {
+export const emailSignIn = (body, endpointKey) => {
   return dispatch => {
     // save previous endpoint key in case of failure
     const prevEndpointKey = getCurrentEndpointKey();
@@ -69,12 +69,13 @@ export function emailSignIn(body, endpointKey) {
     };
     return callApi();
   };
-}
+};
 
 // oAuth signin
 export const oAuthSignInStart      = (provider, endpoint) => ({ type: A.OAUTH_SIGN_IN_START, provider, endpoint });
 export const oAuthSignInComplete   = (user, endpoint) => ({ type: A.OAUTH_SIGN_IN_COMPLETE, user, endpoint });
 export const oAuthSignInError      = (errors, endpoint) => ({ type: A.OAUTH_SIGN_IN_ERROR, errors, endpoint });
+
 // hook for rewire
 var openPopup = _openPopup;
 const listenForCredentials = (endpointKey, popup, provider, resolve, reject) => {

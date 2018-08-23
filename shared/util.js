@@ -42,3 +42,7 @@ export const isJson = (str) => {
   return true;
 };
 
+export const isClass = (func) => (
+  typeof func === 'function' &&
+  /^class\s/.test(Function.prototype.toString.call(func))
+);

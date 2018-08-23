@@ -8,17 +8,14 @@ const RenderChip = ({
   meta,
   style,
   input,
-  ...custom }) => {
-  return (
-    <Chip
-      label={label}
-      style={{ ...style }}
-      {...custom}
-    >
-      {input.value}
-    </Chip>
-  );
-};
+  ...props
+}) => (
+  <Chip
+    label={label || input.value}
+    style={{ ...style }}
+    {...props}
+  />
+);
 
 RenderChip.propTypes = {
   label:    PropTypes.string,
