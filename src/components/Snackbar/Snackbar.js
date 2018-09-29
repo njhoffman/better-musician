@@ -111,10 +111,8 @@ const SbContent = (props) => {
 SbContent.propTypes = {
   classes:   PropTypes.object.isRequired,
   className: PropTypes.string,
-  message:   PropTypes.string.isRequired,
-  title:     PropTypes.string,
-  onClose:   PropTypes.func,
-  variant:   PropTypes.oneOf(['success', 'warning', 'error', 'info'])
+  queue:     PropTypes.array.isRequired,
+  onClose:   PropTypes.func
 };
 
 const SbContentWrapper = withStyles(contentStyles)(SbContent);

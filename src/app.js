@@ -9,10 +9,10 @@ import themes from 'styles/themes';
 import ErrorBoundary from 'components/ErrorBoundaries/Main';
 // TODO: does this bring DevTools into production bundle?
 import DevTools from 'components/DevTools/DevTools';
-import { configureStart, configureComplete } from 'actions/auth';
+import { configureStart, configureComplete } from 'actions/api';
 import createStore from 'store/createStore';
 
-import configure from 'actions/configure';
+import configure from 'utils/configure';
 import { startMemoryStats, domStats } from 'utils/app';
 
 import { init as initLog } from 'shared/logger';

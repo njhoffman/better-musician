@@ -5,13 +5,10 @@ import BaseModel from './BaseModel';
 import {
   ADD_SONG,
   DELETE_SONG,
-  UPDATE_SONG
-} from './actionTypes';
-
-import {
+  UPDATE_SONG,
   SONGS_FETCH_START,
   LOAD_SONGS
-} from 'store/api';
+} from 'constants/api';
 
 class Song extends BaseModel {
   static getPointTotal() {

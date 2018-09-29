@@ -7,7 +7,7 @@ import { withRouter } from 'react-router';
 import { MdClose as ResetIcon, MdSave as SaveIcon } from 'react-icons/md';
 import { Paper, Tabs, Tab, AppBar, Typography, withStyles } from '@material-ui/core';
 
-import { updateUser } from 'store/api';
+import { updateUser } from 'actions/api';
 import Button from 'components/Button';
 import FormField, { FormRow } from 'components/Field';
 import css from './SettingsView.scss';

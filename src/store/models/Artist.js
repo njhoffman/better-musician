@@ -1,5 +1,5 @@
 import BaseModel from './BaseModel';
-import { SONGS_FETCH_START, LOAD_ARTISTS } from 'store/api';
+import { SONGS_FETCH_START, LOAD_ARTISTS } from 'constants/api';
 
 class Artist extends BaseModel {
 

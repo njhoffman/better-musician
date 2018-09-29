@@ -1,8 +1,5 @@
 import * as A from 'constants/auth';
 
-export const configureStart = () => ({ type: A.CONFIGURE_START });
-export const configureComplete = (config) => ({ type: A.CONFIGURE_COMPLETE, payload: config });
-
 export const authenticateStart = () => ({ type: A.AUTHENTICATE_START });
 export const authenticateComplete = (user, endpoints) => ({
   type: A.AUTHENTICATE_COMPLETE,

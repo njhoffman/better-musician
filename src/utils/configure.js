@@ -1,4 +1,3 @@
-import * as A from 'constants/auth';
 import { push } from 'react-router-redux';
 import extend from 'extend';
 import {
@@ -6,8 +5,9 @@ import {
   authenticateComplete,
   authenticateError
 } from 'actions/auth';
+import { configureLoad } from 'actions/api';
 
-import { applyConfig } from 'utils/auth/clientSettings';
+import { applyConfig as applyAuthConfig } from 'utils/auth/clientSettings';
 import { destroySession } from 'utils/auth/sessionStorage';
 import getRedirectInfo from 'utils/auth/parseUrl';
 
@@ -21,7 +21,7 @@ const loadConfiguration = (endpoints = {}, settings = {}) => {
       return Promise.resolve({ blank: true });
     }
 
-    dispatch({ type: A.CONFIGURE_LOAD, payload: endpoints });
+    dispatch(configureLoad(endpoints));
     dispatch(authenticateStart());
 
     // let mustResetPassword, firstTimeLogin
@@ -42,7 +42,7 @@ const loadConfiguration = (endpoints = {}, settings = {}) => {
       destroySession();
     }
 
-    let promise = Promise.resolve(applyConfig({ dispatch, endpoints, settings }));
+    let promise = Promise.resolve(applyAuthConfig({ dispatch, endpoints, settings }));
 
     return promise
       .then(user => {

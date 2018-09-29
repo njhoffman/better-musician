@@ -1,4 +1,5 @@
-import * as A from 'constants/auth';
+import * as AUTH from 'constants/auth';
+import * as API from 'constants/api';
 import userConfig from 'config';
 
 const defaultConfig = {
@@ -15,30 +16,31 @@ const defaultConfig = {
 const initialState = { ...defaultConfig, ...userConfig };
 
 const ACTION_HANDLERS = {
-  [A.CONFIGURE_START]: (state, action) => ({
+  [API.CONFIGURE_START]: (state, action) => ({
     ...state,
     auth: { ...state.auth, loading: true }
   }),
 
-  [A.CURRENT_ENDPOINT_KEY]: (state, { payload }) => ({
-    ...state,
-    auth: { ...state.auth, currentEndpointKey: payload }
-  }),
-
-  [A.ENDPOINT_KEYS]: (state, { payload: { endpointKeys, defaultEndpointKey, currentEndpointKey } }) => ({
-    ...state,
-    auth: { ...state.auth, endpointKeys, defaultEndpointKey, currentEndpointKey }
-  }),
-
-  [A.CONFIGURE_COMPLETE]: (state, { payload }) => ({
+  [API.CONFIGURE_COMPLETE]: (state, { payload }) => ({
     ...state,
     auth: { ...state.auth, loading: false, errors: null, config: payload }
   }),
 
-  [A.CONFIGURE_ERROR]: (state, { errors }) => ({
+  [API.CONFIGURE_ERROR]: (state, { errors }) => ({
     ...state,
     auth: { ...state.auth, loading: false, errors }
+  }),
+
+  [AUTH.CURRENT_ENDPOINT_KEY]: (state, { payload }) => ({
+    ...state,
+    auth: { ...state.auth, currentEndpointKey: payload }
+  }),
+
+  [AUTH.ENDPOINT_KEYS]: (state, { payload: { endpointKeys, defaultEndpointKey, currentEndpointKey } }) => ({
+    ...state,
+    auth: { ...state.auth, endpointKeys, defaultEndpointKey, currentEndpointKey }
   })
+
 };
 
 export default function configReducer(state = initialState, action) {

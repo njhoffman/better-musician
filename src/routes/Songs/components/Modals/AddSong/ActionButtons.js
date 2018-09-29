@@ -6,7 +6,7 @@ import { MdDelete as DeleteIcon } from 'react-icons/md';
 
 import { uiShowModal, uiHideModal } from 'actions/ui';
 import { MODAL_ADD_SONG } from 'constants/ui';
-import { addSong } from 'store/api';
+import { addSong } from 'actions/api';
 import { Row, Column } from 'react-foundation';
 
 const styles = (theme) => ({

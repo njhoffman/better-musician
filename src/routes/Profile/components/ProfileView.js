@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Column } from 'react-foundation';
 import { reduxForm } from 'redux-form';
-import { updateUser } from 'store/api';
+import { updateUser } from 'actions/api';
 import { withRouter } from 'react-router';
 
 import {

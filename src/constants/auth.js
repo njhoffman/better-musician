@@ -21,10 +21,6 @@ export const AUTHENTICATE_ERROR           = 'AUTHENTICATE_ERROR';
 export const ENDPOINT_KEYS                = 'ENDPOINT_KEYS';
 export const CURRENT_ENDPOINT_KEY         = 'CURRENT_ENDPOINT_KEY';
 
-export const CONFIGURE_LOAD               = 'CONFIGURE_LOAD';
-export const CONFIGURE_START              = 'CONFIGURE_START';
-export const CONFIGURE_COMPLETE           = 'CONFIGURE_COMPLETE';
-export const CONFIGURE_ERROR              = 'CONFIGURE_ERROR';
 
 export const SIGN_OUT_START               = 'SIGN_OUT_START';
 export const SIGN_OUT_COMPLETE            = 'SIGN_OUT_COMPLETE';

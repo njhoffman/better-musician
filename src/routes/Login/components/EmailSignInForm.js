@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
@@ -17,15 +17,20 @@ const { error } = initLog('emailSignInForm');
 const styles = theme => ({
   divider: {
     margin: '20px 0px 5px 0px'
+  },
+  errorTitle: {
+    color: 'red'
+  },
+  errorMessage: {
   }
 });
 
 export class EmailSignInForm extends React.Component {
   static propTypes = {
-    api:         PropTypes.object.isRequired,
     classes:     PropTypes.object.isRequired,
     config:      PropTypes.object.isRequired,
     isLoading:   PropTypes.bool.isRequired,
+    errors:      PropTypes.any,
     auth:        PropTypes.object,
     dispatch:    PropTypes.func.isRequired,
     endpoint:    PropTypes.string,
@@ -83,18 +88,23 @@ export class EmailSignInForm extends React.Component {
   render() {
     // let disabled = (this.props.isSignedIn || this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'loading']));
     // const errors = this.props.auth.getIn(['emailSignIn', this.getEndpoint(), 'errors']);
+    const { classes, inputProps, isLoading, errors } = this.props;
     const disabled = this.props.isSignedIn;
-    const { errors } = this.props.api.auth.login;
 
     return (
       <form>
         <FormRow>
           <Column>
-            {errors && [].concat(errors).map((error, i) =>
-              <Typography variant='body1' key={i} className='error'>
-                {error}
-              </Typography>
-            )}
+            {errors && [].concat(errors).map((error, i) => (
+              <Fragment key={i}>
+                <Typography variant='body1' className={classes.errorTitle}>
+                  {error && error.name ? error.name : ''}
+                </Typography>
+                <Typography variant='caption' className={classes.errorMessage}>
+                  {error && error.message ? error.message : error || ''}
+                </Typography>
+              </Fragment>
+            ))}
           </Column>
         </FormRow>
         <FormRow small={6}>
@@ -104,7 +114,7 @@ export class EmailSignInForm extends React.Component {
             name='email-sign-in-email'
             className='email-sign-in-email'
             disabled={disabled}
-            {...this.props.inputProps.email} />
+            {...inputProps.email} />
         </FormRow>
         <FormRow small={6}>
           <FormField
@@ -113,10 +123,10 @@ export class EmailSignInForm extends React.Component {
             name='email-sign-in-password'
             className='email-sign-in-password'
             disabled={disabled}
-            {...this.props.inputProps.password} />
+            {...inputProps.password} />
 
         </FormRow>
-        <Divider className={this.props.classes.divider} />
+        <Divider className={classes.divider} />
         <FormRow small={6}>
           <Column centerOnSmall>
             <Button
@@ -124,7 +134,7 @@ export class EmailSignInForm extends React.Component {
               primary
               icon={<ExitToAppIcon />}
               disabled={disabled}
-              loading={this.props.isLoading}
+              loading={isLoading}
               onClick={this.handleSubmit} />
           </Column>
         </FormRow>
@@ -137,9 +147,9 @@ const mapStateToProps = (state) => {
   return {
     config:      state.config,
     auth:        state.auth,
-    api:         state.api,
     isSignedIn:  state.user.isSignedIn,
     loginForm:   state.form.login,
+    errors:      state.api.auth.login.errors,
     isLoading:   state.api.auth.login.loading,
     emailSignIn: emailSignIn
   };

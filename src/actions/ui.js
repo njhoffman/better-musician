@@ -1,6 +1,6 @@
 import * as A from 'constants/ui';
 import { injectReducer } from 'store/reducers';
-import { fetchSongs } from 'store/api';
+import { fetchSongs } from 'actions/api';
 
 export const uiHideDrawerMenu = () => ({
   type: A.UI_HIDE_DRAWER_MENU
