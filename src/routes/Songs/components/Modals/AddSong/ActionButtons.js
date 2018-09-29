@@ -5,7 +5,7 @@ import { Button, Divider, withStyles } from '@material-ui/core';
 import { MdDelete as DeleteIcon } from 'react-icons/md';
 
 import { uiShowModal, uiHideModal } from 'actions/ui';
-import { MODAL_ADD_SONG } from 'constants/ui';
+import { MODAL_VAR_ADD_SONG } from 'constants/ui';
 import { addSong } from 'actions/api';
 import { Row, Column } from 'react-foundation';
 
@@ -78,7 +78,7 @@ ActionButtons.propTypes = {
 
 const mapDispatchToProps = {
   addSong,
-  editSong : () => uiShowModal(MODAL_ADD_SONG, 'edit'),
+  editSong : () => uiShowModal(MODAL_VAR_ADD_SONG, 'edit'),
   hideModal: uiHideModal
 };
 

@@ -15,7 +15,7 @@ import {
 /* eslint-enable no-multi-spaces */
 
 import { uiShowModal } from 'actions/ui';
-import { MODAL_ADD_SONG } from 'constants/ui';
+import { MODAL_VAR_ADD_SONG } from 'constants/ui';
 
 const styles = {
   headerLink: {
@@ -172,7 +172,7 @@ SongPopover.propTypes = {
   currentSong: PropTypes.string
 };
 
-const showAddSongModal = (actionType) => uiShowModal(MODAL_ADD_SONG, actionType);
+const showAddSongModal = (actionType) => uiShowModal(MODAL_VAR_ADD_SONG, actionType);
 
 const showEditDialog = ({ closeAll, showAddSongModal }) => {
   closeAll();

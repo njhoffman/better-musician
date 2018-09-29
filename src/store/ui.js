@@ -1,4 +1,4 @@
-import * as A from 'constants/ui';
+import * as UI from 'constants/ui';
 
 const toggleDrawerMenu = (state) =>
   ({ ...state, drawer: { ...state.drawer, isOpen: !state.isOpen } });
@@ -29,7 +29,7 @@ const snackbarHide = (state) => ({
   }
 });
 
-const snackbarExited = (state) => ({
+const snackbarExit = (state) => ({
   ...state,
   snackbar: {
     isOpen: state.snackbar.queue.length > 1,
@@ -60,17 +60,17 @@ const initViewEnd = (state, { payload: route }) =>
 
 
 const ACTION_HANDLERS = {
-  [A.UI_TOGGLE_DRAWER_MENU]: toggleDrawerMenu,
-  [A.UI_SHOW_DRAWER_MENU]:   showDrawerMenu,
-  [A.UI_HIDE_DRAWER_MENU]:   hideDrawerMenu,
-  [A.UI_SNACKBAR_QUEUE]:     snackbarQueue,
-  [A.UI_SNACKBAR_HIDE]:      snackbarHide,
-  [A.UI_SNACKBAR_EXITED]:    snackbarExited,
-  [A.UI_SHOW_MODAL]:         showModal,
-  [A.UI_HIDE_MODAL]:         hideModal,
-  [A.UI_UPDATE_MODAL]:       updateModal,
-  [A.INIT_VIEW_START]:       initViewStart,
-  [A.INIT_VIEW_COMPLETE]:    initViewEnd
+  [UI.DRAWER_MENU_TOGGLE]: toggleDrawerMenu,
+  [UI.DRAWER_MENU_SHOW]:   showDrawerMenu,
+  [UI.DRAWER_MENU_HIDE]:   hideDrawerMenu,
+  [UI.SNACKBAR_SHOW]:      snackbarQueue,
+  [UI.SNACKBAR_HIDE]:      snackbarHide,
+  [UI.SNACKBAR_EXIT]:      snackbarExit,
+  [UI.MODAL_SHOW]:      showModal,
+  [UI.MODAL_HIDE]:      hideModal,
+  [UI.MODAL_UPDATE]:    updateModal,
+  [UI.INIT_VIEW_START]:    initViewStart,
+  [UI.INIT_VIEW_COMPLETE]: initViewEnd
 };
 
 export const initialState = {

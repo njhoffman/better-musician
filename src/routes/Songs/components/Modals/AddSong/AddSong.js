@@ -12,7 +12,7 @@ import { Row, Column } from 'react-foundation';
 import { withStyles } from '@material-ui/core';
 
 import { uiHideModal } from 'actions/ui';
-import { MODAL_ADD_SONG } from 'constants/ui';
+import { MODAL_VAR_ADD_SONG } from 'constants/ui';
 import {
   currentSong as currentSongSelector,
   savedTabs as savedTabsSelector
@@ -230,7 +230,7 @@ const mapStateToProps = (state) => ({
   formValues:    state.form.addSongForm ? state.form.addSongForm.values : null,
   savedTabs:     savedTabsSelector(state),
   modal:         state.ui.modal,
-  isOpen:        state.ui.modal.name === MODAL_ADD_SONG
+  isOpen:        state.ui.modal.name === MODAL_VAR_ADD_SONG
 });
 
 const addSongForm = withStyles(styles)(reduxForm({

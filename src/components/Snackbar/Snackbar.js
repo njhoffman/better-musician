@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { uiHideSnackbar, uiSnackbarExited } from 'actions/ui';
+import { uiHideSnackbar, uiSnackbarExit } from 'actions/ui';
 
 import classNames from 'classnames';
 import {
@@ -142,7 +142,7 @@ const horizontal = 'center';
 const Snackbar = ({
   isOpen,
   uiHideSnackbar,
-  uiSnackbarExited,
+  uiSnackbarExit,
   classes,
   queue
 }) => (
@@ -154,7 +154,7 @@ const Snackbar = ({
     open={isOpen}
     autoHideDuration={8000}
     onClose={(e, reason) => reason !== 'clickaway' && uiHideSnackbar()}
-    onExited={uiSnackbarExited}>
+    onExited={uiSnackbarExit}>
     <SbContentWrapper
       onClose={uiHideSnackbar}
       queue={queue} />
@@ -165,11 +165,11 @@ Snackbar.propTypes = {
   classes:          PropTypes.object.isRequired,
   queue:            PropTypes.array.isRequired,
   uiHideSnackbar:   PropTypes.func.isRequired,
-  uiSnackbarExited: PropTypes.func.isRequired,
+  uiSnackbarExit: PropTypes.func.isRequired,
   isOpen:           PropTypes.bool.isRequired
 };
 
-const mapDispatchToProps = { uiHideSnackbar, uiSnackbarExited };
+const mapDispatchToProps = { uiHideSnackbar, uiSnackbarExit };
 const mapStateToProps = (state) => ({
   isOpen: state.ui.snackbar.isOpen,
   queue: state.ui.snackbar.queue
