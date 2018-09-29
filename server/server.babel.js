@@ -14,4 +14,4 @@ try {
 }
 /* eslint-enable no-console */
 
-require('babel-register')(config);
+require('@babel/register')(config);

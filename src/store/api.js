@@ -3,38 +3,37 @@ import { CALL_API } from 'middleware/api';
 import { init as initLog } from 'shared/logger';
 
 
-const { info } = initLog('api-store');
+const { info, warn } = initLog('api-store');
 
 // ------------------------------------
 // Constants
 // ------------------------------------
 
-export const CONFIGURE_LOAD        = 'CONFIGURE_LOAD';
-export const FETCH_SONGS           = 'FETCH_SONGS';
-export const SONGS_REQUEST         = 'SONGS_REQUEST';
-export const SONGS_SUCCESS         = 'SONGS_SUCCESS';
-export const SONGS_FAILURE         = 'SONGS_FAILURE';
-export const LOAD_ARTISTS          = 'LOAD_ARTISTS';
-export const LOAD_INSTRUMENTS      = 'LOAD_INSTRUMENTS';
-export const LOAD_GENRES           = 'LOAD_GENRES';
-export const LOAD_SONGS            = 'LOAD_SONGS';
-export const LOAD_FIELDS           = 'LOAD_FIELDS';
+export const CONFIGURE_LOAD         = 'CONFIGURE_LOAD';
+export const SONGS_FETCH_START      = 'SONGS_FETCH_START';
+export const SONGS_FETCH_COMPLETE   = 'SONGS_FETCH_COMPLETE';
+export const SONGS_FETCH_ERROR      = 'SONGS_FETCH_ERROR';
+export const LOAD_ARTISTS           = 'LOAD_ARTISTS';
+export const LOAD_INSTRUMENTS       = 'LOAD_INSTRUMENTS';
+export const LOAD_GENRES            = 'LOAD_GENRES';
+export const LOAD_SONGS             = 'LOAD_SONGS';
+export const LOAD_FIELDS            = 'LOAD_FIELDS';
 
-export const AUTHENTICATE_START    = 'AUTHENTICATE_START';
-export const AUTHENTICATE_COMPLETE = 'AUTHENTICATE_COMPLETE';
-export const AUTHENTICATE_ERROR    = 'AUTHENTICATE_ERROR';
+export const AUTHENTICATE_START     = 'AUTHENTICATE_START';
+export const AUTHENTICATE_COMPLETE  = 'AUTHENTICATE_COMPLETE';
+export const AUTHENTICATE_ERROR     = 'AUTHENTICATE_ERROR';
 
-export const USER_UPDATE = 'USER_UPDATE';
-export const USER_UPDATE_SUCCESS = 'USER_UPDATE_SUCCESS';
-export const USER_UPDATE_FAILURE = 'USER_UPDATE_FAILURE';
+export const USER_UPDATE_START      = 'USER_UPDATE_START';
+export const USER_UPDATE_COMPLETE   = 'USER_UPDATE_COMPLETE';
+export const USER_UPDATE_ERROR      = 'USER_UPDATE_ERROR';
 
-export const SONGS_ADD = 'SONGS_ADD';
-export const SONGS_ADD_SUCCESS = 'SONGS_ADD_SUCCESS';
-export const SONGS_ADD_FAILURE = 'SONGS_ADD_FAILURE';
+export const SONGS_ADD_START        = 'SONGS_ADD_START';
+export const SONGS_ADD_COMPLETE     = 'SONGS_ADD_COMPLETE';
+export const SONGS_ADD_ERROR        = 'SONGS_ADD_ERROR';
 
-export const EMAIL_SIGN_IN_START       = 'EMAIL_SIGN_IN_START';
-export const EMAIL_SIGN_IN_COMPLETE    = 'EMAIL_SIGN_IN_COMPLETE';
-export const EMAIL_SIGN_IN_ERROR       = 'EMAIL_SIGN_IN_ERROR';
+export const EMAIL_SIGN_IN_START    = 'EMAIL_SIGN_IN_START';
+export const EMAIL_SIGN_IN_COMPLETE = 'EMAIL_SIGN_IN_COMPLETE';
+export const EMAIL_SIGN_IN_ERROR    = 'EMAIL_SIGN_IN_ERROR';
 
 // ------------------------------------
 // Action Creators
@@ -50,24 +49,24 @@ export const fetchSongs = ({ dispatch, getState }) => {
   info('Calling CALL_API');
   return dispatch({
     [CALL_API]: {
-      types: [ SONGS_REQUEST, songsSuccess, SONGS_FAILURE ],
+      types: [ SONGS_FETCH_START, songsFetchComplete, SONGS_FETCH_ERROR],
       endpoint: '/songs'
     }
   });
 };
 
-export const songsSuccess = (response) => (dispatch) => {
+export const songsFetchComplete = (response) => (dispatch) => {
   const tables = response.data.tables;
-  // info('fetchSongsSuccess', response);
-  info(`fetchSongsSuccess: ${tables.songs.length} songs and ${tables.artists.length} artists`);
+  // info('songsFetchComplete', response);
+  info(`songsFetchComplete: ${tables.songs.length} songs and ${tables.artists.length} artists`);
 
   /* eslint-disable no-multi-spaces */
-  dispatch({ type: SONGS_SUCCESS,    payload: response });
-  dispatch({ type: LOAD_ARTISTS,     payload: tables.artists });
-  dispatch({ type: LOAD_INSTRUMENTS, payload: tables.instruments });
-  dispatch({ type: LOAD_GENRES,      payload: tables.genres });
-  dispatch({ type: LOAD_FIELDS,      payload: tables.fields });
-  dispatch({ type: LOAD_SONGS,       payload: tables.songs });
+  dispatch({ type: SONGS_FETCH_COMPLETE, payload: response });
+  dispatch({ type: LOAD_ARTISTS,         payload: tables.artists });
+  dispatch({ type: LOAD_INSTRUMENTS,     payload: tables.instruments });
+  dispatch({ type: LOAD_GENRES,          payload: tables.genres });
+  dispatch({ type: LOAD_FIELDS,          payload: tables.fields });
+  dispatch({ type: LOAD_SONGS,           payload: tables.songs });
   /* eslint-enable no-multi-spaces */
 };
 
@@ -78,7 +77,7 @@ export const updateUser = () => (dispatch, getState) => {
 
   return dispatch({
     [CALL_API]: {
-      types:    [USER_UPDATE, userUpdateSuccess, USER_UPDATE_FAILURE],
+      types:    [USER_UPDATE_START, userUpdateComplete, userUpdateError],
       method:   'POST',
       endpoint: '/users/update',
       payload:  { ...fieldValues }
@@ -86,13 +85,25 @@ export const updateUser = () => (dispatch, getState) => {
   });
 };
 
-export const userUpdateSuccess = (response) => (dispatch) => {
-  info('updateUserSuccess', response);
-  dispatch({ type: USER_UPDATE_SUCCESS, user: response });
+export const userUpdateComplete = (response) => (dispatch) => {
+  info('updateUserComplete', response);
+  dispatch({ type: USER_UPDATE_COMPLETE, user: response });
   dispatch({
-    type: 'UI_SHOW_SNACKBAR',
+    type: 'UI_SNACKBAR_QUEUE',
     payload: 'Profile Successfully Updated',
     meta: { variant: 'success' }
+  });
+  // reloads user attributes
+  dispatch({ type: AUTHENTICATE_COMPLETE, payload: { user: response } });
+};
+
+export const userUpdateError = (response) => (dispatch) => {
+  warn('updateUserERror', response);
+  dispatch({ type: USER_UPDATE_ERROR, user: response });
+  dispatch({
+    type: 'UI_SNACKBAR_QUEUE',
+    payload: response.message ? response.message : response.error ? response.error : 'Unknown Error',
+    meta: { variant: 'error', title: 'Profile Update Error' }
   });
   // reloads user attributes
   dispatch({ type: AUTHENTICATE_COMPLETE, payload: { user: response } });
@@ -103,7 +114,7 @@ export const addSong = () => (dispatch, getState) => {
 
   return dispatch({
     [CALL_API]: {
-      types:    [SONGS_ADD, songsAddSuccess, songsAddFailure],
+      types:    [SONGS_ADD_START, songsAddComplete, songsAddError],
       method:   'POST',
       endpoint: '/songs/add',
       payload:  { ...fieldValues }
@@ -111,14 +122,14 @@ export const addSong = () => (dispatch, getState) => {
   });
 };
 
-export const songsAddSuccess = (response) => (dispatch) => {
-  dispatch({ type: SONGS_ADD_SUCCESS, user: response });
-  dispatch({ type: 'UI_SHOW_SNACKBAR', meta: { message: 'Song Added' } });
+export const songsAddComplete = (response) => (dispatch) => {
+  dispatch({ type: SONGS_ADD_COMPLETE, user: response });
+  dispatch({ type: 'UI_SNACKBAR_QUEUE', payload: 'Song Added', meta: { variant: 'success' } });
 };
 
-export const songsAddFailure = (response) => (dispatch) => {
-  dispatch({ type: SONGS_ADD_FAILURE, user: response });
-  dispatch({ type: 'UI_SHOW_SNACKBAR', meta: { message: 'Validation Error: Song Not Added' } });
+export const songsAddError = (response) => (dispatch) => {
+  dispatch({ type: SONGS_ADD_ERROR, user: response });
+  dispatch({ type: 'UI_SNACKBAR_QUEUE', meta: { variant: 'warnining' }, payload: 'Validation Error: Song Not Added' });
   dispatch({ type: 'UI_UPDATE_MODAL', meta: { type: 'MODAL_ADD_SONG', props: { errors: response.errors } } });
 };
 
@@ -191,18 +202,18 @@ const ACTION_HANDLERS = {
     }
   }),
 
-  // [SONGS_REQUEST] : (state) => ({ ...state, loading: true }),
-  // [SONGS_SUCCESS] : (state) => ({
+  // [SONGS_FETCH_START] : (state) => ({ ...state, loading: true }),
+  // [SONGS_FETCH_COMPLETE] : (state) => ({
   //   ...state,
   //   loading: false,
   //   initialized: state.initialized.indexOf('songs') === -1 ? state.initialized.concat('songs') : state.initialized
   // }),
-  // [USER_UPDATE] : (state) => ({ ...state, loading: true }),
-  // [USER_UPDATE_SUCCESS] : (state) => ({ ...state, loading: false }),
-  // [USER_UPDATE_FAILURE] : (state) => ({ ...state, loading: false }),
-  // [SONGS_ADD] : (state) => ({ ...state, loading: true }),
-  // [SONGS_ADD_SUCCESS] : (state) => ({ ...state, loading: false }),
-  // [SONGS_ADD_FAILURE] : (state) => ({ ...state, loading: false })
+  // [USER_UPDATE_START] : (state) => ({ ...state, loading: true }),
+  // [USER_UPDATE_COMPLETE] : (state) => ({ ...state, loading: false }),
+  // [USER_UPDATE_ERROR] : (state) => ({ ...state, loading: false }),
+  // [SONGS_ADD_START] : (state) => ({ ...state, loading: true }),
+  // [SONGS_ADD_COMPLETE] : (state) => ({ ...state, loading: false }),
+  // [SONGS_ADD_ERROR] : (state) => ({ ...state, loading: false })
 };
 
 // ------------------------------------

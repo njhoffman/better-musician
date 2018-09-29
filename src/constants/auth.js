@@ -36,6 +36,7 @@ export const SAVED_CONFIG_KEY             = 'currentConfigName';
 export const SAVED_CREDS_KEY              = 'authHeaders';
 
 export const SS_TOKEN_VALIDATION_COMPLETE = 'SS_TOKEN_VALIDATION_COMPLETE';
+export const SS_TOKEN_VALIDATION_ERROR    = 'SS_TOKEN_VALIDATION_ERROR';
 export const SS_AUTH_TOKEN_UPDATE         = 'SS_AUTH_TOKEN_UPDATE';
 
 export const UPDATE_PASSWORD_START        = 'UPDATE_PASSWORD_START';

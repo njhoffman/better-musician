@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { uiHideSnackbar } from 'actions/ui';
+import { uiHideSnackbar, uiSnackbarExited } from 'actions/ui';
 
 import classNames from 'classnames';
 import {
   IconButton,
-  Snackbar,
+  Snackbar as MatSnackbar,
   SnackbarContent,
   Typography,
   Slide,
@@ -28,7 +28,7 @@ const variantIcon = {
   info: InfoIcon,
 };
 
-const styles1 = theme => ({
+const contentStyles = theme => ({
   snackbarContent: {
     flexGrow: 0,
     minWidth: '60%',
@@ -50,19 +50,29 @@ const styles1 = theme => ({
   },
   icon: {
     fontSize: 20,
+    color: theme.palette.text.primary,
+    verticalAlign: 'middle'
   },
   iconVariant: {
     opacity: 0.9,
     marginRight: theme.spacing.unit,
   },
-  message: {
+  messageContainer: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'center'
   },
+  message: {
+    opacity: 0.8,
+  },
+  title: {
+    opacity: 1,
+    marginRight: '10px'
+  }
 });
 
 const SbContent = (props) => {
-  const { classes, className, message, onClose, variant, ...other } = props;
+  const { classes, className, onClose, queue, ...other } = props;
+  const { title, variant, message } = queue[0];
   const Icon = variantIcon[variant];
 
   return (
@@ -70,10 +80,15 @@ const SbContent = (props) => {
       className={`${classNames(classes[variant], className)} ${classes.snackbarContent}`}
       aria-describedby='client-snackbar'
       message={
-        <Typography variant='body2' id='client-snackbar' className={classes.message}>
+        <div className={classes.messageContainer}>
           <Icon className={classNames(classes.icon, classes.iconVariant)} />
-          {message}
-        </Typography>
+          <Typography variant='subheading' className={classes.title}>
+            {title}
+          </Typography>
+          <Typography variant='body2' id='client-snackbar' className={classes.message}>
+            {message}
+          </Typography>
+        </div>
       }
       action={[
         <IconButton
@@ -94,68 +109,72 @@ const SbContent = (props) => {
 };
 
 SbContent.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes:   PropTypes.object.isRequired,
   className: PropTypes.string,
-  message: PropTypes.node,
-  onClose: PropTypes.func,
-  variant: PropTypes.oneOf(['success', 'warning', 'error', 'info'])
+  message:   PropTypes.string.isRequired,
+  title:     PropTypes.string,
+  onClose:   PropTypes.func,
+  variant:   PropTypes.oneOf(['success', 'warning', 'error', 'info'])
 };
 
-const SbContentWrapper = withStyles(styles1)(SbContent);
+const SbContentWrapper = withStyles(contentStyles)(SbContent);
 
-const styles2 = theme => ({
+const snackbarStyles = theme => ({
   margin: {
     margin: theme.spacing.unit,
   },
+  closed: { },
+  open: {
+    height: 'auto'
+  },
+  topCenter: {
+    marginTop: '40px'
+  },
 });
 
-class Snackbars extends Component {
+// const slideLeft = (props) => (<Slide {...props} direction="left" />);
+// const slideRight = (props) => (<Slide {...props} direction="right" />);
+// const slideDown = (props) => (<Slide {...props} direction="down" />);
+const slideUp = (props) => (<Slide {...props} direction='up' />);
 
-  handleClick = () => {
-    this.props.uiHideSnackbar();
-  };
+const Transition = slideUp;
+const vertical = 'top';
+const horizontal = 'center';
 
-  handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    this.props.uiHideSnackbar();
-  };
+const Snackbar = ({
+  isOpen,
+  uiHideSnackbar,
+  uiSnackbarExited,
+  classes,
+  queue
+}) => (
+  <MatSnackbar
+    anchorOrigin={{ vertical, horizontal }}
+    className={isOpen ? classes.open : classes.closed }
+    classes={{ anchorOriginTopCenter: classes.topCenter }}
+    TransitionComponent={Transition}
+    open={isOpen}
+    autoHideDuration={8000}
+    onClose={(e, reason) => reason !== 'clickaway' && uiHideSnackbar()}
+    onExited={uiSnackbarExited}>
+    <SbContentWrapper
+      onClose={uiHideSnackbar}
+      queue={queue} />
+  </MatSnackbar>
+);
 
-  render() {
-    const { isOpen, variant, message } = this.props;
-
-    return (
-      <Snackbar
-        // transitionDuration, TransitionComponent=Fade
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-        TransitionComponent={(tProps) => <Slide {...tProps } direction='up' />}
-        open={isOpen}
-        autoHideDuration={6000}
-        onClose={this.handleClose}>
-        <SbContentWrapper
-          onClose={this.handleClose}
-          variant={variant} // error, warning, info, success
-          message={message} />
-      </Snackbar>
-    );
-  }
-}
-
-Snackbars.propTypes = {
-  classes: PropTypes.object.isRequired,
-  message: PropTypes.node,
-  variant: PropTypes.oneOf(['success', 'warning', 'error', 'info'])
+Snackbar.propTypes = {
+  classes:          PropTypes.object.isRequired,
+  queue:            PropTypes.array.isRequired,
+  uiHideSnackbar:   PropTypes.func.isRequired,
+  uiSnackbarExited: PropTypes.func.isRequired,
+  isOpen:           PropTypes.bool.isRequired
 };
 
-const mapDispatchToProps = { uiHideSnackbar };
+const mapDispatchToProps = { uiHideSnackbar, uiSnackbarExited };
 const mapStateToProps = (state) => ({
   isOpen: state.ui.snackbar.isOpen,
-  message: state.ui.snackbar.message,
-  variant: state.ui.snackbar.variant
+  queue: state.ui.snackbar.queue
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles2)(Snackbars));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(snackbarStyles)(Snackbar));

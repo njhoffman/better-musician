@@ -18,19 +18,25 @@ import {
   savedTabs as savedTabsSelector
 } from 'routes/Songs/modules/selectors';
 
-import AddSongMainTab from './AddSongMainTab';
-import AddSongButtons from './AddSongButtons';
+import MainTab from './MainTab';
+import ActionButtons from './ActionButtons';
 //
 import FormField from 'components/Field';
 // import css from './AddSong.scss';
 
-let lastActiveField = 'artist';
+let lastActiveField = '';
 
 const styles = (theme) => ({
   dialogPaper: {
     alignSelf: 'start',
     margin: '50px 0px 0px 0px',
-    overflowY: 'visible'
+    overflowY: 'visible',
+    [theme.breakpoints.up('sm')]: {
+      minWidth: '500px'
+    },
+    [theme.breakpoints.up('md')]: {
+      minWidth: '650px'
+    }
   },
   dialogContent: {
     overflowY: 'visible',
@@ -39,15 +45,6 @@ const styles = (theme) => ({
   },
   editField: {
     color: 'red'
-  },
-  flexTwo: {
-    flex: '0 0 250px',
-    width: '250px'
-  },
-  flexThree:  {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    width: '250px'
   },
   fieldGroup: {
     width: '100%',
@@ -61,30 +58,6 @@ const styles = (theme) => ({
 
 
 //   form {
-//     input {
-//       margin: 0;
-//     }
-//     .fieldGroup {
-//       width: 100%;
-//       max-width: none;
-//       display: flex;
-//       flex-wrap: wrap;
-//       box-align: stretch;
-//       align-items: stretch;
-//       justify-content: space-around;
-//     }
-//
-//     .flexTwo{
-//       flex: 0 0 250px;
-//       width: 250px;
-//     }
-//
-//     .flexThree {
-//       margin-left: auto;
-//       margin-right: auto;
-//       width: 250px;
-//     }
-//
 //     .selectOptions {
 //       margin-top: 10px;
 //       max-width: 550px;
@@ -108,10 +81,6 @@ const styles = (theme) => ({
 //       input[type="text"] {
 //         text-overflow: ellipsis;
 //       }
-//     }
-//     .addField {
-//     }
-//     .editField {
 //     }
 //   }
 // }
@@ -148,33 +117,26 @@ export class AddSongModal extends Component {
   }
 
   render() {
-    const { modal, classes } = this.props;
+    const { modal, classes, activeField } = this.props;
     // const className = classes.addSongModal + ' ' + classes[this.props.modal.action];
     const modalView = {
-      isView  : () => modal.props.action === 'view',
-      isEdit  : () => modal.props.action === 'edit',
-      isAdd   : () => modal.props.action === 'add',
-      getName : () => modal.props.action
+      isView  : () => modal.type === 'view',
+      isEdit  : () => modal.type === 'edit',
+      isAdd   : () => modal.type === 'add'
     };
 
-    lastActiveField = ['artist', 'instrument']
-      .indexOf(this.props.activeField) !== -1
-      ? this.props.activeField : lastActiveField;
+    lastActiveField = activeField || lastActiveField;
 
-    const labelStyle = modalView.isView() ? { textAlign: 'center', width: '100%' } : { };
-    const textStyle = modalView.isView() ? { cursor: 'default' } : {};
+    // const labelStyle = modalView.isView() ? { textAlign: 'center', width: '100%' } : { };
+    // const textStyle = modalView.isView() ? { cursor: 'default' } : {};
 
-    const mainTabProps = {
-      lastActiveField,
-      labelStyle,
-      textStyle,
-      modalView
-    };
-
+    const tabProps = { lastActiveField, activeField, noEdit: modalView.isView(), disabled: modalView.isView()};
     const { value } = this.state;
 
     return (
-      <Dialog open={this.props.isOpen} classes={{ paper: classes.dialogPaper }} >
+      <Dialog
+        open={this.props.isOpen}
+        classes={{ paper: classes.dialogPaper }} >
         <DialogContent className={classes.dialogContent}>
           <form>
             <AppBar position='static' >
@@ -184,15 +146,13 @@ export class AddSongModal extends Component {
                 value={value}
                 onChange={(event, value) => this.handleChange(event, value)}>
                 <Tab label='Main Fields' />
-                {this.props.savedTabs.map((tab, tabIdx) =>
-                  <Tab key={tabIdx} label={tab.name} />
-                )}
+                {this.props.savedTabs.map((tab, tabIdx) => <Tab key={tabIdx} label={tab.name} />)}
               </Tabs>
             </AppBar>
 
             {value === 0 && (
               <TabContainer>
-                <AddSongMainTab {...mainTabProps} />
+                <MainTab {...tabProps} />
               </TabContainer>
             )}
 
@@ -201,7 +161,7 @@ export class AddSongModal extends Component {
                 <TabContainer key={tabIdx}>
                   <Row>
                     <Column>
-                      {modal.props.errors && [].concat(modal.props.errors).map((error, i) =>
+                      {modal.errors && [].concat(modal.errors).map((error, i) =>
                         <p key={i} className='error'>{error}</p>
                       )}
                     </Column>
@@ -210,11 +170,8 @@ export class AddSongModal extends Component {
                     <Row key={fieldIdx}>
                       {fields.map(field => (
                         <FormField
+                          noEdit={modalView.isView()}
                           key={field.idx}
-                          style={textStyle}
-                          labelStyle={labelStyle}
-                          disabled={modalView.isView()}
-                          underlineShow={!modalView.isView()}
                           field={field}
                           fields={fields}
                           name={field.name}
@@ -222,27 +179,16 @@ export class AddSongModal extends Component {
                           centerOnSmall
                           small={fields.length === 1 ? 12 : 6}
                         />
-                        // <CustomField
-                        //   key={field.idx}
-                        //   style={textStyle}
-                        //   labelStyle={labelStyle}
-                        //   disabled={modalView.isView()}
-                        //   underlineShow={!modalView.isView()}
-                        //   field={field}
-                        //   initialValues={this.props.initialValues}
-                        //   centerOnSmall
-                        //   small={fields.length === 1 ? 12 : 6}
-                        // />
                       ))}
                     </Row>
                   ))}
                 </TabContainer>
-              )
-            ))}
+              )))}
+
           </form>
         </DialogContent>
         <DialogActions>
-          <AddSongButtons modalView={modalView} />
+          <ActionButtons noEdit={modalView.isView()} modalView={modalView} />
         </DialogActions>
       </Dialog>
     );
@@ -265,8 +211,8 @@ export class AddSongModal extends Component {
 //   return errors;
 // };
 
-const initialValues = (song, modalAction) => {
-  if (song && modalAction !== 'add') {
+const initialValues = (song, modalType) => {
+  if (song && modalType !== 'add') {
     // return object for nested models, redux form tries to reset and breaks if not a plain object
     const ivSong = Object.assign({}, song);
     ivSong.artist = song.artist.ref;
@@ -279,12 +225,12 @@ const initialValues = (song, modalAction) => {
 const mapDispatchToProps = { uiHideModal };
 
 const mapStateToProps = (state) => ({
-  initialValues: initialValues(currentSongSelector(state), state.ui.modal.props.action),
-  activeField:   state.form.addSongForm ? state.form.addSongForm.active : null,
+  initialValues: initialValues(currentSongSelector(state), state.ui.modal.type),
+  activeField:   state.form.addSongForm ? state.form.addSongForm.active : '',
   formValues:    state.form.addSongForm ? state.form.addSongForm.values : null,
   savedTabs:     savedTabsSelector(state),
   modal:         state.ui.modal,
-  isOpen:        state.ui.modal.type === MODAL_ADD_SONG
+  isOpen:        state.ui.modal.name === MODAL_ADD_SONG
 });
 
 const addSongForm = withStyles(styles)(reduxForm({

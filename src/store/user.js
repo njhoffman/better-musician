@@ -51,11 +51,11 @@ const ACTION_HANDLERS = {
     attributes: user
   }),
 
-  [A.AUTHENTICATE_FAILURE]:     state => ({ ...state, ...initialState }),
-  [A.SS_TOKEN_VALIDATION_ERROR]:  state => ({ ...state, ...initialState }),
-  [A.SIGN_OUT_COMPLETE]:        state => ({ ...state, ...initialState }),
-  [A.SIGN_OUT_ERROR]:           state => ({ ...state, ...initialState }),
-  [A.DESTROY_ACCOUNT_COMPLETE]: state => ({ ...state, ...initialState })
+  [A.AUTHENTICATE_ERROR]:        state => ({ ...state, ...initialState }),
+  [A.SS_TOKEN_VALIDATION_ERROR]: state => ({ ...state, ...initialState }),
+  [A.SIGN_OUT_COMPLETE]:         state => ({ ...state, ...initialState }),
+  [A.SIGN_OUT_ERROR]:            state => ({ ...state, ...initialState }),
+  [A.DESTROY_ACCOUNT_COMPLETE]:  state => ({ ...state, ...initialState })
 };
 
 export default function userReducer(state = initialState, action) {

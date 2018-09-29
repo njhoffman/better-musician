@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core';
+import { withStyles, Typography } from '@material-ui/core';
 import FormField, { FormRow, Stars } from 'components/Field';
 import { Row, Column } from 'react-foundation';
 import PropTypes from 'prop-types';
@@ -29,66 +29,42 @@ const styles = (theme) => ({
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
     flexWrap: 'wrap'
-  },
-  flexTwo: {
-    flex: '0 0 250px',
-    width: '250px'
-  },
-  flexThree:  {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    width: '250px'
-  },
+  }
 });
 
-export const AddSongMainTab = (props) => {
-  const {
-    lastActiveField,
-    modalView,
-    matchedArtist,
-    activeField,
-    classes
-  } = props;
-
+export const AddSongMainTab = ({
+  activeField,
+  lastActiveField,
+  matchedArtist,
+  artistLastNames,
+  instruments,
+  genres,
+  maxDifficulty,
+  noEdit,
+  classes,
+  ...props
+}) => {
   const renderImage = () => {
-    const artistPicture = matchedArtist && matchedArtist.pictures && matchedArtist.pictures[0]
-      ? 'artists/' + matchedArtist.pictures[0]
-      : 'artists/unknown_artist.png';
-    if (activeField === 'artist' || lastActiveField === 'artist') {
-      if (matchedArtist) {
-        return (
-          <Column>
-            <img className={classes.image} src={artistPicture} />
-            <div>{matchedArtist.fullName()}</div>
-            { !modalView.isView() && <Button variant='raised' secondary label='Change Picture' /> }
-          </Column>
-        );
-      } else {
-        return (
-          <Column>
-            <img className={classes.image} src='/artists/unknown_artist.png' />
-            <div>Unknown Artist</div>
-            { !modalView.isView() && <Button variant='raised' secondary label='Change Picture' /> }
-          </Column>
-        );
-      }
-    } else if (activeField === 'instrument' || lastActiveField === 'instrument') {
-      return (
-        <Column>
-          <img className={classes.image} src='/instruments/unknown_instrument.png' />
-          <div>Unknown Instrument</div>
-          { !modalView.isView() && <Button variant='raised' secondary label='Add Picture' /> }
-        </Column>
-      );
-    }
+    // TODO: Find a better way through config!
+    const fieldRE = /^artist|^instrument|^genre/;
+    const imageField = (
+      activeField && fieldRE.test(activeField) ? activeField
+      : lastActiveField && fieldRE.test(lastActiveField) ? lastActiveField
+      : 'artist').replace(/\..*/, '');
+    const imageFile = matchedArtist && matchedArtist.pictures && matchedArtist.pictures[0]
+      ? matchedArtist.pictures[0] : '_unknown.png';
+    const imageLabel = matchedArtist ? matchedArtist.fullName() : `Unknown ${imageField.toUpperCase()}`;
+    const buttonLabel = matchedArtist ? 'Change Picture' : 'Add Picture';
+    return (
+      <Column>
+        <img className={classes.image} src={`/images/${imageField}/${imageFile}`} />
+        <Typography>{imageLabel}</Typography>
+        { !noEdit && <Button variant='raised' secondary label={buttonLabel} /> }
+      </Column>
+    );
   };
 
-  const renderStars = (number) => (
-    <Stars
-      className={classes.progressStars}
-      number={parseInt(number)}
-      />
-  );
+  const renderStars = (number) => ( <Stars className={classes.progressStars} number={parseInt(number)} />);
 
   const renderViewFields = () => (
     <FormRow>
@@ -103,8 +79,8 @@ export const AddSongMainTab = (props) => {
     </FormRow>
   );
 
-  const renderEditFields = ({ artistLastNames }) => (
-    <div>
+  const renderEditFields = () => (
+    <Fragment>
       <FormRow>
         <FormField
           name='title'
@@ -125,10 +101,11 @@ export const AddSongMainTab = (props) => {
           type='text'
           label='First Name' />
       </FormRow>
-    </div>
+    </Fragment>
   );
+
   return (
-    <div>
+    <Fragment>
       <FormRow>
         <Column>
           <Row className={classes.imageFrame}>
@@ -136,49 +113,46 @@ export const AddSongMainTab = (props) => {
           </Row>
         </Column>
       </FormRow>
-      {modalView.isView() && renderViewFields()}
-      {!modalView.isView() && renderEditFields(props)}
+      {noEdit && renderViewFields()}
+      {!noEdit && renderEditFields()}
       <FormRow>
         <FormField
           name='genre.name'
           type='autocomplete'
           label='Song Genre'
-          options={props.genres} />
+          options={genres} />
         <FormField
           name='instrument.name'
           type='autocomplete'
           label='Instrument'
-          options={props.instruments} />
+          options={instruments} />
       </FormRow>
       <FormRow>
         <FormField
           name='difficulty'
           type='slider'
+          label='Difficulty'
           min={1}
-          max={props.maxDifficulty}
-          step={1}
-          disabled={modalView.isView()}
-          label='Difficulty' />
+          max={maxDifficulty}
+          step={1} />
         <FormField
           name='progress'
           type='slider'
+          label='Progress'
           min={0}
           max={4}
           step={1}
-          valueDisplay={renderStars}
-          disabled={modalView.isView()}
-          label='Progress' />
+          valueDisplay={renderStars} />
       </FormRow>
-    </div>
+    </Fragment>
   );
 };
 
 AddSongMainTab.propTypes = {
   lastActiveField : PropTypes.string.isRequired,
-  textStyle       : PropTypes.object.isRequired,
-  modalView       : PropTypes.object.isRequired,
+  activeField     : PropTypes.string.isRequired,
+  noEdit          : PropTypes.bool.isRequired,
   matchedArtist   : PropTypes.object,
-  activeField     : PropTypes.string,
   artistLastNames : PropTypes.any.isRequired,
   genres          : PropTypes.any.isRequired,
   instruments     : PropTypes.any.isRequired,
@@ -187,7 +161,6 @@ AddSongMainTab.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  activeField      : state.form.addSongForm ? state.form.addSongForm.active : null,
   matchedArtist    : artistsMatchedSelector(state),
   maxDifficulty    : maxDifficultySelector(state),
   genres           : genresSelector(state),

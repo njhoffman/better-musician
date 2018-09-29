@@ -5,7 +5,7 @@ import { Typography, withStyles, Paper } from '@material-ui/core';
 import { Column } from 'react-foundation';
 
 import EmailSignInForm from './EmailSignInForm';
-import { handleLoginSuccess } from '../modules/reducer';
+import { withRouter } from 'react-router';
 import SignOutButton from 'components/SignOutButton';
 
 const styles = (theme) => ({
@@ -18,10 +18,11 @@ const styles = (theme) => ({
 
 export const LoginView = ({
   classes,
+  history,
   isSignedIn,
   ...props
 }) => (
-  <Column small={12} medium={10} large={8}>
+  <Column small={12} medium={8} large={6}>
     <Paper elevation={5} className={classes.contentContainer}>
       <div className={classes.loginContainer}>
         <Typography variant='title'>
@@ -36,7 +37,7 @@ export const LoginView = ({
           </div>
         )}
         {!isSignedIn && (
-          <EmailSignInForm next={handleLoginSuccess} />
+          <EmailSignInForm next={() => history.push('/songs')} />
         )}
       </div>
     </Paper>
@@ -44,19 +45,17 @@ export const LoginView = ({
 );
 
 LoginView.propTypes = {
-  handleLoginSuccess: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired,
+  history:    PropTypes.object.isRequired,
+  classes:    PropTypes.object.isRequired,
   isSignedIn: PropTypes.bool.isRequired
 };
 
-const mapActionCreators = {
-  handleLoginSuccess
-};
+const mapActionCreators = { };
 const mapStateToProps = (state) => ({
   settings: state.login,
   isSignedIn: state.user.isSignedIn
 });
 
 const withConnect = connect(mapStateToProps, mapActionCreators);
-const decorators = (View) => withConnect(withStyles(styles)(View));
+const decorators = (View) => withRouter(withConnect(withStyles(styles)(View)));
 export default decorators(LoginView);

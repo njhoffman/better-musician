@@ -30,6 +30,7 @@ const curry = (fn) => {
 };
 
 let __ErrorBoundary;
+let exports = {};
 if (process.env.NODE_ENV === 'development' || process.env.ERROR_ENV === 'development') {
   const { ErrorBoundary, FallbackView } = require('./WithErrorHandler');
 
@@ -92,4 +93,5 @@ if (process.env.NODE_ENV === 'development' || process.env.ERROR_ENV === 'develop
   exports.errorHandlerDecorator = withErrorHandler(void 0);
 }
 
+export { exports };
 export default __ErrorBoundary;

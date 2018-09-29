@@ -21,7 +21,7 @@ import FormField, { FormRow }  from 'components/Field';
 
 const styles = (theme) => ({
   root: {
-    textAlign: 'center'
+    textAlign: 'center',
   },
   avatar: {
     marginLeft: 'auto',
@@ -32,6 +32,10 @@ const styles = (theme) => ({
   avatarIcon: {
     width: '100px',
     height: '100px'
+  },
+  form: {
+    margin: '15px',
+    padding: '15px'
   }
 });
 
@@ -62,13 +66,13 @@ export const ProfileView = (props) => {
     <Column className={props.classes.root} centerOnSmall small={12} medium={10} large={8}>
       <Paper elevation={5}>
         <AppBar position='static'>
-          <Tabs centered={true} fullWidth={true} onChange={(e, value) => history.push(value)} value='profile'>
+          <Tabs value='profile' centered={true} fullWidth={true} onChange={(e, value) => history.push(value)}>
             <Tab data-route='/profile' value='profile' label='Profile' />
             <Tab data-route='/settings' value='settings' label='Settings' />
             <Tab data-route='/fields' value='fields' label='Fields' />
           </Tabs>
         </AppBar>
-        <form autoComplete='off'>
+        <form className={props.classes.form} autoComplete='off'>
           <Typography>
             Update Your Profile
           </Typography>

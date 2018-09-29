@@ -38,7 +38,7 @@ const MultiSelect = ({
                 <Button
                   variant='raised'
                   color='secondary'
-                  onTouchTap={() => addOption(fields)}
+                  onClick={() => addOption(fields)}
                   label='Add' />
               }
             </Column>

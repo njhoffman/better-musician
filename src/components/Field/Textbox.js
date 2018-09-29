@@ -5,8 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import createComponent from './createFormField';
 import mapError from './mapError';
 
-const TextboxForm = createComponent(
- TextField, ({
+const TextboxForm = createComponent(TextField, ({
     defaultValue,
     ...props
   }) => ({
@@ -18,14 +17,18 @@ const Textbox = ({
   meta,
   inputStyle,
   style,
+  disableUnderline,
   ...props
-}) => (
+}) => {
+  return (
   <TextboxForm
+    InputProps={{ disableUnderline }}
     error={meta && meta.touched && meta.error}
     style={{ ...style, width: '100%' }}
     {...props}
   />
-);
+  );
+};
 
 Textbox.propTypes = {
   inputStyle : PropTypes.object,

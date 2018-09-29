@@ -22,7 +22,6 @@ const styles = {
     justifyContent: 'space-between',
     width: 'fit-content',
     flex: 1,
-    float: 'right',
     paddingLeft: '10px',
     textAlign: 'right'
   },

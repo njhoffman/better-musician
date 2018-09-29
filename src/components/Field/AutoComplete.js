@@ -26,8 +26,9 @@ const styles = theme => ({
     margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
   },
 
+
   inputRoot: {
-    flexWrap: 'wrap',
+    flexWrap: 'wrap'
   },
   divider: {
     height: theme.spacing.unit * 2,
@@ -42,6 +43,7 @@ const getSuggestions = (options, inputValue) => {
 
 const renderInput = ({
   InputProps,
+  InputLabelProps,
   classes,
   ref,
   ...props
@@ -50,9 +52,12 @@ const renderInput = ({
     InputProps={{
       inputRef: ref,
       classes: {
-        root: classes.inputRoot,
+        root: classes.inputRoot
       },
-      ...InputProps,
+      ...InputProps
+    }}
+    InputLabelProps={{
+      ...InputLabelProps
     }}
     {...props}
   />
@@ -91,21 +96,35 @@ const AutoComplete = ({
   label,
   options,
   input,
+  disableUnderline,
+  meta,
   ...props
 }) => (
   <Downshift
     {...input}
     onStateChange={({ inputValue }) => input.onChange(inputValue)}
     selectedItem={input.value}>
-    {({ getInputProps, getItemProps, isOpen, inputValue, selectedItem, highlightedIndex }) => (
+    {({
+      getInputProps,
+      getItemProps,
+      isOpen,
+      inputValue,
+      selectedItem,
+      highlightedIndex
+    }) => (
       <div className={classes.container}>
         {renderInput({
-          fullWidth: false,
+          fullWidth: true,
           classes,
+          meta,
           label,
+          name: input.name,
+          InputLabelProps: { disableUnderline },
           InputProps: getInputProps({
+            ...input,
+            ...props
             // placeholder: 'Search',
-          }),
+          })
         })}
         {isOpen ? (
           <Paper className={classes.paper} square>

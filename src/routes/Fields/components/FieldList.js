@@ -154,12 +154,12 @@ export const FieldList = (props) => {
           <Row className={classes.fieldButtons}>
             <Button
               variant='flat'
-              onTouchTap={field.id === editingId ? cancelEdit : () => editField(field)}
+              onClick={field.id === editingId ? cancelEdit : () => editField(field)}
               className={classes.flexButton}
               style={{ color: '#bbbbff'}}
               icon={
                 field.id === editingId ?
-                  <CancelIcon onTouchTap={cancelEdit} />
+                  <CancelIcon onClick={cancelEdit} />
                   : <EditIcon />
               }
             />
@@ -168,7 +168,7 @@ export const FieldList = (props) => {
             {!(field.id === editingId) &&
               <Button
                 variant='flat'
-                onTouchTap={() => deleteField(field.id)}
+                onClick={() => deleteField(field.id)}
                 className={classes.flexButton}
                 style={{ color: '#ffbbbb' }}
                 icon={<DeleteIcon />}

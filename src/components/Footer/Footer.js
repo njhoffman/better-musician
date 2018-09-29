@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Row, Column } from 'react-foundation';
-import { RenderStars, RenderDifficulty } from 'components/Field';
+import { Stars, Difficulty } from 'components/Field';
 import { withStyles, Typography } from '@material-ui/core';
 
 import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
@@ -102,12 +102,12 @@ const SongFooter = ({ classes, maxDifficulty, artistPicture, song }) => (
       <Column small={2} className={css.rightColumn}>
         <Row>
           <Column>
-            <RenderDifficulty difficulty={song.difficulty} maxDifficulty={maxDifficulty} />
+            <Difficulty difficulty={song.difficulty} maxDifficulty={maxDifficulty} />
           </Column>
         </Row>
         <Row>
           <Column>
-            <RenderStars number={song.progress} className={classes.stars} />
+            <Stars number={song.progress} className={classes.stars} />
           </Column>
         </Row>
       </Column>

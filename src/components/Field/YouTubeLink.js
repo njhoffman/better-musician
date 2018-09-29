@@ -2,19 +2,37 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'lodash';
 import { Row, Column } from 'react-foundation';
-import { RenderText } from '../Field';
+import { TextField } from '@material-ui/core';
+// import Textbox from './Textbox';
 import { Field } from 'redux-form';
+import createComponent from './createFormField';
+import mapError from './mapError';
 
 const youtubeRE = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&(amp;)?[\w?=]*)?/;
 
-class CustomYouTubeLink extends Component {
+const TextboxForm = createComponent(TextField, ({
+    input: { onChange, ...inputProps },
+    onChange: onFieldChange,
+    defaultValue,
+    ...props
+  }) => ({
+    ...mapError(props),
+    ...inputProps,
+    onChange: event => {
+      onChange(event.target.value);
+      if (onFieldChange) {
+        onFieldChange(event.target.value);
+      }
+    },
+  })
+);
+
+class YouTubeLink extends Component {
   static propTypes = {
     disabled      : PropTypes.bool,
     preview       : PropTypes.bool,
     initialValues : PropTypes.object,
-    field         : PropTypes.object.isRequired,
-    inputStyle    : PropTypes.object,
-    labelStyle    : PropTypes.object,
+    fields        : PropTypes.array.isRequired,
     style         : PropTypes.object,
     id            : PropTypes.string
   }
@@ -22,7 +40,7 @@ class CustomYouTubeLink extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      videoId: this.parseUrl(get(props.initialValues, props.field.name))
+      videoId: this.parseUrl(get(props.initialValues, props.input.name))
     };
   }
 
@@ -40,7 +58,7 @@ class CustomYouTubeLink extends Component {
         <Field
           style={{ width: '200px', marginTop: '0px' }}
           name={this.props.id}
-          component={RenderText}
+          component={TextField}
           label={this.props.field.label} />
       );
     } else {
@@ -48,14 +66,12 @@ class CustomYouTubeLink extends Component {
         <Column>
           <Row>
             <Column centerOnSmall>
-              <Field
-                style={{ ...this.props.style, ...{ width: '100%', textAlign: 'center', verticalAlign: 'middle' } }}
-                name={this.props.field.name}
+              <TextboxForm
+                name={this.props.input.name}
                 onChange={(e, val) => this.parseUrl(val)}
-                inputStyle={this.props.inputStyle}
                 disabled={this.props.disabled}
-                component={RenderText}
-                label={this.props.field.label}
+                label={this.props.fields[0].label}
+                {...this.props}
               />
             </Column>
           </Row>
@@ -76,4 +92,4 @@ class CustomYouTubeLink extends Component {
   }
 }
 
-export default CustomYouTubeLink;
+export default YouTubeLink;

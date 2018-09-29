@@ -9,12 +9,13 @@ import Checkbox from './Checkbox';
 import Stars from './Stars';
 import Difficulty from './Difficulty';
 import AutoComplete from './AutoComplete';
+import YouTubeLink from './YouTubeLink';
 import Chip from './Chip';
+
 import { withStyles } from '@material-ui/core';
 import { Field } from 'redux-form';
 import { Row, Column } from 'react-foundation';
 
-// import YouTubeLink from 'components/CustomField/YouTubeLink';
 
 /* eslint-disable no-multi-spaces */
 // const fieldOptions = {
@@ -37,6 +38,7 @@ const renderType = (type) => (
   : type === 'slider' ? Slider
   : type === 'multiselect' || type === 'Multi-Select Menu' ? MultiSelect
   : type === 'autocomplete' || type === 'AutoComplete Box' ? AutoComplete
+  : type === 'youtube' || type === 'YouTube Link' ? YouTubeLink
   : Checkbox
 );
 
@@ -53,6 +55,9 @@ const styles = (theme) => ({
   formColumn: {
     flex: '1 1 auto',
     width: '100%'
+  },
+  fieldNoEdit: {
+    textAlign: 'center'
   }
 });
 
@@ -77,7 +82,7 @@ FormRow = withStyles(styles)(FormRow);
 
 const FormField = ({
   type, small, medium, large, field, preview,
-  style, centerOnSmall, classes, ...props
+  style, centerOnSmall, classes, noEdit, ...props
 }) => (
   <Column
     className={classes.formColumn}
@@ -88,6 +93,8 @@ const FormField = ({
     {!preview && (
       <Field
         autoComplete='off'
+        disableUnderline={noEdit ? true : false }
+        className={noEdit ? classes.fieldNoEdit : ''}
         component={renderType(type || field.typeName)}
         {...props}
       />
@@ -108,11 +115,11 @@ FormField.propTypes = {
 
 export {
   Select,
-  // MultiSelect,
+  MultiSelect,
   Textbox,
   Slider,
   Stars,
-  NumberField,
+  NumberField as Number,
   Checkbox,
   Difficulty,
   AutoComplete,

@@ -33,14 +33,29 @@ class Slider extends Component {
     viewType:     PropTypes.string
   };
 
-  state = {
-    value: this.props.input.value ? parseInt(this.props.input.value) : 1
+  static defaultProps = {
+    min: 0,
+    max: 10
   };
+
+  labelStyle = {
+    display: 'inline-block',
+    width: '50%'
+  };
+
+  constructor(props) {
+    super(props);
+    // TODO: add utility function
+    const initialValue = !isNaN(parseFloat(props.input.value)) && isFinite(props.input.value)
+      ? parseInt(props.input.value) : parseInt(props.min);
+    this.state = {
+      value: initialValue
+    };
+  }
 
   render() {
     const {
       input,
-      // viewType,
       label,
       valueDisplay,
       ...props
@@ -49,12 +64,11 @@ class Slider extends Component {
     return (
       <div>
         <FormLabel>
-          <div style={{ display: 'inline-block', width: '50%', textAlign: 'left' }}>
+          <div style={{ ...this.labelStyle, textAlign: 'left' }}>
             {label}
           </div>
-          <div style={{ display: 'inline-block', width: '50%', textAlign: 'right' }}>
-            { valueDisplay && valueDisplay(this.state.value) }
-            { !valueDisplay && this.state.value }
+          <div style={{ ...this.labelStyle, textAlign: 'right' }}>
+            { valueDisplay ? valueDisplay(this.state.value) : this.state.value }
           </div>
         </FormLabel>
         <SliderForm

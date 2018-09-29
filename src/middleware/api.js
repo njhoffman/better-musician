@@ -159,7 +159,7 @@ const apiHandler = (store, action, next) => {
 
     if (typeof failureType === 'function') {
       return next(
-        failureType(err.message)
+        failureType(err)
       );
     } else {
       return next(

@@ -1,5 +1,5 @@
 import BaseModel from './BaseModel';
-import { FETCH_SONGS, LOAD_ARTISTS } from 'store/api';
+import { SONGS_FETCH_START, LOAD_ARTISTS } from 'store/api';
 
 class Artist extends BaseModel {
 
@@ -12,7 +12,7 @@ class Artist extends BaseModel {
   static reducer(action, Artist/* , session */) {
     const { type } = action;
     switch (type) {
-      case FETCH_SONGS:
+      case SONGS_FETCH_START:
         // remove all songs when fetching
         Artist.all().delete();
         break;

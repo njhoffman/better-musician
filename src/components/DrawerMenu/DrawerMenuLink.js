@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { MenuItem } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
-import { uiHideDrawerMenu } from 'store/ui';
+import { uiHideDrawerMenu } from 'actions/ui';
 
 const styles = (theme) => ({
   navLink: {

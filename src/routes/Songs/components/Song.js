@@ -5,7 +5,7 @@ import withTheme from '@material-ui/core/styles/withTheme';
 import { TableRow, TableCell } from '@material-ui/core';
 import { Stars, Difficulty } from 'components/Field';
 import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
-import { uiShowModal, MODAL_ADD_SONG } from 'store/ui';
+import { uiShowAddSongModal } from 'actions/ui';
 
 const rowStyle = { };
 const colStyle = {
@@ -18,17 +18,18 @@ const colStyle = {
 export const Song = ({
   songValues,
   currentSongId,
-  showViewSongModal,
+  uiShowAddSongModal,
   maxDifficulty,
   theme,
-  ...custom }) => {
+  ...props
+}) => {
   return (
     <TableRow
       hover
       selected={currentSongId === songValues.id}
-      onDoubleClick={showViewSongModal}
+      onDoubleClick={() => uiShowAddSongModal('view')}
       style={rowStyle}
-      {...custom}>
+      {...props}>
       <TableCell style={colStyle}>
         { songValues.title }
       </TableCell>
@@ -53,12 +54,10 @@ Song.propTypes = {
     progress:  PropTypes.number,
     difficulty: PropTypes.number
   }).isRequired,
-  showViewSongModal: PropTypes.func,
+  uiShowAddSongModal: PropTypes.func.isRequired,
   maxDifficulty: PropTypes.number.isRequired,
-  theme: PropTypes.object
+  theme: PropTypes.object.isRequired
 };
-
-const showViewSongModal = () => uiShowModal(MODAL_ADD_SONG, 'view');
 
 const mapStateToProps = (state, action) => ({
   currentSongId:   state.SongsView.currentSong,
@@ -66,7 +65,7 @@ const mapStateToProps = (state, action) => ({
 });
 
 const mapActionCreators = ({
-  showViewSongModal
+  uiShowAddSongModal
 });
 
 export default connect(mapStateToProps, mapActionCreators)(withTheme()(Song));

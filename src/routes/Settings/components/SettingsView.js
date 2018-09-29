@@ -15,6 +15,10 @@ import css from './SettingsView.scss';
 const styles = (theme) => ({
   root: {
     textAlign: 'center'
+  },
+  form: {
+    margin: '15px',
+    padding: '15px'
   }
 });
 
@@ -55,7 +59,7 @@ export class SettingsView extends Component {
               <Tab data-route='/fields' value='fields' label='Fields' />
             </Tabs>
           </AppBar>
-          <form>
+          <form className={classes.form}>
             <Typography>Update Your Settings</Typography>
             <FormRow small={8} className={css.fieldHint}>
               <Column>
@@ -65,7 +69,7 @@ export class SettingsView extends Component {
             <FormRow small={5}>
               <FormField
                 name='visualTheme'
-                onTouchTap={() => this.showHint('visualTheme')}
+                onClick={() => this.showHint('visualTheme')}
                 options={{
                   'deepRed-dark': 'Deep Red (Dark)',
                   'steelBlue-dark' : 'Steel Blue (Dark)',
@@ -76,19 +80,19 @@ export class SettingsView extends Component {
                 label='Visual Theme' />
               <FormField
                 name='normalizePoints'
-                onTouchTap={() => this.showHint('normalizePoints')}
+                onClick={() => this.showHint('normalizePoints')}
                 type='checkbox'
                 label='Normalize Points' />
             </FormRow>
             <FormRow small={5}>
               <FormField
                 name='maxDifficulty'
-                onTouchTap={() => this.showHint('maxDifficulty')}
+                onClick={() => this.showHint('maxDifficulty')}
                 type='number'
                 label='Max Difficulty' />
               <FormField
                 name='maxProgress'
-                onTouchTap={() => this.showHint(this, 'maxProgress')}
+                onClick={() => this.showHint(this, 'maxProgress')}
                 type='number'
                 label='Max Progress' />
             </FormRow>

@@ -1,5 +1,5 @@
 import { orm } from 'store/orm';
-import { get } from 'lodash';
+import { get, sortBy } from 'lodash';
 import { createSelector as ormCreateSelector } from 'redux-orm';
 import { createSelector } from 'reselect';
 
@@ -7,9 +7,9 @@ export const ormSelector = state => state.orm;
 
 const lastNameSelector = ormCreateSelector(orm, session => {
   const artists = session.Artist ? session.Artist.all().toModelArray() : [];
-  return artists.map(artist => {
-    return { label: artist.lastName, value: artist.lastName} ;
-  });
+  return sortBy(artists.map(artist => ({
+    label: artist.lastName, value: artist.lastName}
+  )), 'label');
 });
 
 const artistMatchSelector = ormCreateSelector(orm, (session, artist) => {

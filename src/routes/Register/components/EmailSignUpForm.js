@@ -53,9 +53,9 @@ export class EmailSignUpForm extends React.Component {
 
   getEndpoint() {
     return (
-      this.props.endpoint || false
-      // this.props.auth.getIn(['configure', 'currentEndpointKey']) ||
-      // this.props.auth.getIn(['configure', 'defaultEndpointKey'])
+      this.props.endpoint ||
+      this.props.config.auth.currentEndpointKey ||
+      this.props.config.auth.defaultEndpointkey
     );
   }
 
@@ -69,11 +69,12 @@ export class EmailSignUpForm extends React.Component {
   }
 
   render() {
-    let disabled = (this.props.isSignedIn ||
-      this.props.auth.getIn(['emailSignUp', this.getEndpoint(), 'loading'])
-    );
-
-    const errors = this.props.auth.getIn(['emailSignUp', this.getEndpoint(), 'errors']);
+    // let disabled = (this.props.isSignedIn ||
+    //   this.props.auth.getIn(['emailSignUp', this.getEndpoint(), 'loading'])
+    // );
+    // const errors = this.props.auth.getIn(['emailSignUp', this.getEndpoint(), 'errors']);
+    const disabled = this.props.isSignedIn;
+    const { errors } = this.props.api.auth.register;
 
     return (
       <form className='redux-auth email-sign-up-form clearfix'
@@ -117,7 +118,7 @@ export class EmailSignUpForm extends React.Component {
               label='Sign Up'
               icon={<ContentSend />}
               className={css.signupButton}
-              loading={this.props.auth.getIn(['emailSignUp', this.getEndpoint(), 'loading'])}
+              loading={this.props.isLoading}
               disabled={disabled}
               onClick={() => this.handleSubmit()}
               {...this.props.inputProps.submit} />
@@ -138,10 +139,13 @@ export class EmailSignUpForm extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    auth:         state.auth,
     registerForm: state.form.register,
     emailSignUp:  emailSignUp,
-    isSignedIn:  state.user.isSignedIn
+    config:      state.config,
+    auth:        state.auth,
+    api:         state.api,
+    isSignedIn:  state.user.isSignedIn,
+    isLoading:   state.api.auth.register.loading
   };
 };
 

@@ -9,7 +9,7 @@ import {
 } from './actionTypes';
 
 import {
-  FETCH_SONGS,
+  SONGS_FETCH_START,
   LOAD_SONGS
 } from 'store/api';
 
@@ -25,7 +25,7 @@ class Song extends BaseModel {
     let max = 0;
     const songs = this.all().toModelArray();
     songs.forEach(song => {
-      max = song.difficulty > max ? song.difficulty : max;
+      max = parseInt(song.difficulty) > max ? parseInt(song.difficulty) : max;
     });
     if (max === 0) {
       max = 20;
@@ -56,7 +56,7 @@ class Song extends BaseModel {
       case ADD_SONG:
         Song.create(Object.assign({}, payload, { newSong: payload.song }));
         break;
-      case FETCH_SONGS:
+      case SONGS_FETCH_START:
         // remove all songs when fetching
         if (Song.all().count() > 0) {
           Song.all().delete();

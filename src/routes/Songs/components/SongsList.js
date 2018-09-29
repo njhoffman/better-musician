@@ -12,20 +12,25 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { setCurrentSong, setSort } from 'routes/Songs/modules/reducer';
 import { songs as songsSelector } from 'routes/Songs/modules/selectors';
+import { uiShowAddSongModal } from 'actions/ui';
 import SongsListHeader from './SongsListHeader';
-import { uiShowModal, MODAL_ADD_SONG } from 'store/ui';
 import Song from './Song';
 
-const styles = (theme) => { };
+const styles = (theme) => ({
+  root: {
+    tableLayout: 'fixed'
+  }
+});
 
 export const SongsList = ({
   songsCollection,
   showViewSongModal,
   setCurrentSong,
   setSort,
-  currentSongId
+  currentSongId,
+  classes
 }) => (
-  <Table padding='dense'>
+  <Table padding='dense' className={classes.root}>
     <TableHead>
       <TableRow>
         <SongsListHeader
@@ -64,15 +69,14 @@ SongsList.propTypes = {
       id:        PropTypes.string,
       title:     PropTypes.string
     }).isRequired),
-  setSort: PropTypes.func.isRequired,
-  setCurrentSong: PropTypes.func,
+  setSort:           PropTypes.func.isRequired,
+  setCurrentSong:    PropTypes.func,
   showViewSongModal: PropTypes.func,
-  currentSongId: PropTypes.string
+  currentSongId:     PropTypes.string,
+  classes:           PropTypes.object.isRequired
 };
 
-const showViewSongModal = () => {
-  return uiShowModal(MODAL_ADD_SONG, 'view');
-};
+const showViewSongModal = () => uiShowAddSongModal('view');
 
 const mapStateToProps = (state, action) => ({
   songsCollection: songsSelector(state),

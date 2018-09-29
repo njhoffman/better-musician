@@ -2,21 +2,34 @@ import * as A from 'constants/ui';
 import { injectReducer } from 'store/reducers';
 import { fetchSongs } from 'store/api';
 
-export const uiHideDrawerMenu = () => ({ type: A.UI_HIDE_DRAWER_MENU });
-export const uiToggleDrawerMenu = () => ({ type: A.UI_TOGGLE_DRAWER_MENU });
+export const uiHideDrawerMenu = () => ({
+  type: A.UI_HIDE_DRAWER_MENU
+});
+
+export const uiToggleDrawerMenu = () => ({
+  type: A.UI_TOGGLE_DRAWER_MENU
+});
+
+export const uiSnackbarExited = (moreMessage) => ({
+  type: A.UI_SNACKBAR_EXITED
+});
+
+export const uiHideSnackbar = () => ({
+  type: A.UI_SNACKBAR_HIDE
+});
 
 export const uiShowSnackbar = (message, variant) => ({
-  type: A.UI_SHOW_SNACKBAR,
+  type: A.UI_SNACKBAR_QUEUE,
   payload: message,
   meta: { variant }
 });
 
-export const uiHideSnackbar = () => ({ type: A.UI_HIDE_SNACKBAR });
-
-export const uiHideModal        = () => ({ type: A.UI_HIDE_MODAL });
-export const uiShowModal        = (type, viewType) => ({
+export const uiHideModal = () => ({ type: A.UI_HIDE_MODAL });
+export const uiShowAddSongModal = (type) => uiShowModal(A.MODAL_ADD_SONG, type);
+export const uiShowModal = (name, viewType) => ({
   type: A.UI_SHOW_MODAL,
-  meta: { type, props: { action: viewType } }
+  payload: name,
+  meta: { type: viewType }
 });
 
 export const initView = (store, history, route) => {

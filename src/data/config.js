@@ -24,7 +24,7 @@ export default {
   },
   dev: {
     showPanel: true,
-    showChart: false,
+    showChart: true,
     logger: {
       level: 'trace',
       expandObjects: true,

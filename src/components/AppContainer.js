@@ -51,8 +51,8 @@ const AppContainer = ({
   ...props
 }) => (
   <div className={appWrapper}>
+    <Snackbar disableWindowBlurListener={false} />
     <DrawerMenu />
-    <Snackbar />
     <Header />
     <div className={contentWrapper}>
       <Row horizontalAlignment='center'>

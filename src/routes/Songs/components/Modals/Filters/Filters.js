@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Button, Dialog } from '@material-ui/core';
-import { uiHideModal } from 'store/ui';
+import { uiHideModal } from 'actions/ui';
 
 export const FiltersModal = (props) => {
   const actions = [
