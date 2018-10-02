@@ -6,8 +6,8 @@ import { Column } from 'react-foundation';
 
 import SongsPagination from './SongsPagination';
 import SongsList from './SongsList';
-import FiltersModal from './Modals/Filters';
-import AddSongModal from './Modals/AddSong';
+import FiltersModal from './FiltersModal';
+import SongModal from './SongModal';
 
 const styles = (theme) => ({
   songsContainer: {
@@ -30,7 +30,7 @@ export const SongsView = ({ classes, ...props }) => (
   <Column small={12} medium={12} large={10}>
     <Paper elevation={5} className={classes.contentContainer}>
       <div className={classes.songsContainer}>
-        <AddSongModal />
+        <SongModal />
         <SongsList {...props} />
         <SongsPagination />
         <FiltersModal />

@@ -8,7 +8,7 @@ const RenderCustomMultiSelect = ({
   preview,
   label,
   style,
-  optionValues,
+  options,
   ...custom }) => {
   if (preview) {
     return (<div>POOP</div>);
@@ -36,7 +36,7 @@ RenderCustomMultiSelect.propTypes = {
   preview:      PropTypes.bool,
   style:        PropTypes.object,
   label:        PropTypes.string,
-  optionValues: PropTypes.object
+  options:      PropTypes.object
 };
 
 export default RenderCustomMultiSelect;

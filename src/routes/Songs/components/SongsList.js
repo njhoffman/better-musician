@@ -12,19 +12,17 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { setCurrentSong, setSort } from 'routes/Songs/modules/reducer';
 import { songs as songsSelector } from 'routes/Songs/modules/selectors';
-import { uiShowAddSongModal } from 'actions/ui';
 import SongsListHeader from './SongsListHeader';
 import Song from './Song';
 
 const styles = (theme) => ({
   root: {
-    tableLayout: 'fixed'
+    tableLayout: 'auto'
   }
 });
 
 export const SongsList = ({
   songsCollection,
-  showViewSongModal,
   setCurrentSong,
   setSort,
   currentSongId,
@@ -33,22 +31,10 @@ export const SongsList = ({
   <Table padding='dense' className={classes.root}>
     <TableHead>
       <TableRow>
-        <SongsListHeader
-          setSort={setSort}
-          name='title'
-          displayName='Title' />
-        <SongsListHeader
-          setSort={setSort}
-          name='artist'
-          displayName='Artist' />
-        <SongsListHeader
-          setSort={setSort}
-          name='progress'
-          displayName='Progress' />
-        <SongsListHeader
-          setSort={setSort}
-          name='difficulty'
-          displayName='Difficulty' />
+        <SongsListHeader name='title' displayName='Title' setSort={setSort} />
+        <SongsListHeader name='artist' displayName='Artist' centered setSort={setSort} />
+        <SongsListHeader name='progress' displayName='Progress' centered setSort={setSort} />
+        <SongsListHeader name='difficulty' displayName='Difficulty' centered setSort={setSort} />
       </TableRow>
     </TableHead>
     <TableBody>
@@ -71,12 +57,9 @@ SongsList.propTypes = {
     }).isRequired),
   setSort:           PropTypes.func.isRequired,
   setCurrentSong:    PropTypes.func,
-  showViewSongModal: PropTypes.func,
   currentSongId:     PropTypes.string,
   classes:           PropTypes.object.isRequired
 };
-
-const showViewSongModal = () => uiShowAddSongModal('view');
 
 const mapStateToProps = (state, action) => ({
   songsCollection: songsSelector(state),
@@ -84,7 +67,6 @@ const mapStateToProps = (state, action) => ({
 });
 
 const mapActionCreators = ({
-  showViewSongModal,
   setCurrentSong,
   setSort
 });

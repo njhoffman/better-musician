@@ -56,6 +56,7 @@ const mapStateToProps = (state) => ({
   isSignedIn: state.user.isSignedIn
 });
 
+// TODO: Use recompose to handle all the HOC's, decorators only work on classes
 const withConnect = connect(mapStateToProps, mapActionCreators);
 const decorators = (View) => withRouter(withConnect(withStyles(styles)(View)));
 export default decorators(LoginView);

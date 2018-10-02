@@ -15,11 +15,15 @@ export const uiShowSnackbar = (message, variant) => ({
 });
 
 export const uiHideModal = () => ({ type: UI.MODAL_HIDE });
-export const uiShowAddSongModal = (type) => uiShowModal(UI.MODAL_VAR_ADD_SONG, type);
+
+export const uiShowSongModal = (type) => (dispatch) => {
+  dispatch(uiShowModal(UI.SONG_MODAL, type));
+};
+
 export const uiShowModal = (name, viewType) => ({
   type: UI.MODAL_SHOW,
   payload: name,
-  meta: { type: viewType }
+  meta: { variant: viewType }
 });
 
 export const initView = (store, history, route) => {

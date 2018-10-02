@@ -35,9 +35,9 @@ const instrumentSelector = ormCreateSelector(orm, session => {
 
 export const artistLastNames = createSelector(ormSelector, state => state, lastNameSelector);
 
-export const artistsMatched = createSelector(
+export const artistMatched = createSelector(
   ormSelector,
-  state => get(state, 'form.addSongForm.values.artist', null),
+  state => get(state, 'form.songForm.values.artist', null),
   artistMatchSelector
 );
 

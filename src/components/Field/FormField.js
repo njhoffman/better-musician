@@ -1,5 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core';
+import { Field } from 'redux-form';
+import { Row, Column } from 'react-foundation';
+
 import Select from './Select';
 import MultiSelect from './MultiSelect';
 import Textbox from './Textbox';
@@ -12,10 +16,7 @@ import AutoComplete from './AutoComplete';
 import YouTubeLink from './YouTubeLink';
 import Chip from './Chip';
 
-import { withStyles } from '@material-ui/core';
-import { Field } from 'redux-form';
-import { Row, Column } from 'react-foundation';
-
+import { FIELD_VARIANT_VIEW, FIELD_VARIANT_EDIT, FIELD_VARIANT_ADD } from 'constants/ui';
 
 /* eslint-disable no-multi-spaces */
 // const fieldOptions = {
@@ -32,13 +33,13 @@ import { Row, Column } from 'react-foundation';
 /* eslint-enable no-multi-spaces */
 
 const renderType = (type) => (
-  type === 'select' || type === 'Select Menu' ? Select
-  : type === 'text' || type === 'Text Box' ? Textbox
+  type === 'select' || type === 'Select Menu' || type === 2 ? Select
+  : type === 'text' || type === 'Text Box' || type === 0 ? Textbox
   : type === 'number' ? NumberField
   : type === 'slider' ? Slider
-  : type === 'multiselect' || type === 'Multi-Select Menu' ? MultiSelect
-  : type === 'autocomplete' || type === 'AutoComplete Box' ? AutoComplete
-  : type === 'youtube' || type === 'YouTube Link' ? YouTubeLink
+  : type === 'multiselect' || type === 'Multi-Select Menu' || type === 3 ? MultiSelect
+  : type === 'autocomplete' || type === 'AutoComplete Box' || type === 1 ? AutoComplete
+  : type === 'youtube' || type === 'YouTube Link' || type === 7 ? YouTubeLink
   : Checkbox
 );
 
@@ -48,6 +49,7 @@ const styles = (theme) => ({
     marginBottom: theme.spacing.unit,
     flexWrap: 'wrap',
     justifyContent: 'center',
+    alignItems: 'flex-start',
     [theme.breakpoints.up('sm')]: {
       flexWrap: 'nowrap'
     }
@@ -56,9 +58,11 @@ const styles = (theme) => ({
     flex: '1 1 auto',
     width: '100%'
   },
-  fieldNoEdit: {
+  fieldView: {
     textAlign: 'center'
-  }
+  },
+  fieldAdd: {},
+  fieldEdit: {}
 });
 
 let FormRow = ({
@@ -81,8 +85,10 @@ FormRow.propTypes = {
 FormRow = withStyles(styles)(FormRow);
 
 const FormField = ({
-  type, small, medium, large, field, preview,
-  style, centerOnSmall, classes, noEdit, ...props
+  type, small, medium, large, preview,
+  style, centerOnSmall, classes, tabName,
+  variant = FIELD_VARIANT_EDIT,
+  ...props
 }) => (
   <Column
     className={classes.formColumn}
@@ -92,25 +98,29 @@ const FormField = ({
     centerOnSmall={centerOnSmall}>
     {!preview && (
       <Field
-        autoComplete='off'
-        disableUnderline={noEdit ? true : false }
-        className={noEdit ? classes.fieldNoEdit : ''}
-        component={renderType(type || field.typeName)}
-        {...props}
-      />
+        className={
+          variant === FIELD_VARIANT_VIEW ? classes.fieldView
+            : variant === FIELD_VARIANT_ADD ? classes.fieldAdd
+            : classes.fieldEdit
+        }
+        disabled={variant === FIELD_VARIANT_VIEW}
+        component={renderType(type)}
+        {...{ variant, ...props }} />
     )}
-    {preview && renderType(type || field.typeName)}
+    {preview && renderType(type)}
+    { false && console.log('formField', props, type) }
   </Column>
 );
 
 FormField.propTypes = {
   centerOnSmall: PropTypes.bool,
-  type:          PropTypes.string.isRequired,
+  type:          PropTypes.any, // TODO: combine type and field.typeName attributes
   style:         PropTypes.object,
   small:         PropTypes.number,
   medium:        PropTypes.number,
   large:         PropTypes.number,
-  classes:       PropTypes.object.isRequired
+  classes:       PropTypes.object.isRequired,
+  variant:       PropTypes.string
 };
 
 export {

@@ -64,7 +64,7 @@ export const FieldsView = (props) => {
       case 2:
       case 3:
       case 5:
-        return <FieldArray name='optionValues' component={FieldOptions} />;
+        return <FieldArray name='options' component={FieldOptions} />;
     }
   };
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Chip } from '@material-ui/core';
+import { Chip as MatChip } from '@material-ui/core';
 
-const RenderChip = ({
+const Chip = ({
   label,
   viewType,
   meta,
@@ -10,14 +10,14 @@ const RenderChip = ({
   input,
   ...props
 }) => (
-  <Chip
+  <MatChip
     label={label || input.value}
     style={{ ...style }}
     {...props}
   />
 );
 
-RenderChip.propTypes = {
+Chip.propTypes = {
   label:    PropTypes.string,
   viewType: PropTypes.string,
   meta:     PropTypes.object,
@@ -25,4 +25,4 @@ RenderChip.propTypes = {
   input:    PropTypes.object.isRequired
 };
 
-export default RenderChip;
+export default Chip;

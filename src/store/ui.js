@@ -39,12 +39,12 @@ const snackbarExit = (state) => ({
 
 const updateModal = (state, action) => ({
   ...state,
-  modal: { ...state.modal, name: action.payload, type: action.meta.type }
+  modal: { ...state.modal, name: action.payload, variant: action.meta.variant }
 });
 
 const showModal = (state, action) => ({
   ...state,
-  modal: { ...state.modal, name: action.payload, type: action.meta.type }
+  modal: { ...state.modal, name: action.payload, variant: action.meta.variant }
 });
 
 const hideModal = (state) => ({

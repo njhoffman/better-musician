@@ -92,11 +92,11 @@ renderSuggestion.propTypes = {
 };
 
 const AutoComplete = ({
+  fullWidth,
   classes,
   label,
   options,
   input,
-  disableUnderline,
   meta,
   ...props
 }) => (
@@ -114,12 +114,12 @@ const AutoComplete = ({
     }) => (
       <div className={classes.container}>
         {renderInput({
-          fullWidth: true,
+          fullWidth,
           classes,
           meta,
           label,
           name: input.name,
-          InputLabelProps: { disableUnderline },
+          InputLabelProps: { },
           InputProps: getInputProps({
             ...input,
             ...props

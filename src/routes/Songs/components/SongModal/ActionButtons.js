@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { Button, Divider, withStyles } from '@material-ui/core';
 import { MdDelete as DeleteIcon } from 'react-icons/md';
 
-import { uiShowModal, uiHideModal } from 'actions/ui';
-import { MODAL_VAR_ADD_SONG } from 'constants/ui';
+import { uiShowSongModal, uiHideModal } from 'actions/ui';
+import { MODAL_VARIANT_EDIT, MODAL_VARIANT_VIEW, MODAL_VARIANT_ADD } from 'constants/ui';
 import { addSong } from 'actions/api';
 import { Row, Column } from 'react-foundation';
 
@@ -27,20 +27,21 @@ const styles = (theme) => ({
 
 export const ActionButtons = ({
   classes,
-  modalView,
   addSong,
   editSong,
+  variant,
   hideModal
 }) => {
-  const buttonLabel = modalView.isView()
-    ? 'Edit' : modalView.isEdit()
+
+  const buttonLabel = variant === MODAL_VARIANT_VIEW
+    ? 'Edit' : MODAL_VARIANT_EDIT
     ? 'Save' : 'Add';
 
   return (
     <Row className={classes.root}>
       <Divider />
       <Column className={classes.left}>
-        {!modalView.isAdd() &&
+        {variant !== MODAL_VARIANT_ADD &&
           <Button
             variant='flat'
             className={classes.deleteButton}
@@ -60,7 +61,7 @@ export const ActionButtons = ({
         <Button
           variant='raised'
           color='primary'
-          onClick={modalView.isView() ? editSong : addSong}>
+          onClick={variant === MODAL_VARIANT_VIEW ? editSong : addSong}>
           {buttonLabel}
         </Button>
       </Column>
@@ -72,13 +73,13 @@ ActionButtons.propTypes = {
   classes   : PropTypes.object.isRequired,
   addSong   : PropTypes.func.isRequired,
   editSong  : PropTypes.func.isRequired,
-  modalView : PropTypes.object.isRequired,
+  variant   : PropTypes.string.isRequired,
   hideModal : PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = {
   addSong,
-  editSong : () => uiShowModal(MODAL_VAR_ADD_SONG, 'edit'),
+  editSong : () => uiShowSongModal(MODAL_VARIANT_EDIT),
   hideModal: uiHideModal
 };
 

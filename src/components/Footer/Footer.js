@@ -75,10 +75,10 @@ const SongFooter = ({ classes, maxDifficulty, artistPicture, song }) => (
       <Column small={3} className={css.leftColumn}>
         <img
           className={css.instrumentPicture}
-          src={`instruments/${song.instrument.picture}`} />
+          src={`/images/instrument/${song.instrument.picture}`} />
         <img
           className={css.artistPicture}
-          src={`artists/${artistPicture}`} />
+          src={`/images/artist/${artistPicture}`} />
       </Column>
       <Column small={7} className={css.middleColumn}>
         <Row className={css.middleTop}>
@@ -125,7 +125,7 @@ SongFooter.propTypes = {
 const Footer = ({ song, isSignedIn, ...props }) => {
   if (song && song.artist) {
     const artistPicture = song.artist && song.artist.pictures && song.artist.pictures[0]
-      ? song.artist.pictures[0] : 'unknown_artist.png';
+      ? song.artist.pictures[0] : '_unknown.png';
     return SongFooter({ song, artistPicture, ...props });
   } else if (isSignedIn) {
     return SongStatsFooter({ ...props });

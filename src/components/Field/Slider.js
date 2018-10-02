@@ -30,12 +30,16 @@ class Slider extends Component {
     input:        PropTypes.object,
     label:        PropTypes.string,
     valueDisplay: PropTypes.func,
-    viewType:     PropTypes.string
+    viewType:     PropTypes.string,
+    min:          PropTypes.number,
+    max:          PropTypes.number,
+    step:         PropTypes.number
   };
 
   static defaultProps = {
     min: 0,
-    max: 10
+    max: 10,
+    step: 1
   };
 
   labelStyle = {
@@ -45,22 +49,15 @@ class Slider extends Component {
 
   constructor(props) {
     super(props);
-    // TODO: add utility function
-    const initialValue = !isNaN(parseFloat(props.input.value)) && isFinite(props.input.value)
-      ? parseInt(props.input.value) : parseInt(props.min);
     this.state = {
-      value: initialValue
+      value: props.input.value > props.min ? props.input.value : props.min
     };
   }
 
   render() {
-    const {
-      input,
-      label,
-      valueDisplay,
-      ...props
-    } = this.props;
-
+    const { label, valueDisplay, input, min, max, step } = this.props;
+    // TODO: Find a better way
+    input.value = this.state.value;
     return (
       <div>
         <FormLabel>
@@ -73,10 +70,9 @@ class Slider extends Component {
         </FormLabel>
         <SliderForm
           onChange={(value) => this.setState({ value })}
-          input={input}
-          value={parseInt(this.state.value)}
+          value={this.state.value}
           style={{ padding: '8px 0px' }}
-          {...props}
+          { ...{ input, min, max, step } }
         />
       </div>
     );

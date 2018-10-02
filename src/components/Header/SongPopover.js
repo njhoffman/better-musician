@@ -14,8 +14,8 @@ import {
 } from 'react-icons/md';
 /* eslint-enable no-multi-spaces */
 
-import { uiShowModal } from 'actions/ui';
-import { MODAL_VAR_ADD_SONG } from 'constants/ui';
+import { MODAL_VARIANT_EDIT, MODAL_VARIANT_ADD } from 'constants/ui';
+import { uiShowSongModal } from 'actions/ui';
 
 const styles = {
   headerLink: {
@@ -73,7 +73,7 @@ SongButtonOther.propTypes = {
 };
 
 const SongButtonAdd = ({ classes, ...props }) => (
-  <a onClick={() => showAddDialog({ ...props })}
+  <a onClick={(e) => showAddSongDialog(e, { ...props })}
     className={classes.headerLink}>
     <MenuItem className={classes.iconWrapper}>
       <ListItemIcon>
@@ -96,7 +96,7 @@ const SongButtonView = ({
   ...props
 }) => (
   <a className={classes.headerLink}
-    onClick={() => showEditDialog({ ...props, closeAll })} >
+    onClick={(e) => showEditSongDialog(e, { ...props, closeAll })} >
     <MenuItem
       className={classes.iconWrapper}
       selected={Boolean(isOpen)}
@@ -127,7 +127,7 @@ const SongButtonView = ({
       <MenuItem
         className={classes.iconWrapper}
         style={{ width }}
-        onClick={() => showAddDialog({ ...props, closeAll})}>
+        onClick={(e) => showAddSongDialog(e, { ...props, closeAll})}>
         <ListItemIcon>
           <AddIcon className={classes.icon} />
         </ListItemIcon>
@@ -161,6 +161,7 @@ SongButtonView.propTypes = {
 };
 
 export const SongPopover = ({ currentView, currentSong, ...props }) => {
+  // TODO: make this a constant
   return (currentView === 'Songs'
     ? (currentSong ? SongButtonView(props) : SongButtonAdd(props))
     : SongButtonOther(props)
@@ -172,20 +173,22 @@ SongPopover.propTypes = {
   currentSong: PropTypes.string
 };
 
-const showAddSongModal = (actionType) => uiShowModal(MODAL_VAR_ADD_SONG, actionType);
+const showSongModal = (actionType) => uiShowSongModal(actionType);
 
-const showEditDialog = ({ closeAll, showAddSongModal }) => {
+const showEditSongDialog = (e, { closeAll, showSongModal }) => {
+  e.stopPropagation();
   closeAll();
-  showAddSongModal('edit');
+  showSongModal(MODAL_VARIANT_EDIT);
 };
 
-const showAddDialog = ({ closeAll, showAddSongModal }) => {
+const showAddSongDialog = (e, { closeAll, showSongModal }) => {
+  e.stopPropagation();
   closeAll();
-  showAddSongModal('add');
+  showSongModal(MODAL_VARIANT_ADD);
 };
 
 const mapActionCreators = {
-  showAddSongModal
+  showSongModal
 };
 
 const mapStateToProps = (state) => ({

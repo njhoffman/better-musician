@@ -17,6 +17,7 @@ import {
 } from '@material-ui/core';
 
 import Button from 'components/Button';
+import { FIELD_VARIANT_VIEW } from 'constants/ui';
 import FormField, { FormRow }  from 'components/Field';
 
 const styles = (theme) => ({
@@ -34,6 +35,10 @@ const styles = (theme) => ({
     height: '100px'
   },
   form: {
+    margin: '15px',
+    padding: '15px'
+  },
+  fields: {
     margin: '15px',
     padding: '15px'
   }
@@ -80,30 +85,19 @@ export const ProfileView = (props) => {
             { ProfileImage(props) }
           </FormRow>
           <FormRow small={6}>
-            <FormField
-              name='email'
-              disabled
-              type='text'
-              label='User Name' />
+            <FormField name='email' type='text' disabled variant={FIELD_VARIANT_VIEW} />
           </FormRow>
-          <FormRow small={6}>
-            <FormField
-              name='firstName'
-              type='text'
-              label='First Name' />
-          </FormRow>
-          <FormRow small={6}>
-            <FormField
-              name='lastName'
-              type='text'
-              label='Last Name' />
-          </FormRow>
-          <FormRow small={6}>
-            <FormField
-              name='notificationsEmail'
-              type='text'
-              label='Notifications Email' />
-          </FormRow>
+          <div className={props.classes.fields}>
+            <FormRow small={6}>
+              <FormField name='firstName' type='text' label='First Name' fullWidth />
+            </FormRow>
+            <FormRow small={6}>
+              <FormField name='lastName' type='text' label='Last Name' fullWidth />
+            </FormRow>
+            <FormRow small={6}>
+              <FormField name='notificationsEmail' type='text' label='Notifications Email' fullWidth />
+            </FormRow>
+          </div>
           <FormRow small={6}>
             <Column>
               <Button
@@ -114,7 +108,8 @@ export const ProfileView = (props) => {
                 icon={<SaveIcon style={{ marginTop: '-10px' }} />}
                 className='update-profile-submit'
                 primary
-                disabled={disabled} />
+                disabled={disabled}
+                fullWidth />
             </Column>
           </FormRow>
         </form>

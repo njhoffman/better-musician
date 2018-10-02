@@ -39,6 +39,8 @@ startApp();
 const theme = themes['steelBlue-dark'];
 
 const render = (Component) => {
+  // TODO: make this a config option and handle it better
+  const hideDev = window.innerWidth < 600;
   ReactDOM.render(
     <Provider store={store}>
       <ErrorBoundary onError={onError}>
@@ -49,7 +51,7 @@ const render = (Component) => {
             </ConnectedRouter>
           </MuiThemeProvider>
         </ErrorBoundary>
-        <DevTools />
+        {!hideDev && <DevTools />}
       </ErrorBoundary>
     </Provider>,
     MOUNT_NODE

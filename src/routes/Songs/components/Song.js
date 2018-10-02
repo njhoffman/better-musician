@@ -2,44 +2,50 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import withTheme from '@material-ui/core/styles/withTheme';
-import { TableRow, TableCell } from '@material-ui/core';
+import { TableRow, TableCell, withStyles } from '@material-ui/core';
 import { Stars, Difficulty } from 'components/Field';
 import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
-import { uiShowAddSongModal } from 'actions/ui';
+import { MODAL_VARIANT_VIEW } from 'constants/ui';
+import { uiShowSongModal } from 'actions/ui';
 
 const rowStyle = { };
-const colStyle = {
-  // textAlign: 'center',
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis',
-  overflow: 'hidden'
-};
+const styles = (theme) => ({
+  column: {
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden'
+  },
+  centered: {
+    textAlign: 'center'
+  }
+});
 
 export const Song = ({
+  classes,
   songValues,
   currentSongId,
-  uiShowAddSongModal,
+  uiShowSongModal,
   maxDifficulty,
-  theme,
+  theme: { instrumental: { starColor }},
   ...props
 }) => {
   return (
     <TableRow
       hover
       selected={currentSongId === songValues.id}
-      onDoubleClick={() => uiShowAddSongModal('view')}
+      onDoubleClick={() => uiShowSongModal(MODAL_VARIANT_VIEW)}
       style={rowStyle}
       {...props}>
-      <TableCell style={colStyle}>
+      <TableCell className={classes.column}>
         { songValues.title }
       </TableCell>
-      <TableCell style={colStyle}>
-        {songValues.artist.lastName}
+      <TableCell className={`${classes.column} ${classes.centered}`}>
+        {songValues.artist.fullName()}
       </TableCell>
-      <TableCell style={colStyle}>
-        <Stars number={songValues.progress} starColor={theme.instrumental.starColor} />
+      <TableCell className={`${classes.column} ${classes.centered}`}>
+        <Stars number={songValues.progress} starColor={starColor} />
       </TableCell>
-      <TableCell style={colStyle}>
+      <TableCell className={`${classes.column} ${classes.centered}`}>
         <Difficulty difficulty={songValues.difficulty} maxDifficulty={maxDifficulty} />
       </TableCell>
     </TableRow>
@@ -47,6 +53,7 @@ export const Song = ({
 };
 
 Song.propTypes = {
+  classes: PropTypes.object.isRequired,
   currentSongId: PropTypes.string,
   songValues: PropTypes.shape({
     completed: PropTypes.bool,
@@ -54,7 +61,7 @@ Song.propTypes = {
     progress:  PropTypes.number,
     difficulty: PropTypes.number
   }).isRequired,
-  uiShowAddSongModal: PropTypes.func.isRequired,
+  uiShowSongModal: PropTypes.func.isRequired,
   maxDifficulty: PropTypes.number.isRequired,
   theme: PropTypes.object.isRequired
 };
@@ -65,7 +72,7 @@ const mapStateToProps = (state, action) => ({
 });
 
 const mapActionCreators = ({
-  uiShowAddSongModal
+  uiShowSongModal
 });
 
-export default connect(mapStateToProps, mapActionCreators)(withTheme()(Song));
+export default connect(mapStateToProps, mapActionCreators)(withTheme()(withStyles(styles)(Song)));

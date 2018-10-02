@@ -12,7 +12,6 @@ const RenderCustomSelect = ({
   label,
   labelStyle,
   style,
-  optionValues,
   ...custom
 }) => {
   if (preview) {
@@ -44,8 +43,7 @@ RenderCustomSelect.propTypes = {
   inputStyle:   PropTypes.object,
   labelStyle:   PropTypes.object,
   style:        PropTypes.object,
-  label:        PropTypes.string,
-  optionValues: PropTypes.object.isRequired
+  label:        PropTypes.string
 };
 
 // export default RenderCustomSelect;

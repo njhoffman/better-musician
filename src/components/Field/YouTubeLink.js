@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'lodash';
 import { Row, Column } from 'react-foundation';
@@ -29,12 +29,11 @@ const TextboxForm = createComponent(TextField, ({
 
 class YouTubeLink extends Component {
   static propTypes = {
-    disabled      : PropTypes.bool,
     preview       : PropTypes.bool,
     initialValues : PropTypes.object,
-    fields        : PropTypes.array.isRequired,
     style         : PropTypes.object,
-    id            : PropTypes.string
+    id            : PropTypes.string,
+    variant       : PropTypes.string.isRequired
   }
 
   constructor(props) {
@@ -53,26 +52,27 @@ class YouTubeLink extends Component {
   }
 
   render() {
-    if (this.props.preview) {
+    const {
+      preview, id, meta,
+      field, input, label
+    } = this.props;
+
+    if (preview) {
       return (
         <Field
           style={{ width: '200px', marginTop: '0px' }}
-          name={this.props.id}
+          name={id}
           component={TextField}
-          label={this.props.field.label} />
+          label={field.label} />
       );
     } else {
       return (
-        <Column>
+        <Fragment>
           <Row>
             <Column centerOnSmall>
               <TextboxForm
-                name={this.props.input.name}
-                onChange={(e, val) => this.parseUrl(val)}
-                disabled={this.props.disabled}
-                label={this.props.fields[0].label}
-                {...this.props}
-              />
+                name={input.name} onChange={(e, val) => this.parseUrl(val)}
+                {...{ input, meta, label }} />
             </Column>
           </Row>
           <Row>
@@ -86,7 +86,7 @@ class YouTubeLink extends Component {
                 src={'http://www.youtube.com/embed/' + this.state.videoId} />
             </Column>
           </Row>
-        </Column>
+        </Fragment>
       );
     }
   }

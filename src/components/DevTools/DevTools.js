@@ -20,21 +20,9 @@ const DevTools = createDevTools(
     toggleVisibilityKey='ctrl-shift-h'
     changePositionKey='ctrl-q'>
     <MultipleMonitors className='multi-monitor'>
-      <Launcher
-        theme={twilightMod}
-        devConfig={config.dev}
-      />
-      <SliderMonitor
-        theme={twilightMod}
-        preserveScrollTop={false}
-        inline
-      />
-      <Inspector
-        theme='twilight'
-        expandDiffs
-        invertTheme={false}
-        supportImmutable
-      />
+      <Launcher theme={twilightMod} devConfig={config.dev} />
+      <SliderMonitor theme={twilightMod} preserveScrollTop={false} inline />
+      <Inspector theme='twilight' expandDiffs invertTheme={false} supportImmutable />
     </MultipleMonitors>
   </DockMonitor>
 );

@@ -49,10 +49,10 @@ export const fieldsComplete = (data) => (dispatch, getState) => {
   dispatch({ type: FIELDS_ADD_COMPLETE, payload: data.fields });
 };
 
-export const editField = ({ type, label, tabName, optionValues, id }) => (dispatch) => {
+export const editField = ({ type, label, tabName, options, id }) => (dispatch) => {
   return dispatch({
     type: FIELDS_EDIT,
-    payload: { type: type.toString(), label, tabName, optionValues, id }
+    payload: { type: type.toString(), label, tabName, options, id }
   });
 };
 

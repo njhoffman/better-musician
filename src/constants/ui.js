@@ -1,19 +1,26 @@
-export const SNACKBAR_SHOW          = 'SNACKBAR_SHOW';
-export const SNACKBAR_HIDE          = 'SNACKBAR_HIDE';
-export const SNACKBAR_EXIT          = 'SNACKBAR_EXIT';
+export const SNACKBAR_SHOW      = 'SNACKBAR_SHOW';
+export const SNACKBAR_HIDE      = 'SNACKBAR_HIDE';
+export const SNACKBAR_EXIT      = 'SNACKBAR_EXIT';
 
-export const DRAWER_MENU_HIDE       = 'DRAWER_MENU_HIDE';
-export const DRAWER_MENU_SHOW       = 'DRAWER_MENU_SHOW';
-export const DRAWER_MENU_TOGGLE     = 'DRAWER_MENU_TOGGLE';
-export const MODAL_SHOW             = 'MODAL_SHOW';
-export const MODAL_HIDE             = 'MODAL_HIDE';
-export const MODAL_UPDATE           = 'MODAL_UPDATE';
+export const DRAWER_MENU_HIDE   = 'DRAWER_MENU_HIDE';
+export const DRAWER_MENU_SHOW   = 'DRAWER_MENU_SHOW';
+export const DRAWER_MENU_TOGGLE = 'DRAWER_MENU_TOGGLE';
 
-export const MODAL_VAR_ADD_SONG     = 'MODAL_VAR_ADD_SONG';
-export const MODAL_VAR_FILTER_SONGS = 'MODAL_VAR_FILTER_SONGS';
+export const MODAL_SHOW         = 'MODAL_SHOW';
+export const MODAL_HIDE         = 'MODAL_HIDE';
+export const MODAL_UPDATE       = 'MODAL_UPDATE';
+export const MODAL_VARIANT_VIEW = 'MODAL_VARIANT_VIEW';
+export const MODAL_VARIANT_ADD  = 'MODAL_VARIANT_ADD';
+export const MODAL_VARIANT_EDIT = 'MODAL_VARIANT_EDIT';
+export const SONG_MODAL         = 'SONG_MODAL';
+export const FILTERS_MODAL      = 'FILTERS_MODAL';
 
-export const INIT_VIEW_START        = 'INIT_VIEW_START';
-export const INIT_VIEW_COMPLETE     = 'INIT_VIEW_COMPLETE';
+export const FIELD_VARIANT_VIEW = 'FIELD_VARIANT_VIEW';
+export const FIELD_VARIANT_ADD  = 'FIELD_VARIANT_ADD';
+export const FIELD_VARIANT_EDT  = 'FIELD_VARIANT_EDIT';
+
+export const INIT_VIEW_START    = 'INIT_VIEW_START';
+export const INIT_VIEW_COMPLETE = 'INIT_VIEW_COMPLETE';
 
 // auth ui
 export const HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL          = 'HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL';

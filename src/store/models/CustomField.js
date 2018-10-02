@@ -60,7 +60,7 @@ CustomField.shallowFields = {
   type:         'string',
   tabName:      'string',
   defaultValue: 'number',
-  optionValues: 'array'
+  options:      'array'
 };
 
 export default CustomField;

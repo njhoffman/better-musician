@@ -6,14 +6,12 @@ import { Row, Column } from 'react-foundation';
 import PropTypes from 'prop-types';
 
 import Button from 'components/Button';
+import { artistLastNames, artistMatched, instruments, genres } from 'selectors/songs';
+import { maxDifficulty } from 'selectors/users';
 import {
-  artistLastNames as artistLastNamesSelector,
-  artistsMatched as artistsMatchedSelector,
-  instruments as instrumentsSelector,
-  genres as genresSelector
-} from 'selectors/songs';
-
-import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
+  FIELD_VARIANT_EDIT, FIELD_VARIANT_ADD, FIELD_VARIANT_VIEW,
+  MODAL_VARIANT_EDIT, MODAL_VARIANT_ADD, MODAL_VARIANT_VIEW
+} from 'constants/ui';
 // import css from './AddSong.scss';
 
 const styles = (theme) => ({
@@ -32,18 +30,25 @@ const styles = (theme) => ({
   }
 });
 
-export const AddSongMainTab = ({
+export const SongMainTab = ({
   activeField,
   lastActiveField,
   matchedArtist,
-  artistLastNames,
-  instruments,
-  genres,
+  lastNames,
+  instrumentOptions,
+  genreOptions,
   maxDifficulty,
-  noEdit,
   classes,
+  variant: modalVariant,
   ...props
 }) => {
+  const fieldProps = {
+    ...props,
+    fullWidth: true,
+    variant:  (modalVariant === MODAL_VARIANT_EDIT ? FIELD_VARIANT_EDIT
+      : modalVariant === MODAL_VARIANT_ADD ? FIELD_VARIANT_ADD : FIELD_VARIANT_VIEW)
+  };
+
   const renderImage = () => {
     // TODO: Find a better way through config!
     const fieldRE = /^artist|^instrument|^genre/;
@@ -59,7 +64,7 @@ export const AddSongMainTab = ({
       <Column>
         <img className={classes.image} src={`/images/${imageField}/${imageFile}`} />
         <Typography>{imageLabel}</Typography>
-        { !noEdit && <Button variant='raised' secondary label={buttonLabel} /> }
+        { modalVariant !== MODAL_VARIANT_EDIT && <Button variant='raised' secondary label={buttonLabel} /> }
       </Column>
     );
   };
@@ -71,11 +76,15 @@ export const AddSongMainTab = ({
       <FormField
         name='title'
         type='text'
-        label='Song Title' />
+        label='Song Title'
+        {...fieldProps}
+      />
       <FormField
         name='artist.fullName'
         type='text'
-        label='Song Artist' />
+        label='Song Artist'
+        {...fieldProps}
+      />
     </FormRow>
   );
 
@@ -88,18 +97,24 @@ export const AddSongMainTab = ({
           small={12}
           medium={8}
           centerOnSmall
-          label='Song Title' />
+          label='Song Title'
+          {...fieldProps}
+        />
       </FormRow>
       <FormRow>
         <FormField
           name='artist.lastName'
           type='autocomplete'
-          options={artistLastNames}
-          label='Last Name / Band' />
+          label='Last Name / Band'
+          options={lastNames}
+          {...fieldProps}
+        />
         <FormField
           name='artist.firstName'
           type='text'
-          label='First Name' />
+          label='First Name'
+          {...fieldProps}
+        />
       </FormRow>
     </Fragment>
   );
@@ -113,19 +128,23 @@ export const AddSongMainTab = ({
           </Row>
         </Column>
       </FormRow>
-      {noEdit && renderViewFields()}
-      {!noEdit && renderEditFields()}
+      {modalVariant === MODAL_VARIANT_VIEW && renderViewFields()}
+      {modalVariant !== MODAL_VARIANT_VIEW && renderEditFields()}
       <FormRow>
         <FormField
           name='genre.name'
           type='autocomplete'
           label='Song Genre'
-          options={genres} />
+          options={genreOptions}
+          {...fieldProps}
+        />
         <FormField
           name='instrument.name'
           type='autocomplete'
           label='Instrument'
-          options={instruments} />
+          options={instrumentOptions}
+          {...fieldProps}
+        />
       </FormRow>
       <FormRow>
         <FormField
@@ -134,7 +153,9 @@ export const AddSongMainTab = ({
           label='Difficulty'
           min={1}
           max={maxDifficulty}
-          step={1} />
+          step={1}
+          {...fieldProps}
+        />
         <FormField
           name='progress'
           type='slider'
@@ -142,30 +163,32 @@ export const AddSongMainTab = ({
           min={0}
           max={4}
           step={1}
-          valueDisplay={renderStars} />
+          valueDisplay={renderStars}
+          {...fieldProps}
+        />
       </FormRow>
     </Fragment>
   );
 };
 
-AddSongMainTab.propTypes = {
-  lastActiveField : PropTypes.string.isRequired,
-  activeField     : PropTypes.string.isRequired,
-  noEdit          : PropTypes.bool.isRequired,
-  matchedArtist   : PropTypes.object,
-  artistLastNames : PropTypes.any.isRequired,
-  genres          : PropTypes.any.isRequired,
-  instruments     : PropTypes.any.isRequired,
-  maxDifficulty   : PropTypes.number,
-  classes         : PropTypes.object.isRequired
+SongMainTab.propTypes = {
+  lastActiveField:   PropTypes.string.isRequired,
+  activeField:       PropTypes.string.isRequired,
+  matchedArtist:     PropTypes.object,
+  lastNames:         PropTypes.any.isRequired,
+  genreOptions:      PropTypes.any.isRequired,
+  instrumentOptions: PropTypes.any.isRequired,
+  maxDifficulty:     PropTypes.number,
+  classes:           PropTypes.object.isRequired,
+  variant:           PropTypes.string.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  matchedArtist    : artistsMatchedSelector(state),
-  maxDifficulty    : maxDifficultySelector(state),
-  genres           : genresSelector(state),
-  instruments      : instrumentsSelector(state),
-  artistLastNames  : artistLastNamesSelector(state)
+  matchedArtist:     artistMatched(state),
+  lastNames:         artistLastNames(state),
+  maxDifficulty:     maxDifficulty(state),
+  genreOptions:      genres(state),
+  instrumentOptions: instruments(state)
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(AddSongMainTab));
+export default connect(mapStateToProps)(withStyles(styles)(SongMainTab));

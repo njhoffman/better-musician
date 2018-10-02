@@ -84,7 +84,7 @@ export const userUpdateError = (response) => (dispatch) => {
 };
 
 export const addSong = () => (dispatch, getState) => {
-  const fieldValues = getState().form.addSongForm.values;
+  const fieldValues = getState().form.songForm.values;
 
   return dispatch({
     [CALL_API]: {

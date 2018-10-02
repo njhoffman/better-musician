@@ -6,13 +6,12 @@ import { reduxForm } from 'redux-form';
 import {
   AppBar, Dialog, DialogContent,
   DialogActions, Tabs, Tab,
-  Typography, withMobileDialog
+  Typography, withMobileDialog, withStyles
 } from '@material-ui/core';
 import { Row, Column } from 'react-foundation';
-import { withStyles } from '@material-ui/core';
 
 import { uiHideModal } from 'actions/ui';
-import { MODAL_VAR_ADD_SONG } from 'constants/ui';
+import { SONG_MODAL, MODAL_VARIANT_EDIT, MODAL_VARIANT_ADD } from 'constants/ui';
 import {
   currentSong as currentSongSelector,
   savedTabs as savedTabsSelector
@@ -21,7 +20,7 @@ import {
 import MainTab from './MainTab';
 import ActionButtons from './ActionButtons';
 //
-import FormField from 'components/Field';
+import FormField, { FormRow } from 'components/Field';
 // import css from './AddSong.scss';
 
 let lastActiveField = '';
@@ -97,11 +96,11 @@ TabContainer.propTypes = {
 };
 
 // TODO: investigate stack trace problem when forgetting to import 'Component'
-export class AddSongModal extends Component {
+export class SongModal extends Component {
   static propTypes = {
     uiHideModal:   PropTypes.func.isRequired,
     isOpen:        PropTypes.bool.isRequired,
-    modal:         PropTypes.object.isRequired,
+    variant:       PropTypes.string.isRequired,
     savedTabs:     PropTypes.array.isRequired,
     activeField:   PropTypes.string,
     classes:       PropTypes.object.isRequired,
@@ -117,20 +116,11 @@ export class AddSongModal extends Component {
   }
 
   render() {
-    const { modal, classes, activeField } = this.props;
-    // const className = classes.addSongModal + ' ' + classes[this.props.modal.action];
-    const modalView = {
-      isView  : () => modal.type === 'view',
-      isEdit  : () => modal.type === 'edit',
-      isAdd   : () => modal.type === 'add'
-    };
+    const { classes, activeField, variant, errors } = this.props;
 
     lastActiveField = activeField || lastActiveField;
 
-    // const labelStyle = modalView.isView() ? { textAlign: 'center', width: '100%' } : { };
-    // const textStyle = modalView.isView() ? { cursor: 'default' } : {};
-
-    const tabProps = { lastActiveField, activeField, noEdit: modalView.isView(), disabled: modalView.isView()};
+    const tabProps = { lastActiveField, activeField, variant };
     const { value } = this.state;
 
     return (
@@ -161,26 +151,26 @@ export class AddSongModal extends Component {
                 <TabContainer key={tabIdx}>
                   <Row>
                     <Column>
-                      {modal.errors && [].concat(modal.errors).map((error, i) =>
+                      {errors && [].concat(errors).map((error, i) =>
                         <p key={i} className='error'>{error}</p>
                       )}
                     </Column>
                   </Row>
                   {chunk(tab.fields, 2).map((fields, fieldIdx) => (
-                    <Row key={fieldIdx}>
+                    <FormRow key={fieldIdx}>
                       {fields.map(field => (
                         <FormField
-                          noEdit={modalView.isView()}
                           key={field.idx}
-                          field={field}
-                          fields={fields}
                           name={field.name}
+                          small={fields.length === 1 ? 12 : 6}
+                          variant={variant}
+                          fieldGroup={fields}
                           initialValues={this.props.initialValues}
                           centerOnSmall
-                          small={fields.length === 1 ? 12 : 6}
+                          { ...field }
                         />
                       ))}
-                    </Row>
+                    </FormRow>
                   ))}
                 </TabContainer>
               )))}
@@ -188,7 +178,7 @@ export class AddSongModal extends Component {
           </form>
         </DialogContent>
         <DialogActions>
-          <ActionButtons noEdit={modalView.isView()} modalView={modalView} />
+          <ActionButtons variant={variant} />
         </DialogActions>
       </Dialog>
     );
@@ -211,11 +201,12 @@ export class AddSongModal extends Component {
 //   return errors;
 // };
 
-const initialValues = (song, modalType) => {
-  if (song && modalType !== 'add') {
+const initialValues = (song, addModalVariant) => {
+  if (song && !addModalVariant) {
     // return object for nested models, redux form tries to reset and breaks if not a plain object
+    // TODO: find a better way
     const ivSong = Object.assign({}, song);
-    ivSong.artist = song.artist.ref;
+    ivSong.artist = Object.assign({}, song.artist.ref, { fullName: song.artist.fullName() });
     ivSong.genre = song.genre.ref;
     ivSong.instrument = song.instrument.ref;
     return ivSong;
@@ -225,18 +216,18 @@ const initialValues = (song, modalType) => {
 const mapDispatchToProps = { uiHideModal };
 
 const mapStateToProps = (state) => ({
-  initialValues: initialValues(currentSongSelector(state), state.ui.modal.type),
-  activeField:   state.form.addSongForm ? state.form.addSongForm.active : '',
-  formValues:    state.form.addSongForm ? state.form.addSongForm.values : null,
+  initialValues: initialValues(currentSongSelector(state), state.ui.modal.variant === MODAL_VARIANT_ADD),
+  activeField:   state.form.songForm && state.form.songForm.active ? state.form.songForm.active : '',
   savedTabs:     savedTabsSelector(state),
-  modal:         state.ui.modal,
-  isOpen:        state.ui.modal.name === MODAL_VAR_ADD_SONG
+  variant:       state.ui.modal.variant || MODAL_VARIANT_EDIT,
+  errors:        state.ui.modal.errors,
+  isOpen:        state.ui.modal.name === SONG_MODAL
 });
 
-const addSongForm = withStyles(styles)(reduxForm({
-  form: 'addSongForm'
-  // enableReinitialize: true,
+const songForm = withStyles(styles)(reduxForm({
+  form: 'songForm',
+  enableReinitialize: true,
   // validate
-})(AddSongModal));
+})(SongModal));
 
-export default connect(mapStateToProps, mapDispatchToProps)(withMobileDialog()(addSongForm));
+export default connect(mapStateToProps, mapDispatchToProps)(withMobileDialog()(songForm));

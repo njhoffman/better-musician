@@ -5,7 +5,9 @@ import mapError from './mapError';
 import { Select, InputLabel, FormControl, MenuItem } from '@material-ui/core';
 
 const generateMenu = (dataSource) => {
-  let items = [];
+  let items = [
+    <MenuItem key={-1} value='' disabled>Select...</MenuItem>
+  ];
   const isArray = Array.isArray(dataSource);
   // assign value to key if dataSource is an object, otherwise assign scalar value
   Object.keys(dataSource).forEach(key => {
@@ -39,23 +41,26 @@ export const SelectForm = createComponent(Select, ({
 }));
 
 const SelectField = ({
+  label,
   options,
-  optionValues,
+  variant,
+  initialValues,
+  fieldGroup,
   ...props
 }) => (
   <FormControl style={{ minWidth: '120px' }}>
-    <InputLabel htmlFor='age-helper'>
-      Field Type
+    <InputLabel shrink>
+      {label}
     </InputLabel>
-    <SelectForm {...props}>
+    <SelectForm {...props} displayEmpty>
       {options && generateMenu(options)}
-      {optionValues && generateMenu(optionValues)}
     </SelectForm>
   </FormControl>
 );
 
 SelectField.propTypes = {
-  options: PropTypes.object.isRequired
+  options: PropTypes.any.isRequired, // can be object or array
+  label: PropTypes.string
 };
 
 export default SelectField;

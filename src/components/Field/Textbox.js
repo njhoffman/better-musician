@@ -5,6 +5,8 @@ import TextField from '@material-ui/core/TextField';
 import createComponent from './createFormField';
 import mapError from './mapError';
 
+import { FIELD_VARIANT_VIEW } from 'constants/ui';
+
 const TextboxForm = createComponent(TextField, ({
     defaultValue,
     ...props
@@ -15,23 +17,21 @@ const TextboxForm = createComponent(TextField, ({
 
 const Textbox = ({
   meta,
-  inputStyle,
+  inputProps,
   style,
-  disableUnderline,
+  variant,
   ...props
 }) => {
   return (
   <TextboxForm
-    InputProps={{ disableUnderline }}
+    InputProps={{ disableUnderline: variant === FIELD_VARIANT_VIEW, ...inputProps }}
     error={meta && meta.touched && meta.error}
-    style={{ ...style, width: '100%' }}
     {...props}
   />
   );
 };
 
 Textbox.propTypes = {
-  inputStyle : PropTypes.object,
   label      : PropTypes.string,
   meta       : PropTypes.object,
   style      : PropTypes.object,
