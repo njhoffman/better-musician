@@ -45,7 +45,6 @@ const SelectField = ({
   options,
   variant,
   initialValues,
-  fieldGroup,
   ...props
 }) => (
   <FormControl style={{ minWidth: '120px' }}>

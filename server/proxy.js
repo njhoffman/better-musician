@@ -17,7 +17,7 @@ module.exports = ({ config, app, logger, sdc }) => {
   proxy.on('proxyReq', (proxyReq, req, res, options) => {
     const requestLog = require('./utils/requestLog')(sdc, logger);
     proxyReq.setHeader('Content-Type', 'application/json');
-    proxyReq.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
+    proxyReq.setHeader('Access-Control-Allow-Origin', targetUrl);
     req._isProxy = true;
     return requestLog(req, res);
   });

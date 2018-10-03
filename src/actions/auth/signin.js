@@ -11,6 +11,7 @@ import { CALL_API } from 'middleware/api';
 import fetch, { parseResponse } from 'utils/fetch';
 import { getAllParams, normalizeTokenKeys } from 'utils/auth/parseUrl';
 import _openPopup from 'utils/popup';
+import { uiShowSnackbar } from 'actions/ui';
 import * as A from 'constants/auth';
 
 export const emailSignInFormUpdate = (endpoint, key, value) => ({
@@ -25,10 +26,14 @@ export const emailSignInStart = (endpoint) => ({
   payload: { endpoint }
 });
 
-export const emailSignInComplete = (endpoint, user) => ({
-  type: A.EMAIL_SIGN_IN_COMPLETE,
-  payload: { user, endpoint }
-});
+export const emailSignInComplete = (endpoint, user) => (dispatch) => {
+  dispatch(uiShowSnackbar('You are now signed in.', 'success', 'Success'));
+
+  dispatch({
+    type: A.EMAIL_SIGN_IN_COMPLETE,
+    payload: { user, endpoint }
+  });
+};
 
 export const emailSignInError = (endpoint, errors) => ({
   type: A.EMAIL_SIGN_IN_ERROR,
@@ -63,7 +68,7 @@ export const emailSignIn = (body, endpointKey) => {
           ],
           method: 'POST',
           payload: JSON.stringify(body),
-          endpoint: getEmailSignInUrl(currentEndpointKey).replace(`${window.location.origin}/api`, '')
+          endpoint: getEmailSignInUrl(currentEndpointKey)
         }
       });
     };

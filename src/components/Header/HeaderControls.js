@@ -7,7 +7,7 @@ import SongPopover from './SongPopover';
 import { withStyles, MenuItem, ListItemIcon, ListItemText } from '@material-ui/core';
 
 import { uiShowModal } from 'actions/ui';
-import { MODAL_VAR_FILTER_SONGS } from 'constants/ui';
+import { FILTERS_MODAL } from 'constants/ui';
 
 import { MdFilterList as FilterIcon } from 'react-icons/md';
 
@@ -116,7 +116,7 @@ class HeaderControls extends Component {
 
   renderFiltersButton() {
     const { modal, classes, showFiltersModal } = this.props;
-    const isActive = modal && modal.type === MODAL_VAR_FILTER_SONGS;
+    const isActive = modal && modal.name === FILTERS_MODAL;
     return (
       <a
         className={`${classes.headerLink} ${isActive ? classes.headerLinkActive : ''}`}
@@ -158,7 +158,7 @@ class HeaderControls extends Component {
   }
 }
 
-export const showFiltersModal = () => uiShowModal(MODAL_VAR_FILTER_SONGS);
+export const showFiltersModal = () => uiShowModal(FILTERS_MODAL);
 
 const mapActionCreators = {
   showFiltersModal

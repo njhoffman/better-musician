@@ -18,6 +18,21 @@ import Song from './Song';
 const styles = (theme) => ({
   root: {
     tableLayout: 'auto'
+  },
+  columnTitle: {
+    width: '200px',
+  },
+  columnArtist: {
+    textAlign: 'center'
+  },
+  columnProgress: {
+    textAlign: 'center',
+    width: '80px'
+  },
+  columnDifficulty: {
+    textAlign: 'center',
+    width: '80px',
+    paddingRight: '12px !important'
   }
 });
 
@@ -31,10 +46,30 @@ export const SongsList = ({
   <Table padding='dense' className={classes.root}>
     <TableHead>
       <TableRow>
-        <SongsListHeader name='title' displayName='Title' setSort={setSort} />
-        <SongsListHeader name='artist' displayName='Artist' centered setSort={setSort} />
-        <SongsListHeader name='progress' displayName='Progress' centered setSort={setSort} />
-        <SongsListHeader name='difficulty' displayName='Difficulty' centered setSort={setSort} />
+        <SongsListHeader
+          name='title'
+          displayName='Title'
+          className={classes.columnTitle}
+          setSort={setSort}
+        />
+        <SongsListHeader
+          name='artist'
+          displayName='Artist'
+          className={classes.columnArtist}
+          setSort={setSort}
+        />
+        <SongsListHeader
+          name='progress'
+          displayName='Progress'
+          className={classes.columnProgress}
+          setSort={setSort}
+        />
+        <SongsListHeader
+          name='difficulty'
+          displayName='Difficulty'
+          className={classes.columnDifficulty}
+          setSort={setSort}
+        />
       </TableRow>
     </TableHead>
     <TableBody>
@@ -63,7 +98,7 @@ SongsList.propTypes = {
 
 const mapStateToProps = (state, action) => ({
   songsCollection: songsSelector(state),
-  currentSongId:   state.SongsView.currentSong
+  currentSongId:   state.SongsView ? state.SongsView.currentSong : null
 });
 
 const mapActionCreators = ({

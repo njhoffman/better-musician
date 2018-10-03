@@ -4,20 +4,27 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import { MdMenu as MenuIcon } from 'react-icons/md';
-import { Link } from 'react-router-dom';
 import { uiToggleDrawerMenu } from 'actions/ui';
 
 import Button from 'components/Button';
+import logoIcon from 'assets/logo-small.png';
+
+const LogoIcon = () => (
+  <img src={logoIcon} style={{ height: '1.75em', filter: 'invert(1)' }} />
+  );
 
 const styles = (theme) => ({
-  homeLink: {
-    color: theme.palette.text.primary,
-    fontSize: '0.8rem',
-    marginLeft: '-5px',
+  homeLogo: {
+    marginLeft: '15px',
     textDecoration: 'none',
     '&:hover':  {
       textShadow: '0px 0px 3px rgba(255,255,255,0.3), 0px -0px 3px rgba(255,255,255,0.5)'
-    }
+    },
+    padding: '0px'
+  },
+  homeButton: {
+    padding: '2px',
+    marginLeft: '15px'
   },
   menuIcon: {
   },
@@ -31,10 +38,13 @@ const styles = (theme) => ({
 const HeaderLeft = ({ classes, toggleDrawerMenu }) => (
   <div className={classes.headerLeft}>
     <Button
-      icon={<MenuIcon className={classes.menuIcon} onClick={toggleDrawerMenu} />} />
-    <Link className={classes.homeLink} to='/'>
-      instrumental.io
-    </Link>
+      icon={<MenuIcon className={classes.menuIcon} onClick={toggleDrawerMenu} />}
+    />
+    <Button
+      className={classes.homeButton}
+      link='/'
+      icon={<LogoIcon className={classes.homeLogo}/>}
+    />
   </div>
 );
 

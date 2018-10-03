@@ -1,13 +1,9 @@
-// ------------------------------------
-// Constants
-// ------------------------------------
-export const INIT_VIEW = 'INIT_VIEW';
-
+import { INIT_VIEW_COMPLETE } from 'constants/ui';
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [INIT_VIEW] : (state, action) => ({ ...state, ...{ initialized: true } })
+  [INIT_VIEW_COMPLETE] : (state, action) => ({ ...state, initialized: true })
 };
 
 // ------------------------------------

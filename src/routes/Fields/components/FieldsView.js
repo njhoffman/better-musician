@@ -28,24 +28,32 @@ import {
 
 import { savedTabs as savedTabsSelector } from '../modules/selectors';
 
-import css from './FieldsView.scss';
-
 const styles = (theme) => ({
   root: {
     textAlign: 'center'
-  }
+  },
+  form: {
+    margin: '15px',
+    padding: '15px',
+    [theme.breakpoints.down('sm')]: {
+      margin: '0px',
+      padding: '0px',
+    }
+  },
+  extraFields: {}
 });
 
-export const FieldsView = (props) => {
+export const FieldsView = ({
+  updateField,
+  addField,
+  editingField,
+  formValues,
+  history,
+  classes,
+  ...props
+}) => {
   // const user = props.settings.get('attributes');
   let disabled =  false;
-
-  const {
-    updateField,
-    addField,
-    editingField,
-    formValues
-  } = props;
 
   const fieldOptions = {
     0: 'Text Box',
@@ -79,8 +87,11 @@ export const FieldsView = (props) => {
         primary
         icon={<SaveIcon style={{ marginTop: '-10px' }} />}
         className='update-fields-submit'
-        disabled={disabled} />
-      <MatButton variant='raised' label='Cancel' color='secondary' />
+        disabled={disabled}
+      />
+      <MatButton variant='raised' color='secondary'>
+        Cancel
+      </MatButton>
     </div>
   );
 
@@ -98,17 +109,16 @@ export const FieldsView = (props) => {
   );
 
   return (
-    <Column centerOnSmall small={12} medium={10} large={8}>
+    <Column className={classes.root} centerOnSmall small={12} medium={10} large={8}>
       <Paper elevation={5}>
         <AppBar position='static'>
-          <Tabs value='fields' centered={true} fullWidth={true}
-            onChange={(e, val) => props.history.push(val)}>
+          <Tabs value='fields' centered={true} fullWidth={true} onChange={(e, value) => history.push(value)}>
             <Tab data-route='/profile' value='profile' label='Profile' />
             <Tab data-route='/settings' value='settings' label='Settings' />
             <Tab data-route='/fields' value='fields' label='Fields' />
           </Tabs>
         </AppBar>
-        <form>
+        <form className={classes.form}>
           <Typography>Build Your Custom Fields</Typography>
           <FormRow>
             <FormField
@@ -137,7 +147,7 @@ export const FieldsView = (props) => {
               type='text'
             />
           </FormRow>
-          <div className={css.extraFields}>
+          <div className={classes.extraFields}>
             {formValues && renderExtraFields(formValues)}
           </div>
           <FormRow>

@@ -1,4 +1,8 @@
+import _ from 'lodash';
+import { LOCATION_CHANGE } from 'connected-react-router';
 import * as UI from 'constants/ui';
+
+import { init as initLog } from 'shared/logger';
 
 const toggleDrawerMenu = (state) =>
   ({ ...state, drawer: { ...state.drawer, isOpen: !state.isOpen } });
@@ -55,11 +59,34 @@ const hideModal = (state) => ({
 const initViewStart = (state, { payload: route } ) =>
   ({ ...state, initializing: route });
 
-const initViewEnd = (state, { payload: route }) =>
-  ({ ...state, initializing: null, currentView: route });
+const initViewComplete = (state, {
+  payload: route,
+  meta: { pathname }
+}) => ({
+  ...state,
+  initializing: null,
+  currentView: route,
+  initializedViews: _.uniqBy([
+    ...state.initializedViews,
+    { route, pathname }
+  ], 'pathname')
+});
 
+
+const locationChangeView = (state, { payload: { pathname } }) => {
+  const { info } = initLog('ui-reducer');
+
+  const view = _.find(state.initializedViews, { pathname });
+  if (view) {
+    info(`Refreshing View "${view.route}", Route: ${view.pathname}`);
+    return { ...state, currentView: view.route };
+  }
+  info(`Initializing Route: ${pathname}`);
+  return state;
+};
 
 const ACTION_HANDLERS = {
+  [LOCATION_CHANGE]: locationChangeView,
   [UI.DRAWER_MENU_TOGGLE]: toggleDrawerMenu,
   [UI.DRAWER_MENU_SHOW]:   showDrawerMenu,
   [UI.DRAWER_MENU_HIDE]:   hideDrawerMenu,
@@ -70,12 +97,13 @@ const ACTION_HANDLERS = {
   [UI.MODAL_HIDE]:      hideModal,
   [UI.MODAL_UPDATE]:    updateModal,
   [UI.INIT_VIEW_START]:    initViewStart,
-  [UI.INIT_VIEW_COMPLETE]: initViewEnd
+  [UI.INIT_VIEW_COMPLETE]: initViewComplete
 };
 
 export const initialState = {
   currentView: null,
   initializing: null,
+  initializedViews: [],
   snackbar: {
     isOpen: false,
     isTransitioning: false,

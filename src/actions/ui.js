@@ -8,10 +8,10 @@ export const uiToggleDrawerMenu = () => ({ type: UI.DRAWER_MENU_TOGGLE });
 
 export const uiSnackbarExit = (moreMessage) => ({ type: UI.SNACKBAR_EXIT });
 export const uiHideSnackbar = () => ({ type: UI.SNACKBAR_HIDE });
-export const uiShowSnackbar = (message, variant) => ({
+export const uiShowSnackbar = (message, variant, title) => ({
   type: UI.SNACKBAR_SHOW,
   payload: message,
-  meta: { variant }
+  meta: { variant, title }
 });
 
 export const uiHideModal = () => ({ type: UI.MODAL_HIDE });
@@ -37,8 +37,13 @@ export const initView = (store, history, route) => {
   // TODO: have this as upstream route property
   if (['songs', 'fields', 'settings', 'stats'].indexOf(route.toLowerCase()) !== -1) {
     fetchSongs(store);
+    // fetchArtists(store);
   }
-  store.dispatch({ type: UI.INIT_VIEW_COMPLETE, payload: route });
+  store.dispatch({
+    type: UI.INIT_VIEW_COMPLETE,
+    payload: route,
+    meta: { pathname: history.location.pathname }
+  });
 };
 
 export const hideEmailSignInSuccessModal          = () => ({ type: UI.HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL });

@@ -22,7 +22,7 @@ const styles = theme => ({
 
 export class EmailSignUpForm extends React.Component {
   static propTypes = {
-    auth:                   PropTypes.object.isRequired,
+    config:                 PropTypes.object.isRequired,
     endpoint:               PropTypes.string,
     next:                   PropTypes.func.isRequired,
     emailSignUp:            PropTypes.func.isRequired,
@@ -141,11 +141,10 @@ const mapStateToProps = (state) => {
   return {
     registerForm: state.form.register,
     emailSignUp:  emailSignUp,
-    config:      state.config,
-    auth:        state.auth,
-    api:         state.api,
-    isSignedIn:  state.user.isSignedIn,
-    isLoading:   state.api.auth.register.loading
+    config:       state.config,
+    api:          state.api,
+    isSignedIn:   state.user.isSignedIn,
+    isLoading:    state.api.auth.register.loading
   };
 };
 

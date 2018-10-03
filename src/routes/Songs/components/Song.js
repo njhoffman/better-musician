@@ -12,11 +12,28 @@ const rowStyle = { };
 const styles = (theme) => ({
   column: {
     whiteSpace: 'nowrap',
+    cursor: 'pointer',
     textOverflow: 'ellipsis',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    padding: '2px 12px',
+    [theme.breakpoints.down('md')]: {
+      padding: '1px 4px'
+    }
+
   },
-  centered: {
+  columnTitle: {
+    width: '200px',
+  },
+  columnArtist: {
     textAlign: 'center'
+  },
+  columnProgress: {
+    textAlign: 'center',
+    width: '80px'
+  },
+  columnDifficulty: {
+    textAlign: 'center',
+    width: '80px'
   }
 });
 
@@ -36,16 +53,16 @@ export const Song = ({
       onDoubleClick={() => uiShowSongModal(MODAL_VARIANT_VIEW)}
       style={rowStyle}
       {...props}>
-      <TableCell className={classes.column}>
+      <TableCell className={`${classes.column} ${classes.columnTitle}`}>
         { songValues.title }
       </TableCell>
-      <TableCell className={`${classes.column} ${classes.centered}`}>
-        {songValues.artist.fullName()}
+      <TableCell className={`${classes.column} ${classes.columnArtist}`}>
+        {songValues.artist.fullName}
       </TableCell>
-      <TableCell className={`${classes.column} ${classes.centered}`}>
+      <TableCell className={`${classes.column} ${classes.columnProgress}`}>
         <Stars number={songValues.progress} starColor={starColor} />
       </TableCell>
-      <TableCell className={`${classes.column} ${classes.centered}`}>
+      <TableCell className={`${classes.column} ${classes.columnDifficulty}`}>
         <Difficulty difficulty={songValues.difficulty} maxDifficulty={maxDifficulty} />
       </TableCell>
     </TableRow>
@@ -67,7 +84,7 @@ Song.propTypes = {
 };
 
 const mapStateToProps = (state, action) => ({
-  currentSongId:   state.SongsView.currentSong,
+  currentSongId:   state.SongsView ? state.SongsView.currentSong : null,
   maxDifficulty:   maxDifficultySelector(state)
 });
 

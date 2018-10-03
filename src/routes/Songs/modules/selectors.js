@@ -84,6 +84,7 @@ const savedTabsSelector = ormCreateSelector(orm, (Session, currentSong) => {
   });
 });
 
+// TODO: Fix race condition where selectors cause errors before SongsView is initialized
 export const songs = createSelector(ormSelector, state => state.SongsView, songsSelector);
 export const currentSong = createSelector(ormSelector, state => state.SongsView, currentSongSelector);
 export const paginationTotal = createSelector(ormSelector, state => state.SongsView, paginationTotalSelector);
@@ -91,4 +92,8 @@ export const paginationStart = createSelector(ormSelector, state => state.SongsV
 export const paginationEnd = createSelector(ormSelector, state => state.SongsView, paginationEndSelector);
 export const paginationPages = createSelector(ormSelector, state => state.SongsView, paginationPagesSelector);
 export const songStats = createSelector(ormSelector, state => state.orm, songStatsSelector);
-export const savedTabs = createSelector(ormSelector, state => state.SongsView.currentSong, savedTabsSelector);
+
+export const savedTabs = createSelector(ormSelector, state =>
+  (state.SongsView ? state.SongsView.currentSong : null),
+  savedTabsSelector
+);

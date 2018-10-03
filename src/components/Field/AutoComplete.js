@@ -6,6 +6,8 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import { FIELD_VARIANT_VIEW } from 'constants/ui';
+
 const styles = theme => ({
   root: {
     // flexGrow: 1,
@@ -35,16 +37,17 @@ const styles = theme => ({
   },
 });
 
-const getSuggestions = (options, inputValue) => {
+const getSuggestions = ({ options, inputValue, maxResults }) => {
   return options.filter(option => {
     return (!inputValue || option.label.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1);
-  }).slice(0, 5);
+  }).slice(0, maxResults);
 };
 
 const renderInput = ({
   InputProps,
   InputLabelProps,
   classes,
+  variant,
   ref,
   ...props
 }) => (
@@ -98,11 +101,14 @@ const AutoComplete = ({
   options,
   input,
   meta,
+  variant,
+  maxResults,
   ...props
 }) => (
   <Downshift
     {...input}
     onStateChange={({ inputValue }) => input.onChange(inputValue)}
+    onFocus={() => input.onFocus()}
     selectedItem={input.value}>
     {({
       getInputProps,
@@ -121,6 +127,7 @@ const AutoComplete = ({
           name: input.name,
           InputLabelProps: { },
           InputProps: getInputProps({
+            disableUnderline: variant === FIELD_VARIANT_VIEW,
             ...input,
             ...props
             // placeholder: 'Search',
@@ -128,7 +135,7 @@ const AutoComplete = ({
         })}
         {isOpen ? (
           <Paper className={classes.paper} square>
-            {getSuggestions(options, inputValue).map((suggestion, index) =>
+            {getSuggestions({ options, inputValue, maxResults }).map((suggestion, index) =>
               renderSuggestion({
                 suggestion,
                 index,

@@ -69,16 +69,16 @@ SongStatsFooter.propTypes = {
   stats: PropTypes.object.isRequired
 };
 
-const SongFooter = ({ classes, maxDifficulty, artistPicture, song }) => (
+const SongFooter = ({ classes, maxDifficulty, song }) => (
   <div className={classes.root}>
     <Row className={css.footerSong}>
       <Column small={3} className={css.leftColumn}>
         <img
           className={css.instrumentPicture}
-          src={`/images/instrument/${song.instrument.picture}`} />
+          src={song.instrument.primaryImage} />
         <img
           className={css.artistPicture}
-          src={`/images/artist/${artistPicture}`} />
+          src={song.artist.primaryImage} />
       </Column>
       <Column small={7} className={css.middleColumn}>
         <Row className={css.middleTop}>
@@ -91,7 +91,7 @@ const SongFooter = ({ classes, maxDifficulty, artistPicture, song }) => (
         <Row className={css.middleBottom}>
           <Column>
             <div className={css.artistName}>
-              <Typography>{song.artist.fullName()}</Typography>
+              <Typography>{song.artist.fullName}</Typography>
             </div>
             <div className={css.genreName}>
               <Typography>{song.genre.name}</Typography>
@@ -116,7 +116,6 @@ const SongFooter = ({ classes, maxDifficulty, artistPicture, song }) => (
 );
 
 SongFooter.propTypes = {
-  artistPicture: PropTypes.string.isRequired,
   classes:       PropTypes.object.isRequired,
   song:          PropTypes.object.isRequired,
   maxDifficulty: PropTypes.number.isRequired
@@ -124,9 +123,7 @@ SongFooter.propTypes = {
 
 const Footer = ({ song, isSignedIn, ...props }) => {
   if (song && song.artist) {
-    const artistPicture = song.artist && song.artist.pictures && song.artist.pictures[0]
-      ? song.artist.pictures[0] : '_unknown.png';
-    return SongFooter({ song, artistPicture, ...props });
+    return SongFooter({ song, ...props });
   } else if (isSignedIn) {
     return SongStatsFooter({ ...props });
   } else {

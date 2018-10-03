@@ -28,12 +28,15 @@ const styles = theme => ({
   icon: {
     fontSize: 'inherit'
   },
-  rightWrapper: {
+  rightLabel: {
     marginRight: theme.spacing.unit,
     fontSize: 'inherit'
   },
-  leftWrapper: {
+  leftLabel: {
     marginLeft: theme.spacing.unit,
+    fontSize: 'inherit'
+  },
+  centerLabel: {
     fontSize: 'inherit'
   },
   centerIcon: {
@@ -90,6 +93,11 @@ export class Button extends React.Component {
     const { icon: Icon, classes, spinnerType }  = this.props;
     const loading = this.props.loading || this.props.override.loading;
     const height = this.props.iconHeight || 1.0;
+    const iconProps = {
+      style: { height: `${height}em` },
+      className: `${classes.icon}`
+    };
+
     if (loading) {
       const loaderName = this.ucFirst(`${spinnerType}Loader`);
       const LoaderIcon = Spinners[loaderName] ? Spinners[loaderName] : Spinners.RingLoader;
@@ -105,24 +113,18 @@ export class Button extends React.Component {
         ...Icon,
         props: {
           ...Icon.props,
-          style: { height: `${height}em` },
-          className: `${classes.icon}`
+          ...iconProps
         }
       };
     } else if (Icon) {
       return (
-        <Icon
-          style={{ height: `${height}em` }}
-          className={`${classes.icon}`}
-        />
+        <Icon {...iconProps} />
       );
-    } else {
-      return '';
     }
   }
 
-  renderLabel() {
-    const props = {
+  renderButton() {
+    const buttonProps = {
       className: this.props.className,
       disabled:  this.props.disabled || this.props.loading,
       variant:   this.props.variant,
@@ -130,50 +132,37 @@ export class Button extends React.Component {
       style:     this.props.style
     };
 
-    if (this.props.icon && !this.props.label) {
-      return (
-        <MaterialIconButton
-          {...props}
-          onClick={(e) => this.handleClick(e)}>
-          {this.renderIcon()}
-        </MaterialIconButton>
-      );
-    } else {
-      return (
-        <MaterialButton
-          {...props}
-          onClick={(e) => this.handleClick(e)}>
-          {this.props.iconAlign === 'right' && (
-            <span className={this.props.classes.rightWrapper}>
-              {this.props.label}
-            </span>
+    const { label, classes, iconAlign, icon } = this.props;
+    const labelClass = icon && label ? classes[`${iconAlign}Label`] : classes['centerLabel'];
+    const BaseButton = icon && !label ? MaterialIconButton : MaterialButton;
+
+    return (
+      <BaseButton
+        {...buttonProps}
+        onClick={(e) => this.handleClick(e)}>
+        {iconAlign === 'right' && label && (<span className={labelClass}>{label}</span>)}
+        {icon && (
+          <span className={classes.iconWrapper}>
+            {this.renderIcon()}
+          </span>
           )}
-          {this.props.icon && (
-            <span className={this.props.classes.iconWrapper}>
-              {this.renderIcon()}
-            </span>
-          )}
-          {this.props.iconAlign === 'left' && (
-            <span className={this.props.classes.leftWrapper}>
-              {this.props.label}
-            </span>
-          )}
-        </MaterialButton>
-      );
-    }
+        {iconAlign !== 'right' && label && (<span className={labelClass}>{label}</span>)}
+      </BaseButton>
+    );
+
   }
 
   render() {
-    if (this.props.href) {
+    if (this.props.link) {
       return (
         <NavLink
-          to={this.props.href}
+          to={this.props.link}
           className={`${this.props.classes.linkText}`}>
-          {this.renderLabel()}
+          {this.renderButton()}
         </NavLink>
       );
     } else {
-      return this.renderLabel();
+      return this.renderButton();
     }
   }
 }

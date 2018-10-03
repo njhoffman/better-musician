@@ -1,12 +1,15 @@
+import { INIT_VIEW_COMPLETE } from 'constants/ui';
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
-const ACTION_HANDLERS = { };
+const ACTION_HANDLERS = {
+  [INIT_VIEW_COMPLETE] : (state, action) => ({ ...state, initialized: true })
+};
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = 0;
+const initialState = { initialized: false };
 export default function loginReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
   return handler ? handler(state, action) : state;

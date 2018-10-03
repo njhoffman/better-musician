@@ -22,6 +22,7 @@ import {
 // Need to apply the hocs here to avoid applying them inside the render method
 
 const LoadComponent = ({ store, history }, route, importRoute) => {
+  info(`Before load component... ${route}`);
   return Loadable({
     loader: () => {
       info(`Loading component  ${route}View`);

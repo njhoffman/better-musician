@@ -5,6 +5,10 @@ module.exports = {
       host: 'localhost',
       port: 3000
     },
+    api: {
+      host: 'localhost',
+      port: 3001
+    },
     webpack: {
       mode: 'development',
       devtool: 'cheap-module-eval-source-map',
@@ -21,10 +25,6 @@ module.exports = {
           'eventsource-polyfill',
           'webpack-hot-middleware/client?reload=true'
         ]
-      },
-      output: {
-        publicPath: `http://localhost:3000/`,
-        pathinfo: false
       }
     },
     middleware: {

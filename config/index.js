@@ -18,12 +18,12 @@ const config = {
   showAppModulesBuild: true,
 
   server: {
-    host: ip.address(), // use string 'localhost' to prevent exposure on local network
+    host: process.env.HOST || ip.address(), // use string 'localhost' to prevent exposure on local network
     port: process.env.PORT || 3000
   },
 
   api: {
-    host   : process.env.API_HOST || '0.0.0.0',
+    host   : process.env.API_HOST || ip.address(),
     port   : process.env.API_PORT || 3001
   },
 

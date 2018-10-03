@@ -74,7 +74,7 @@ export const SongsPagination = ({
           value={paginationCurrent}
           onChange={setPaginationCurrent}
           style={{ width: '40px' }} />
-        <span className={css.centerPageTotal}> / &nbsp;&nbsp;&nbsp;&nbsp; {paginationPages} </span>
+        <span className={css.centerPageTotal}> / {paginationPages} </span>
         <Button
           style={styleObj.buttons}
           variant='raised'
@@ -152,8 +152,8 @@ const setPaginationEnd = () => (dispatch, getState) => {
 };
 
 const mapStateToProps = (state, action) => ({
-  paginationCurrent: state.SongsView.paginationCurrent,
-  paginationPerPage: state.SongsView.paginationPerPage,
+  paginationCurrent: state.SongsView ? state.SongsView.paginationCurrent : null,
+  paginationPerPage: state.SongsView ? state.SongsView.paginationPerPage : null,
   paginationTotal:   paginationTotalSelector(state),
   paginationPages:   paginationPagesSelector(state),
   paginationStart:   paginationStartSelector(state),

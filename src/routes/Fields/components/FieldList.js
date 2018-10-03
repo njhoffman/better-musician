@@ -15,7 +15,6 @@ import {
 } from 'react-icons/md';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import CustomField from 'components/Field/FormField';
 import Button from 'components/Button';
 
 const styles = (theme) => ({
@@ -23,13 +22,24 @@ const styles = (theme) => ({
     width: '100%',
   },
   expansionPanel: {
-    margin: '15px 25px'
+    margin: '15px 25px',
+    [theme.breakpoints.down('sm')]: {
+      margin: '1px 3px'
+    }
   },
   expansionSummary: {
-    backgroundColor: theme.palette.primary.dark
+    backgroundColor: theme.palette.primary.dark,
+    margin: '12px 0px'
   },
   expansionDetails: {
-    flexDirection: 'column'
+    flexDirection: 'column',
+    padding: '8px 24px 24px',
+    [theme.breakpoints.down('sm')]: {
+      padding: '2px 4px 4px'
+    },
+    [theme.breakpoints.down('md')]: {
+      padding: '6px 8px 8px'
+    }
   },
   tabNumber: {
     textAlign: 'left',
@@ -63,12 +73,13 @@ const styles = (theme) => ({
     width: '75%',
   },
   fieldButtons: {
-    justifyContent: 'flex-end',
+    justifyContent: 'space-evenly',
+    display: 'flex'
   },
   flexButton: {
-    width: '36px',
-    height: '36px',
-    marginRight: '5px'
+    // width: '36px',
+    // height: '36px',
+    padding: '6px'
   },
 
   heading: {
@@ -95,6 +106,8 @@ const styles = (theme) => ({
   tabbedField: {
     borderRadius: '10px',
     border: 'solid 1px #456',
+    padding: '7px 5px',
+    margin: '3px 0px'
   }
 });
 
@@ -112,7 +125,7 @@ export const FieldList = (props) => {
     const editingId = editingField ? editingField.id : null;
     return (
       <Row className={classes.tabbedField} key={key}>
-        <Column centerOnSmall small={6}>
+        <Column centerOnSmall small={8}>
           <Row>
             <Column small={4} className={classes.fieldLabel}>
               <Typography>
@@ -138,34 +151,25 @@ export const FieldList = (props) => {
             </Column>
           </Row>
         </Column>
-        <Column centerOnSmall small={4}>
-          <Row>
-            <Column className={classes.fieldPreviewLabel}>
-              <Typography>
-                Field Preview
-              </Typography>
-            </Column>
-          </Row>
-          <Row>
-            <CustomField field={field} preview />
-          </Row>
-        </Column>
-        <Column centerOnSmall small={2}>
-          <Row className={classes.fieldButtons}>
-            <Button
-              variant='flat'
-              onClick={field.id === editingId ? cancelEdit : () => editField(field)}
-              className={classes.flexButton}
-              style={{ color: '#bbbbff'}}
-              icon={
-                field.id === editingId ?
-                  <CancelIcon onClick={cancelEdit} />
-                  : <EditIcon />
-              }
-            />
-          </Row>
-          <Row className={classes.fieldButtons}>
-            {!(field.id === editingId) &&
+        <Column className={classes.fieldButtons} small={4}>
+          <Button
+            variant='outline'
+            secondary
+            className={classes.flexButton}
+            label='Preview'
+          />
+          <Button
+            variant='flat'
+            onClick={field.id === editingId ? cancelEdit : () => editField(field)}
+            className={classes.flexButton}
+            style={{ color: '#bbbbff'}}
+            icon={
+              field.id === editingId ?
+                <CancelIcon onClick={cancelEdit} />
+                : <EditIcon />
+            }
+          />
+          {!(field.id === editingId) &&
               <Button
                 variant='flat'
                 onClick={() => deleteField(field.id)}
@@ -173,8 +177,7 @@ export const FieldList = (props) => {
                 style={{ color: '#ffbbbb' }}
                 icon={<DeleteIcon />}
               />
-            }
-          </Row>
+          }
         </Column>
       </Row>
     );

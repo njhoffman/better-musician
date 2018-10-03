@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Button, Dialog } from '@material-ui/core';
-import { MODAL_VAR_FILTER_SONGS } from 'constants/ui';
+import { FILTERS_MODAL } from 'constants/ui';
 import { uiHideModal } from 'actions/ui';
 
 export const FiltersModal = (props) => {
@@ -45,7 +45,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => ({
   modal:         state.ui.modal,
-  isOpen:        state.ui.modal.type === MODAL_VAR_FILTER_SONGS
+  isOpen:        state.ui.modal.name === FILTERS_MODAL
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FiltersModal);

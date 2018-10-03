@@ -108,7 +108,6 @@ const FormField = ({
         {...{ variant, ...props }} />
     )}
     {preview && renderType(type)}
-    { false && console.log('formField', props, type) }
   </Column>
 );
 

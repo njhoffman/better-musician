@@ -31,7 +31,6 @@ export class EmailSignInForm extends React.Component {
     config:      PropTypes.object.isRequired,
     isLoading:   PropTypes.bool.isRequired,
     errors:      PropTypes.any,
-    auth:        PropTypes.object,
     dispatch:    PropTypes.func.isRequired,
     endpoint:    PropTypes.string,
     next:        PropTypes.func.isRequired,
@@ -146,7 +145,6 @@ export class EmailSignInForm extends React.Component {
 const mapStateToProps = (state) => {
   return {
     config:      state.config,
-    auth:        state.auth,
     isSignedIn:  state.user.isSignedIn,
     loginForm:   state.form.login,
     errors:      state.api.auth.login.errors,

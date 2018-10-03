@@ -2,11 +2,17 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'lodash';
 import { Row, Column } from 'react-foundation';
-import { TextField } from '@material-ui/core';
+import { TextField, withStyles } from '@material-ui/core';
 // import Textbox from './Textbox';
 import { Field } from 'redux-form';
 import createComponent from './createFormField';
 import mapError from './mapError';
+
+const styles = (theme) => ({
+  inputRow: {
+    marginBottom: '20px'
+  }
+});
 
 const youtubeRE = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&(amp;)?[\w?=]*)?/;
 
@@ -53,8 +59,8 @@ class YouTubeLink extends Component {
 
   render() {
     const {
-      preview, id, meta,
-      field, input, label
+      preview, id, meta, classes,
+      field, input, label,
     } = this.props;
 
     if (preview) {
@@ -68,7 +74,7 @@ class YouTubeLink extends Component {
     } else {
       return (
         <Fragment>
-          <Row>
+          <Row className={classes.inputRow}>
             <Column centerOnSmall>
               <TextboxForm
                 name={input.name} onChange={(e, val) => this.parseUrl(val)}
@@ -92,4 +98,4 @@ class YouTubeLink extends Component {
   }
 }
 
-export default YouTubeLink;
+export default withStyles(styles)(YouTubeLink);

@@ -86,7 +86,9 @@ const updateAuthCredentials = (resp) => {
 };
 
 const apiFetch = (endpoint, options) => {
-  endpoint = __API_URL__ + endpoint;
+  // endpoint = __API_URL__ + endpoint;
+  // TODO: make this a config option
+  endpoint = endpoint.replace('localhost', window.location.hostname);
   info(`Fetching: ${endpoint}`);
   trace('Options', options);
   if (typeof options.body === 'object' && Object.keys(options.body).length > 0) {

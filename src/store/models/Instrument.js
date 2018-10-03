@@ -1,6 +1,36 @@
 import BaseModel from './BaseModel';
+import _ from 'lodash';
 
 class Instrument extends BaseModel {
+
+  static get path() {
+    return `/images/instrument`;
+  }
+
+  static get defaultImage() {
+    return `_unknown.png`;
+  }
+
+  static get imageLabel() {
+    return `Unknown Instrument`;
+  }
+
+  static findByDisplayName(name) {
+    return this.all().toModelArray().filter(instrument => {
+      return instrument.displayName === name;
+    })[0];
+  }
+
+  static imagesByDisplayName(name) {
+    const instrument = Instrument.findByDisplaylName(name);
+    const images = instrument && instrument.images ? instrument.images : [Instrument.defaultImage];
+    return images.map(img => `${Instrument.path}/${img}`);
+  }
+
+  static primaryImage() {
+    return `/images/instrument/_unknown.png`;
+  }
+
   static reducer(action, Instrument/* , session */) {
     const { type } = action;
     switch (type) {
@@ -15,6 +45,15 @@ class Instrument extends BaseModel {
         break;
     }
   }
+
+  get primaryImage() {
+    return `${Instrument.path}/${_.get(this, 'images[0].file') || Instrument.defaultImage}`;
+  }
+
+  get imageLabel() {
+    return this.name || Instrument.imageLabel;
+  }
+
   toString() {
     return `Instrument: ${this.name}`;
   }

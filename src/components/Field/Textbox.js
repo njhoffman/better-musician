@@ -17,6 +17,7 @@ const TextboxForm = createComponent(TextField, ({
 
 const Textbox = ({
   meta,
+  initialValues,
   inputProps,
   style,
   variant,
@@ -24,7 +25,11 @@ const Textbox = ({
 }) => {
   return (
   <TextboxForm
-    InputProps={{ disableUnderline: variant === FIELD_VARIANT_VIEW, ...inputProps }}
+    InputProps={{
+      disableUnderline: variant === FIELD_VARIANT_VIEW,
+      autoComplete: 'off',
+      ...inputProps
+    }}
     error={meta && meta.touched && meta.error}
     {...props}
   />

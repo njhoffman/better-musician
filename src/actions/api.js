@@ -24,7 +24,7 @@ export const fetchSongs = ({ dispatch, getState }) => {
   return dispatch({
     [CALL_API]: {
       types: [ API.SONGS_FETCH_START, songsFetchComplete, API.SONGS_FETCH_ERROR],
-      endpoint: '/songs'
+      endpoint: `${__API_URL__}/songs`
     }
   });
 };
@@ -44,6 +44,23 @@ export const songsFetchComplete = (response) => (dispatch) => {
   /* eslint-enable no-multi-spaces */
 };
 
+export const fetchArtists = ({ dispatch, getState }) => {
+  // TODO: make this better dumbass
+  info('Calling CALL_API');
+  return dispatch({
+    [CALL_API]: {
+      types: [ API.ARTISTS_FETCH_START, artistsFetchComplete, API.ARTISTS_FETCH_ERROR],
+      endpoint: `${__API_URL__}/artists`
+    }
+  });
+};
+
+export const artistsFetchComplete = (response) => (dispatch) => {
+  const tables = response.data.tables;
+  info(`artistsFetchComplete: ${tables.artists.length} artists`);
+  dispatch({ type: API.LOAD_ARTISTS, payload: tables.artists });
+};
+
 export const updateUser = () => (dispatch, getState) => {
   const fieldValues = getState().form.updateProfileForm
     ? getState().form.updateProfileForm.values
@@ -53,7 +70,7 @@ export const updateUser = () => (dispatch, getState) => {
     [CALL_API]: {
       types:    [API.USER_UPDATE_START, userUpdateComplete, userUpdateError],
       method:   'POST',
-      endpoint: '/users/update',
+      endpoint: `${__API_URL__}/users/update`,
       payload:  { ...fieldValues }
     }
   });
@@ -90,7 +107,7 @@ export const addSong = () => (dispatch, getState) => {
     [CALL_API]: {
       types:    [API.SONGS_ADD_START, songsAddComplete, songsAddError],
       method:   'POST',
-      endpoint: '/songs/add',
+      endpoint: `${__API_URL__}/songs/add`,
       payload:  { ...fieldValues }
     }
   });
@@ -113,7 +130,7 @@ export const songsAddError = (response) => (dispatch) => {
   dispatch({
     type: UI.MODAL_UPDATE,
     meta: {
-      type: UI.MODAL_VAR_ADD_SONG,
+      type: UI.SONG_MODAL,
       props: { errors: response.errors }
     }
   });

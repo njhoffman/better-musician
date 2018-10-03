@@ -164,7 +164,6 @@ export class SongModal extends Component {
                           name={field.name}
                           small={fields.length === 1 ? 12 : 6}
                           variant={variant}
-                          fieldGroup={fields}
                           initialValues={this.props.initialValues}
                           centerOnSmall
                           { ...field }
@@ -206,7 +205,7 @@ const initialValues = (song, addModalVariant) => {
     // return object for nested models, redux form tries to reset and breaks if not a plain object
     // TODO: find a better way
     const ivSong = Object.assign({}, song);
-    ivSong.artist = Object.assign({}, song.artist.ref, { fullName: song.artist.fullName() });
+    ivSong.artist = Object.assign({}, song.artist.ref, { fullName: song.artist.fullName });
     ivSong.genre = song.genre.ref;
     ivSong.instrument = song.instrument.ref;
     return ivSong;

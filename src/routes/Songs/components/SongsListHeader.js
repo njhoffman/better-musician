@@ -8,21 +8,20 @@ import {
 } from '@material-ui/core';
 
 const styles = (theme) => ({
-  root: { },
-  centered: {
-    textAlign: 'center'
+  root: {
+    padding: '2px 12px'
   }
 });
 const SongsListHeader = ({
   displayName,
   name,
   classes,
-  centered,
+  className,
   setSort
 }) => (
   <TableCell
     variant='head'
-    className={`${classes.root} ${centered ? classes.centered : ''}`} >
+    className={`${classes.root} ${className}`} >
     <Tooltip title='Sort' placement='bottom-end' enterDelay={300}>
       <TableSortLabel active={true} onClick={() => setSort(name)}>
         {displayName}
@@ -33,6 +32,7 @@ const SongsListHeader = ({
 
 SongsListHeader.propTypes = {
   name: PropTypes.string.isRequired,
+  className: PropTypes.string.isRequired,
   displayName: PropTypes.string.isRequired,
   setSort: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,

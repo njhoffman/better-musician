@@ -6,7 +6,14 @@ import { Row, Column } from 'react-foundation';
 import PropTypes from 'prop-types';
 
 import Button from 'components/Button';
-import { artistLastNames, artistMatched, instruments, genres } from 'selectors/songs';
+import {
+  genreMatch,
+  instrumentMatch,
+  artistMatch,
+  artistLastNames,
+  instruments,
+  genres
+} from 'selectors/songs';
 import { maxDifficulty } from 'selectors/users';
 import {
   FIELD_VARIANT_EDIT, FIELD_VARIANT_ADD, FIELD_VARIANT_VIEW,
@@ -34,7 +41,9 @@ export const SongMainTab = ({
   activeField,
   lastActiveField,
   matchedArtist,
-  lastNames,
+  matchedGenre,
+  matchedInstrument,
+  lastNameOptions,
   instrumentOptions,
   genreOptions,
   maxDifficulty,
@@ -49,20 +58,25 @@ export const SongMainTab = ({
       : modalVariant === MODAL_VARIANT_ADD ? FIELD_VARIANT_ADD : FIELD_VARIANT_VIEW)
   };
 
-  const renderImage = () => {
-    // TODO: Find a better way through config!
+  const matchedImages = () => {
     const fieldRE = /^artist|^instrument|^genre/;
-    const imageField = (
+    const field = (
       activeField && fieldRE.test(activeField) ? activeField
       : lastActiveField && fieldRE.test(lastActiveField) ? lastActiveField
       : 'artist').replace(/\..*/, '');
-    const imageFile = matchedArtist && matchedArtist.pictures && matchedArtist.pictures[0]
-      ? matchedArtist.pictures[0] : '_unknown.png';
-    const imageLabel = matchedArtist ? matchedArtist.fullName() : `Unknown ${imageField.toUpperCase()}`;
-    const buttonLabel = matchedArtist ? 'Change Picture' : 'Add Picture';
+    const matchers = { artist: matchedArtist, genre: matchedGenre, instrument: matchedInstrument };
+    const matched = matchers[field];
+    const buttonLabel =  matched.images && matched.images.length > 0 ? 'Change Picture' : 'Add Picture';
+    return { buttonLabel, imageLabel: matched.imageLabel, image: matched.primaryImage };
+  };
+
+  const renderImage = () => {
+    // TODO: Find a better way through config!
+    const { buttonLabel, imageLabel, image } = matchedImages();
+
     return (
       <Column>
-        <img className={classes.image} src={`/images/${imageField}/${imageFile}`} />
+        <img className={classes.image} src={`${image}`} />
         <Typography>{imageLabel}</Typography>
         { modalVariant !== MODAL_VARIANT_EDIT && <Button variant='raised' secondary label={buttonLabel} /> }
       </Column>
@@ -106,7 +120,8 @@ export const SongMainTab = ({
           name='artist.lastName'
           type='autocomplete'
           label='Last Name / Band'
-          options={lastNames}
+          options={lastNameOptions}
+          maxResults={10}
           {...fieldProps}
         />
         <FormField
@@ -132,17 +147,19 @@ export const SongMainTab = ({
       {modalVariant !== MODAL_VARIANT_VIEW && renderEditFields()}
       <FormRow>
         <FormField
-          name='genre.name'
+          name='genre.displayName'
           type='autocomplete'
           label='Song Genre'
           options={genreOptions}
+          maxResults={2}
           {...fieldProps}
         />
         <FormField
-          name='instrument.name'
+          name='instrument.displayName'
           type='autocomplete'
           label='Instrument'
           options={instrumentOptions}
+          maxResults={10}
           {...fieldProps}
         />
       </FormRow>
@@ -175,7 +192,7 @@ SongMainTab.propTypes = {
   lastActiveField:   PropTypes.string.isRequired,
   activeField:       PropTypes.string.isRequired,
   matchedArtist:     PropTypes.object,
-  lastNames:         PropTypes.any.isRequired,
+  lastNameOptions:   PropTypes.any.isRequired,
   genreOptions:      PropTypes.any.isRequired,
   instrumentOptions: PropTypes.any.isRequired,
   maxDifficulty:     PropTypes.number,
@@ -184,9 +201,11 @@ SongMainTab.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  matchedArtist:     artistMatched(state),
-  lastNames:         artistLastNames(state),
+  matchedGenre:      genreMatch(state),
+  matchedInstrument: instrumentMatch(state),
+  matchedArtist:     artistMatch(state),
   maxDifficulty:     maxDifficulty(state),
+  lastNameOptions:   artistLastNames(state),
   genreOptions:      genres(state),
   instrumentOptions: instruments(state)
 });

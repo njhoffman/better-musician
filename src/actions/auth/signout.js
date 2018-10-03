@@ -4,6 +4,7 @@ import {
 } from 'utils/auth/sessionStorage';
 
 import * as A from 'constants/auth';
+import { uiShowSnackbar } from 'actions/ui';
 import { storeCurrentEndpointKey } from 'actions/auth';
 import fetch, { parseResponse } from 'utils/fetch';
 
@@ -17,6 +18,7 @@ export const signOut = (endpoint) => (dispatch) => {
   return fetch(getSignOutUrl(endpoint), { method: 'delete' })
     .then(parseResponse)
     .then((user) => {
+      dispatch(uiShowSnackbar('You have successfully logged out of your account.', 'success'));
       dispatch(signOutComplete(endpoint, user));
       dispatch(storeCurrentEndpointKey(null));
       destroySession();
