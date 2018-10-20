@@ -51,7 +51,7 @@ export const RegisterView = ({
   <Column small={12} medium={10} large={8}>
     <Paper elevation={5} className={classes.contentContainer}>
       <div className={classes.registerContainer}>
-        <Typography variant='title'>Sign Up for instrumental.io</Typography>
+        <Typography variant='h2'>Sign Up for instrumental.io</Typography>
         <Typography>It&rsquo;s free. It&rsquo;s easy. It takes 5 seconds.</Typography>
         <Row>
           <Column>

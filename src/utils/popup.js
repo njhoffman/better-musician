@@ -1,16 +1,16 @@
 /* istanbul ignore next */
-var settings = 'scrollbars=no,toolbar=no,location=no,titlebar=no,directories=no,status=no,menubar=no';
+const settings = 'scrollbars=no,toolbar=no,location=no,titlebar=no,directories=no,status=no,menubar=no';
 
 /* istanbul ignore next */
-function getPopupOffset({ width, height }) {
-  var wLeft = window.screenLeft ? window.screenLeft : window.screenX;
-  var wTop = window.screenTop ? window.screenTop : window.screenY;
+const getPopupOffset = ({ width, height }) => {
+  const wLeft = window.screenLeft ? window.screenLeft : window.screenX;
+  const wTop = window.screenTop ? window.screenTop : window.screenY;
 
-  var left = wLeft + (window.innerWidth / 2) - (width / 2);
-  var top = wTop + (window.innerHeight / 2) - (height / 2);
+  const left = wLeft + (window.innerWidth / 2) - (width / 2);
+  const top = wTop + (window.innerHeight / 2) - (height / 2);
 
   return { top, left };
-}
+};
 
 /* istanbul ignore next */
 function getPopupSize(provider) {
@@ -42,12 +42,12 @@ function getPopupSize(provider) {
 }
 
 /* istanbul ignore next */
-function getPopupDimensions(provider) {
-  let { width, height } = getPopupSize(provider);
-  let { top, left } = getPopupOffset({ width, height });
+const getPopupDimensions = (provider) => {
+  const { width, height } = getPopupSize(provider);
+  const { top, left } = getPopupOffset({ width, height });
 
   return `width=${width},height=${height},top=${top},left=${left}`;
-}
+};
 
 /* istanbul ignore next */
 export default function openPopup(provider, url, name) {

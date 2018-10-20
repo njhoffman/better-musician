@@ -12,17 +12,37 @@ import {
 } from 'react-icons/md';
 
 import {
-  Avatar, Paper, Tabs, Tab,
+  Avatar, Paper, Tabs, Tab, Divider,
   AppBar, Typography, withStyles
 } from '@material-ui/core';
 
+import validate from 'utils/validate';
 import Button from 'components/Button';
-import { FIELD_VARIANT_VIEW } from 'constants/ui';
+import { FIELD_VIEW } from 'constants/ui';
 import FormField, { FormRow }  from 'components/Field';
 
 const styles = (theme) => ({
   root: {
     textAlign: 'center',
+    [theme.breakpoints.down('sm')]: {
+      padding: '0px'
+    }
+  },
+  form: {
+    margin: '15px',
+    padding: '5px',
+    [theme.breakpoints.down('sm')]: {
+      margin: '10px 5px',
+      padding: '2px',
+    }
+  },
+  buttonDivider: {
+    marginTop: '5px',
+    marginBottom: '10px'
+  },
+  buttonBar: {
+    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit,
   },
   avatar: {
     marginLeft: 'auto',
@@ -34,17 +54,13 @@ const styles = (theme) => ({
     width: '100px',
     height: '100px'
   },
-  form: {
-    margin: '15px',
-    padding: '15px'
-  },
   fields: {
     margin: '15px',
     padding: '15px'
   }
 });
 
-const ProfileImage = ({ classes }) => (
+const ProfileImage = (classes) => (
   <Column centerOnSmall>
     <Avatar className={classes.avatar}>
       <AvatarIcon className={classes.avatarIcon} />
@@ -52,64 +68,65 @@ const ProfileImage = ({ classes }) => (
     <Typography>
       No Picture
     </Typography>
-    <Button secondary variant='raised' label='Add a Picture' />
+    <Button secondary variant='contained' label='Add a Picture' />
   </Column>
 );
 
-ProfileImage.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export const ProfileView = (props) => {
-  const {
-    history,
-    api: { isFetching }
-  } = props;
-  const disabled = isFetching;
-
+export const ProfileView = ({
+  history,
+  classes,
+  updateProfile,
+  formTouched,
+  errors,
+  api: { isFetching },
+  ...props
+}) => {
+  const disabled = isFetching || !formTouched || Boolean(errors);
   return (
-    <Column className={props.classes.root} centerOnSmall small={12} medium={10} large={8}>
-      <Paper elevation={5}>
+    <Column className={classes.root} small={12} medium={10} large={8}>
+      <Paper elevation={5} className={classes.contentContainer}>
         <AppBar position='static'>
-          <Tabs value='profile' centered={true} fullWidth={true} onChange={(e, value) => history.push(value)}>
+          <Tabs value='profile' centered fullWidth onChange={(e, value) => history.push(value)}>
             <Tab data-route='/profile' value='profile' label='Profile' />
             <Tab data-route='/settings' value='settings' label='Settings' />
             <Tab data-route='/fields' value='fields' label='Fields' />
           </Tabs>
         </AppBar>
-        <form className={props.classes.form} autoComplete='off'>
+        <form className={classes.form} autoComplete='off'>
           <Typography>
             Update Your Profile
           </Typography>
-          <FormRow small={6}>
-            { ProfileImage(props) }
+          <FormRow small={10} medium={8}>
+            { ProfileImage(classes) }
           </FormRow>
-          <FormRow small={6}>
-            <FormField name='email' type='text' disabled variant={FIELD_VARIANT_VIEW} />
+          <FormRow small={10} medium={8}>
+            <FormField name='email' type='text' disabled mode={FIELD_VIEW} />
           </FormRow>
-          <div className={props.classes.fields}>
-            <FormRow small={6}>
+          <div className={classes.fields}>
+            <FormRow small={10} medium={8}>
               <FormField name='firstName' type='text' label='First Name' fullWidth />
             </FormRow>
-            <FormRow small={6}>
+            <FormRow small={10} medium={8}>
               <FormField name='lastName' type='text' label='Last Name' fullWidth />
             </FormRow>
-            <FormRow small={6}>
+            <FormRow small={10} medium={8}>
               <FormField name='notificationsEmail' type='text' label='Notifications Email' fullWidth />
             </FormRow>
           </div>
-          <FormRow small={6}>
-            <Column>
+          <Divider className={classes.buttonDivider} />
+          <FormRow small={10} medium={8}>
+            <Column className={classes.buttonBar}>
               <Button
                 type='submit'
                 label='Save'
                 loading={isFetching}
-                onClick={props.updateProfile}
+                onClick={updateProfile}
                 icon={<SaveIcon style={{ marginTop: '-10px' }} />}
                 className='update-profile-submit'
                 primary
                 disabled={disabled}
-                fullWidth />
+                fullWidth
+              />
             </Column>
           </FormRow>
         </form>
@@ -118,24 +135,34 @@ export const ProfileView = (props) => {
   );
 };
 
+const validateFields = {
+  'notificationsEmail': [
+    ['isEmail', 'Invalid Email']
+  ]
+};
+
 ProfileView.propTypes = {
-  history:       PropTypes.object.isRequired,
-  api:           PropTypes.object.isRequired,
+  history:       PropTypes.instanceOf(Object).isRequired,
+  api:           PropTypes.instanceOf(Object).isRequired,
   updateProfile: PropTypes.func.isRequired,
-  classes:       PropTypes.object.isRequired
+  classes:       PropTypes.instanceOf(Object).isRequired
 };
 
 const mapActionCreators = {
   updateProfile : updateUser
 };
 
-const mapStateToProps = (state) => {
-  return ({
-    api:           state.api,
-    initialValues: state.user.attributes,
-    settings:      state.user.attributes
-  });
-};
+const mapStateToProps = (state) => ({
+  api:           state.api,
+  initialValues: state.user.attributes,
+  settings:      state.user.attributes,
+  formTouched:   state.form.updateProfileForm && state.form.updateProfileForm.anyTouched,
+  errors:        state.form.updateProfileForm && state.form.updateProfileForm.syncErrors
+});
 
-const profileForm = reduxForm({ form: 'updateProfileForm' })(withStyles(styles)(ProfileView));
+const profileForm = reduxForm({
+  form: 'updateProfileForm',
+  validate: validate(validateFields)
+})(withStyles(styles)(ProfileView));
+
 export default withRouter(connect(mapStateToProps, mapActionCreators)(profileForm));

@@ -38,9 +38,9 @@ const loadApiEndpoints = (endpoints, level) => {
 
 const ACTION_HANDLERS = {
 
-  [API.CONFIGURE_LOAD] : (state, { payload }) => ({
+  [API.CONFIGURE_LOAD] : (state, { payload: { endpoints, clientInfo } }) => ({
     ...state,
-    ...loadApiEndpoints(payload)
+    ...loadApiEndpoints(endpoints)
   }),
 
   [AUTH.EMAIL_SIGN_IN_START] : (state) => ({

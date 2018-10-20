@@ -22,7 +22,7 @@ const generateMenu = (dataSource) => {
   return items;
 };
 
-export const SelectForm = createComponent(Select, ({
+const SelectForm = createComponent(Select, ({
     input: { onChange, value, onBlur, ...inputProps },
     onChange: onChangeFromField,
     defaultValue,
@@ -62,4 +62,5 @@ SelectField.propTypes = {
   label: PropTypes.string
 };
 
+export { SelectForm };
 export default SelectField;

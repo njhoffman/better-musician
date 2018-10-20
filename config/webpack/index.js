@@ -22,10 +22,7 @@ module.exports = (config) => {
   _.merge(config.webpack.externals.webpackVariables, { apiUrl: `${__API_URL__}` });
 
   config.webpack.plugins = [
-    new webpack.DefinePlugin(config.globals),
-    new webpack.ProvidePlugin({
-      fetch: 'exports-loader?self.fetch!whatwg-fetch'
-    })
+    new webpack.DefinePlugin(config.globals)
   ];
 
   // exit on errors during testing so that they do not get skipped and misreported

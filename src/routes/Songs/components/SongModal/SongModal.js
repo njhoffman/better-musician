@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { chunk } from 'lodash';
@@ -10,17 +10,16 @@ import {
 } from '@material-ui/core';
 import { Row, Column } from 'react-foundation';
 
-import { uiHideModal } from 'actions/ui';
+import { uiHideModal, uiUpdateModal } from 'actions/ui';
 import { SONG_MODAL, MODAL_VARIANT_EDIT, MODAL_VARIANT_ADD } from 'constants/ui';
 import {
   currentSong as currentSongSelector,
   savedTabs as savedTabsSelector
 } from 'routes/Songs/modules/selectors';
-
+import FormField, { FormRow } from 'components/Field';
 import MainTab from './MainTab';
 import ActionButtons from './ActionButtons';
-//
-import FormField, { FormRow } from 'components/Field';
+
 // import css from './AddSong.scss';
 
 let lastActiveField = '';
@@ -28,22 +27,45 @@ let lastActiveField = '';
 const styles = (theme) => ({
   dialogPaper: {
     alignSelf: 'start',
-    margin: '50px 0px 0px 0px',
-    overflowY: 'visible',
+    margin: '0px',
+    maxHeight: '100vh',
+    top: '10%',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%'
+    },
     [theme.breakpoints.up('sm')]: {
-      minWidth: '500px'
+      marginTop: theme.app.headerHeight,
+      minWidth: '450px',
     },
     [theme.breakpoints.up('md')]: {
-      minWidth: '650px'
+      minWidth: '550px'
     }
   },
+  mobile: {
+    [theme.breakpoints.down('xs')]: {
+      top: '0%',
+      height: '100%'
+    },
+  },
   dialogContent: {
-    overflowY: 'visible',
     textAlign: 'center',
-    padding: '0 !important' // :first-child padding-top: 24px
+    // alignItems: 'center',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    display: 'flex',
+    padding: '0 !important', // :first-child padding-top: 24px
   },
   editField: {
     color: 'red'
+  },
+  form: {
+    // padding: '12px'
+    // display: 'flex',
+    // flexDirection: 'column',
+    alignSelf: 'center',
+    maxHeight: '100%',
+
+    width: '100%'
   },
   fieldGroup: {
     width: '100%',
@@ -53,6 +75,11 @@ const styles = (theme) => ({
     boxAlign: 'stretch',
     alignItems: 'stretch',
     justifyContent: 'space-around',
+  },
+  customFieldRow: {
+    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit
+    // alignItems: 'center'
   }
 
 
@@ -85,105 +112,97 @@ const styles = (theme) => ({
 // }
 });
 
-const TabContainer = (props) => (
-  <Typography component='div' style={{ padding: 8 * 3 }}>
-    {props.children}
-  </Typography>
+const TabContainer = ({ children }) => (
+  <Fragment>
+    {children}
+  </Fragment>
 );
 
 TabContainer.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-// TODO: investigate stack trace problem when forgetting to import 'Component'
-export class SongModal extends Component {
-  static propTypes = {
-    uiHideModal:   PropTypes.func.isRequired,
-    isOpen:        PropTypes.bool.isRequired,
-    variant:       PropTypes.string.isRequired,
-    savedTabs:     PropTypes.array.isRequired,
-    activeField:   PropTypes.string,
-    classes:       PropTypes.object.isRequired,
-    initialValues: PropTypes.object
-  };
-
-  state = {
-    value: 0
-  };
-
-  handleChange(event, value) {
-    this.setState({ value });
-  }
-
-  render() {
-    const { classes, activeField, variant, errors } = this.props;
-
-    lastActiveField = activeField || lastActiveField;
-
-    const tabProps = { lastActiveField, activeField, variant };
-    const { value } = this.state;
-
-    return (
-      <Dialog
-        open={this.props.isOpen}
-        classes={{ paper: classes.dialogPaper }} >
-        <DialogContent className={classes.dialogContent}>
-          <form>
-            <AppBar position='static' >
-              <Tabs
-                centered={true}
-                fullWidth={true}
-                value={value}
-                onChange={(event, value) => this.handleChange(event, value)}>
-                <Tab label='Main Fields' />
-                {this.props.savedTabs.map((tab, tabIdx) => <Tab key={tabIdx} label={tab.name} />)}
-              </Tabs>
-            </AppBar>
-
-            {value === 0 && (
-              <TabContainer>
-                <MainTab {...tabProps} />
+const SongModal = ({
+  classes,
+  activeField,
+  savedTabs,
+  variant,
+  isMobile,
+  isOpen,
+  errors,
+  tabChange,
+  currentTab,
+  initialValues
+}) => {
+  lastActiveField = activeField || lastActiveField;
+  const tabProps = { lastActiveField, activeField, variant };
+  return (
+    <Dialog
+      onExited={() => tabChange(0)}
+      open={isOpen}
+      classes={{ paper: `${classes.dialogPaper} ${isMobile ? classes.mobile : ''}` }}>
+      <AppBar position='static'>
+        <Tabs
+          centered
+          fullWidth
+          value={currentTab}
+          onChange={(e, val) => tabChange(val)}>
+          <Tab label='Main Fields' />
+          {savedTabs.map((tab, tabIdx) => <Tab key={tab.idx} label={tab.name} />)}
+        </Tabs>
+      </AppBar>
+      <DialogContent className={classes.dialogContent}>
+        <form className={classes.form}>
+          {currentTab === 0 && (
+            <TabContainer>
+              <MainTab {...tabProps} />
+            </TabContainer>
+          )}
+          {savedTabs.map((tab, tabIdx) => (
+            currentTab === (tabIdx + 1) && (
+              <TabContainer key={tab.idx}>
+                <Row>
+                  <Column>
+                    {errors && [].concat(errors).map((error, i) =>
+                      <Typography key={i} className='error'>{error}</Typography>
+                    )}
+                  </Column>
+                </Row>
+                {chunk(tab.fields, 2).map((fields, fieldIdx) => (
+                  <FormRow key={fieldIdx} className={classes.customFieldRow}>
+                    {fields.map(field => (
+                      <FormField
+                        key={field.idx}
+                        name={field.name}
+                        small={6}
+                        variant={variant}
+                        initialValues={initialValues}
+                        centerOnSmall
+                        {...field}
+                      />
+                    ))}
+                  </FormRow>
+                ))}
               </TabContainer>
-            )}
+            )))}
+        </form>
+      </DialogContent>
+      <DialogActions>
+        <ActionButtons variant={variant} />
+      </DialogActions>
+    </Dialog>
+  );
+};
 
-            {this.props.savedTabs.map((tab, tabIdx) => (
-              value === (tabIdx + 1) && (
-                <TabContainer key={tabIdx}>
-                  <Row>
-                    <Column>
-                      {errors && [].concat(errors).map((error, i) =>
-                        <p key={i} className='error'>{error}</p>
-                      )}
-                    </Column>
-                  </Row>
-                  {chunk(tab.fields, 2).map((fields, fieldIdx) => (
-                    <FormRow key={fieldIdx}>
-                      {fields.map(field => (
-                        <FormField
-                          key={field.idx}
-                          name={field.name}
-                          small={fields.length === 1 ? 12 : 6}
-                          variant={variant}
-                          initialValues={this.props.initialValues}
-                          centerOnSmall
-                          { ...field }
-                        />
-                      ))}
-                    </FormRow>
-                  ))}
-                </TabContainer>
-              )))}
-
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <ActionButtons variant={variant} />
-        </DialogActions>
-      </Dialog>
-    );
-  }
-}
-
+SongModal.propTypes = {
+  uiHideModal:   PropTypes.func.isRequired,
+  isOpen:        PropTypes.bool.isRequired,
+  variant:       PropTypes.string.isRequired,
+  savedTabs:     PropTypes.array.isRequired,
+  activeField:   PropTypes.string,
+  classes:       PropTypes.object.isRequired,
+  initialValues: PropTypes.object
+};
 // const validate = (values) => {
 //   const errors = {};
 //   // TODO: figure out why autocomplete meta doesnt get errors or touched assigned
@@ -212,7 +231,10 @@ const initialValues = (song, addModalVariant) => {
   }
 };
 
-const mapDispatchToProps = { uiHideModal };
+const mapDispatchToProps = {
+  uiHideModal,
+  tabChange: (val) => uiUpdateModal(SONG_MODAL, { currentTab: val })
+};
 
 const mapStateToProps = (state) => ({
   initialValues: initialValues(currentSongSelector(state), state.ui.modal.variant === MODAL_VARIANT_ADD),
@@ -220,7 +242,9 @@ const mapStateToProps = (state) => ({
   savedTabs:     savedTabsSelector(state),
   variant:       state.ui.modal.variant || MODAL_VARIANT_EDIT,
   errors:        state.ui.modal.errors,
-  isOpen:        state.ui.modal.name === SONG_MODAL
+  isOpen:        state.ui.modal.name === SONG_MODAL,
+  isMobile:      state.config.client.device.isMobile,
+  currentTab:    state.ui.modal.currentTab
 });
 
 const songForm = withStyles(styles)(reduxForm({

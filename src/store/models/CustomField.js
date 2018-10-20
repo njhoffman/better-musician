@@ -4,8 +4,9 @@ class CustomField extends BaseModel {
   static reducer(action, Field/* , session */) {
     const { type } = action;
     switch (type) {
+      case 'FIELDS_UPDATE_COMPLETE':
       case 'LOAD_FIELDS':
-        this.loadData(action.payload, Field);
+        this.loadData([].concat(action.payload), Field);
         break;
       case 'ADD_FIELD':
         if (action.payload) {

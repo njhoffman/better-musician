@@ -1,52 +1,35 @@
-import React, { Component } from 'react';
+import React, { Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   Chip,
   FormRow
 } from 'components/Field';
 import { Field } from 'redux-form';
-import { TextField } from '@material-ui/core';
+import { TextField, withStyles } from '@material-ui/core';
 import { Column } from 'react-foundation';
 import Button from 'components/Button';
-  // .fieldsForm {
-  //   margin-left: auto;
-  //   margin-right: auto;
-  //   margin: 25px 5px 5px 5px;
-  //   text-align: center;
-  //
-  //   .fieldAdd,
-  //   .buttons,
-  //   .extraFields,
-  //   .tabbedField {
-  //     display: flex;
-  //     max-width: none;
-  //     flex-wrap: wrap;
-  //     box-align: stretch;
-  //     align-items: center;
-  //     justify-content: space-around;
-  //   }
-  //   .fieldAdd {
-  //     padding: 0px 20px;
-  //   }
-  //   .extraFields {
-  //     margin-left: auto;
-  //     margin-right: auto;
-  //     .selectOptions {
-  //       margin-top: 10px;
-  //       max-width: 550px;
-  //       max-height: 400px;
-  //       overflow-y: auto;
-  //       display: flex;
-  //       flex-wrap: wrap;
-  //       justify-content: center;
-  //     }
-  //     .flexThree {
-  //       margin-left: auto;
-  //       margin-right: auto;
-  //     }
-  //   }
 
-export class FieldOptions extends Component {
+const styles = (theme) => ({
+  chips: {
+    display: 'inline-flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    margin: '10px 0px',
+    maxHeight: '12vh',
+    // minHeight: '75px',
+    overflowY: 'scroll'
+  },
+  addOptionWrapper: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  addButton: {
+    display: 'flex',
+    alignSelf: 'center'
+  },
+});
+
+class FieldOptions extends Component {
   static propTypes = {
     fields: PropTypes.any.isRequired
   }
@@ -56,44 +39,51 @@ export class FieldOptions extends Component {
   };
 
   addOption(fields) {
-    fields.push(this.state.optionText.trim());
+    const { optionText } = this.state;
+    fields.push(optionText.trim());
     this.setState({
       optionText: ''
     });
   }
 
   render() {
+    const { classes, fields } = this.props;
+    const { optionText } = this.state;
     return (
-      <div>
+      <Fragment>
         <FormRow>
-          <Column small={8}>
+          <Column className={classes.addOptionWrapper} small={12}>
             <TextField
               label='Option Text'
               onChange={(e) => this.setState({ optionText: e.target.value })}
-              value={this.state.optionText}
-              name='optionText' />
+              value={optionText}
+              name='optionText'
+            />
             <Button
-              variant='raised'
-              onClick={() => this.addOption(this.props.fields)}
+              variant='contained'
+              onClick={() => this.addOption(fields)}
+              className={classes.addButton}
+              size='small'
               secondary
-              label='Add' />
+              label='Add'
+            />
           </Column>
         </FormRow>
         <FormRow>
-          <Column small={6}>
-            {this.props.fields.map((option, index, fields) =>
+          <Column small={12} className={classes.chips}>
+            {fields.map((option, index, fieldsRef) => (
               <Field
                 key={index}
                 name={`${option}`}
                 component={Chip}
-                onDelete={() => fields.remove(index)}
+                onDelete={() => fieldsRef.remove(index)}
               />
-            )}
+            ))}
           </Column>
         </FormRow>
-      </div>
+      </Fragment>
     );
   }
 }
 
-export default FieldOptions;
+export default withStyles(styles)(FieldOptions);

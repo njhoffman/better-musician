@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import withTheme from '@material-ui/core/styles/withTheme';
@@ -7,6 +7,7 @@ import { Stars, Difficulty } from 'components/Field';
 import { maxDifficulty as maxDifficultySelector } from 'selectors/users';
 import { MODAL_VARIANT_VIEW } from 'constants/ui';
 import { uiShowSongModal } from 'actions/ui';
+import Tappable from 'react-tappable';
 
 const rowStyle = { };
 const styles = (theme) => ({
@@ -19,38 +20,53 @@ const styles = (theme) => ({
     [theme.breakpoints.down('md')]: {
       padding: '1px 4px'
     }
-
   },
   columnTitle: {
-    width: '200px',
+    textAlign: 'center',
+    [theme.breakpoints.down('sm')]: {
+      textAlign: 'left',
+      width: '66%',
+    }
   },
   columnArtist: {
     textAlign: 'center'
   },
   columnProgress: {
     textAlign: 'center',
-    width: '80px'
+    width: '80px',
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   },
   columnDifficulty: {
     textAlign: 'center',
-    width: '80px'
+    width: '80px',
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   }
 });
 
 export const Song = ({
   classes,
+  setCurrentSong,
   songValues,
   currentSongId,
   uiShowSongModal,
   maxDifficulty,
-  theme: { instrumental: { starColor }},
+  theme: { app: { starColor }},
   ...props
 }) => {
   return (
-    <TableRow
+    <Tappable
       hover
+      component={TableRow}
       selected={currentSongId === songValues.id}
       onDoubleClick={() => uiShowSongModal(MODAL_VARIANT_VIEW)}
+      onPress={() => {
+        setCurrentSong(songValues);
+        uiShowSongModal(MODAL_VARIANT_VIEW);
+      }}
       style={rowStyle}
       {...props}>
       <TableCell className={`${classes.column} ${classes.columnTitle}`}>
@@ -65,7 +81,7 @@ export const Song = ({
       <TableCell className={`${classes.column} ${classes.columnDifficulty}`}>
         <Difficulty difficulty={songValues.difficulty} maxDifficulty={maxDifficulty} />
       </TableCell>
-    </TableRow>
+    </Tappable>
   );
 };
 

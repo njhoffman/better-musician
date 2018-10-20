@@ -1,28 +1,52 @@
+/* eslint-disable no-console */
+
 const pjson = require('prettyjson-256');
 const _ = require('lodash');
-const { padRight } = require('../util');
 
 const beautifiers = require('./browser.beautifiers');
 
 //  console.log('%cBlue! %cRed!', 'color: blue;', 'color: red;');
-const results = pjson.init({ browser: true, showEmpty: false });
+pjson.init({ browser: true, showEmpty: false });
 const consoleLog = console.log;
 const subsystems = ['hot-module'];
 const lineLimit = 150;
 
-const ignoredActions = [
-  '@@redux-form/BLUR', '@@redux-form/CHANGE', '@@redux-form/FOCUS'
-];
-
 const deleteNull = (test, recurse) => {
-  for (var i in test) {
-    if (test[i] == null) {
-      delete test[i];
-    } else if (recurse && typeof test[i] === 'object') {
-      deleteNull(test[i], recurse);
+  const filtered = test;
+  let i;
+  for (i in filtered) {
+    if (filtered[i] == null) {
+      delete filtered[i];
+    } else if (recurse && typeof filtered[i] === 'object') {
+      deleteNull(filtered[i], recurse);
     }
   }
-}
+  return filtered;
+};
+
+const createLogLine = (messages) => {
+  let out = '';
+  const colors = [];
+  let lineLength = 0;
+  messages.forEach((line, n) => {
+    const newMessage = line[0].replace(/%i$/, '');
+    const newMessageLength = newMessage.replace(/%c/g, '').length;
+    if (n > 0 && !/%i$/.test(line[0])) {
+      out += ' \n ';
+      lineLength = 0;
+    }
+    lineLength += newMessageLength;
+    out += lineLength > lineLimit
+      ? `${newMessage.slice(0, lineLimit - (lineLength - newMessageLength))}...`
+      : newMessage;
+    colors.push(...line.slice(1));
+    const nextLine = messages[n + 1];
+    if (nextLine && !/%i$/.test(nextLine[0])) {
+      out += ' \r ';
+    }
+  });
+  return [out, ...colors];
+};
 
 const parse = (subsystem, style, messages) => {
   subsystems.indexOf(subsystem) === -1 && subsystems.push(subsystem);
@@ -36,14 +60,14 @@ const parse = (subsystem, style, messages) => {
       const pretty = beautifiers[lastKey](messages.pop()[lastKey]);
       toProcess = _.isArray(pretty) && _.isArray(pretty[0]) ? pretty : [pretty];
     } else {
-      toProcess = messages.filter(msg => !_.isUndefined(msg));
+      toProcess = messages.filter((msg) => !_.isUndefined(msg));
     }
   }
 
   const logMessages = [];
-  [].concat(toProcess).filter(msg => !_.isEmpty(msg)).forEach((msg, i) => {
+  [].concat(toProcess).filter((msg) => !_.isEmpty(msg)).forEach((message, i) => {
     // if (msg.method === 'POST') debugger;
-    deleteNull(msg, true);
+    const msg = deleteNull(message, true);
     let rendered = [];
     if (_.isArray(msg) && msg[0].split('%c').length === msg.length) {
       // if has own color code formatting, don't send it through json parser
@@ -68,46 +92,28 @@ const parse = (subsystem, style, messages) => {
     logMessages.push(logLine);
   });
 
-  logMessages.forEach(([msg, ...colors]) =>
-    msg.split('\n').forEach(line =>
-      // !/null\s*$/.test(line) &&
-      consoleLog(line, ...colors.splice(0, line.split('%c').length - 1))
-    )
-  );
+  logMessages.forEach(([msg, ...colors]) => msg.split('\n').forEach(
+    (line) => consoleLog(line, ...colors.splice(0, line.split('%c').length - 1))
+  ));
 };
 
-const createLogLine = (messages) => {
-  let out = '';
-  let colors = [];
-  let lineLength = 0;
-  messages.forEach((line, n) => {
-    const newMessage = line[0].replace(/%i$/, '');
-    const newMessageLength = newMessage.replace(/\%c/g, '').length;
-    if (n > 0 && !/%i$/.test(line[0])) {
-      out += ' \n ';
-      lineLength = 0;
-    }
-    lineLength += newMessageLength;
-    out += lineLength > lineLimit ? newMessage.slice(0, lineLimit - (lineLength - newMessageLength)) + '...' : newMessage;
-    colors.push(...line.slice(1));
-    const nextLine = messages[n + 1];
-    if (nextLine && !/%i$/.test(nextLine[0])) {
-      out += ' \r ';
-    }
-  });
-  return [out, ...colors];
-};
-
-console.log = function (arg1) {
+console.log = function consoleLogEnhanced(arg1) {
   if (arg1 && arg1.indexOf && arg1.indexOf('[HMR]') !== -1) {
     if (arg1.indexOf('bundle rebuilding') !== -1) {
       console.clear();
     }
     return parse('hot-module', 'color: #ff8800', `${arg1}`);
-  } else {
-    return consoleLog.apply(console, arguments);
   }
+  return consoleLog.apply(console, arguments);
 };
+
+export const trace = (subsystem, ...inputs) => parse(subsystem, 'color: #ccffff', inputs);
+export const debug = (subsystem, ...inputs) => parse(subsystem, 'color: #88ffee', inputs);
+export const info  = (subsystem, ...inputs) => parse(subsystem, 'color: #44aabb', inputs);
+export const log   = (subsystem, ...inputs) => parse(subsystem, 'color: #00aa66', inputs);
+export const warn  = (subsystem, ...inputs) => parse(subsystem, 'color: #aa6622', inputs);
+export const error = (subsystem, ...inputs) => parse(subsystem, 'color: #ff0000', inputs);
+export const fatal = (subsystem, ...inputs) => parse(subsystem, 'color: #ff0000', inputs);
 
 export const init = (subsystem) => ({
   trace : trace.bind(this, subsystem),
@@ -119,14 +125,7 @@ export const init = (subsystem) => ({
   fatal : fatal.bind(this, subsystem)
 });
 
-export const trace = (subsystem, ...inputs) => parse(subsystem, 'color: #ccffff', inputs);
-export const debug = (subsystem, ...inputs) => parse(subsystem, 'color: #88ffee', inputs);
-export const info  = (subsystem, ...inputs) => parse(subsystem, 'color: #44aabb', inputs);
-export const log   = (subsystem, ...inputs) => parse(subsystem, 'color: #00aa66', inputs);
-export const warn  = (subsystem, ...inputs) => parse(subsystem, 'color: #aa6622', inputs);
-export const error = (subsystem, ...inputs) => parse(subsystem, 'color: #ff0000', inputs);
-export const fatal = (subsystem, ...inputs) => parse(subsystem, 'color: #ff0000', inputs);
-
+/* eslint-enable no-console */
 
 // TODO: Improvements...
 // Allow in place colors to be used without arrays

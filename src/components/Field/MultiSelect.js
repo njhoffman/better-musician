@@ -50,7 +50,7 @@ const MultiSelect = ({
         />
         {!disabled &&
             <Button
-              variant='raised'
+              variant='contained'
               color='secondary'
               className={classes.addButton}
               onClick={() => addOption(input.value)}>

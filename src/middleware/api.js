@@ -19,8 +19,8 @@ export const CALL_API = Symbol('Call API');
 
 const makeFormData = (FormData, data, name = '') => {
   if (typeof data === 'object') {
-    Object.keys(data).forEach(key => {
-      let val = data[key];
+    Object.keys(data).forEach((key) => {
+      const val = data[key];
       if (name === '') {
         makeFormData(FormData, val, key);
       } else {
@@ -31,8 +31,11 @@ const makeFormData = (FormData, data, name = '') => {
     FormData.append(name, data);
   }
 };
-export const addAuthorizationHeader = (accessToken, headers) =>
-  Object.assign({}, headers, { Authorization: `Bearer ${accessToken}` });
+export const addAuthorizationHeader = (accessToken, headers) => Object.assign(
+  {},
+  headers,
+  { Authorization: `Bearer ${accessToken}` }
+);
 
 const getAuthHeaders = (url) => {
   // fetch current auth headers from storage
@@ -43,20 +46,19 @@ const getAuthHeaders = (url) => {
   nextHeaders['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
 
   // set header for each key in `tokenFormat` config
-  for (var key in getTokenFormat()) {
+  Object.keys(getTokenFormat()).forEach((key) => {
     nextHeaders[key] = currentHeaders[key];
-  }
+  });
 
   return addAuthorizationHeader(currentHeaders['access-token'], nextHeaders);
 };
 
 export const parseResponse = (response) => {
-  let json = response.json();
+  const json = response.json();
   if (response.status >= 200 && response.status < 300) {
     return json;
-  } else {
-    return json.then(err => Promise.reject(err.errors ? err.errors : err));
   }
+  return json.then((err) => Promise.reject(err.errors ? err.errors : err));
 };
 
 const updateAuthCredentials = (resp) => {
@@ -69,13 +71,13 @@ const updateAuthCredentials = (resp) => {
   let blankHeaders = true;
 
   // set header key + val for each key in `tokenFormat` config
-  for (var key in getTokenFormat()) {
+  Object.keys(getTokenFormat()).forEach((key) => {
     newHeaders[key] = resp.headers.get(key);
 
     if (newHeaders[key]) {
       blankHeaders = false;
     }
-  }
+  });
 
   // persist headers for next request
   if (!blankHeaders) {
@@ -87,27 +89,16 @@ const updateAuthCredentials = (resp) => {
 
 const apiFetch = (endpoint, options) => {
   // endpoint = __API_URL__ + endpoint;
-  // TODO: make this a config option
-  endpoint = endpoint.replace('localhost', window.location.hostname);
-  info(`Fetching: ${endpoint}`);
-  trace('Options', options);
+  const endpointPath = endpoint.replace('localhost', window.location.hostname);
+  const fetchOptions = options;
   if (typeof options.body === 'object' && Object.keys(options.body).length > 0) {
-    let formData = new FormData();
-    makeFormData(formData, options.body);
-    options.body = formData;
+    const formData = new FormData();
+    makeFormData(formData, fetchOptions.body);
+    fetchOptions.body = formData;
   }
-  return fetch(endpoint, options);
-};
-
-export const actionLogger = (store) => next => action => {
-  // meta.form, meta.field
-  const { warn, trace } = initLog('api-action');
-  if (_.isUndefined(action)) {
-    warn('undefined action');
-  } else {
-    trace(`Action: ${padRight(action.type)}`, { _action: { ...action } });
-    apiHandler(store, action, next);
-  }
+  info(`Fetching: ${endpointPath}`);
+  trace('Options', fetchOptions);
+  return fetch(endpointPath, fetchOptions);
 };
 
 const validateCall = ({ endpoint, types, method, payload }) => {
@@ -117,7 +108,7 @@ const validateCall = ({ endpoint, types, method, payload }) => {
   if (!Array.isArray(types) || types.length !== 3) {
     throw new Error('Expected an array of three action types.');
   }
-  if (!types.every(type => (typeof type === 'string' || typeof type === 'function'))) {
+  if (!types.every((type) => (typeof type === 'string' || typeof type === 'function'))) {
     throw new Error('Expected action types to be strings or functions.');
   }
   if (method === 'GET' && payload) {
@@ -126,31 +117,30 @@ const validateCall = ({ endpoint, types, method, payload }) => {
 };
 
 const apiHandler = (store, action, next) => {
-  const actionWith = data => {
+  if (_.isUndefined(action)) {
+    return next();
+  } else if (_.isUndefined(action[CALL_API])) {
+    // not an API call, pass it through
+    return next(action);
+  }
+
+  const callApi = action[CALL_API];
+  const { endpoint, method = 'GET' } = callApi;
+  const { types, payload } = callApi;
+  const [requestType, successType, failureType] = types;
+  info(`Call to API: ${types[0]}`, { _action: { ...action[CALL_API], callApi: true } });
+
+  const endpointPath = typeof endpoint === 'function' ? endpoint(store.getState()) : endpoint;
+
+  validateCall({ endpoint: endpointPath, types, method, payload });
+
+  const actionWith = (data) => {
     const finalAction = Object.assign({}, action, data);
     delete finalAction[CALL_API];
     return finalAction;
   };
 
-  const responseSuccess = (response) => {
-    info(`Fetch success: ${JSON.stringify(response).length} characters returned`);
-    if (response.errors && response.errors.length > 0) {
-      // successful fetch but validation errors returned
-      return responseFailure({ name: 'ValidationError', message: response.errors.join('\n') });
-    } else {
-      if (typeof successType === 'function') {
-        return next(
-          successType(response)
-        );
-      } else {
-        return next(
-          actionWith({
-            payload: response,
-            type: successType
-          }));
-      }
-    }
-  };
+  next(actionWith({ type: requestType }));
 
   const responseFailure = (err) => {
     if (err.name === 'ValidationError') {
@@ -163,46 +153,58 @@ const apiHandler = (store, action, next) => {
       return next(
         failureType(err)
       );
-    } else {
-      return next(
-        actionWith({
-          payload: err,
-          type: failureType
-        }));
     }
+    return next(
+      actionWith({
+        payload: err,
+        type: failureType
+      })
+    );
   };
 
-  if (_.isUndefined(action)) {
-    return;
-  } else if (_.isUndefined(action[CALL_API])) {
-    // not an API call, pass it through
-    return next(action);
-  }
-
-  const callApi = action[CALL_API];
-  let { endpoint, method = 'GET' } = callApi;
-  const { types, payload } = callApi;
-  info(`Call to API: ${types[0]}`, { _action: { ...action[CALL_API], callApi: true } });
-
-  if (typeof endpoint === 'function') {
-    endpoint = endpoint(store.getState());
-  }
-
-  validateCall({ endpoint, types, method, payload });
-
-  const [ requestType, successType, failureType ] = types;
-  next(actionWith({ type: requestType }));
+  const responseSuccess = ({ data }) => {
+    info(`Fetch success: ${JSON.stringify(data).length} characters returned`);
+    if (data.errors && data.errors.length > 0) {
+      // successful fetch but validation errors returned
+      return responseFailure({
+        name: 'ValidationError',
+        message: data.errors.map((e) => e.message).join('\n')
+      });
+    }
+    if (typeof successType === 'function') {
+      return next(
+        successType(data)
+      );
+    }
+    return next(
+      actionWith({
+        payload: data,
+        type: successType
+      })
+    );
+  };
 
   const options = {
     method,
-    headers: getAuthHeaders(endpoint),
+    headers: getAuthHeaders(endpointPath),
     body: _.isObject(payload) ? JSON.stringify(payload) : payload
   };
 
-  return apiFetch(endpoint, options)
-    .then(resp => updateAuthCredentials(resp))
-    .then(resp => parseResponse(resp))
+  return apiFetch(endpointPath, options)
+    .then((resp) => updateAuthCredentials(resp))
+    .then((resp) => parseResponse(resp))
     .then(responseSuccess, responseFailure);
 };
 
-export default (store) => next => action => apiHandler(store, action, next);
+export const actionLogger = (store) => (next) => (action) => {
+  // meta.form, meta.field
+  const { warn: warnAction, trace: traceAction } = initLog('api-action');
+  if (_.isUndefined(action)) {
+    warnAction('undefined action');
+  } else {
+    traceAction(`Action: ${padRight(action.type)}`, { _action: { ...action } });
+    apiHandler(store, action, next);
+  }
+};
+
+export default (store) => (next) => (action) => apiHandler(store, action, next);

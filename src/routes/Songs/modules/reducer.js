@@ -15,10 +15,7 @@ export const SET_PAGINATION_CURRENT   = 'SET_PAGINATION_CURRENT';
 // ------------------------------------
 
 export const setCurrentSong = (song) => (dispatch, getState) => {
-  if (getState().ui.modal.type) {
-    return;
-  }
-  return dispatch({ type: SET_CURRENT_SONG, payload: song.id });
+  return dispatch({ type: SET_CURRENT_SONG, payload: song && song.id || '' });
 };
 
 export const setSort = (sortField) => (dispatch, getState) => {

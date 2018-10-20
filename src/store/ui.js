@@ -4,6 +4,25 @@ import * as UI from 'constants/ui';
 
 import { init as initLog } from 'shared/logger';
 
+export const initialState = {
+  currentView: null,
+  initializing: null,
+  initializedViews: [],
+  snackbar: {
+    isOpen: false,
+    isTransitioning: false,
+    queue: []
+  },
+  drawer: {
+    isOpen: false,
+    menuProps: {}
+  },
+  modal: {
+    name: '',
+    type: ''
+  }
+};
+
 const toggleDrawerMenu = (state) =>
   ({ ...state, drawer: { ...state.drawer, isOpen: !state.isOpen } });
 
@@ -17,7 +36,7 @@ const snackbarQueue = (state, { payload, meta }) => ({
   ...state,
   snackbar: {
     isOpen: !state.snackbar.isOpen,
-    queue: [ ...state.snackbar.queue, {
+    queue: [...state.snackbar.queue, {
       message: payload,
       variant: meta.variant,
       title:   meta.title
@@ -41,14 +60,14 @@ const snackbarExit = (state) => ({
   }
 });
 
-const updateModal = (state, action) => ({
+const updateModal = (state, { payload, meta }) => ({
   ...state,
-  modal: { ...state.modal, name: action.payload, variant: action.meta.variant }
+  modal: { ...state.modal, name: payload, ...meta }
 });
 
-const showModal = (state, action) => ({
+const showModal = (state, { payload, meta }) => ({
   ...state,
-  modal: { ...state.modal, name: action.payload, variant: action.meta.variant }
+  modal: { ...state.modal, name: payload, ...meta }
 });
 
 const hideModal = (state) => ({
@@ -76,13 +95,14 @@ const initViewComplete = (state, {
 const locationChangeView = (state, { payload: { pathname } }) => {
   const { info } = initLog('ui-reducer');
 
-  const view = _.find(state.initializedViews, { pathname });
+  const pathBase = pathname.split('?')[0];
+  const view = _.find(state.initializedViews, { pathname: pathBase });
   if (view) {
     info(`Refreshing View "${view.route}", Route: ${view.pathname}`);
     return { ...state, currentView: view.route };
   }
-  info(`Initializing Route: ${pathname}`);
-  return state;
+  info(`Initializing Route: ${pathBase}`);
+  return { ...state, currentView: null };
 };
 
 const ACTION_HANDLERS = {
@@ -93,30 +113,11 @@ const ACTION_HANDLERS = {
   [UI.SNACKBAR_SHOW]:      snackbarQueue,
   [UI.SNACKBAR_HIDE]:      snackbarHide,
   [UI.SNACKBAR_EXIT]:      snackbarExit,
-  [UI.MODAL_SHOW]:      showModal,
-  [UI.MODAL_HIDE]:      hideModal,
-  [UI.MODAL_UPDATE]:    updateModal,
+  [UI.MODAL_SHOW]:         showModal,
+  [UI.MODAL_HIDE]:         hideModal,
+  [UI.MODAL_UPDATE]:       updateModal,
   [UI.INIT_VIEW_START]:    initViewStart,
   [UI.INIT_VIEW_COMPLETE]: initViewComplete
-};
-
-export const initialState = {
-  currentView: null,
-  initializing: null,
-  initializedViews: [],
-  snackbar: {
-    isOpen: false,
-    isTransitioning: false,
-    queue: []
-  },
-  drawer: {
-    isOpen: false,
-    menuProps: {}
-  },
-  modal: {
-    name: '',
-    type: ''
-  }
 };
 
 export default function uiReducer(state = initialState, action) {

@@ -31,21 +31,23 @@ export const HomeView = ({ classes, showSnackbar }) => (
     <Paper elevation={5} className={classes.paper}>
       <Row>
         <Column>
-          <Typography variant='title'>
-              This is the home screen
-          </Typography>
-          <Link to='/songs'>Songs</Link><br />
-          <Link to='/profile'>Profile</Link><br />
-          <Link to='/login'>Login</Link><br />
-          <Link to='/register'>Register</Link><br />
-          <Link to='/reset'>Reset</Link><br />
+          <Link to='/songs'>Songs</Link>
+          <br />
+          <Link to='/profile'>Profile</Link>
+          <br />
+          <Link to='/login'>Login</Link>
+          <br />
+          <Link to='/register'>Register</Link>
+          <br />
+          <Link to='/reset'>Reset</Link>
+          <br />
           <Link to='/settings'> Settings</Link>
         </Column>
       </Row>
       <Divider className={classes.divider} />
       <Row>
         <Column>
-          <Typography variant='title'>
+          <Typography variant='h6'>
             Snackbars
           </Typography>
           <Button
@@ -60,7 +62,10 @@ export const HomeView = ({ classes, showSnackbar }) => (
           </Button>
           <Button
             color='secondary'
-            onClick={() => showSnackbar('This is a test warning message', 'warning')}>
+            onClick={() => showSnackbar(
+              'This is a test warning message, it is supposed to be very long to simulate multiline text.',
+              'warning'
+            )}>
             Warning
           </Button>
           <Button
@@ -70,12 +75,82 @@ export const HomeView = ({ classes, showSnackbar }) => (
           </Button>
         </Column>
       </Row>
+      <Divider className={classes.divider} />
+      <Row>
+        <Column style={{ height: '300px', overflowY: 'scroll' }}>
+          <Typography variant='body2'>
+            <span>body2:</span>
+            <span>The quick brown fox jumped across...</span>
+          </Typography>
+          <br />
+          <Typography variant='body1'>
+            <span>body1:</span>
+            <span> The quick brown fox jumped across...</span>
+          </Typography>
+          <br />
+          <Typography variant='subtitle2'>
+            <span>subtitle2:</span>
+            <span>The quick brown fox jumped across...</span>
+          </Typography>
+          <br />
+          <Typography variant='subtitle1'>
+            <span>subtitle1:</span>
+            <span>The quick brown fox jumped across...</span>
+          </Typography>
+          <br />
+          <Typography variant='overline'>
+            <span>overline:</span>
+            <span>The quick brown fox jumped across...</span>
+          </Typography>
+          <br />
+          <Typography variant='button'>
+            <span>button:</span>
+            <span>The quick brown fox jumped across...</span>
+          </Typography>
+          <br />
+          <Typography variant='caption'>
+            <span>caption:</span>
+            <span>The quick brown fox jumped across...</span>
+          </Typography>
+          <br />
+          <Typography variant='h6'>
+            <span>h6:</span>
+            <span>The quick brown fox jumped across...</span>
+          </Typography>
+          <br />
+          <Typography variant='h5'>
+            <span>h5:</span>
+            <span>The quick brown fox jumped across...</span>
+          </Typography>
+          <br />
+          <Typography variant='h4'>
+            <span>h4:</span>
+            <span>The quick brown fox jumped across...</span>
+          </Typography>
+          <br />
+          <Typography variant='h3'>
+            <span>h3:</span>
+            <span>The quick brown fox jumped across...</span>
+          </Typography>
+          <br />
+          <Typography variant='h2'>
+            <span>h2:</span>
+            <span>The quick brown fox jumped across...</span>
+          </Typography>
+          <br />
+          <Typography variant='h1'>
+            <span>h1:</span>
+            <span>The quick brown fox jumped across...</span>
+          </Typography>
+          <br />
+        </Column>
+      </Row>
     </Paper>
   </Column>
 );
 
 HomeView.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.instanceOf(Object).isRequired,
   showSnackbar: PropTypes.func.isRequired
 };
 

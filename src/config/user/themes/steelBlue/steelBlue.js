@@ -8,30 +8,35 @@ import {
 import spacing from '@material-ui/core/styles/spacing';
 
 export default {
-  spacing:            spacing,
-  themeName:          'Steel Blue',
-  overrides:          {
-    MuiDrawer:        {
-      paper:          {
-        background:   'rgba(0, 0, 0, 0.95)'
+  spacing: spacing,
+  themeName: 'Steel Blue',
+  overrides: {
+    MuiDrawer: {
+      paper: {
+        background: 'rgba(0, 0, 0, 0.95)'
       }
-    }
-  },
-  palette:            {
-    primary:          {
-      main:           blueGrey['800']
     },
-    secondary:        {
-      main:           blueGrey['400']
+    MuiBackdrop: {
+      root: {
+        backgroundColor: 'rgba(0, 0, 0, 0.6)'
+      }
+    },
+  },
+  palette: {
+    primary: {
+      main: blueGrey['800']
+    },
+    secondary: {
+      main: blueGrey['400']
     }
   },
-  typography:         {
-    fontFamily:       '"Roboto", "Open Sans", sans-serif',
-    fontSize:         13
+  typography: {
+    fontFamily: '"Roboto", "Open Sans", sans-serif',
+    fontSize: 13
   },
   backgroundColor:    'linear-gradient(135deg, #141a1e 0%,#627c91 50%,#627c91 52%,#141a1e 100%)',
-  instrumental:       {
-    starColor:        yellow['A200'],
+  app: {
+    starColor:        yellow['200'],
     headerLinksColor: blueGrey['300'],
     footerFiller:     'linear-gradient(180deg, rgb(33,33,33) 0%, rgb(10,10,10) 20%, rgb(0,0,0) 100%)',
     canvasColor:      grey['900'],

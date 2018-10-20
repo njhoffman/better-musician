@@ -1,161 +1,171 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Column } from 'react-foundation';
 import { reduxForm } from 'redux-form';
 import { withRouter } from 'react-router';
 import { MdClose as ResetIcon, MdSave as SaveIcon } from 'react-icons/md';
-import { Paper, Tabs, Tab, AppBar, Typography, withStyles } from '@material-ui/core';
+import { Paper, Tabs, Tab, AppBar, Typography, Divider, withStyles } from '@material-ui/core';
 
-import { updateUser } from 'actions/api';
+import { updateSettings } from 'actions/api';
 import Button from 'components/Button';
 import FormField, { FormRow } from 'components/Field';
-import css from './SettingsView.scss';
 
 const styles = (theme) => ({
   root: {
-    textAlign: 'center'
+    textAlign: 'center',
+    [theme.breakpoints.down('sm')]: {
+      padding: '0px'
+    }
   },
   form: {
     margin: '15px',
-    padding: '15px'
-  }
+    padding: '5px',
+    [theme.breakpoints.down('sm')]: {
+      margin: '10px 5px',
+      padding: '2px',
+    }
+  },
+  buttonDivider: {
+    marginTop: '5px',
+    marginBottom: '10px'
+  },
+  buttonBar: {
+    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit,
+  },
 });
+//
+// visualTheme: 'Select a color theme to apply to the whole application.',
+// normalizePoints: 'Calculate point total based on highest difficulty ' +
+//    '(adding songs of higer difficulty reduces points totaled from lower difficulty songs).',
+// maxDifficulty: 'The highest difficulty you anticipate assigning a song. ' +
+//    'This is automatically calculated if not set or existing songs exceed it.',
+// maxProgress: 'The highest number you want to assign your progress on a song.'
 
-export class SettingsView extends Component {
-  constructor(props) {
-    super(props);
-    this.hintMap = {
-      default: 'Hover or select a field for additional information...',
-      visualTheme: 'Select a color theme to apply to the whole application.',
-      normalizePoints: 'Calculate point total based on highest difficulty ' +
-      '(adding songs of higer difficulty reduces points totaled from lower difficulty songs).',
-      maxDifficulty: 'The highest difficulty you anticipate assigning a song. ' +
-      'This is automatically calculated if not set or existing songs exceed it.',
-      maxProgress: 'The highest number you want to assign your progress on a song.'
-    };
-    this.state = {
-      fieldHint: 'Hover or select a field for additional information...'
-    };
-  }
-
-  showHint(fieldName) {
-    this.setState({
-      fieldHint: this.hintMap[fieldName] ? this.hintMap[fieldName] : this.hintMap['default']
-    });
-  }
-
-  render() {
-    let disabled = this.props.api && this.props.api.isFetching;
-    const { history, classes }  = this.props;
-
-    return (
-      <Column className={classes.root} small={12} medium={10} centerOnSmall large={8}>
-        <Paper elevation={5}>
-          <AppBar position='static'>
-            <Tabs value='settings' centered={true} fullWidth={true} onChange={(e, val) => history.push(val)}>
-              <Tab data-route='/profile' value='profile' label='Profile' />
-              <Tab data-route='/settings' value='settings' label='Settings' />
-              <Tab data-route='/fields' value='fields' label='Fields' />
-            </Tabs>
-          </AppBar>
-          <form className={classes.form}>
-            <Typography>Update Your Settings</Typography>
-            <FormRow small={8} className={css.fieldHint}>
-              <Column>
-                <Typography>{this.state.fieldHint}</Typography>
-              </Column>
-            </FormRow>
-            <FormRow small={5}>
-              <FormField
-                name='visualTheme'
-                onClick={() => this.showHint('visualTheme')}
-                options={{
-                  'deepRed-dark': 'Deep Red (Dark)',
-                  'steelBlue-dark' : 'Steel Blue (Dark)',
-                  'blue-light' : 'Blue (Light)'
-                }}
-                onChange={this.props.setTheme}
-                type='select'
-                label='Visual Theme' />
-              <FormField
-                name='normalizePoints'
-                onClick={() => this.showHint('normalizePoints')}
-                type='checkbox'
-                label='Normalize Points' />
-            </FormRow>
-            <FormRow small={5}>
-              <FormField
-                name='maxDifficulty'
-                onClick={() => this.showHint('maxDifficulty')}
-                type='number'
-                label='Max Difficulty' />
-              <FormField
-                name='maxProgress'
-                onClick={() => this.showHint(this, 'maxProgress')}
-                type='number'
-                label='Max Progress' />
-            </FormRow>
-            <FormRow small={5}>
-              <FormField
-                name='songBrushUpInterval'
-                type='number'
-                label='Brush Up Interval' />
-              <FormField
-                name='songBrushUpDuration'
-                type='number'
-                label='Brush Up Duration' />
-            </FormRow>
-            <FormRow small={5}>
-              <FormField
-                name='songGoalEmail'
-                type='checkbox'
-                label='Receive Goal Notifications' />
-              <FormField
-                name='songBrushUpEmail'
-                type='checkbox'
-                label='Receive Brush Up Notifications' />
-            </FormRow>
-            <FormRow small={8}>
-              <Column>
-                <Button
-                  type='submit'
-                  label='Reset'
-                  secondary
-                  loading={disabled}
-                  labelStyle={{ paddingRight: '5px' }}
-                  style={{ width: '160px', marginRight: '15px' }}
-                  onClick={this.props.resetSettings}
-                  icon={<ResetIcon style={{ marginTop: '-10px' }} />}
-                  className='update-profile-submit'
-                  disabled={disabled} />
-                <Button
-                  type='submit'
-                  label='Save'
-                  loading={disabled}
-                  labelStyle={{ paddingRight: '5px' }}
-                  style={{ width: '160px', marginRight: '15px' }}
-                  onClick={this.props.updateSettings}
-                  icon={<SaveIcon style={{ marginTop: '-10px' }} />}
-                  className='update-profile-submit'
-                  disabled={disabled}
-                  primary />
-              </Column>
-            </FormRow>
-          </form>
-        </Paper>
-      </Column>
-    );
-  }
-}
+const SettingsView = ({
+  history,
+  classes,
+  update,
+  reset,
+  formTouched,
+  errors,
+  setTheme,
+  api: { isFetching },
+  ...props
+}) => {
+  const disabled = isFetching || !formTouched || Boolean(errors);
+  return (
+    <Column className={classes.root} small={12} medium={10} centerOnSmall large={8}>
+      <Paper elevation={5}>
+        <AppBar position='static'>
+          <Tabs value='settings' centered fullWidth onChange={(e, val) => history.push(val)}>
+            <Tab data-route='/profile' value='profile' label='Profile' />
+            <Tab data-route='/settings' value='settings' label='Settings' />
+            <Tab data-route='/fields' value='fields' label='Fields' />
+          </Tabs>
+        </AppBar>
+        <form className={classes.form}>
+          <Typography>Update Your Settings</Typography>
+          <FormRow small={6}>
+            <FormField
+              name='visualTheme'
+              options={{
+                'crimsonRed.dark': 'Crimson Red (Dark)',
+                'crimsonRed.light': 'Crimson Red (Light)',
+                'steelBlue.dark' : 'Steel Blue (Dark)',
+                'steelBlue.light' : 'Steel Blue (Light)',
+                'blue-light' : 'Blue (Light)'
+              }}
+              onChange={setTheme}
+              type='select'
+              label='Visual Theme'
+            />
+            <FormField
+              name='normalizePoints'
+              type='checkbox'
+              label='Normalize Points'
+            />
+          </FormRow>
+          <FormRow small={6}>
+            <FormField
+              name='maxDifficulty'
+              type='number'
+              label='Max Difficulty'
+            />
+            <FormField
+              name='maxProgress'
+              type='number'
+              label='Max Progress'
+            />
+          </FormRow>
+          <FormRow small={6}>
+            <FormField
+              name='songBrushUpInterval'
+              type='number'
+              unit='days'
+              label='Brush Up Interval'
+            />
+            <FormField
+              name='songBrushUpDuration'
+              type='number'
+              unit='days'
+              label='Brush Up Duration'
+            />
+          </FormRow>
+          <FormRow small={6}>
+            <FormField
+              name='songGoalEmail'
+              type='checkbox'
+              label='Receive Goal Notifications'
+            />
+            <FormField
+              name='songBrushUpEmail'
+              type='checkbox'
+              label='Receive Brush Up Notifications'
+            />
+          </FormRow>
+          <Divider className={classes.buttonDivider} />
+          <FormRow small={10}>
+            <Column className={classes.buttonBar}>
+              <Button
+                type='submit'
+                label='Reset'
+                secondary
+                labelStyle={{ paddingRight: '5px' }}
+                style={{ width: '100px', marginRight: '5px' }}
+                onClick={reset}
+                icon={<ResetIcon style={{ marginTop: '-10px' }} />}
+                className='update-profile-submit'
+                disabled={isFetching}
+              />
+              <Button
+                type='submit'
+                label='Save'
+                loading={isFetching}
+                labelStyle={{ paddingRight: '5px' }}
+                style={{ width: '100px', marginLeft: '5px' }}
+                onClick={update}
+                icon={<SaveIcon style={{ marginTop: '-10px' }} />}
+                className='update-profile-submit'
+                disabled={disabled}
+                primary
+              />
+            </Column>
+          </FormRow>
+        </form>
+      </Paper>
+    </Column>
+  );
+};
 
 SettingsView.propTypes = {
-  api:            PropTypes.object,
-  history:        PropTypes.object.isRequired,
-  setTheme:       PropTypes.func,
-  updateSettings: PropTypes.func.isRequired,
-  resetSettings:  PropTypes.func.isRequired,
-  classes:        PropTypes.object.isRequired
+  api:      PropTypes.object,
+  history:  PropTypes.instanceOf(Object).isRequired,
+  setTheme: PropTypes.func,
+  update:   PropTypes.func.isRequired,
+  reset:    PropTypes.func.isRequired,
+  classes:  PropTypes.instanceOf(Object).isRequired
 };
 
 
@@ -169,15 +179,17 @@ const setTheme = (theme) => (dispatch, getState) => {
 };
 
 const mapActionCreators = {
-  resetSettings:  updateUser,
-  updateSettings: updateUser,
-  setTheme:       setTheme
+  reset:    updateSettings,
+  update:   updateSettings,
+  setTheme: setTheme
 };
 
 const mapStateToProps = (state) => ({
   api:           state.api,
   initialValues: state.user.attributes,
-  settings:      state.user.attributes
+  settings:      state.user.attributes,
+  formTouched:   state.form.updateSettingsForm && state.form.updateSettingsForm.anyTouched,
+  errors:        state.form.updateSettingsForm && state.form.updateSettingsForm.syncErrors
 });
 
 const updateSettingsForm = reduxForm({ form: 'updateSettingsForm' })(withStyles(styles)(SettingsView));

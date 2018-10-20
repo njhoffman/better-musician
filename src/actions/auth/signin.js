@@ -63,7 +63,7 @@ export const emailSignIn = (body, endpointKey) => {
         [CALL_API]: {
           types: [
             A.EMAIL_SIGN_IN_START,
-            (user) => emailSignInComplete(currentEndpointKey, user),
+            ({ data }) => emailSignInComplete(currentEndpointKey, data),
             (errors) => signInError(errors)
           ],
           method: 'POST',

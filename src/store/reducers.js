@@ -14,7 +14,7 @@ import { init as initLog } from 'shared/logger';
 
 const { info } = initLog('reducers');
 
-export const makeRootReducer = (asyncReducers, injectedModels = []) => {
+const makeRootReducer = (asyncReducers, injectedModels = []) => {
   if (injectedModels.length > 0) {
     info(`Injecting models into reducer: ${injectedModels.join(' ,')}$`);
     // orm.register(...injectedModels);

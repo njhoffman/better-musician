@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import {
   ExpansionPanel,
@@ -22,24 +22,57 @@ const styles = (theme) => ({
     width: '100%',
   },
   expansionPanel: {
-    margin: '15px 25px',
+    margin: '10px 15px',
     [theme.breakpoints.down('sm')]: {
       margin: '1px 3px'
     }
   },
   expansionSummary: {
-    backgroundColor: theme.palette.primary.dark,
-    margin: '12px 0px'
+    background: theme.palette.primary.dark,
+    margin: '6px 0px'
   },
   expansionDetails: {
     flexDirection: 'column',
     padding: '8px 24px 24px',
+    margin: '0px 10px',
     [theme.breakpoints.down('sm')]: {
       padding: '2px 4px 4px'
     },
     [theme.breakpoints.down('md')]: {
       padding: '6px 8px 8px'
     }
+  },
+  summaryRoot: {
+    minHeight: '12px',
+    [theme.breakpoints.down('sm')]: {
+      padding: '0px 8px 0px 8px'
+    },
+    '&:hover': {
+      background: theme.palette.primary.light
+    },
+    '& > div': {
+      background: 'transparent',
+      alignItems: 'center',
+    }
+  },
+  summaryContent: {
+    margin: '6px 0px',
+  },
+  summaryExpanded: {
+    background: theme.palette.primary.main,
+    minHeight: '1.5em !important',
+    margin: '12px 0px 6px 0px !important'
+  },
+  expandIcon: {
+    margin: '0px !important'
+  },
+  tabName : {
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflowX: 'hidden'
+    // width: '30%',
+
+    // display: 'inline-block',
   },
   tabNumber: {
     textAlign: 'left',
@@ -64,21 +97,36 @@ const styles = (theme) => ({
   },
   fieldLabel: {
     fontVariant: 'small-caps',
-    width: '25%',
+    // width: '25%',
     display: 'inline-block',
-    fontSize: '0.8em',
+    // fontSize: '0.8em',
     textAlign: 'right',
+    whiteSpace: 'no-wrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
   },
   fieldValue: {
-    width: '75%',
+    // width: '75%',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  },
+  fieldDetails: {
+    padding: '0px',
   },
   fieldButtons: {
     justifyContent: 'space-evenly',
+    padding: '0px',
     display: 'flex'
   },
+  activeField: {
+    // tabbedField overrides
+    border: 'solid 1px rgb(170,180,204) !important',
+    backgroundColor: 'rgba(170, 180, 204, 0.1) !important'
+  },
   flexButton: {
-    // width: '36px',
-    // height: '36px',
+    width: '36px',
+    height: '36px',
     padding: '6px'
   },
 
@@ -107,11 +155,11 @@ const styles = (theme) => ({
     borderRadius: '10px',
     border: 'solid 1px #456',
     padding: '7px 5px',
-    margin: '3px 0px'
+    margin: '3px 5px'
   }
 });
 
-export const FieldList = (props) => {
+const FieldList = (props) => {
   const {
     editingField,
     editField,
@@ -124,87 +172,95 @@ export const FieldList = (props) => {
   const renderFieldItem = (field, key) => {
     const editingId = editingField ? editingField.id : null;
     return (
-      <Row className={classes.tabbedField} key={key}>
-        <Column centerOnSmall small={8}>
+      <Row className={`${classes.tabbedField} ${editingId === field.id ? classes.activeField : ''}`} key={key}>
+        <Column small={6} className={classes.fieldDetails}>
           <Row>
             <Column small={4} className={classes.fieldLabel}>
-              <Typography>
+              <Typography variant='body1'>
                 Label:
               </Typography>
             </Column>
             <Column small={8} className={classes.fieldValue}>
-              <Typography>
+              <Typography variant='caption'>
                 {field.label}
               </Typography>
             </Column>
           </Row>
           <Row>
             <Column small={4} className={classes.fieldLabel}>
-              <Typography>
+              <Typography variant='body1'>
                 Type:
               </Typography>
             </Column>
             <Column small={8} className={classes.fieldValue}>
-              <Typography>
+              <Typography variant='caption'>
                 {field.typeName}
               </Typography>
             </Column>
           </Row>
         </Column>
-        <Column className={classes.fieldButtons} small={4}>
+        <Column small={3} className={`${classes.fieldButtons}`}>
           <Button
-            variant='outline'
+            variant='outlined'
             secondary
-            className={classes.flexButton}
+            style={{ marginLeft: (editingId === field.id ? '0px' : '0px') }}
+            className={`${classes.flexButton}`}
             label='Preview'
           />
+        </Column>
+        <Column small={3} className={`${classes.fieldButtons}`}>
           <Button
-            variant='flat'
+            variant='text'
             onClick={field.id === editingId ? cancelEdit : () => editField(field)}
             className={classes.flexButton}
-            style={{ color: '#bbbbff'}}
-            icon={
-              field.id === editingId ?
-                <CancelIcon onClick={cancelEdit} />
-                : <EditIcon />
-            }
+            style={{ color: '#bbbbff' }}
+            icon={field.id === editingId ? <CancelIcon onClick={cancelEdit} /> : <EditIcon /> }
           />
-          {!(field.id === editingId) &&
-              <Button
-                variant='flat'
-                onClick={() => deleteField(field.id)}
-                className={classes.flexButton}
-                style={{ color: '#ffbbbb' }}
-                icon={<DeleteIcon />}
-              />
-          }
+          {!(field.id === editingId) && (
+            <Button
+              variant='text'
+              onClick={() => deleteField(field.id)}
+              className={classes.flexButton}
+              style={{ color: '#ffbbbb' }}
+              icon={<DeleteIcon />}
+            />
+          )}
         </Column>
       </Row>
     );
   };
 
   return (
-    <div>
+    <Fragment>
       {savedTabs.map((tab, i) => (
         <ExpansionPanel
           key={i}
           className={classes.expansionPanel}
-          hoverColor='rgba(0, 151, 167, 0.4'
           defaultExpanded={i === 0}>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} className={classes.expansionSummary}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            className={classes.expansionSummary}
+            classes={{
+              root: classes.summaryRoot,
+              expanded: classes.summaryExpanded,
+              content: classes.summaryContent,
+              expandIcon: classes.expandIcon
+            }}>
             <Column>
-              <Typography variant='subheading' className={classes.tabNumber}>
-                Tab {i + 1}
+              <Typography variant='subtitle2' className={classes.tabNumber}>
+                {'Tab '}
+                {i + 1}
               </Typography>
             </Column>
             <Column>
-              <Typography variant='subheading' className={classes.tabName}>
+              <Typography variant='subtitle2' className={classes.tabName}>
                 {tab.name}
               </Typography>
             </Column>
             <Column>
-              <Typography variant='subheading' className={classes.tabCount}>
-                {tab.fields.length + ' Fields'}
+              <Typography variant='subtitle2' className={classes.tabCount}>
+                {tab.fields.length}
+                {' Fields'}
               </Typography>
             </Column>
           </ExpansionPanelSummary>
@@ -213,7 +269,7 @@ export const FieldList = (props) => {
           </ExpansionPanelDetails>
         </ExpansionPanel>
       ))}
-    </div>
+    </Fragment>
   );
 };
 

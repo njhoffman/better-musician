@@ -1,7 +1,14 @@
-import { defaultsDeep } from 'lodash';
-import defaultConfig from 'config.default';
+import userMonitorProps from 'config/user/monitors';
+import defaults from 'config/user/themes/defaults';
+import crimsonRed from 'config/user/themes/crimsonRed';
+import steelBlue from 'config/user/themes/steelBlue';
 
-const userConfig = {
+export default {
+  themes: {
+    defaults,
+    crimsonRed,
+    steelBlue
+  },
   endpoints:   {
     default: {
       auth: {
@@ -34,30 +41,42 @@ const userConfig = {
   },
   settings: {},
   dev: {
-    showPanel: true,
+    showInspector: false,
     showChart: false,
+    showToolbar: false,
+    showExtension: true,
+    monitorProps:  userMonitorProps,
     extensionOptions: {
       name: 'instrumental',
-      // actionsBlacklist: ['@@redux-form/REGISTER_FIELD', '@@redux-form/UNREGISTER_FIELD'],
-      theme: 'twilight'
+      theme: 'twilight',
+      styles: {
+        container: {
+          backgroundColor: 'rgb(0, 11, 21)',
+        },
+        buttonBar: {
+          backgroundColor: '#050b16',
+          borderColor: '#1f2a35'
+        }
+      }
     },
-    inspector: {
+    inspectorOptions: {
+      hideMobile: true,
       actions: {
-        exclude: [ ],
+        exclude: [],
         style: { }
       }
     },
-    chart: {
+    chartOptions: {
       actions: {
         exclude: [
           '@@redux-form/BLUR',
           '@@redux-form/FOCUS'
         ],
         style: {
-          'CONFIGURE_COMPLETE':            { color: '#88eeaa' },
-          'EMAIL_SIGN_IN_ERROR':           { color: 'red', border: 'solid 1px #660000' },
-          'EMAIL_SIGN_IN_START':           { color: 'rgba(200, 255, 255, 1)' },
-          'EMAIL_SIGN_IN_SUCCESS':         { color: '#00ffaa' },
+          CONFIGURE_COMPLETE:            { color: '#88eeaa' },
+          EMAIL_SIGN_IN_ERROR:           { color: 'red', border: 'solid 1px #660000' },
+          EMAIL_SIGN_IN_START:           { color: 'rgba(200, 255, 255, 1)' },
+          EMAIL_SIGN_IN_SUCCESS:         { color: '#00ffaa' },
           '@@redux-form/REGISTER_FIELD':   { color: '#838383' },
           '@@redux-form/UNREGISTER_FIELD': { color: '#838383' },
         }
@@ -65,19 +84,3 @@ const userConfig = {
     }
   }
 };
-
-export default defaultsDeep(userConfig, defaultConfig);
-
-      // signOutPath           : '/users/logout',
-      // emailSignInPath       : '/users/login',
-      // emailRegistrationPath : '/users/register',
-      // accountUpdatePath     : '/users/update',
-      // accountDeletePath     : '/users/delete',
-      // passwordResetPath     : '/users/password_reset',
-      // passwordUpdatePath    : '/users/password_update',
-      // tokenValidationPath   : '/users/validate_token',
-      // authProviderPaths     : {
-      //   github   : '/users/login/github',
-      //   facebook : '/users/login/facebook',
-      //   google   : '/users/login/google_oauth2'
-      // },

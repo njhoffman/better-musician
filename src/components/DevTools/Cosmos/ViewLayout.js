@@ -77,7 +77,7 @@ export class ViewLayout extends React.Component {
     return (
       <MuiThemeProvider theme={theme}>
         <Paper style={cs(theme)}>
-          <Typography variant='subheading' style={{ display: 'block', width: '100%', textAlign: 'center' }}>
+          <Typography variant='h3' style={{ display: 'block', width: '100%', textAlign: 'center' }}>
             {theme.themeName} ({theme.palette.type.replace(/^\w/, (c) => c.toUpperCase())})
           </Typography>
           <Divider className={classes.divider} />

@@ -1,4 +1,4 @@
-import { red } from '@material-ui/core/colors';
+import { red, yellow, grey } from '@material-ui/core/colors';
 
 import { darken } from '@material-ui/core/styles/colorManipulator';
 import spacing from '@material-ui/core/styles/spacing';
@@ -19,7 +19,14 @@ export default {
     fontFamily:       '"Roboto", "Helvetica", "Arial", sans-serif',
     fontSize:         14
   },
-  backgroundColor:      'linear-gradient(135deg, #141a1e 0%,#220000 49%,#220000 52%,#141a1e 100%)'
+  backgroundColor:      'linear-gradient(135deg, #141a1e 0%,#220000 49%,#220000 52%,#141a1e 100%)',
+  app: {
+    starColor:        yellow['200'],
+    // headerLinksColor: blueGrey['300'],
+    footerFiller:     'linear-gradient(180deg, rgb(33,33,33) 0%, rgb(10,10,10) 20%, rgb(0,0,0) 100%)',
+    canvasColor:      grey['900'],
+    // fieldsViewLabel:  blueGrey['500']
+  }
 };
 
 // const old = {

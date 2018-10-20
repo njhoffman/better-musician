@@ -1,10 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Chip as MatChip } from '@material-ui/core';
+import { Chip as MatChip, withStyles } from '@material-ui/core';
+
+const styles = (theme) => ({
+  root: {
+    maxWidth: '100px'
+  },
+  label: {
+    display: 'inline-block',
+    textOverflow: 'ellipsis',
+    overflowX: 'hidden'
+  }
+});
 
 const Chip = ({
   label,
-  viewType,
+  variant,
+  classes,
   meta,
   style,
   input,
@@ -12,7 +24,11 @@ const Chip = ({
 }) => (
   <MatChip
     label={label || input.value}
-    style={{ ...style }}
+    style={{ ...style, margin: '3px' }}
+    classes={{
+      root: classes.root,
+      label: classes.label,
+    }}
     {...props}
   />
 );
@@ -25,4 +41,4 @@ Chip.propTypes = {
   input:    PropTypes.object.isRequired
 };
 
-export default Chip;
+export default withStyles(styles)(Chip);

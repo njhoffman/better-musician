@@ -1,10 +1,10 @@
 import fetch from 'isomorphic-fetch';
 import cookie from 'cookie';
-import getRedirectInfo from './parseUrl';
+import url from 'url';
 import * as A from 'constants/auth';
+import getRedirectInfo from './parseUrl';
 import { addAuthorizationHeader } from '../fetch';
 import parseEndpointConfig from './parseEndpointConfig';
-import url from 'url';
 
 const parseHeaders = (headers) => {
   // set header for each key in `tokenFormat` config
@@ -16,7 +16,15 @@ const parseHeaders = (headers) => {
 
   // set header key + val for each key in `tokenFormat` config
   // TODO: get actual config value
-  for (var key of ['access-token', 'token-type', 'client', 'expiry', 'uid', 'config', 'endpointKey']) {
+
+  ['access-token',
+    'token-type',
+    'client',
+    'expiry',
+    'uid',
+    'config',
+    'endpointKey'
+  ].forEach(key => {
     newHeaders[key] = headers[key];
     if (newHeaders[key]) {
       // normalize -- sometimes headers come back in array form
@@ -25,7 +33,7 @@ const parseHeaders = (headers) => {
       }
       blankHeaders = false;
     }
-  }
+  });
 
   // persist headers for next request
   if (!blankHeaders) {
@@ -34,14 +42,18 @@ const parseHeaders = (headers) => {
 };
 
 export const fetchToken = ({ rawEndpoints, cookies, currentLocation }) => {
-  let { authRedirectHeaders } = getRedirectInfo(url.parse(currentLocation));
+  const { authRedirectHeaders } = getRedirectInfo(url.parse(currentLocation));
 
   return new Promise((resolve, reject) => {
     if (cookies || authRedirectHeaders) {
-      let rawCookies = cookie.parse(cookies || '{}');
-      let parsedCookies = JSON.parse(rawCookies.authHeaders || 'false');
-      let firstTimeLogin, mustResetPassword, currentEndpointKey, headers;
-      let newHeaders, { currentEndpoints, defaultEndpointKey } = parseEndpointConfig(rawEndpoints);
+      const rawCookies = cookie.parse(cookies || '{}');
+      const parsedCookies = JSON.parse(rawCookies.authHeaders || 'false');
+      let firstTimeLogin;
+      let mustResetPassword;
+      let currentEndpointKey;
+      let headers;
+      let newHeaders;
+      const { currentEndpoints, defaultEndpointKey } = parseEndpointConfig(rawEndpoints);
 
       if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders['access-token']) {
         headers = parseHeaders(authRedirectHeaders);
@@ -71,59 +83,53 @@ export const fetchToken = ({ rawEndpoints, cookies, currentLocation }) => {
       }).then((resp) => {
         newHeaders = parseHeaders(resp.headers.raw());
         return resp.json();
-      })
-        .then((json) => {
-          if (json.success) {
-            return resolve({
-              headers: newHeaders,
-              user: json.data,
-              mustResetPassword,
-              firstTimeLogin,
-              currentEndpoints,
-              currentEndpointKey,
-              defaultEndpointKey
-            });
-          } else {
-            return reject({
-              reason: json.errors,
-              mustResetPassword,
-              firstTimeLogin,
-              currentEndpoints,
-              defaultEndpointKey
-            });
-          }
-        }).catch(reason => {
-          return reject({
-            reason,
-            firstTimeLogin,
+      }).then((json) => {
+        if (json.success) {
+          return resolve({
+            headers: newHeaders,
+            user: json.data,
             mustResetPassword,
+            firstTimeLogin,
             currentEndpoints,
+            currentEndpointKey,
             defaultEndpointKey
           });
+        }
+        return reject({
+          reason: json.errors,
+          mustResetPassword,
+          firstTimeLogin,
+          currentEndpoints,
+          defaultEndpointKey
         });
-    } else {
-      let { currentEndpoints, defaultEndpointKey } = parseEndpointConfig(rawEndpoints);
-      reject({
-        reason: 'No creds',
-        currentEndpoints,
-        defaultEndpointKey
-      });
+      }).catch(reason =>
+        reject({
+          reason,
+          firstTimeLogin,
+          mustResetPassword,
+          currentEndpoints,
+          defaultEndpointKey
+        }));
     }
+    const { currentEndpoints, defaultEndpointKey } = parseEndpointConfig(rawEndpoints);
+    return reject({
+      reason: 'No creds',
+      currentEndpoints,
+      defaultEndpointKey
+    });
   });
 };
 
-const verifyAuth = (rawEndpoints, { isServer, cookies, currentLocation }) => {
-  return new Promise((resolve, reject) => {
+const verifyAuth = (rawEndpoints, { isServer, cookies, currentLocation }) =>
+  new Promise((resolve, reject) => {
     if (isServer) {
       return fetchToken({ rawEndpoints, cookies, currentLocation })
         .then(res => resolve(res))
         .catch(res => reject(res));
-    } else {
-      // TODO: deal with localStorage
-      // Auth.validateToken(getCurrentEndpointKey())
-      // .then((user) => resolve(user.data), (err) => reject({reason: err}));
     }
+    // TODO: deal with localStorage
+    // Auth.validateToken(getCurrentEndpointKey())
+    // .then((user) => resolve(user.data), (err) => reject({reason: err}));
   });
-};
 
 export default verifyAuth;

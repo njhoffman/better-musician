@@ -1,8 +1,8 @@
-export const humanMemorySize = (bytes, si) => {
-  bytes = Number(bytes);
+export const humanMemorySize = (b, si) => {
+  let bytes = Number(b);
   const thresh = si ? 1000 : 1024;
   if (Math.abs(bytes) < thresh) {
-    return bytes + ' B';
+    return `${bytes} B`;
   }
   const units = si
     ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
@@ -10,20 +10,20 @@ export const humanMemorySize = (bytes, si) => {
   let u = -1;
   do {
     bytes /= thresh;
-    ++u;
+    u += 1;
   } while (Math.abs(bytes) >= thresh && u < units.length - 1);
-  return bytes.toFixed(1) + ' ' + units[u];
-}
+  return `${bytes.toFixed(1)} ${units[u]}`;
+};
 
 export const padLeft = (input, len) => {
-  const str = input && input.toString() || '';
+  const str = input && input.toString() ? input.toString() : '';
   return len > str.length
     ? (new Array(len - str.length + 1)).join(' ') + str
     : str;
 };
 
 export const padRight = (input, len) => {
-  const str = input && input.toString() || '';
+  const str = input && input.toString() ? input.toString() : '';
   return len > str.length
     ? str + (new Array(len - str.length + 1)).join(' ')
     : str;
@@ -43,6 +43,5 @@ export const isJson = (str) => {
 };
 
 export const isClass = (func) => (
-  typeof func === 'function' &&
-  /^class\s/.test(Function.prototype.toString.call(func))
+  typeof func === 'function' && /^class\s/.test(Function.prototype.toString.call(func))
 );

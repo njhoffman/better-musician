@@ -1,4 +1,5 @@
-import * as A from 'constants/auth';
+import * as AUTH from 'constants/auth';
+import * as API from 'constants/api';
 
 const initialState = {
   attributes: null,
@@ -8,13 +9,19 @@ const initialState = {
 };
 
 const ACTION_HANDLERS = {
-  [A.AUTHENTICATE_COMPLETE]: (state, { payload }) => ({
+  [API.USER_UPDATE_COMPLETE]: (state, { payload }) => ({
+    ...state,
+    isSignedIn: true,
+    attributes: payload
+  }),
+
+  [AUTH.AUTHENTICATE_COMPLETE]: (state, { payload }) => ({
     ...state,
     isSignedIn: true,
     attributes: payload.user
   }),
 
-  [A.SS_TOKEN_VALIDATION_COMPLETE]: (state, { user, mustResetPassword, firstTimeLogin }) => ({
+  [AUTH.SS_TOKEN_VALIDATION_COMPLETE]: (state, { user, mustResetPassword, firstTimeLogin }) => ({
     ...state,
     attributes: user,
     isSignedIn: true,
@@ -22,28 +29,28 @@ const ACTION_HANDLERS = {
     mustResetPassword
   }),
 
-  [A.EMAIL_SIGN_IN_COMPLETE]: (state, { payload }) => ({
+  [AUTH.EMAIL_SIGN_IN_COMPLETE]: (state, { payload }) => ({
     ...state,
     attributes: payload.user,
     isSignedIn: true
   }),
 
   // if registration does not require confirmation, user will be signed in at this point.
-  [A.EMAIL_SIGN_UP_COMPLETE]: (state, { endpoint, user }) => {
-    return (user.uid ? ({
+  [AUTH.EMAIL_SIGN_UP_COMPLETE]: (state, { endpoint, user }) => (
+    user.uid ? ({
       ...state,
       attributes: user,
       isSignedIn: true
-    }) : state);
-  },
+    }) : state
+  ),
 
-  [A.OAUTH_SIGN_IN_COMPLETE]: (state, { payload }) => ({
+  [AUTH.OAUTH_SIGN_IN_COMPLETE]: (state, { payload }) => ({
     ...state,
     attributes: payload.user,
     isSignedIn: true
   }),
 
-  [A.SS_AUTH_TOKEN_UPDATE]: (state, { user, mustResetPassword, firstTimeLogin }) => ({
+  [AUTH.SS_AUTH_TOKEN_UPDATE]: (state, { user, mustResetPassword, firstTimeLogin }) => ({
     ...state,
     mustResetPassword,
     firstTimeLogin,
@@ -51,11 +58,11 @@ const ACTION_HANDLERS = {
     attributes: user
   }),
 
-  [A.AUTHENTICATE_ERROR]:        state => ({ ...state, ...initialState }),
-  [A.SS_TOKEN_VALIDATION_ERROR]: state => ({ ...state, ...initialState }),
-  [A.SIGN_OUT_COMPLETE]:         state => ({ ...state, ...initialState }),
-  [A.SIGN_OUT_ERROR]:            state => ({ ...state, ...initialState }),
-  [A.DESTROY_ACCOUNT_COMPLETE]:  state => ({ ...state, ...initialState })
+  [AUTH.AUTHENTICATE_ERROR]:        (state) => ({ ...state, ...initialState }),
+  [AUTH.SS_TOKEN_VALIDATION_ERROR]: (state) => ({ ...state, ...initialState }),
+  [AUTH.SIGN_OUT_COMPLETE]:         (state) => ({ ...state, ...initialState }),
+  [AUTH.SIGN_OUT_ERROR]:            (state) => ({ ...state, ...initialState }),
+  [AUTH.DESTROY_ACCOUNT_COMPLETE]:  (state) => ({ ...state, ...initialState })
 };
 
 export default function userReducer(state = initialState, action) {

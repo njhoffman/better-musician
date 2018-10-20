@@ -10,14 +10,14 @@ export const FiltersModal = (props) => {
     <Button
       key={0}
       label='Cancel'
-      variant='flat'
+      variant='text'
       primary
       onTouchTap={props.uiHideModal}
     />,
     <Button
       key={1}
       label='Submit'
-      variant='flat'
+      variant='text'
       primary
       keyboardFocused
       onTouchTap={props.uiHideModal}

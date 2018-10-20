@@ -1,26 +1,26 @@
 import _ from 'lodash';
-import BaseModel from './BaseModel';
 import { SONGS_FETCH_START, LOAD_ARTISTS, ARTISTS_FETCH_START } from 'constants/api';
+import BaseModel from './BaseModel';
 
 class Artist extends BaseModel {
-
   static get path() {
-    return `/images/artist`;
+    return '/images/artist';
   }
 
   static get defaultImage() {
-    return `_unknown.png`;
+    return '_unknown.png';
   }
 
   static get imageLabel() {
-    return `Unknown Artist`;
+    return 'Unknown Artist';
   }
 
   static findByFullName(name) {
-    return this.all().toModelArray().filter(artist => {
-      return artist.fullName === name;
-    })[0];
+    return this.all().toModelArray().filter(artist => (
+      artist.fullName === name
+    ))[0];
   }
+
 
   static imagesByFullName(name) {
     const artist = Artist.findByFullName(name);
@@ -28,34 +28,30 @@ class Artist extends BaseModel {
     return images.map(img => `${Artist.path}/${img}`);
   }
 
-  static reducer(action, Artist/* , session */) {
+  static reducer(action, ArtistModel/* , session */) {
     const { type } = action;
     switch (type) {
       case SONGS_FETCH_START:
         // remove all songs when fetching
-        Artist.all().delete();
+        ArtistModel.all().delete();
         break;
       case ARTISTS_FETCH_START:
         // remove all songs when fetching
         break;
       case LOAD_ARTISTS:
-        Artist.loadData(action.payload, Artist);
+        ArtistModel.loadData(action.payload, ArtistModel);
         break;
       default:
         break;
     }
   }
 
-  constructor(artist) {
-    super(artist);
-  }
-
   get fullName() {
-    return this.lastName + ', ' + this.firstName;
+    return `${this.lastName}, ${this.firstName}`;
   }
 
   get imageLabel() {
-    return this.lastName ? this.lastName + ', ' + this.firstName : Artist.imageLabel;
+    return this.lastName ? `${this.lastName}, ${this.firstName}` : Artist.imageLabel;
   }
 
   get primaryImage() {

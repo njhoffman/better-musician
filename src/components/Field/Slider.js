@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { FormLabel, withStyles } from '@material-ui/core';
 import MaterialSlider from '@material-ui/lab/Slider';
-import { FormLabel } from '@material-ui/core';
 
+import { FIELD_VIEW } from 'constants/ui';
 import createComponent from './createFormField';
 
 const SliderForm = createComponent(
@@ -25,12 +26,35 @@ const SliderForm = createComponent(
   })
 );
 
+const styles = (theme) => ({
+  root: {
+    padding: '8px 0px'
+  },
+  fullWidth: {
+    width: '100%'
+  },
+  label: {
+    display: 'inline-block',
+    width: '50%',
+  },
+  left: {
+    textAlign: 'left'
+  },
+  right: {
+    textAlign: 'right'
+  },
+  view: {
+    display: 'none'
+  }
+});
+
 class Slider extends Component {
   static propTypes = {
-    input:        PropTypes.object,
+    classes:      PropTypes.object.isRequired,
+    mode:         PropTypes.string.isRequired,
+    input:        PropTypes.object.isRequired,
     label:        PropTypes.string,
     valueDisplay: PropTypes.func,
-    viewType:     PropTypes.string,
     min:          PropTypes.number,
     max:          PropTypes.number,
     step:         PropTypes.number
@@ -39,44 +63,43 @@ class Slider extends Component {
   static defaultProps = {
     min: 0,
     max: 10,
-    step: 1
-  };
-
-  labelStyle = {
-    display: 'inline-block',
-    width: '50%'
+    step: 1,
+    label: '',
+    valueDisplay: (currValue) => currValue,
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      value: props.input.value > props.min ? props.input.value : props.min
+      value: props.input.value > props.min
+        ? props.input.value
+        : props.min
     };
   }
 
   render() {
-    const { label, valueDisplay, input, min, max, step } = this.props;
-    // TODO: Find a better way
-    input.value = this.state.value;
+    const { classes, label, valueDisplay, mode, fullWidth, input, ...props }  = this.props;
+    const { value: currValue } = this.state;
+    input.value = currValue;
     return (
-      <div>
+      <div className={`${classes.root} ${fullWidth ? classes.fullWidth : ''}`}>
         <FormLabel>
-          <div style={{ ...this.labelStyle, textAlign: 'left' }}>
+          <div className={`${classes.label} ${classes.left}`}>
             {label}
           </div>
-          <div style={{ ...this.labelStyle, textAlign: 'right' }}>
-            { valueDisplay ? valueDisplay(this.state.value) : this.state.value }
+          <div className={`${classes.label} ${classes.right}`}>
+            { valueDisplay(currValue) }
           </div>
         </FormLabel>
         <SliderForm
+          disabled={mode === FIELD_VIEW}
           onChange={(value) => this.setState({ value })}
-          value={this.state.value}
-          style={{ padding: '8px 0px' }}
-          { ...{ input, min, max, step } }
+          value={currValue}
+          {...{ ...props, input }}
         />
       </div>
     );
   }
 }
 
-export default Slider;
+export default withStyles(styles)(Slider);

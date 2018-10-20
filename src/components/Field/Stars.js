@@ -1,17 +1,18 @@
 import React from 'react';
+import { Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { MdStar as StarIcon } from 'react-icons/md';
 
-const Stars = ({ number, starColor, style }) => {
+const Stars = ({ number, starColor, className, style }) => {
   // if (isNaN(number)) {
   //   debugger;
   // }
   return (
-    <div style={style}>
-      { [...Array(number)].map((x, i) =>
+    <Typography className={className} style={style}>
+      {[...Array(number)].map((x, i) =>
         <StarIcon key={i} style={{ color: starColor }} />
-      ) }
-    </div>
+      )}
+    </Typography>
   );
 };
 

@@ -41,7 +41,9 @@ module.exports = {
     }
   },
   entry: {
-    app: []
+    app: [
+      'whatwg-fetch'
+    ]
   },
   externals: {
     'react/lib/ExecutionEnvironment' : true,

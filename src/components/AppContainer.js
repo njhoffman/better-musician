@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core';
+import { withRouter } from 'react-router';
 import { Row } from 'react-foundation';
 
 import 'coreStyles';
@@ -22,15 +23,31 @@ const styles = (theme) => ({
     flexDirection: 'column'
   },
   contentWrapper: {
+    background: theme.backgroundColor,
+    maxWidth: 'none',
     width: '100%',
     height: '100%',
-    maxHeight: 'calc(100vh - 90px - 75px)',
+    alignItems: 'flex-start',
+    maxHeight: `calc(100vh - ${theme.app.headerHeight})`,
     overflowY: 'auto',
     position: 'relative',
-    background: theme.backgroundColor
+    '&.Profile': {
+      // maxHeight: `calc(100vh - (2 * ${theme.app.headerHeight}))`,
+    },
+    '&.Fields': {
+      // maxHeight: `calc(100vh - (2 * ${theme.app.headerHeight}))`,
+    },
+    '&.Songs': {
+      maxHeight: `calc(100vh - ${theme.app.headerHeight} - ${theme.app.footerHeight})`,
+      [theme.breakpoints.down('sm')]: {
+        maxHeight: `calc(100vh - (${theme.app.headerHeight} * 1.6) - ${theme.app.footerHeight})`,
+      }
+    },
   },
   contentContainer: {
     margin: '0px',
+    // maxHeight: `calc(100vh - ${theme.app.headerHeight})`,
+    // maxHeight: `calc(100vh - ${theme.app.headerHeight} - ${theme.app.footerHeight})`,
     [theme.breakpoints.up('md')]: {
       margin: '30px 5px'
     },
@@ -40,12 +57,13 @@ const styles = (theme) => ({
   },
   footerFiller: {
     flexGrow: 1,
-    background: theme.instrumental.footerFiller
+    background: theme.app.footerFiller
   }
 });
 
 const AppContainer = ({
   history,
+  currentView,
   classes: { appWrapper, contentWrapper, contentContainer, footerFiller },
   store,
   ...props
@@ -54,27 +72,40 @@ const AppContainer = ({
     <Snackbar disableWindowBlurListener={false} />
     <DrawerMenu />
     <Header />
-    <div className={contentWrapper}>
-      <Row horizontalAlignment='center'>
-        <Routes store={store} history={history} classes={ contentContainer } />
-      </Row>
-    </div>
+    <Row horizontalAlignment='center' className={`${contentWrapper} ${currentView}`}>
+      <Routes
+        store={store}
+        history={history}
+        classes={contentContainer}
+      />
+    </Row>
     <Footer />
     <div className={footerFiller} />
   </div>
 );
 
+AppContainer.defaultProps = {
+  currentView: ''
+};
+
 AppContainer.propTypes = {
-  history: PropTypes.object.isRequired,
-  store:   PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired
+  history:     PropTypes.instanceOf(Object).isRequired,
+  store:       PropTypes.instanceOf(Object).isRequired,
+  classes:     PropTypes.instanceOf(Object).isRequired,
+  currentView: PropTypes.string
 };
 
 const mapStateToProps = (state) => ({
   theme: state.auth && state.auth.get('user') && state.auth.get('user').get('attributes')
-    ? state.auth.get('user').get('attributes').get('visualTheme')
-    : 'steelBlue'
+    ? state.auth.get('user').get('attributes').get('visualTheme') : 'steelBlue',
+  currentView: state.ui.currentView
 });
-import { withRouter } from 'react-router';
 
-export default withRouter(connect(mapStateToProps)(withStyles(styles)(AppContainer)));
+export default
+withRouter(
+  connect(mapStateToProps)(
+    withStyles(styles)(
+      AppContainer
+    )
+  )
+);

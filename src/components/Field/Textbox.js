@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import TextField from '@material-ui/core/TextField';
+
+import { FIELD_VIEW } from 'constants/ui';
 import createComponent from './createFormField';
 import mapError from './mapError';
 
-import { FIELD_VARIANT_VIEW } from 'constants/ui';
 
-const TextboxForm = createComponent(TextField, ({
+const TextboxForm = createComponent(
+  TextField, ({
     defaultValue,
     ...props
   }) => ({
@@ -15,32 +16,41 @@ const TextboxForm = createComponent(TextField, ({
   })
 );
 
-const Textbox = ({
-  meta,
+const createTextbox = (Component) => ({
   initialValues,
+  disabled,
   inputProps,
   style,
-  variant,
+  mode,
+  fullWidth,
+  disableUnderline,
+  meta,
   ...props
-}) => {
-  return (
-  <TextboxForm
+}) => (
+  <Component
     InputProps={{
-      disableUnderline: variant === FIELD_VARIANT_VIEW,
+      disableUnderline: mode === FIELD_VIEW || disableUnderline,
+      disabled: mode === FIELD_VIEW || disabled,
       autoComplete: 'off',
       ...inputProps
     }}
-    error={meta && meta.touched && meta.error}
-    {...props}
+    inputProps={{
+      style
+    }}
+    {...{ ...props, meta, fullWidth: fullWidth !== false }}
   />
-  );
-};
+);
 
-Textbox.propTypes = {
+const propTypes = {
   label      : PropTypes.string,
-  meta       : PropTypes.object,
-  style      : PropTypes.object,
+  style      : PropTypes.instanceOf(Object),
   width      : PropTypes.number
 };
 
-export default Textbox;
+const TextboxField = createTextbox(TextboxForm);
+export const Textbox = createTextbox(TextField);
+
+TextboxField.propTypes = propTypes;
+Textbox.propTypes = propTypes;
+
+export default TextboxField;

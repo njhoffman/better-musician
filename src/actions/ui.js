@@ -16,21 +16,30 @@ export const uiShowSnackbar = (message, variant, title) => ({
 
 export const uiHideModal = () => ({ type: UI.MODAL_HIDE });
 
-export const uiShowSongModal = (type) => (dispatch) => {
-  dispatch(uiShowModal(UI.SONG_MODAL, type));
-};
-
-export const uiShowModal = (name, viewType) => ({
+export const uiShowModal = (name, viewType, meta) => ({
   type: UI.MODAL_SHOW,
   payload: name,
-  meta: { variant: viewType }
+  meta: { variant: viewType, ...meta }
 });
+
+export const uiUpdateModal = (name, meta) => ({
+  type: UI.MODAL_SHOW,
+  payload: name,
+  meta
+});
+
+
+export const uiShowSongModal = (type) => (dispatch) => {
+  dispatch(uiShowModal(UI.SONG_MODAL, type, { currentTab: 0 }));
+};
 
 export const initView = (store, history, route) => {
   store.dispatch({ type: UI.INIT_VIEW_START, payload: route });
   injectReducer({
     key: `${route}View`,
+    /* eslint-disable global-require, import/no-dynamic-require */
     reducer: require(`routes/${route}/modules/reducer`).default,
+    /* eslint-enable global-require, import/no-dynamic-require */
     store,
     history
   });

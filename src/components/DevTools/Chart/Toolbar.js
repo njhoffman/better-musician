@@ -13,6 +13,7 @@ import getInspectedState from 'redux-devtools-inspector/lib/utils/getInspectedSt
 import { createStylingFromTheme } from './createStylingFromTheme';
 import SliderMonitor from './SliderMonitor';
 import ActionList from './ActionList';
+import config from '../../../config';
 
 const { commit, sweep, toggleAction, jumpToAction, jumpToState } = ActionCreators;
 
@@ -264,12 +265,13 @@ class ChartToolbar extends Component {
   render() {
     const {
       stagedActionIds: actionIds, actionsById: actions, computedStates, tabs, invertTheme,
-      skippedActionIds, currentStateIndex, monitorState, isWideLayout, devConfig
+      skippedActionIds, currentStateIndex, monitorState, isWideLayout, // devConfig
     } = this.props;
 
+    const devConfig = config.dev;
     const { selectedActionId, startActionId, searchValue, tabName } = monitorState;
     const { themeState, action, nextState, delta, stateCount, error } = this.state;
-    const { actions: actionsConfig } = devConfig.chart;
+    const { actions: actionsConfig } = devConfig.monitorProps.chart;
 
     const flatDelta = delta ? flatten(delta) : {};
     const parsedDelta = {
@@ -350,8 +352,8 @@ class ChartToolbar extends Component {
               skippedActionIds={skippedActionIds}
               currentActionId={actionIds[currentStateIndex]}
               lastActionId={getLastActionId(this.props)}
-              excludedActions={actionsConfig.exclude}
-              styledActions={actionsConfig.style}
+              excludedActions={actionsConfig ? actionsConfig.exclude :[]}
+              styledActions={actionsConfig ? actionsConfig.style : {}}
             />
           </div>
         </Draggable>

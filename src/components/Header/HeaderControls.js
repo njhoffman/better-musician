@@ -2,18 +2,17 @@ import React, { Component }  from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Column } from 'react-foundation';
-import SearchPopover from './SearchPopover';
-import SongPopover from './SongPopover';
 import { withStyles, MenuItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { MdFilterList as FilterIcon } from 'react-icons/md';
 
 import { uiShowModal } from 'actions/ui';
 import { FILTERS_MODAL } from 'constants/ui';
-
-import { MdFilterList as FilterIcon } from 'react-icons/md';
+import SearchPopover from './SearchPopover';
+import SongPopover from './SongPopover';
 
 // import css from './Header.scss';
-const styles = {
-  headerMiddle: {
+const styles = (theme) => ({
+  root: {
     width: 'fit-content',
     display: 'flex',
     flex: 3,
@@ -21,9 +20,21 @@ const styles = {
     justifyContent: 'space-around',
     textAlign: 'center',
     float: 'left',
+    height: theme.app.headerHeight,
+    [theme.breakpoints.down('sm')]: {
+      height: `calc(${theme.app.headerHeight} * 0.6)`,
+      flex: 'none',
+      width: '100%',
+      border: '0px',
+      borderTop: `1px ${theme.palette.primary.main}33`,
+      borderStyle: 'groove'
+    }
     // when width < 450px, set width to 100% and headerRight to absolute position
   },
-  headerLink: {
+  column: {
+    padding: '0'
+  },
+  link: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -33,17 +44,19 @@ const styles = {
     textDecoration: 'none',
     minWidth: '0px'
   },
-  headerLinkActive: { },
-  iconWrapper: {
+  linkActive: { },
+  linkItem: {
     width: '100%',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    height: '100%',
+    padding: '0'
   },
   icon: { },
   iconText: {
     flex: 'none',
-    padding: 0
+    padding: '0'
   }
-};
+});
 
 const popoverStyle = {
   anchor: { horizontal: 'center', vertical: 'bottom' },
@@ -62,12 +75,14 @@ class HeaderControls extends Component {
     search: {
       isOpen: false,
       anchor: null,
-      width: 0
+      width: 0,
+      height: 0
     },
     song: {
       isOpen: false,
       anchor: null,
-      width: 0
+      width: 0,
+      height: 0
     }
   };
 
@@ -87,7 +102,8 @@ class HeaderControls extends Component {
       [`${name}`]: {
         isOpen: true,
         anchor: e.currentTarget,
-        width:  e.currentTarget.clientWidth
+        width:  e.currentTarget.clientWidth,
+        height: e.currentTarget.clientHeight
       }
     });
   }
@@ -119,9 +135,9 @@ class HeaderControls extends Component {
     const isActive = modal && modal.name === FILTERS_MODAL;
     return (
       <a
-        className={`${classes.headerLink} ${isActive ? classes.headerLinkActive : ''}`}
+        className={`${classes.link} ${isActive ? classes.linkActive : ''}`}
         onClick={showFiltersModal} >
-        <MenuItem className={classes.iconWrapper}>
+        <MenuItem className={classes.linkItem}>
           <ListItemIcon>
             <FilterIcon className={classes.icon} />
           </ListItemIcon>
@@ -133,20 +149,21 @@ class HeaderControls extends Component {
 
   render() {
     const { classes, currentSong } = this.props;
+    const { width, height } = this.state.song;
     return (
-      <div className={classes.headerMiddle}>
-        <Column style={{ padding: '0px', height: '100%' }}>
+      <div className={classes.root}>
+        <Column className={classes.column}>
           <SongPopover
             anchorOrigin={popoverStyle.anchor}
             transformOrigin={popoverStyle.transform}
             currentSong={currentSong}
-            {...this.state.song }
+            {...this.state.song}
             {...this.popoverActions} />
         </Column>
-        <Column style={{ padding: '0px', height: '100%' }}>
+        <Column className={classes.column}>
           { this.renderFiltersButton() }
         </Column>
-        <Column style={{ padding: '0px', height: '100%' }}>
+        <Column className={classes.column}>
           <SearchPopover
             anchorOrigin={popoverStyle.anchor}
             transformOrigin={popoverStyle.transform}

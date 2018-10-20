@@ -1,4 +1,5 @@
 export default {
+  name: __BASENAME__,
   endpoints: {
     default: {
       apiUrl : __API_URL__,
@@ -10,13 +11,21 @@ export default {
     // cleanSession:        true
   },
   dev: {
-    showPanel: true,
+    showInspector: false,
     showChart: false,
-    chart: {
+    showToolbar: true,
+    showExtension: true,
+    extensionOptions: {
+      maxAge: 1000
+    },
+    inspectorOptions: {
+      hideMobile: true,
+    },
+    chartOptions: {
       styledActions: {},
       excludedActions: []
     },
-    logger: {
+    loggerOptions: {
       level: 'trace',
       expandObjects: true,
       clearOnReload: true,

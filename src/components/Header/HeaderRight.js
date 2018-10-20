@@ -19,7 +19,7 @@ const styles = {
   headerRight: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     width: 'fit-content',
     flex: 1,
     paddingLeft: '10px',
@@ -35,17 +35,20 @@ const styles = {
     textDecoration: 'none'
   },
   profileName: {
-    fontSize: '0.8em',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    lineHeight: '0.8em',
   },
   profileAvatar: {
     marginLeft: '5px',
   },
   loginButton:  {
     marginRight: '5px',
+    marginLeft: '5px',
+  },
+  registerButton:  {
+    marginRight: '5px',
+    marginLeft: '5px',
   }
 };
 
@@ -53,10 +56,14 @@ const SignedIn = ({ classes, getUserPoints, userDisplayName }) => (
   <div className={classes.headerRight}>
     <div className={classes.profileDisplay}>
       <NavLink to='/profile' className={classes.profilePoints}>
-        <Typography variant='body1'>{ getUserPoints }</Typography>
+        <Typography variant='body1'>
+          { getUserPoints }
+        </Typography>
       </NavLink>
-      <NavLink to='/stats' className={classes.profileName}>
-        <Typography variant='caption'>{ userDisplayName }</Typography>
+      <NavLink to='/stats'>
+        <Typography className={classes.profileName} variant='caption'>
+          { userDisplayName }
+        </Typography>
       </NavLink>
     </div>
     <div className={classes.profileAvatar}>
@@ -76,9 +83,9 @@ SignedIn.propTypes = {
 };
 
 const SignedOut = ({ classes }) => (
-  <div className={classes.flex}>
-    <Button label='Login' link='/login' primary />
-    <Button label='Register' link='/register' secondary />
+  <div className={`${classes.flex} ${classes.headerRight}`}>
+    <Button label='Login' link='/login' primary className={classes.loginButton} />
+    <Button label='Register' link='/register' secondary className={classes.registerButton} />
   </div>
 );
 

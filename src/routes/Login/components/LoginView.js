@@ -1,52 +1,129 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Typography, withStyles, Paper } from '@material-ui/core';
-import { Column } from 'react-foundation';
-
-import EmailSignInForm from './EmailSignInForm';
+import { Row, Column } from 'react-foundation';
 import { withRouter } from 'react-router';
+
+import OAuthSignInButton from 'components/OAuthSignInButton';
+import SocialIcon from 'components/SocialIcon';
 import SignOutButton from 'components/SignOutButton';
+import EmailSignInForm from './EmailSignInForm';
 
 const styles = (theme) => ({
+  root: {
+    textAlign: 'center',
+    [theme.breakpoints.down('sm')]: {
+      padding: '0px'
+    }
+  },
   loginContainer: {
     textAlign: 'center',
     margin: '30px',
     padding: '30px'
+  },
+  divider: {
+    whiteSpace: 'nowrap',
+    margin: '1em 0',
+    display: 'table',
+    width: '100%',
+    marginBottom: '2em',
+    '&:before': {
+      content: '""',
+      display: 'table-cell',
+      width: '42%',
+      borderBottom: '1px solid rgba(255,255,255,0.1)'
+    },
+    '&:after': {
+      content: '""',
+      display: 'table-cell',
+      width: '42%',
+      borderBottom: '1px solid rgba(255,255,255,0.1)'
+    },
+  },
+  dividerText: {
+    display: 'table-cell',
+    width: '16%',
+    padding: '0 0.5em',
+    position: 'relative',
+    top: '.6em'
+  },
+  facebookButton: {
+    width: '250px',
+    margin: '5px',
+    background: '#4c69ba'
+  },
+  googleButton: {
+    width: '250px',
+    margin: '5px',
+    background: '#4285f4'
   }
 });
 
-export const LoginView = ({
+const LoginView = ({
   classes,
   history,
   isSignedIn,
   ...props
 }) => (
-  <Column small={12} medium={8} large={6}>
+  <Column small={12} medium={8} large={6} className={classes.root}>
     <Paper elevation={5} className={classes.contentContainer}>
       <div className={classes.loginContainer}>
-        <Typography variant='title'>
-          This is the Login Page
-        </Typography>
         {isSignedIn && (
-          <div>
+          <Fragment>
             <Typography variant='body2'>
               You are already logged in.  Would you like to log out?!
+              <SignOutButton label='LOGOUT' next={() => { }} />
             </Typography>
-            <SignOutButton label='LOGOUT' next={() => { }} />
-          </div>
+          </Fragment>
         )}
         {!isSignedIn && (
-          <EmailSignInForm next={() => history.push('/songs')} />
-        )}
+          <Fragment>
+            <Typography variant='body1'>
+              Sign in to
+              <br />
+              <i>BetterMusician.io</i>
+            </Typography>
+            <Row>
+              <Column>
+                <OAuthSignInButton
+                  label='Sign Up with Facebook'
+                  primary
+                  iconAlign='left'
+                  iconHeight={1.8}
+                  className={classes.facebookButton}
+                  icon={<SocialIcon name='facebook' />}
+                  provider='facebook'
+                />
+              </Column>
+            </Row>
+            <Row>
+              <Column>
+                <OAuthSignInButton
+                  label='Sign Up With Google'
+                  primary
+                  iconAlign='left'
+                  className={classes.googleButton}
+                  iconHeight={1.8}
+                  icon={<SocialIcon name='google' />}
+                  provider='google'
+                />
+              </Column>
+            </Row>
+            <div className={classes.divider}>
+              <Typography className={classes.dividerText}>or, sign up with email</Typography>
+            </div>
+            <EmailSignInForm next={() => history.push('/songs')} />
+          </Fragment>
+        ) }
       </div>
     </Paper>
   </Column>
 );
 
 LoginView.propTypes = {
-  history:    PropTypes.object.isRequired,
-  classes:    PropTypes.object.isRequired,
+  history:    PropTypes.instanceOf(Object).isRequired,
+  classes:    PropTypes.instanceOf(Object).isRequired,
   isSignedIn: PropTypes.bool.isRequired
 };
 
@@ -59,4 +136,5 @@ const mapStateToProps = (state) => ({
 // TODO: Use recompose to handle all the HOC's, decorators only work on classes
 const withConnect = connect(mapStateToProps, mapActionCreators);
 const decorators = (View) => withRouter(withConnect(withStyles(styles)(View)));
+
 export default decorators(LoginView);

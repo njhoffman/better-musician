@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import onClickOutside from 'react-onclickoutside';
 import {
   Table,
   TableHead,
@@ -8,8 +9,9 @@ import {
   TableRow
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-// import Tappable from 'react-tappable';
+import Tappable from 'react-tappable';
 
+import { MODAL_VARIANT_VIEW } from 'constants/ui';
 import { setCurrentSong, setSort } from 'routes/Songs/modules/reducer';
 import { songs as songsSelector } from 'routes/Songs/modules/selectors';
 import SongsListHeader from './SongsListHeader';
@@ -17,31 +19,49 @@ import Song from './Song';
 
 const styles = (theme) => ({
   root: {
-    tableLayout: 'auto'
+    // tableLayout: 'auto'
+    tableLayout: 'fixed'
   },
   columnTitle: {
-    width: '200px',
+    textAlign: 'center',
+    [theme.breakpoints.down('sm')]: {
+      textAlign: 'left',
+      width: '66%',
+    }
   },
   columnArtist: {
     textAlign: 'center'
   },
   columnProgress: {
     textAlign: 'center',
-    width: '80px'
+    width: '80px',
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   },
   columnDifficulty: {
     textAlign: 'center',
     width: '80px',
-    paddingRight: '12px !important'
+    paddingRight: '12px !important',
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   }
 });
+
+const clickOutside = ({ target }) => {
+  if (target.classList && target.classList.value.indexOf('AppContainer-contentWrapper') !== -1) {
+    return setCurrentSong();
+  }
+  return () => {};
+};
 
 export const SongsList = ({
   songsCollection,
   setCurrentSong,
   setSort,
   currentSongId,
-  classes
+  classes,
 }) => (
   <Table padding='dense' className={classes.root}>
     <TableHead>
@@ -74,10 +94,12 @@ export const SongsList = ({
     </TableHead>
     <TableBody>
       {songsCollection && songsCollection.map(song => (
-        <Song
-          onClick={(e) => setCurrentSong(song)}
-          key={song.id}
+        <Tappable
+          component={Song}
           songValues={song}
+          onTap={(e) => setCurrentSong(song)}
+          key={song.id}
+          {...{ setCurrentSong }}
         />
       ))}
     </TableBody>
@@ -89,7 +111,8 @@ SongsList.propTypes = {
     PropTypes.shape({
       id:        PropTypes.string,
       title:     PropTypes.string
-    }).isRequired),
+    }).isRequired
+  ),
   setSort:           PropTypes.func.isRequired,
   setCurrentSong:    PropTypes.func,
   currentSongId:     PropTypes.string,
@@ -103,7 +126,8 @@ const mapStateToProps = (state, action) => ({
 
 const mapActionCreators = ({
   setCurrentSong,
-  setSort
+  setSort,
+  handleClickOutside: clickOutside
 });
 
-export default connect(mapStateToProps, mapActionCreators)(withStyles(styles)(SongsList));
+export default connect(mapStateToProps, mapActionCreators)(withStyles(styles)(onClickOutside(SongsList)));

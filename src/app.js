@@ -4,54 +4,46 @@ import { ConnectedRouter } from 'react-router-redux';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
 import { MuiThemeProvider } from '@material-ui/core';
-import themes from 'styles/themes';
-
-import ErrorBoundary from 'components/ErrorBoundaries/Main';
-// TODO: does this bring DevTools into production bundle?
-import DevTools from 'components/DevTools/DevTools';
+import processThemes from 'styles/themes';
+import appConfig from 'config';
 import { configureStart, configureComplete } from 'actions/api';
+import loadConfiguration from 'utils/configure';
 import createStore from 'store/createStore';
-
-import configure from 'utils/configure';
 import { startMemoryStats, domStats } from 'utils/app';
-
 import { init as initLog } from 'shared/logger';
-const { info, warn } = initLog('app');
+import ErrorBoundary from 'components/ErrorBoundaries/Main';
+import devTools from 'components/DevTools/DevTools';
 
+const { info, warn } = initLog('app');
 const initialState = window.__INITIAL_STATE__;
 const history = createBrowserHistory();
-const store = createStore(initialState, history);
+const store = createStore(initialState, history, appConfig.dev);
 
 const MOUNT_NODE = document.getElementById('root');
 
-const startApp = () => {
-  store.dispatch(configureStart());
-  configure(store)
-    .then((userData) => {
-      store.dispatch(configureComplete());
-      renderDev();
-      domStats();
-    });
+console.info('appConfig', appConfig);
+const themes = processThemes(appConfig.themes);
+const theme = themes.steelBlue.dark;
+const RedBox = require('redbox-react').default;
+
+const onError = (error, errorInfo, props) => {
+  warn('App.onError:', error, errorInfo, props);
 };
-
-startApp();
-
-const theme = themes['steelBlue-dark'];
 
 const render = (Component) => {
   // TODO: make this a config option and handle it better
-  const hideDev = window.innerWidth < 600;
+  const devConfig = store.getState().config.dev;
   ReactDOM.render(
     <Provider store={store}>
       <ErrorBoundary onError={onError}>
         <ErrorBoundary onError={onError}>
-          <MuiThemeProvider theme={theme} >
+          <MuiThemeProvider theme={theme}>
             <ConnectedRouter history={history}>
               <Component history={history} store={store} />
             </ConnectedRouter>
           </MuiThemeProvider>
         </ErrorBoundary>
-        {!hideDev && <DevTools />}
+        {devConfig.showInspector && devTools(devConfig)}
       </ErrorBoundary>
     </Provider>,
     MOUNT_NODE
@@ -59,18 +51,15 @@ const render = (Component) => {
   startMemoryStats();
 };
 
-const onError = (error, errorInfo, props) => {
-  warn('App.onError:', error, errorInfo, props);
-};
-
-const RedBox = require('redbox-react').default;
 const renderError = (error) => {
   ReactDOM.render(<RedBox error={error} />, MOUNT_NODE);
 };
 
 const renderDev = () => {
   try {
+    /* eslint-disable global-require */
     const NextApp = require('components/AppContainer').default;
+    /* eslint-enable global-require */
     render(NextApp);
   } catch (error) {
     renderError(error);
@@ -81,14 +70,25 @@ const renderDev = () => {
 if (__DEV__) {
   if (module.hot) {
     // module.hot.accept(() => {
-    module.hot.accept('components/AppContainer', () => {
+    module.hot.accept('components/AppContainer', (() => {
       // console.clear();
       info('HMR reloading ...');
       ReactDOM.unmountComponentAtNode(MOUNT_NODE);
       renderDev();
-    });
+    }));
   }
-  window.addEventListener('message', e => {
+  window.addEventListener('message', (e) => {
     // console.clear();
   });
 }
+
+const startApp = () => {
+  store.dispatch(configureStart());
+  loadConfiguration(store, appConfig)
+    .then((userData) => {
+      store.dispatch(configureComplete());
+      renderDev();
+      domStats();
+    });
+};
+startApp();

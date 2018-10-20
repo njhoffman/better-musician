@@ -24,7 +24,7 @@ const LoadingIndicator = ({ isLoading, pastDelay, error, classes, theme }) => (
   <Column small={6}>
     {isLoading && pastDelay && (
       <Paper className={classes.paper}>
-        <Typography variant='title'>
+        <Typography variant='h5'>
           Loading...
       </Typography>
       <BarLoader
@@ -38,7 +38,7 @@ const LoadingIndicator = ({ isLoading, pastDelay, error, classes, theme }) => (
     )}
     {!isLoading && error && (
       <Paper className={`${classes.paper} ${classes.error}`}>
-        <Typography variant='title'>
+        <Typography variant='h5'>
           Error!
         </Typography>
         <Typography>

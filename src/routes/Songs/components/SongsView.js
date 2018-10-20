@@ -11,7 +11,7 @@ import SongModal from './SongModal';
 
 const styles = (theme) => ({
   root: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       padding: '0px'
     }
   },

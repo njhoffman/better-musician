@@ -45,7 +45,7 @@ class Launcher extends Component {
   static propTypes = {
     dispatch: PropTypes.func,
     classes: PropTypes.object.isRequired,
-    devConfig: PropTypes.object.isRequired,
+    devConfig: PropTypes.object,
     computedStates: PropTypes.array,
     actionsById: PropTypes.object,
     stagedActionIds: PropTypes.array,

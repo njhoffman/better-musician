@@ -9,15 +9,15 @@ export const DRAWER_MENU_TOGGLE = 'DRAWER_MENU_TOGGLE';
 export const MODAL_SHOW         = 'MODAL_SHOW';
 export const MODAL_HIDE         = 'MODAL_HIDE';
 export const MODAL_UPDATE       = 'MODAL_UPDATE';
-export const MODAL_VARIANT_VIEW = 'MODAL_VARIANT_VIEW';
-export const MODAL_VARIANT_ADD  = 'MODAL_VARIANT_ADD';
-export const MODAL_VARIANT_EDIT = 'MODAL_VARIANT_EDIT';
+export const MODAL_VARIANT_VIEW = 'MODAL_VIEW';
+export const MODAL_VARIANT_ADD  = 'MODAL_ADD';
+export const MODAL_VARIANT_EDIT = 'MODAL_EDIT';
 export const SONG_MODAL         = 'SONG_MODAL';
 export const FILTERS_MODAL      = 'FILTERS_MODAL';
 
-export const FIELD_VARIANT_VIEW = 'FIELD_VARIANT_VIEW';
-export const FIELD_VARIANT_ADD  = 'FIELD_VARIANT_ADD';
-export const FIELD_VARIANT_EDIT = 'FIELD_VARIANT_EDIT';
+export const FIELD_VIEW = 'FIELD_VIEW';
+export const FIELD_ADD  = 'FIELD_ADD';
+export const FIELD_EDIT = 'FIELD_EDIT';
 
 export const INIT_VIEW_START    = 'INIT_VIEW_START';
 export const INIT_VIEW_COMPLETE = 'INIT_VIEW_COMPLETE';

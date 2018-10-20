@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { MenuItem, ListItemIcon, ListItemText, withStyles } from '@material-ui/core';
@@ -8,7 +8,7 @@ import { uiHideDrawerMenu } from 'actions/ui';
 const styles = (theme) => ({
   root: {
     padding: '0px',
-    height: '48px'
+    height: '48px',
   },
   navButton: {
     width: '100%',
@@ -21,59 +21,77 @@ const styles = (theme) => ({
     width: '100%',
     display: 'flex',
     alignItems: 'center',
-    padding: '0px 24px'
+    padding: '0px 24px',
+  },
+  google: {
+    borderRadius: '5px',
+    background: '#4c69ba66',
+    margin: '6px',
+    height: '42px'
+  },
+  facebook: {
+    background: '#4285f466',
+    borderRadius: '5px',
+    margin: '6px',
+    height: '42px'
   },
   navText: {
     textAlign: 'center',
-    color: theme.instrumental.headerLinksColor,
+    color: theme.app.headerLinksColor,
     textTransform: 'uppercase',
     padding: '0px'
   },
   loginText: {
     display: 'flex',
-    padding: '0px'
+    padding: '0px',
+    justifyContent: 'center'
   },
   textWrapper: {
-    padding: '0px'
+    padding: '0px',
+    justifyContent: 'center'
+  },
+  icon: {
+    marginRight: '10px'
   }
 });
 
-export const DrawerMenuLink = ({
-  label,
+const MenuLink = ({ classes, label, Icon, loginLink }) => (
+  <Fragment>
+    {Icon && (
+      <ListItemIcon>
+      <Icon className={classes.icon}/>
+      </ListItemIcon>
+    )}
+    <ListItemText
+      inset={Icon && true}
+      className={classes.textWrapper}
+      primaryTypographyProps={{
+        className: loginLink ? classes.loginText : classes.navText
+      }}
+      primary={label}
+    />
+  </Fragment>
+);
+
+const DrawerMenuLink = ({
   link,
   hideDrawerMenu,
-  Icon,
   classes,
+  onClick,
   loginLink,
-  onClick
+  ...props
 }) => (
-  <MenuItem onClick={onClick ? onClick : hideDrawerMenu} className={classes.root}>
+  <MenuItem
+    onClick={onClick || hideDrawerMenu}
+    className={`${classes.root} ${classes[loginLink]}`}>
     {link && (
       <NavLink to={link} className={classes.navLink}>
-        {Icon && (
-          <ListItemIcon>
-            <Icon />
-          </ListItemIcon>
-        )}
-        <ListItemText
-          inset={Icon ? true : false}
-          className={classes.textWrapper}
-          primaryTypographyProps={{ className: loginLink ? classes.loginText : classes.navText }}
-          primary={label} />
+        {MenuLink({ classes, loginLink, ...props })}
       </NavLink>
     )}
     {!link && (
       <div className={classes.navButton}>
-        {Icon && (
-          <ListItemIcon>
-            <Icon />
-          </ListItemIcon>
-        )}
-        <ListItemText
-          inset={Icon ? true : false}
-          className={classes.textWrapper}
-          primary={label}
-          primaryTypographyProps={{ className: loginLink ? classes.loginText : classes.navText }} />
+        {MenuLink({ classes, loginLink, ...props })}
       </div>
     )}
   </MenuItem>
@@ -83,8 +101,11 @@ DrawerMenuLink.propTypes = {
   hideDrawerMenu: PropTypes.func.isRequired,
   classes:        PropTypes.object.isRequired,
   onClick:        PropTypes.func,
-  loginLink:      PropTypes.bool,
   link:           PropTypes.string,
+  loginLink:      PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool
+  ]),
   label:          PropTypes.string,
   Icon:           PropTypes.func
 };

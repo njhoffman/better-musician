@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -17,16 +17,16 @@ import {
 import { MODAL_VARIANT_EDIT, MODAL_VARIANT_ADD } from 'constants/ui';
 import { uiShowSongModal } from 'actions/ui';
 
-const styles = {
-  headerLink: {
+const styles = (theme) => ({
+  link: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
     height: '100%',
     cursor: 'pointer',
     textDecoration: 'none',
-    minWidth: '0px'
+    minWidth: '0px',
+    padding: '0'
   },
   downArrow : {
     '&:hover' : {
@@ -35,29 +35,62 @@ const styles = {
     fontSize: '1.5em',
     marginLeft: '5px'
   },
-  iconWrapper: {
+  linkItem: {
     width: '100%',
-    justifyContent: 'center'
+    height: '100%',
+    justifyContent: 'center',
+    padding: '0'
   },
-  icon : { },
+  sublinksWrapper: {
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: '-16px'
+    }
+  },
+  sublink: {
+    // margin: '0px -16px 0px 0px',
+    // padding: '0px 0px 0px 16px',
+    padding: '0',
+    minHeight: '40px',
+  },
+  sublinkIcon: {
+    paddingLeft: '8px'
+  },
+  editIcon: {
+    marginRight: theme.spacing.unit,
+    [theme.breakpoints.down('sm')]: {
+      marginRight: '0px',
+      marginLeft: theme.spacing.unit,
+    }
+  },
+  icon: {
+    // margin: '0px 6px'
+  },
   iconText: {
     flex: 'none',
     padding: 0
-  },
-  paper: {
-    paddingTop: '0',
-    paddingBottom: '0'
   }
-};
+});
 
 const popoverStyle = {
   anchor: { vertical: 'bottom', horizontal: 'left' },
   transform: { vertical: 'top', horizontal: 'center' }
 };
 
+const showAddSongDialog = (e, { closeAll, showSongModal }) => {
+  e.stopPropagation();
+  closeAll();
+  showSongModal(MODAL_VARIANT_ADD);
+};
+
+const showEditSongDialog = (e, { closeAll, showSongModal }) => {
+  e.stopPropagation();
+  closeAll();
+  showSongModal(MODAL_VARIANT_EDIT);
+};
+
 const SongButtonOther = ({ classes }) => (
-  <Link className={classes.headerLink} to='/songs'>
-    <MenuItem className={classes.iconWrapper}>
+  <Link className={classes.link} to='/songs'>
+    <MenuItem className={classes.linkItem}>
       <ListItemIcon>
         <ViewIcon className={classes.icon} />
       </ListItemIcon>
@@ -73,17 +106,18 @@ SongButtonOther.propTypes = {
 };
 
 const SongButtonAdd = ({ classes, ...props }) => (
-  <a onClick={(e) => showAddSongDialog(e, { ...props })}
-    className={classes.headerLink}>
-    <MenuItem className={classes.iconWrapper}>
-      <ListItemIcon>
-        <AddIcon className={classes.icon} />
-      </ListItemIcon>
-      <ListItemText className={classes.iconText}>
-        Add Song
-      </ListItemText>
-    </MenuItem>
-  </a>
+  <MenuItem
+    onClick={(e) => {
+      return showAddSongDialog(e, { ...props });
+    }}
+    className={classes.link}>
+    <ListItemIcon>
+      <AddIcon className={classes.icon} />
+    </ListItemIcon>
+    <ListItemText className={classes.iconText}>
+      Add Song
+    </ListItemText>
+  </MenuItem>
 );
 
 SongButtonAdd.propTypes = {
@@ -91,26 +125,26 @@ SongButtonAdd.propTypes = {
 };
 
 const SongButtonView = ({
-  classes, isOpen, anchor, width,
+  classes, isOpen, anchor, width, height,
   open, close, toggle, closeAll,
   ...props
 }) => (
-  <a className={classes.headerLink}
-    onClick={(e) => showEditSongDialog(e, { ...props, closeAll })} >
+  <Fragment>
     <MenuItem
-      className={classes.iconWrapper}
+      className={classes.link}
+      onClick={(e) => showAddSongDialog(e, { ...props, closeAll })}
       selected={Boolean(isOpen)}
       onMouseEnter={(e) => open('song', e)}>
       <ListItemIcon>
-        <EditIcon className={classes.icon} />
+        <EditIcon className={classes.editIcon} />
       </ListItemIcon>
       <ListItemText className={classes.iconText}>
         Edit Song
-        <ArrowDropDownIcon
-          className={classes.downArrow}
-          onClick={(e) => toggle('song', e)}
-        />
       </ListItemText>
+      <ArrowDropDownIcon
+        className={classes.downArrow}
+        onClick={(e) => toggle('song', e)}
+      />
     </MenuItem>
     <Menu
       open={Boolean(isOpen)}
@@ -118,17 +152,19 @@ const SongButtonView = ({
       anchorOrigin={popoverStyle.anchor}
       getContentAnchorEl={null}
       transformOrigin={popoverStyle.target}
+      className={classes.subinksWrapper}
+      PopoverClasses={{ paper: classes.sublinksWrapper }}
       MenuListProps={{
         style: { paddingTop: '0', paddingBottom: '0' },
         onMouseLeave: () => close('song')
       }}
-      disableRestoreFocus={true}
+      disableRestoreFocus
       onClose={() => close('song')}>
       <MenuItem
-        className={classes.iconWrapper}
-        style={{ width }}
-        onClick={(e) => showAddSongDialog(e, { ...props, closeAll})}>
-        <ListItemIcon>
+        className={classes.sublink}
+        style={{ width, height }}
+        onClick={(e) => showAddSongDialog(e, { ...props, closeAll })}>
+        <ListItemIcon className={classes.sublinkIcon}>
           <AddIcon className={classes.icon} />
         </ListItemIcon>
         <ListItemText className={classes.iconText}>
@@ -136,9 +172,9 @@ const SongButtonView = ({
         </ListItemText>
       </MenuItem>
       <MenuItem
-        className={classes.iconWrapper}
-        style={{ width }}>
-        <ListItemIcon>
+        style={{ width, height }}
+        className={classes.sublink}>
+        <ListItemIcon className={classes.sublinkIcon}>
           <DeleteIcon className={classes.icon} />
         </ListItemIcon>
         <ListItemText className={classes.iconText}>
@@ -146,7 +182,7 @@ const SongButtonView = ({
         </ListItemText>
       </MenuItem>
     </Menu>
-  </a>
+  </Fragment>
 );
 
 SongButtonView.propTypes = {
@@ -161,11 +197,10 @@ SongButtonView.propTypes = {
 };
 
 export const SongPopover = ({ currentView, currentSong, ...props }) => {
-  // TODO: make this a constant
-  return (currentView === 'Songs'
-    ? (currentSong ? SongButtonView(props) : SongButtonAdd(props))
-    : SongButtonOther(props)
-  );
+  if (currentView === 'Songs') {
+    return currentSong ? SongButtonView(props) : SongButtonAdd(props);
+  }
+  return SongButtonOther(props);
 };
 
 SongPopover.propTypes = {
@@ -173,22 +208,8 @@ SongPopover.propTypes = {
   currentSong: PropTypes.string
 };
 
-const showSongModal = (actionType) => uiShowSongModal(actionType);
-
-const showEditSongDialog = (e, { closeAll, showSongModal }) => {
-  e.stopPropagation();
-  closeAll();
-  showSongModal(MODAL_VARIANT_EDIT);
-};
-
-const showAddSongDialog = (e, { closeAll, showSongModal }) => {
-  e.stopPropagation();
-  closeAll();
-  showSongModal(MODAL_VARIANT_ADD);
-};
-
 const mapActionCreators = {
-  showSongModal
+  showSongModal: uiShowSongModal
 };
 
 const mapStateToProps = (state) => ({

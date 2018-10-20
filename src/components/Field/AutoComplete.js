@@ -2,14 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Downshift from 'downshift';
 import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
+import { TextField, FormControl, Paper, MenuItem } from '@material-ui/core';
 
-import { FIELD_VARIANT_VIEW } from 'constants/ui';
+import { FIELD_VIEW } from 'constants/ui';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
+    width: '100%'
     // flexGrow: 1,
     // height: 250,
   },
@@ -27,8 +26,6 @@ const styles = theme => ({
   chip: {
     margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
   },
-
-
   inputRoot: {
     flexWrap: 'wrap'
   },
@@ -37,17 +34,14 @@ const styles = theme => ({
   },
 });
 
-const getSuggestions = ({ options, inputValue, maxResults }) => {
-  return options.filter(option => {
-    return (!inputValue || option.label.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1);
-  }).slice(0, maxResults);
-};
+const getSuggestions = ({ options, inputValue, maxResults }) => options.filter(
+  (option) => !inputValue || option.label.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1
+).slice(0, maxResults);
 
 const renderInput = ({
   InputProps,
   InputLabelProps,
   classes,
-  variant,
   ref,
   ...props
 }) => (
@@ -101,54 +95,58 @@ const AutoComplete = ({
   options,
   input,
   meta,
-  variant,
+  mode,
+  disabled,
   maxResults,
   ...props
 }) => (
-  <Downshift
-    {...input}
-    onStateChange={({ inputValue }) => input.onChange(inputValue)}
-    onFocus={() => input.onFocus()}
-    selectedItem={input.value}>
-    {({
-      getInputProps,
-      getItemProps,
-      isOpen,
-      inputValue,
-      selectedItem,
-      highlightedIndex
-    }) => (
-      <div className={classes.container}>
-        {renderInput({
-          fullWidth,
-          classes,
-          meta,
-          label,
-          name: input.name,
-          InputLabelProps: { },
-          InputProps: getInputProps({
-            disableUnderline: variant === FIELD_VARIANT_VIEW,
-            ...input,
-            ...props
-            // placeholder: 'Search',
-          })
-        })}
-        {isOpen ? (
-          <Paper className={classes.paper} square>
-            {getSuggestions({ options, inputValue, maxResults }).map((suggestion, index) =>
-              renderSuggestion({
-                suggestion,
-                index,
-                itemProps: getItemProps({ item: suggestion.label }),
-                highlightedIndex,
-                selectedItem,
-              }),
-            )}
-          </Paper>
-        ) : null}
-      </div>
-    )}
-  </Downshift>
+  <FormControl className={classes.root}>
+    <Downshift
+      {...input}
+      onStateChange={({ inputValue }) => input.onChange(inputValue)}
+      onFocus={() => input.onFocus()}
+      selectedItem={input.value}>
+      {({
+        getInputProps,
+        getItemProps,
+        isOpen,
+        inputValue,
+        selectedItem,
+        highlightedIndex
+      }) => (
+        <div className={classes.container}>
+          {renderInput({
+            fullWidth: fullWidth !== false,
+            classes,
+            meta,
+            label,
+            name: input.name,
+            InputLabelProps: { },
+            InputProps: getInputProps({
+              disableUnderline: mode === FIELD_VIEW,
+              disabled: mode === FIELD_VIEW || disabled,
+              ...input,
+              ...props
+              // placeholder: 'Search',
+            })
+          })}
+          {isOpen ? (
+            <Paper className={classes.paper} square>
+              {getSuggestions({ options, inputValue, maxResults }).map(
+                (suggestion, index) => renderSuggestion({
+                  suggestion,
+                  index,
+                  itemProps: getItemProps({ item: suggestion.label }),
+                  highlightedIndex,
+                  selectedItem,
+                })
+              )}
+            </Paper>
+          ) : null}
+        </div>
+      )}
+    </Downshift>
+  </FormControl>
 );
 
 AutoComplete.propTypes = {

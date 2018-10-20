@@ -8,11 +8,10 @@ import { twilight } from 'redux-devtools-themes';
 
 import MultipleMonitors from './MultipleMonitors';
 import Launcher from './Launcher';
-import config from 'config';
 
 const twilightMod = { ...twilight, base00: '#0e0e0e', base01: '#222527' };
 
-const DevTools = createDevTools(
+export const DevTools = createDevTools(
   <DockMonitor
     defaultIsVisible
     defaultPosition='bottom'
@@ -20,11 +19,14 @@ const DevTools = createDevTools(
     toggleVisibilityKey='ctrl-shift-h'
     changePositionKey='ctrl-q'>
     <MultipleMonitors className='multi-monitor'>
-      <Launcher theme={twilightMod} devConfig={config.dev} />
+      <Launcher theme={twilightMod} />
       <SliderMonitor theme={twilightMod} preserveScrollTop={false} inline />
       <Inspector theme='twilight' expandDiffs invertTheme={false} supportImmutable />
     </MultipleMonitors>
   </DockMonitor>
 );
 
-export default DevTools;
+export default function DevToolsInit(devConfig) {
+  console.info('devConfig', devConfig);
+  return <DevTools devConfig={devConfig} />
+}

@@ -17,29 +17,31 @@ const styles = (theme) => ({
 const youtubeRE = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&(amp;)?[\w?=]*)?/;
 
 const TextboxForm = createComponent(TextField, ({
-    input: { onChange, ...inputProps },
-    onChange: onFieldChange,
-    defaultValue,
-    ...props
-  }) => ({
-    ...mapError(props),
-    ...inputProps,
-    onChange: event => {
-      onChange(event.target.value);
-      if (onFieldChange) {
-        onFieldChange(event.target.value);
-      }
-    },
-  })
-);
+  input: { onChange, ...inputProps },
+  onChange: onFieldChange,
+  defaultValue,
+  ...props
+}) => ({
+  ...mapError(props),
+  ...inputProps,
+  onChange: (event) => {
+    onChange(event.target.value);
+    if (onFieldChange) {
+      onFieldChange(event.target.value);
+    }
+  },
+}));
 
 class YouTubeLink extends Component {
+  static defaultProps = {
+    preview: false,
+  };
+
   static propTypes = {
     preview       : PropTypes.bool,
     initialValues : PropTypes.object,
     style         : PropTypes.object,
-    id            : PropTypes.string,
-    variant       : PropTypes.string.isRequired
+    id            : PropTypes.string
   }
 
   constructor(props) {
@@ -69,32 +71,37 @@ class YouTubeLink extends Component {
           style={{ width: '200px', marginTop: '0px' }}
           name={id}
           component={TextField}
-          label={field.label} />
-      );
-    } else {
-      return (
-        <Fragment>
-          <Row className={classes.inputRow}>
-            <Column centerOnSmall>
-              <TextboxForm
-                name={input.name} onChange={(e, val) => this.parseUrl(val)}
-                {...{ input, meta, label }} />
-            </Column>
-          </Row>
-          <Row>
-            <Column />
-          </Row>
-          <Row>
-            <Column centerOnSmall>
-              <iframe id='player' type='text/html'
-                width='350'
-                height='250'
-                src={'http://www.youtube.com/embed/' + this.state.videoId} />
-            </Column>
-          </Row>
-        </Fragment>
+          label={field.label}
+        />
       );
     }
+    return (
+      <Fragment>
+        <Row className={classes.inputRow}>
+          <Column centerOnSmall>
+            <TextboxForm
+              name={input.name}
+              onChange={(e, val) => this.parseUrl(val)}
+              {...{ input, meta, label }}
+            />
+          </Column>
+        </Row>
+        <Row>
+          <Column />
+        </Row>
+        <Row>
+          <Column centerOnSmall>
+            <iframe
+              id='player'
+              type='text/html'
+              width='350'
+              height='250'
+              src={`http://www.youtube.com/embed/${this.state.videoId}`}
+            />
+          </Column>
+        </Row>
+      </Fragment>
+    );
   }
 }
 

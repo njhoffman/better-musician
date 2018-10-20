@@ -5,18 +5,16 @@ import { MdSearch as SearchIcon } from 'react-icons/md';
 import { withStyles, MenuItem, ListItemIcon, ListItemText } from '@material-ui/core';
 
 const styles = {
-  headerLink: {
+  link: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
     height: '100%',
     cursor: 'pointer',
-    textDecoration: 'none'
-  },
-  iconWrapper: {
-    width: '100%',
-    justifyContent: 'center'
+    textDecoration: 'none',
+    minWidth: '0px',
+    padding: '0'
   },
   icon: { },
   iconText: {
@@ -34,17 +32,15 @@ const SearchPopover = ({
   open, close, toggle, closeAll,
   ...props
 }) => (
-  <a className={classes.headerLink}>
-    <MenuItem
-      className={classes.iconWrapper}
-      selected={Boolean(isOpen)}
-      onMouseEnter={(e) => open('search', e)}>
-      <ListItemIcon>
-        <SearchIcon className={classes.icon} />
-      </ListItemIcon>
-      <ListItemText className={classes.iconText}>Search</ListItemText>
-    </MenuItem>
-  </a>
+  <MenuItem
+    className={classes.link}
+    selected={Boolean(isOpen)}
+    onClick={(e) => open('search', e)}>
+    <ListItemIcon>
+      <SearchIcon className={classes.icon} />
+    </ListItemIcon>
+    <ListItemText className={classes.iconText}>Search</ListItemText>
+  </MenuItem>
 );
 
 SearchPopover.propTypes = {

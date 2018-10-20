@@ -25,43 +25,45 @@ const styles = (theme) => ({
   }
 });
 
-export const ActionButtons = ({
+const ActionButtons = ({
   classes,
-  addSong,
-  editSong,
+  add,
+  edit,
   variant,
   hideModal
 }) => {
-
-  const buttonLabel = variant === MODAL_VARIANT_VIEW
-    ? 'Edit' : MODAL_VARIANT_EDIT
-    ? 'Save' : 'Add';
+  let buttonLabel = 'Add';
+  if (variant === MODAL_VARIANT_VIEW) {
+    buttonLabel = 'Edit';
+  } else if (MODAL_VARIANT_VIEW) {
+    buttonLabel = 'Save';
+  }
 
   return (
     <Row className={classes.root}>
       <Divider />
       <Column className={classes.left}>
-        {variant !== MODAL_VARIANT_ADD &&
+        {variant !== MODAL_VARIANT_ADD && (
           <Button
-            variant='flat'
+            variant='text'
             className={classes.deleteButton}
             onClick={addSong}>
             <DeleteIcon />
             Delete
           </Button>
-        }
+        )}
       </Column>
       <Column className={classes.right}>
         <Button
-          variant='flat'
+          variant='text'
           color='primary'
           onClick={hideModal}>
           Cancel
         </Button>
         <Button
-          variant='raised'
+          variant='contained'
           color='primary'
-          onClick={variant === MODAL_VARIANT_VIEW ? editSong : addSong}>
+          onClick={variant === MODAL_VARIANT_VIEW ? edit : add}>
           {buttonLabel}
         </Button>
       </Column>
@@ -70,16 +72,16 @@ export const ActionButtons = ({
 };
 
 ActionButtons.propTypes = {
-  classes   : PropTypes.object.isRequired,
-  addSong   : PropTypes.func.isRequired,
-  editSong  : PropTypes.func.isRequired,
+  classes   : PropTypes.instanceOf(Object).isRequired,
+  add       : PropTypes.func.isRequired,
+  edit      : PropTypes.func.isRequired,
   variant   : PropTypes.string.isRequired,
   hideModal : PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = {
-  addSong,
-  editSong : () => uiShowSongModal(MODAL_VARIANT_EDIT),
+  add: addSong,
+  edit : () => uiShowSongModal(MODAL_VARIANT_EDIT),
   hideModal: uiHideModal
 };
 

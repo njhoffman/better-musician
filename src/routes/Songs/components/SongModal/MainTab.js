@@ -16,7 +16,7 @@ import {
 } from 'selectors/songs';
 import { maxDifficulty } from 'selectors/users';
 import {
-  FIELD_VARIANT_EDIT, FIELD_VARIANT_ADD, FIELD_VARIANT_VIEW,
+  FIELD_EDIT, FIELD_ADD, FIELD_VIEW,
   MODAL_VARIANT_EDIT, MODAL_VARIANT_ADD, MODAL_VARIANT_VIEW
 } from 'constants/ui';
 // import css from './AddSong.scss';
@@ -29,13 +29,33 @@ const styles = (theme) => ({
     height: '200px',
     marginBottom: '5px'
   },
-  progressStars: theme.instrumental.starColor,
+  progressStars: theme.app.starColor,
   row: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
-    flexWrap: 'wrap'
+    flexWrap: 'nowrap',
+    [theme.breakpoints.down('xs')]: {
+      flexWrap: 'wrap',
+      marginTop: '0px',
+      marginBottom: '0px'
+    },
+  },
+  field: {
+    [theme.breakpoints.down('xs')]: {
+      marginTop: theme.spacing.unit,
+      marginBottom: theme.spacing.unit,
+    },
   }
 });
+
+const fieldMode = (modalVariant) => {
+  if (modalVariant === MODAL_VARIANT_VIEW) {
+    return FIELD_VIEW;
+  } else if (modalVariant === MODAL_VARIANT_ADD) {
+    return FIELD_ADD;
+  }
+  return FIELD_EDIT;
+};
 
 export const SongMainTab = ({
   activeField,
@@ -48,22 +68,24 @@ export const SongMainTab = ({
   genreOptions,
   maxDifficulty,
   classes,
-  variant: modalVariant,
+  variant,
   ...props
 }) => {
   const fieldProps = {
     ...props,
-    fullWidth: true,
-    variant:  (modalVariant === MODAL_VARIANT_EDIT ? FIELD_VARIANT_EDIT
-      : modalVariant === MODAL_VARIANT_ADD ? FIELD_VARIANT_ADD : FIELD_VARIANT_VIEW)
+    className: classes.field,
+    mode: fieldMode(variant)
   };
 
   const matchedImages = () => {
     const fieldRE = /^artist|^instrument|^genre/;
-    const field = (
-      activeField && fieldRE.test(activeField) ? activeField
-      : lastActiveField && fieldRE.test(lastActiveField) ? lastActiveField
-      : 'artist').replace(/\..*/, '');
+    let field = 'artist';
+    if (activeField && fieldRE.test(activeField)) {
+      field = activeField;
+    } else if (lastActiveField && fieldRE.test(lastActiveField)) {
+      field = lastActiveField;
+    }
+    field = field.replace(/\..*/, '');
     const matchers = { artist: matchedArtist, genre: matchedGenre, instrument: matchedInstrument };
     const matched = matchers[field];
     const buttonLabel =  matched.images && matched.images.length > 0 ? 'Change Picture' : 'Add Picture';
@@ -78,15 +100,15 @@ export const SongMainTab = ({
       <Column>
         <img className={classes.image} src={`${image}`} />
         <Typography>{imageLabel}</Typography>
-        { modalVariant !== MODAL_VARIANT_EDIT && <Button variant='raised' secondary label={buttonLabel} /> }
+        { variant !== MODAL_VARIANT_EDIT && <Button variant='contained' secondary label={buttonLabel} /> }
       </Column>
     );
   };
 
   const renderStars = (number) => ( <Stars className={classes.progressStars} number={parseInt(number)} />);
 
-  const renderViewFields = () => (
-    <FormRow>
+  const renderViewFields = (classes) => (
+    <FormRow className={classes.row}>
       <FormField
         name='title'
         type='text'
@@ -102,9 +124,9 @@ export const SongMainTab = ({
     </FormRow>
   );
 
-  const renderEditFields = () => (
+  const renderEditFields = (classes) => (
     <Fragment>
-      <FormRow>
+      <FormRow className={classes.row}>
         <FormField
           name='title'
           type='text'
@@ -115,7 +137,7 @@ export const SongMainTab = ({
           {...fieldProps}
         />
       </FormRow>
-      <FormRow>
+      <FormRow className={classes.row}>
         <FormField
           name='artist.lastName'
           type='autocomplete'
@@ -136,16 +158,16 @@ export const SongMainTab = ({
 
   return (
     <Fragment>
-      <FormRow>
+      <FormRow className={classes.row}>
         <Column>
           <Row className={classes.imageFrame}>
             { renderImage() }
           </Row>
         </Column>
       </FormRow>
-      {modalVariant === MODAL_VARIANT_VIEW && renderViewFields()}
-      {modalVariant !== MODAL_VARIANT_VIEW && renderEditFields()}
-      <FormRow>
+      {variant === MODAL_VARIANT_VIEW && renderViewFields(classes)}
+      {variant !== MODAL_VARIANT_VIEW && renderEditFields(classes)}
+      <FormRow className={classes.row}>
         <FormField
           name='genre.displayName'
           type='autocomplete'
@@ -163,7 +185,7 @@ export const SongMainTab = ({
           {...fieldProps}
         />
       </FormRow>
-      <FormRow>
+      <FormRow className={classes.row}>
         <FormField
           name='difficulty'
           type='slider'

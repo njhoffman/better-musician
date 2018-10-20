@@ -57,13 +57,13 @@ export const SongsPagination = ({
         <Button
           style={styleObj.buttons}
           className={css.beginning}
-          variant='raised'
+          variant='contained'
           color='secondary'
           icon={<BeforeIcon />}
           onClick={setPaginationStart} />
         <Button
           style={styleObj.buttons}
-          variant='raised'
+          variant='contained'
           className={css.prev}
           onClick={setPaginationDecrement}
           icon={<BeforeIcon />}
@@ -77,7 +77,7 @@ export const SongsPagination = ({
         <span className={css.centerPageTotal}> / {paginationPages} </span>
         <Button
           style={styleObj.buttons}
-          variant='raised'
+          variant='contained'
           className={css.next}
           color='secondary'
           icon={<NextIcon />}
@@ -85,7 +85,7 @@ export const SongsPagination = ({
         <Button
           style={styleObj.buttons}
           className={css.end}
-          variant='raised'
+          variant='contained'
           color='secondary'
           icon={<NextIcon />}
           onClick={setPaginationEnd} />

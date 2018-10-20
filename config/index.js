@@ -1,8 +1,10 @@
 /* eslint key-spacing:0 spaced-comment:0 */
 const path = require('path');
-const argv = require('yargs').argv;
+const { argv } = require('yargs');
 const ip = require('ip');
 
+const { name } = require('../package.json');
+const environments = require('./environments.js');
 const configWebpack = require('./webpack');
 const logger = require('../shared/logger')('app:config');
 
@@ -43,9 +45,9 @@ const config = {
   }
 };
 
-const base = function () {
-  const args = [config.base].concat([].slice.call(arguments));
-  return path.resolve.apply(path, args);
+const base = (...args) => {
+  const baseArgs = [config.base].concat([].slice.call(args));
+  return path.resolve.apply(path, baseArgs);
 };
 
 Object.keys(config.paths).forEach(pathKey => {
@@ -53,7 +55,6 @@ Object.keys(config.paths).forEach(pathKey => {
 });
 config.paths.base = base;
 
-const environments = require('./environments.js');
 const overrides = environments[config.env];
 if (overrides) {
   logger.info({ overrides: overrides(config) },
@@ -66,16 +67,16 @@ if (overrides) {
 // globals added here must _also_ be added to .eslintrc
 config.globals = {
   'process.env'  : {
-    'NODE_ENV' : JSON.stringify(config.env)
+    NODE_ENV : JSON.stringify(config.env)
   },
-  'NODE_ENV'     : config.env,
-  '__DEV__'      : config.env === 'development',
-  '__PROD__'     : config.env === 'production',
-  '__TEST__'     : config.env === 'test',
-  '__COVERAGE__' : !argv.watch && config.env === 'test',
-  '__VERBOSE__'  : config.envFlag === 'verbose',
-  '__API_URL__' : `"http://${config.server.host}:${config.server.port}/api"`,
-  '__BASENAME__' : JSON.stringify(process.env.BASENAME || '')
+  NODE_ENV     : config.env,
+  __DEV__      : config.env === 'development',
+  __PROD__     : config.env === 'production',
+  __TEST__     : config.env === 'test',
+  __COVERAGE__ : !argv.watch && config.env === 'test',
+  __VERBOSE__  : config.envFlag === 'verbose',
+  __API_URL__ : `"http://${config.server.host}:${config.server.port}/api"`,
+  __BASENAME__ : JSON.stringify(process.env.BASENAME || name || '')
 };
 
 configWebpack(config);
