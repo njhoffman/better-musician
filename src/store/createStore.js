@@ -65,7 +65,7 @@ export default (initialState = {}, history, devConfig) => {
     module.hot.accept('./reducers', () => {
       info('HMR replace reducers');
       /* eslint-disable global-require */
-      const nextReducer = require('./reducers').makeRootReducer;
+      const nextReducer = require('./reducers').default;
       /* eslint-enable global-require */
       store.replaceReducer(nextReducer(store.asyncReducers));
     });

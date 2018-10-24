@@ -29,12 +29,6 @@ const ACTION_HANDLERS = {
     mustResetPassword
   }),
 
-  [AUTH.EMAIL_SIGN_IN_COMPLETE]: (state, { payload }) => ({
-    ...state,
-    attributes: payload.user,
-    isSignedIn: true
-  }),
-
   // if registration does not require confirmation, user will be signed in at this point.
   [AUTH.EMAIL_SIGN_UP_COMPLETE]: (state, { endpoint, user }) => (
     user.uid ? ({
@@ -43,12 +37,6 @@ const ACTION_HANDLERS = {
       isSignedIn: true
     }) : state
   ),
-
-  [AUTH.OAUTH_SIGN_IN_COMPLETE]: (state, { payload }) => ({
-    ...state,
-    attributes: payload.user,
-    isSignedIn: true
-  }),
 
   [AUTH.SS_AUTH_TOKEN_UPDATE]: (state, { user, mustResetPassword, firstTimeLogin }) => ({
     ...state,

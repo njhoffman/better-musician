@@ -35,7 +35,7 @@ const loadConfiguration = ({ endpoints, settings, dev }) => dispatch => {
 
 
   // let mustResetPassword, firstTimeLogin
-  let { authRedirectPath, authRedirectHeaders } = getRedirectInfo(window.location);
+  const { authRedirectPath, authRedirectHeaders } = getRedirectInfo(window.location);
 
   if (authRedirectPath) {
     debug(`auth redirecting: ${authRedirectPath}`);
@@ -52,7 +52,7 @@ const loadConfiguration = ({ endpoints, settings, dev }) => dispatch => {
     destroySession();
   }
 
-  let promise = Promise.resolve(applyAuthConfig({ dispatch, endpoints, settings }));
+  const promise = Promise.resolve(applyAuthConfig({ dispatch, endpoints, settings }));
 
   return promise
     .then(user => {
@@ -63,7 +63,11 @@ const loadConfiguration = ({ endpoints, settings, dev }) => dispatch => {
 
       return user;
     })
-    .catch(({ reason } = {}) => {
+    .catch((err) => {
+      const { reason } = err;
+      if (!reason) {
+        return Promise.reject(err);
+      }
       dispatch(authenticateError([reason], endpoints));
 
       // if (firstTimeLogin) dispatch(showFirstTimeLoginErrorModal());

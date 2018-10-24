@@ -24,7 +24,7 @@ class CustomField extends BaseModel {
     }
   }
 
-  get typeOptions() {
+  static get typeOptions() {
     return {
       0: 'Text Box',
       1: 'AutoComplete Box',
@@ -43,7 +43,21 @@ class CustomField extends BaseModel {
   }
 
   get name() {
-    return isNaN(this.idx) ? this.id : 'customFields[' + this.idx + ']';
+    // return isNaN(this.idx) ? this.id : 'customFields[' + this.idx + ']';
+    return !(this.idx >= 0) ? `customFields[${this.id}]` : `customFields[${this.idx}]`;
+  }
+
+  get fieldProps() {
+    const { id, idx, label, type, options, defaultValue, name } = this;
+    return {
+      id,
+      idx,
+      label,
+      defaultValue,
+      options,
+      name,
+      type: parseInt(type, 10)
+    };
   }
 
   toString() {

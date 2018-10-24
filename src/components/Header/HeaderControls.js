@@ -42,19 +42,30 @@ const styles = (theme) => ({
     height: '100%',
     cursor: 'pointer',
     textDecoration: 'none',
-    minWidth: '0px'
+    minWidth: '0px',
   },
   linkActive: { },
   linkItem: {
     width: '100%',
     justifyContent: 'center',
     height: '100%',
-    padding: '0'
+    padding: '0',
+    color: theme.app.headerLinksColor,
+    '&:hover': {
+      // background-color: rgba(255, 255, 255, 0.078430);
+      color: theme.palette.text.primary
+    }
   },
-  icon: { },
-  iconText: {
+  icon: {
+    color: 'inherit'
+  },
+  iconTextWrapper: {
     flex: 'none',
-    padding: '0'
+    padding: '0',
+    color: 'inherit'
+  },
+  iconText: {
+    color: 'inherit'
   }
 });
 
@@ -64,11 +75,18 @@ const popoverStyle = {
 };
 
 class HeaderControls extends Component {
+  static defaultProps = {
+    currentSong: null
+  }
+
   static propTypes = {
     showFiltersModal: PropTypes.func.isRequired,
     currentSong:      PropTypes.string,
-    modal:            PropTypes.object.isRequired,
-    classes:          PropTypes.object.isRequired
+    modal:            PropTypes.shape({
+      name: PropTypes.string,
+      type: PropTypes.string
+    }).isRequired,
+    classes:          PropTypes.instanceOf(Object).isRequired
   }
 
   defaultState = {
@@ -109,12 +127,12 @@ class HeaderControls extends Component {
   }
 
   togglePopover = (name, e) => {
-    this.setState({
-      [`${name}`]: {
-        isOpen: !this.state[`${name}`]['isOpen'],
-        anchor: !this.state[`${name}`]['isOpen'] ? null : e.currentTarget
-      }
-    });
+    const { [`${name}`]: { isOpen } } = this.state;
+    if (isOpen) {
+      this.closePopover(name);
+    } else {
+      this.openPopover(name, e);
+    }
   }
 
   closePopover = (name) => {
@@ -134,22 +152,24 @@ class HeaderControls extends Component {
     const { modal, classes, showFiltersModal } = this.props;
     const isActive = modal && modal.name === FILTERS_MODAL;
     return (
-      <a
-        className={`${classes.link} ${isActive ? classes.linkActive : ''}`}
-        onClick={showFiltersModal} >
-        <MenuItem className={classes.linkItem}>
-          <ListItemIcon>
-            <FilterIcon className={classes.icon} />
-          </ListItemIcon>
-          <ListItemText className={classes.iconText}>Filters</ListItemText>
-        </MenuItem>
-      </a>
+      <MenuItem
+        onClick={showFiltersModal}
+        className={`${classes.linkItem} ${isActive ? classes.linkActive : ''}`}>
+        <ListItemIcon classes={{ root: classes.icon }}>
+          <FilterIcon />
+        </ListItemIcon>
+        <ListItemText
+          primaryTypographyProps={{ className: classes.iconText }}
+          className={classes.iconTextWrapper}>
+          Filters
+        </ListItemText>
+      </MenuItem>
     );
   }
 
   render() {
     const { classes, currentSong } = this.props;
-    const { width, height } = this.state.song;
+    const { song, search } = this.state;
     return (
       <div className={classes.root}>
         <Column className={classes.column}>
@@ -157,8 +177,9 @@ class HeaderControls extends Component {
             anchorOrigin={popoverStyle.anchor}
             transformOrigin={popoverStyle.transform}
             currentSong={currentSong}
-            {...this.state.song}
-            {...this.popoverActions} />
+            {...song}
+            {...this.popoverActions}
+          />
         </Column>
         <Column className={classes.column}>
           { this.renderFiltersButton() }
@@ -167,8 +188,9 @@ class HeaderControls extends Component {
           <SearchPopover
             anchorOrigin={popoverStyle.anchor}
             transformOrigin={popoverStyle.transform}
-            {...this.state.search }
-            {...this.popoverActions} />
+            {...search}
+            {...this.popoverActions}
+          />
         </Column>
       </div>
     );

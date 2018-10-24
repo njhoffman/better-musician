@@ -37,7 +37,7 @@ module.exports = {
         logLevel  : 'debug',
         clientLogLevel: 'debug',
         watchOptions : {
-          aggregateTimeout: 300,
+          aggregateTimeout: 100,
           poll: 1000,
           ignored: /node_modules/,
           verbosity: 'verbose'

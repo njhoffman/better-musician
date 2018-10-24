@@ -16,7 +16,8 @@ module.exports = {
     } else if (action.payload) {
       return [
         `%c${padRight(action.type, 30)} %c `
-        + `${JSON.stringify(action.payload)} ${JSON.stringify(action.meta)}`,
+        + `${action.payload ? JSON.stringify(action.payload) : ''} `
+        + ` ${action.meta ? JSON.stringify(action.meta) : ''}`,
         'color: #88aaff;', 'color: #886688;'
       ];
     }

@@ -34,7 +34,6 @@ export default {
       updatePassword:  '/users/password_update',
     },
     admin: {
-      extends:         'user',
       listModels:      '/admin/list/models',
       listAll:         '/admin/list/all'
     }

@@ -21,7 +21,7 @@ const { info } = initLog('router');
 // Need to apply the hocs here to avoid applying them inside the render method
 const LoadComponent = ({ store, history }, route, importRoute) => Loadable({
   loader: () => {
-    info(`Loading component  ${route}View`);
+    info(`Loading component: ${route}View`);
     initView(store, history, route);
     return importRoute
       .then((View) => {
@@ -82,6 +82,11 @@ class Routes extends Component {
       'Reset',
       import(/* webpackChunkName: "ResetView" */ 'routes/Reset/components/ResetView')
     ));
+    this.MissedRoute = userNoAuthentication(LoadComponent(
+      props,
+      'Missed',
+      import(/* webpackChunkName: "MissedView" */ 'routes/Missed/components/MissedView')
+    ));
   }
 
   render() {
@@ -96,6 +101,7 @@ class Routes extends Component {
         <Route path='/stats' component={this.StatsRoute} />
         <Route path='/profile' component={this.ProfileRoute} />
         <Route path='/settings' component={this.SettingsRoute} />
+        <Route component={this.MissedRoute} />
       </Switch>
     );
   }

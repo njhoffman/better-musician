@@ -14,14 +14,13 @@ import { init as initLog } from 'shared/logger';
 import ErrorBoundary from 'components/ErrorBoundaries/Main';
 import devTools from 'components/DevTools/DevTools';
 
-const { info, warn } = initLog('app');
+const { info, debug, warn } = initLog('app');
 const initialState = window.__INITIAL_STATE__;
 const history = createBrowserHistory();
 const store = createStore(initialState, history, appConfig.dev);
 
 const MOUNT_NODE = document.getElementById('root');
 
-console.info('appConfig', appConfig);
 const themes = processThemes(appConfig.themes);
 const theme = themes.steelBlue.dark;
 const RedBox = require('redbox-react').default;
@@ -69,7 +68,7 @@ const renderDev = () => {
 // This code is excluded from production bundle
 if (__DEV__) {
   if (module.hot) {
-    // module.hot.accept(() => {
+     // reload components
     module.hot.accept('components/AppContainer', (() => {
       // console.clear();
       info('HMR reloading ...');
@@ -88,7 +87,8 @@ const startApp = () => {
     .then((userData) => {
       store.dispatch(configureComplete());
       renderDev();
-      domStats();
+      const stats = domStats();
+      debug(`-- depth => ${stats.averageDepth} / ${stats.maxDepth} : ${stats.totalNodes} Nodes`);
     });
 };
 startApp();

@@ -14,16 +14,16 @@ export const SET_PAGINATION_CURRENT   = 'SET_PAGINATION_CURRENT';
 // Action Creators
 // ------------------------------------
 
-export const setCurrentSong = (song) => (dispatch, getState) => {
-  return dispatch({ type: SET_CURRENT_SONG, payload: song && song.id || '' });
-};
+export const setCurrentSong = (song) => (dispatch, getState) => (
+  dispatch({ type: SET_CURRENT_SONG, payload: song ? song.id : '' })
+);
 
-export const setSort = (sortField) => (dispatch, getState) => {
-  return dispatch({ type: SET_SORT, payload: sortField });
-};
+export const setSortColumn = (sortField) => (dispatch, getState) => (
+  dispatch({ type: SET_SORT, payload: sortField })
+);
 
 export const actions = {
-  setSort, setCurrentSong
+  setSortColumn, setCurrentSong
 };
 
 // ------------------------------------

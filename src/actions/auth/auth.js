@@ -1,20 +1,22 @@
-import * as A from 'constants/auth';
+import * as AUTH from 'constants/auth';
 
-export const authenticateStart = () => ({ type: A.AUTHENTICATE_START });
+export const authenticateStart = () => ({ type: AUTH.AUTHENTICATE_START });
+
 export const authenticateComplete = (user, endpoints) => ({
-  type: A.AUTHENTICATE_COMPLETE,
+  type: AUTH.AUTHENTICATE_COMPLETE,
   payload: { user, endpoints }
 });
+
 export const authenticateError = (errors, endpoints) => ({
-  type: A.AUTHENTICATE_ERROR,
+  type: AUTH.AUTHENTICATE_ERROR,
   payload: { errors, endpoints }
 });
 
 export const setEndpointKeys = (endpointKeys, currentEndpointKey, defaultEndpointKey) => ({
-  type: A.ENDPOINT_KEYS,
+  type: AUTH.ENDPOINT_KEYS,
   payload: { endpointKeys, currentEndpointKey, defaultEndpointKey }
 });
 
 export const storeCurrentEndpointKey = (currentEndpointKey) => ({
-  type: A.CURRENT_ENDPOINT_KEY, payload: currentEndpointKey
+  type: AUTH.CURRENT_ENDPOINT_KEY, payload: currentEndpointKey
 });

@@ -11,6 +11,7 @@ const initialState = {
     defaultEndpointKey: null,
     currentEndpointKey: null
   },
+  endpoints: {},
   client: {
     device: {},
     screen: {}
@@ -33,10 +34,11 @@ const ACTION_HANDLERS = {
     auth: { ...state.auth, loading: true },
   }),
 
-  [API.CONFIGURE_LOAD]: (state, { payload: { devConfig, auth, clientInfo } }) => ({
+  [API.CONFIGURE_LOAD]: (state, { payload: { devConfig, endpoints, clientInfo } }) => ({
     ...state,
-    client: { ...state.client, ...clientInfo },
-    dev: { ...state.dev, ...devConfig }
+    client:    { ...state.client, ...clientInfo },
+    endpoints: { ...state.endpoints, ...endpoints},
+    dev:       { ...state.dev, ...devConfig }
   }),
 
   [API.CONFIGURE_COMPLETE]: (state, { payload }) => ({

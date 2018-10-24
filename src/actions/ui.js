@@ -15,6 +15,7 @@ export const uiShowSnackbar = (message, variant, title) => ({
 });
 
 export const uiHideModal = () => ({ type: UI.MODAL_HIDE });
+export const uiModalExit = () => ({ type: UI.MODAL_EXIT });
 
 export const uiShowModal = (name, viewType, meta) => ({
   type: UI.MODAL_SHOW,
@@ -23,7 +24,7 @@ export const uiShowModal = (name, viewType, meta) => ({
 });
 
 export const uiUpdateModal = (name, meta) => ({
-  type: UI.MODAL_SHOW,
+  type: UI.MODAL_UPDATE,
   payload: name,
   meta
 });

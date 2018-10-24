@@ -8,6 +8,7 @@ export const DRAWER_MENU_TOGGLE = 'DRAWER_MENU_TOGGLE';
 
 export const MODAL_SHOW         = 'MODAL_SHOW';
 export const MODAL_HIDE         = 'MODAL_HIDE';
+export const MODAL_EXIT         = 'MODAL_EXIT';
 export const MODAL_UPDATE       = 'MODAL_UPDATE';
 export const MODAL_VARIANT_VIEW = 'MODAL_VIEW';
 export const MODAL_VARIANT_ADD  = 'MODAL_ADD';

@@ -57,7 +57,7 @@ const ActionButtons = ({
         <Button
           variant='text'
           color='primary'
-          onClick={hideModal}>
+          onClick={() => hideModal()}>
           Cancel
         </Button>
         <Button

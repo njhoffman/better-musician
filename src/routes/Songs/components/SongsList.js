@@ -11,8 +11,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import Tappable from 'react-tappable';
 
-import { MODAL_VARIANT_VIEW } from 'constants/ui';
-import { setCurrentSong, setSort } from 'routes/Songs/modules/reducer';
+import { setCurrentSong, setSortColumn } from 'routes/Songs/modules/reducer';
 import { songs as songsSelector } from 'routes/Songs/modules/selectors';
 import SongsListHeader from './SongsListHeader';
 import Song from './Song';
@@ -56,9 +55,9 @@ const clickOutside = ({ target }) => {
   return () => {};
 };
 
-export const SongsList = ({
+const SongsList = ({
   songsCollection,
-  setCurrentSong,
+  setSong,
   setSort,
   currentSongId,
   classes,
@@ -97,14 +96,19 @@ export const SongsList = ({
         <Tappable
           component={Song}
           songValues={song}
-          onTap={(e) => setCurrentSong(song)}
+          onTap={(e) => setSong(song)}
           key={song.id}
-          {...{ setCurrentSong }}
+          {...{ setSong }}
         />
       ))}
     </TableBody>
   </Table>
 );
+
+SongsList.defaultProps = {
+  songsCollection: [],
+  currentSongId: null
+};
 
 SongsList.propTypes = {
   songsCollection: PropTypes.arrayOf(
@@ -114,9 +118,9 @@ SongsList.propTypes = {
     }).isRequired
   ),
   setSort:           PropTypes.func.isRequired,
-  setCurrentSong:    PropTypes.func,
+  setSong:           PropTypes.func.isRequired,
   currentSongId:     PropTypes.string,
-  classes:           PropTypes.object.isRequired
+  classes:           PropTypes.instanceOf(Object).isRequired
 };
 
 const mapStateToProps = (state, action) => ({
@@ -125,8 +129,8 @@ const mapStateToProps = (state, action) => ({
 });
 
 const mapActionCreators = ({
-  setCurrentSong,
-  setSort,
+  setSong:            setCurrentSong,
+  setSort:            setSortColumn,
   handleClickOutside: clickOutside
 });
 

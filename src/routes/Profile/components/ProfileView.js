@@ -93,14 +93,17 @@ export const ProfileView = ({
           </Tabs>
         </AppBar>
         <form className={classes.form} autoComplete='off'>
-          <Typography>
-            Update Your Profile
-          </Typography>
           <FormRow small={10} medium={8}>
             { ProfileImage(classes) }
           </FormRow>
           <FormRow small={10} medium={8}>
-            <FormField name='email' type='text' disabled mode={FIELD_VIEW} />
+            <FormField
+              fullWidth={false}
+              name='email'
+              type='text'
+              disabled
+              mode={FIELD_VIEW}
+            />
           </FormRow>
           <div className={classes.fields}>
             <FormRow small={10} medium={8}>
@@ -121,7 +124,7 @@ export const ProfileView = ({
                 label='Save'
                 loading={isFetching}
                 onClick={updateProfile}
-                icon={<SaveIcon style={{ marginTop: '-10px' }} />}
+                icon={<SaveIcon />}
                 className='update-profile-submit'
                 primary
                 disabled={disabled}
@@ -136,7 +139,7 @@ export const ProfileView = ({
 };
 
 const validateFields = {
-  'notificationsEmail': [
+  notificationsEmail: [
     ['isEmail', 'Invalid Email']
   ]
 };

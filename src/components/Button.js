@@ -33,7 +33,8 @@ const styles = (theme) => ({
   },
   rightLabel: {
     marginRight: theme.spacing.unit,
-    fontSize: 'inherit'
+    fontSize: 'inherit',
+    lineHeight: 'normal'
   },
   leftLabel: {
     marginLeft: theme.spacing.unit,
@@ -83,8 +84,8 @@ const renderIcon = ({
     return {
       ...Icon,
       props: {
-        ...Icon.props,
-        ...iconProps
+        ...iconProps,
+        ...Icon.props
       }
     };
   }
@@ -129,15 +130,15 @@ const renderButton = ({
   return (
     <BaseButton onClick={(e) => onClick(e)} {...buttonProps}>
       {iconAlign === 'right' && label && (
-        <span className={labelClass}>{label}</span>
+        <div className={labelClass}>{label}</div>
       )}
       {icon && (
-        <span className={classes.iconWrapper}>
+        <div className={classes.iconWrapper}>
           {renderIcon({ ...props, classes, icon, loading })}
-        </span>
+        </div>
       )}
       {iconAlign !== 'right' && label && (
-        <span className={labelClass}>{label}</span>
+        <div className={labelClass}>{label}</div>
       )}
     </BaseButton>
   );

@@ -1,7 +1,7 @@
 import { orm } from 'store/orm';
 import { createSelector as ormCreateSelector } from 'redux-orm';
 import { createSelector } from 'reselect';
-import { find, isEmpty } from 'lodash';
+import { find, isEmpty, omit, unset, cloneDeep } from 'lodash';
 
 export const ormSelector = state => state.orm;
 
@@ -70,14 +70,17 @@ const songStatsSelector = ormCreateSelector(orm, (Session, state) => (
 
 const savedTabsSelector = ormCreateSelector(orm, (Session, currentSong) => {
   const tabs = {};
-  Session.CustomField.all().toModelArray().forEach((field) => {
-    field.type = parseInt(field.type, 10);
-    if (tabs[field.tabName]) {
-      tabs[field.tabName].push(field);
-    } else {
-      tabs[field.tabName] = [field];
+  Session.CustomField.all().toModelArray().forEach((field, idx) => {
+    // TODO: find a better way through the model
+    const cField = field;
+    cField.idx = idx;
+
+    if (!tabs[cField.tabName]) {
+      tabs[cField.tabName] = [];
     }
+    tabs[cField.tabName].push({ ...cField.fieldProps });
   });
+
   return Object.keys(tabs).map((tabKey, idx) => (
     { name: tabKey, fields: tabs[tabKey], idx }
   ));

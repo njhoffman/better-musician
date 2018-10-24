@@ -59,6 +59,7 @@ const MultiSelect = ({
         }
       </Column>
     </Row>
+    {console.info('input', input)}
     <Row>
       <Column
         centerOnSmall

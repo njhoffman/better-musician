@@ -26,20 +26,42 @@ const styles = (theme) => ({
     cursor: 'pointer',
     textDecoration: 'none',
     minWidth: '0px',
-    padding: '0'
+    padding: '0',
+  },
+  linkItem: {
+    color: theme.app.headerLinksColor,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    padding: '0',
+    '&:hover': {
+      color: theme.palette.text.primary
+    }
   },
   downArrow : {
     '&:hover' : {
       stroke: 'white'
     },
+    color: 'inherit',
     fontSize: '1.5em',
     marginLeft: '5px'
   },
-  linkItem: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    padding: '0'
+  editIcon: {
+    color: 'inherit',
+    [theme.breakpoints.down('sm')]: {
+      marginRight: '0px',
+    }
+  },
+  icon: {
+    color: 'inherit'
+  },
+  iconTextWrapper: {
+    flex: 'none',
+    padding: '0',
+    color: 'inherit'
+  },
+  iconText: {
+    color: 'inherit'
   },
   sublinksWrapper: {
     [theme.breakpoints.down('sm')]: {
@@ -47,28 +69,17 @@ const styles = (theme) => ({
     }
   },
   sublink: {
-    // margin: '0px -16px 0px 0px',
-    // padding: '0px 0px 0px 16px',
+    display: 'flex',
+    justifyContent: 'center',
     padding: '0',
     minHeight: '40px',
   },
-  sublinkIcon: {
-    paddingLeft: '8px'
-  },
-  editIcon: {
-    marginRight: theme.spacing.unit,
-    [theme.breakpoints.down('sm')]: {
-      marginRight: '0px',
-      marginLeft: theme.spacing.unit,
-    }
-  },
-  icon: {
-    // margin: '0px 6px'
-  },
-  iconText: {
+  sublinkIcon: { },
+  sublinkText: {
+    marginRight: 'calc(5px + 1.5em)',
     flex: 'none',
     padding: 0
-  }
+  },
 });
 
 const popoverStyle = {
@@ -91,10 +102,12 @@ const showEditSongDialog = (e, { closeAll, showSongModal }) => {
 const SongButtonOther = ({ classes }) => (
   <Link className={classes.link} to='/songs'>
     <MenuItem className={classes.linkItem}>
-      <ListItemIcon>
+      <ListItemIcon classes={{ root: classes.icon }}>
         <ViewIcon className={classes.icon} />
       </ListItemIcon>
-      <ListItemText className={classes.iconText}>
+      <ListItemText
+        className={classes.iconTextWrapper}
+        primaryTypographyProps={{ className: classes.iconText }}>
         Songs
       </ListItemText>
     </MenuItem>
@@ -102,26 +115,26 @@ const SongButtonOther = ({ classes }) => (
 );
 
 SongButtonOther.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.instanceOf(Object).isRequired
 };
 
 const SongButtonAdd = ({ classes, ...props }) => (
   <MenuItem
-    onClick={(e) => {
-      return showAddSongDialog(e, { ...props });
-    }}
-    className={classes.link}>
-    <ListItemIcon>
+    onClick={(e) => showAddSongDialog(e, { ...props })}
+    className={classes.linkItem}>
+    <ListItemIcon classes={{ root: classes.icon }}>
       <AddIcon className={classes.icon} />
     </ListItemIcon>
-    <ListItemText className={classes.iconText}>
+    <ListItemText
+      className={classes.iconTextWrapper}
+      primaryTypographyProps={{ className: classes.iconText }}>
       Add Song
     </ListItemText>
   </MenuItem>
 );
 
 SongButtonAdd.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.instanceOf(Object).isRequired
 };
 
 const SongButtonView = ({
@@ -131,14 +144,16 @@ const SongButtonView = ({
 }) => (
   <Fragment>
     <MenuItem
-      className={classes.link}
-      onClick={(e) => showAddSongDialog(e, { ...props, closeAll })}
+      className={classes.linkItem}
+      onClick={(e) => showEditSongDialog(e, { ...props, closeAll })}
       selected={Boolean(isOpen)}
       onMouseEnter={(e) => open('song', e)}>
-      <ListItemIcon>
+      <ListItemIcon classes={{ root: classes.icon }}>
         <EditIcon className={classes.editIcon} />
       </ListItemIcon>
-      <ListItemText className={classes.iconText}>
+      <ListItemText
+        className={classes.iconTextWrapper}
+        primaryTypographyProps={{ className: classes.iconText }}>
         Edit Song
       </ListItemText>
       <ArrowDropDownIcon
@@ -167,7 +182,7 @@ const SongButtonView = ({
         <ListItemIcon className={classes.sublinkIcon}>
           <AddIcon className={classes.icon} />
         </ListItemIcon>
-        <ListItemText className={classes.iconText}>
+        <ListItemText className={classes.sublinkText}>
           Add Song
         </ListItemText>
       </MenuItem>
@@ -177,7 +192,7 @@ const SongButtonView = ({
         <ListItemIcon className={classes.sublinkIcon}>
           <DeleteIcon className={classes.icon} />
         </ListItemIcon>
-        <ListItemText className={classes.iconText}>
+        <ListItemText className={classes.sublinkText}>
           Delete Song
         </ListItemText>
       </MenuItem>
@@ -185,18 +200,24 @@ const SongButtonView = ({
   </Fragment>
 );
 
+SongButtonView.defaultProps = {
+  anchor: null,
+  width:  null,
+  height: null
+};
 SongButtonView.propTypes = {
-  classes:     PropTypes.object.isRequired,
+  classes:     PropTypes.instanceOf(Object).isRequired,
   isOpen:      PropTypes.bool.isRequired,
-  anchor:      PropTypes.object,
+  anchor:      PropTypes.instanceOf(HTMLElement),
   width:       PropTypes.number,
+  height:      PropTypes.number,
   open:        PropTypes.func.isRequired,
   close:       PropTypes.func.isRequired,
   toggle:      PropTypes.func.isRequired,
   closeAll:    PropTypes.func.isRequired
 };
 
-export const SongPopover = ({ currentView, currentSong, ...props }) => {
+const SongPopover = ({ currentView, currentSong, ...props }) => {
   if (currentView === 'Songs') {
     return currentSong ? SongButtonView(props) : SongButtonAdd(props);
   }

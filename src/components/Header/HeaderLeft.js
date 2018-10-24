@@ -9,8 +9,6 @@ import { uiToggleDrawerMenu } from 'actions/ui';
 import Button from 'components/Button';
 import logoIcon from 'assets/logo-small.png';
 
-const LogoIcon = ({ classes }) => <img src={logoIcon} className={classes.homeLogo} />;
-
 const styles = (theme) => ({
   headerLeft: {
     display: 'flex',
@@ -26,7 +24,6 @@ const styles = (theme) => ({
     },
   },
   homeLogo: {
-    height: '1.75em',
     minWidth: '3.1em',
     textDecoration: 'none',
     '&:hover':  {
@@ -48,14 +45,15 @@ const HeaderLeft = ({ classes, toggleDrawerMenu }) => (
     <Button
       className={classes.homeButton}
       link='/'
-      icon={<LogoIcon classes={classes} />}
+      iconHeight={1.75}
+      icon={<img src={logoIcon} className={classes.homeLogo} alt='BetterMusician logo' />}
     />
   </div>
 );
 
 HeaderLeft.propTypes = {
   toggleDrawerMenu: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.instanceOf(Object).isRequired
 };
 
 const mapStateToProps = () => ({ });

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import withTheme from '@material-ui/core/styles/withTheme';
@@ -47,46 +47,44 @@ const styles = (theme) => ({
   }
 });
 
-export const Song = ({
+const Song = ({
   classes,
-  setCurrentSong,
+  setSong,
   songValues,
   currentSongId,
-  uiShowSongModal,
+  showSongModal,
   maxDifficulty,
-  theme: { app: { starColor }},
+  theme: {app: { starColor }},
   ...props
-}) => {
-  return (
-    <Tappable
-      hover
-      component={TableRow}
-      selected={currentSongId === songValues.id}
-      onDoubleClick={() => uiShowSongModal(MODAL_VARIANT_VIEW)}
-      onPress={() => {
-        setCurrentSong(songValues);
-        uiShowSongModal(MODAL_VARIANT_VIEW);
-      }}
-      style={rowStyle}
-      {...props}>
-      <TableCell className={`${classes.column} ${classes.columnTitle}`}>
-        { songValues.title }
-      </TableCell>
-      <TableCell className={`${classes.column} ${classes.columnArtist}`}>
-        {songValues.artist.fullName}
-      </TableCell>
-      <TableCell className={`${classes.column} ${classes.columnProgress}`}>
-        <Stars number={songValues.progress} starColor={starColor} />
-      </TableCell>
-      <TableCell className={`${classes.column} ${classes.columnDifficulty}`}>
-        <Difficulty difficulty={songValues.difficulty} maxDifficulty={maxDifficulty} />
-      </TableCell>
-    </Tappable>
-  );
-};
+}) => (
+  <Tappable
+    hover
+    component={TableRow}
+    selected={currentSongId === songValues.id}
+    onDoubleClick={() => showSongModal(MODAL_VARIANT_VIEW)}
+    onPress={() => {
+      setSong(songValues);
+      showSongModal(MODAL_VARIANT_VIEW);
+    }}
+    style={rowStyle}
+    {...props}>
+    <TableCell className={`${classes.column} ${classes.columnTitle}`}>
+      { songValues.title }
+    </TableCell>
+    <TableCell className={`${classes.column} ${classes.columnArtist}`}>
+      {songValues.artist.fullName}
+    </TableCell>
+    <TableCell className={`${classes.column} ${classes.columnProgress}`}>
+      <Stars number={songValues.progress} starColor={starColor} />
+    </TableCell>
+    <TableCell className={`${classes.column} ${classes.columnDifficulty}`}>
+      <Difficulty difficulty={songValues.difficulty} maxDifficulty={maxDifficulty} />
+    </TableCell>
+  </Tappable>
+);
 
 Song.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.instanceOf(Object).isRequired,
   currentSongId: PropTypes.string,
   songValues: PropTypes.shape({
     completed: PropTypes.bool,
@@ -94,7 +92,7 @@ Song.propTypes = {
     progress:  PropTypes.number,
     difficulty: PropTypes.number
   }).isRequired,
-  uiShowSongModal: PropTypes.func.isRequired,
+  showSongModal: PropTypes.func.isRequired,
   maxDifficulty: PropTypes.number.isRequired,
   theme: PropTypes.object.isRequired
 };
@@ -105,7 +103,7 @@ const mapStateToProps = (state, action) => ({
 });
 
 const mapActionCreators = ({
-  uiShowSongModal
+  showSongModal: uiShowSongModal
 });
 
 export default connect(mapStateToProps, mapActionCreators)(withTheme()(withStyles(styles)(Song)));

@@ -20,12 +20,12 @@ export const signOut = (endpoint) => (dispatch) => {
     .then((user) => {
       dispatch(uiShowSnackbar('You have successfully logged out of your account.', 'success'));
       dispatch(signOutComplete(endpoint, user));
-      dispatch(storeCurrentEndpointKey(null));
+      dispatch(storeCurrentEndpointKey('default'));
       destroySession();
     })
     .catch(({ errors }) => {
       dispatch(signOutError(endpoint, errors));
-      dispatch(storeCurrentEndpointKey(null));
+      dispatch(storeCurrentEndpointKey('default'));
       destroySession();
       throw errors;
     });

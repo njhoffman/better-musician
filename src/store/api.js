@@ -2,15 +2,12 @@ import _ from 'lodash';
 import * as API from 'constants/api';
 import * as AUTH from 'constants/auth';
 
-const loadApiEndpoints = (endpoints, level) => {
+const loadApiEndpoints = (endpoints, roles = []) => {
   // TODO: make api endpoint extension and nesting recursive
-  const apiEndpoints = endpoints.default;
-  if (level) {
-    if (apiEndpoints[level].extends) {
-      _.merge(apiEndpoints, endpoints[endpoints[level].extends]);
-    }
-    _.merge(apiEndpoints, endpoints[level]);
-  }
+  const apiEndpoints = { ...endpoints.default };
+  roles.forEach(role => {
+    _.merge(apiEndpoints, { [role]: endpoints[role] });
+  });
 
   const results = _.mapValues(apiEndpoints, ep1 => {
     // apiURL
@@ -38,9 +35,14 @@ const loadApiEndpoints = (endpoints, level) => {
 
 const ACTION_HANDLERS = {
 
-  [API.CONFIGURE_LOAD] : (state, { payload: { endpoints, clientInfo } }) => ({
+  [API.CONFIGURE_LOAD] : (state, { payload: { endpoints } }) => ({
     ...state,
     ...loadApiEndpoints(endpoints)
+  }),
+
+  [AUTH.AUTHENTICATE_COMPLETE] : (state, { payload: { user, endpoints } }) => ({
+    ...state,
+    ...loadApiEndpoints(endpoints, user.roles)
   }),
 
   [AUTH.EMAIL_SIGN_IN_START] : (state) => ({

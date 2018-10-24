@@ -18,8 +18,9 @@ export const initialState = {
     menuProps: {}
   },
   modal: {
-    name: '',
-    type: ''
+    name: null,
+    type: null,
+    isOpen: false
   }
 };
 
@@ -67,15 +68,20 @@ const updateModal = (state, { payload, meta }) => ({
 
 const showModal = (state, { payload, meta }) => ({
   ...state,
-  modal: { ...state.modal, name: payload, ...meta }
+  modal: { ...state.modal, name: payload, isOpen: true, ...meta }
 });
 
 const hideModal = (state) => ({
   ...state,
+  modal: { ...state.modal, isOpen: false }
+});
+
+const modalExit = (state) => ({
+  ...state,
   modal: { ...initialState.modal }
 });
 
-const initViewStart = (state, { payload: route } ) =>
+const initViewStart = (state, { payload: route }) =>
   ({ ...state, initializing: route });
 
 const initViewComplete = (state, {
@@ -106,7 +112,7 @@ const locationChangeView = (state, { payload: { pathname } }) => {
 };
 
 const ACTION_HANDLERS = {
-  [LOCATION_CHANGE]: locationChangeView,
+  [LOCATION_CHANGE]:       locationChangeView,
   [UI.DRAWER_MENU_TOGGLE]: toggleDrawerMenu,
   [UI.DRAWER_MENU_SHOW]:   showDrawerMenu,
   [UI.DRAWER_MENU_HIDE]:   hideDrawerMenu,
@@ -115,6 +121,7 @@ const ACTION_HANDLERS = {
   [UI.SNACKBAR_EXIT]:      snackbarExit,
   [UI.MODAL_SHOW]:         showModal,
   [UI.MODAL_HIDE]:         hideModal,
+  [UI.MODAL_EXIT]:         modalExit,
   [UI.MODAL_UPDATE]:       updateModal,
   [UI.INIT_VIEW_START]:    initViewStart,
   [UI.INIT_VIEW_COMPLETE]: initViewComplete

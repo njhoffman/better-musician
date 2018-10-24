@@ -10,8 +10,8 @@ import {
 } from '@material-ui/core';
 import { Row, Column } from 'react-foundation';
 
-import { uiHideModal, uiUpdateModal } from 'actions/ui';
 import { SONG_MODAL, MODAL_VARIANT_EDIT, MODAL_VARIANT_ADD } from 'constants/ui';
+import { uiUpdateModal, uiModalExit } from 'actions/ui';
 import {
   currentSong as currentSongSelector,
   savedTabs as savedTabsSelector
@@ -130,6 +130,7 @@ const SongModal = ({
   isMobile,
   isOpen,
   errors,
+  modalExit,
   tabChange,
   currentTab,
   initialValues
@@ -138,7 +139,7 @@ const SongModal = ({
   const tabProps = { lastActiveField, activeField, variant };
   return (
     <Dialog
-      onExited={() => tabChange(0)}
+      onExited={modalExit}
       open={isOpen}
       classes={{ paper: `${classes.dialogPaper} ${isMobile ? classes.mobile : ''}` }}>
       <AppBar position='static'>
@@ -161,20 +162,27 @@ const SongModal = ({
           {savedTabs.map((tab, tabIdx) => (
             currentTab === (tabIdx + 1) && (
               <TabContainer key={tab.idx}>
-                <Row>
-                  <Column>
-                    {errors && [].concat(errors).map((error, i) =>
-                      <Typography key={i} className='error'>{error}</Typography>
-                    )}
-                  </Column>
-                </Row>
+                {errors && [].concat(errors).map((error, i) => (
+                  <Row key={error.name}>
+                    <Column>
+                      <Typography variant='body1' className={classes.errorTitle}>
+                        {error.name}
+                      </Typography>
+                      <Typography variant='caption' className={classes.errorMessage}>
+                        {error.message}
+                      </Typography>
+                    </Column>
+                  </Row>
+                ))}
                 {chunk(tab.fields, 2).map((fields, fieldIdx) => (
+                  /* eslint-disable react/no-array-index-key */
                   <FormRow key={fieldIdx} className={classes.customFieldRow}>
                     {fields.map(field => (
                       <FormField
-                        key={field.idx}
-                        name={field.name}
                         small={6}
+                        fullWidth={false}
+                        key={field.id}
+                        name={field.name}
                         variant={variant}
                         initialValues={initialValues}
                         centerOnSmall
@@ -182,6 +190,7 @@ const SongModal = ({
                       />
                     ))}
                   </FormRow>
+                  /* eslint-enable react/no-array-index-key */
                 ))}
               </TabContainer>
             )))}
@@ -194,14 +203,25 @@ const SongModal = ({
   );
 };
 
+SongModal.defaultProps = {
+  currentTab:  null,
+  activeField: null
+};
+
 SongModal.propTypes = {
-  uiHideModal:   PropTypes.func.isRequired,
   isOpen:        PropTypes.bool.isRequired,
   variant:       PropTypes.string.isRequired,
-  savedTabs:     PropTypes.array.isRequired,
+  savedTabs:     PropTypes.arrayOf(
+    PropTypes.shape({
+      fields: PropTypes.array,
+      idx: PropTypes.number,
+      name: PropTypes.string
+    })
+  ).isRequired,
+  currentTab:    PropTypes.number,
   activeField:   PropTypes.string,
-  classes:       PropTypes.object.isRequired,
-  initialValues: PropTypes.object
+  classes:       PropTypes.instanceOf(Object).isRequired,
+  initialValues: PropTypes.instanceOf(Object).isRequired
 };
 // const validate = (values) => {
 //   const errors = {};
@@ -229,10 +249,11 @@ const initialValues = (song, addModalVariant) => {
     ivSong.instrument = song.instrument.ref;
     return ivSong;
   }
+  return {};
 };
 
 const mapDispatchToProps = {
-  uiHideModal,
+  modalExit: uiModalExit,
   tabChange: (val) => uiUpdateModal(SONG_MODAL, { currentTab: val })
 };
 
@@ -242,13 +263,14 @@ const mapStateToProps = (state) => ({
   savedTabs:     savedTabsSelector(state),
   variant:       state.ui.modal.variant || MODAL_VARIANT_EDIT,
   errors:        state.ui.modal.errors,
-  isOpen:        state.ui.modal.name === SONG_MODAL,
+  isOpen:        state.ui.modal.name === SONG_MODAL && state.ui.modal.isOpen,
   isMobile:      state.config.client.device.isMobile,
   currentTab:    state.ui.modal.currentTab
 });
 
 const songForm = withStyles(styles)(reduxForm({
   form: 'songForm',
+  // destroyOnUnmount: false,
   enableReinitialize: true,
   // validate
 })(SongModal));

@@ -2,7 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { MdSearch as SearchIcon } from 'react-icons/md';
-import { withStyles, MenuItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import {
+  Paper,
+  Popper,
+  Fade,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  TextField,
+  withStyles
+} from '@material-ui/core';
 
 const styles = {
   link: {
@@ -24,30 +33,53 @@ const styles = {
   paper: {
     paddingTop: '0',
     paddingBottom: '0'
+  },
+  searchBox: {
+    height: '3.0em'
   }
 };
 
 const SearchPopover = ({
-  classes, isOpen, anchor, width,
+  classes, isOpen, anchor,
   open, close, toggle, closeAll,
   ...props
 }) => (
   <MenuItem
     className={classes.link}
     selected={Boolean(isOpen)}
-    onClick={(e) => open('search', e)}>
+    onClick={(e) => toggle('search', e)}>
     <ListItemIcon>
       <SearchIcon className={classes.icon} />
     </ListItemIcon>
     <ListItemText className={classes.iconText}>Search</ListItemText>
+    <Popper
+      open={Boolean(isOpen)}
+      anchorEl={anchor}
+      transition>
+      {({ TransitionProps }) => (
+        <Fade {...TransitionProps} timeout={350}>
+          <Paper>
+            <TextField
+              autoFocus
+              variant='outlined'
+              className={classes.searchBox}
+              placeholder='Search ...'
+            />
+          </Paper>
+        </Fade>
+      )}
+    </Popper>
   </MenuItem>
 );
 
+SearchPopover.defaultProps = {
+  anchor: null
+};
+
 SearchPopover.propTypes = {
-  classes:     PropTypes.object.isRequired,
+  classes:     PropTypes.instanceOf(Object).isRequired,
   isOpen:      PropTypes.bool.isRequired,
-  anchor:      PropTypes.object,
-  width:       PropTypes.number,
+  anchor:      PropTypes.instanceOf(HTMLElement),
   open:        PropTypes.func.isRequired,
   close:       PropTypes.func.isRequired,
   toggle:      PropTypes.func.isRequired,
@@ -59,20 +91,3 @@ const mapActionCreators = {};
 const mapStateToProps = () => ({ });
 
 export default connect(mapStateToProps, mapActionCreators)(withStyles(styles)(SearchPopover));
-//
-//   <Popover
-//     open={{this.props.searchPopoverOpen}
-//     anchorEl={{this.props.searchPopoverAnchor}
-//     anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-//     targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-//     style={{ borderRadius: '5px', padding: '5px', width: '25%' }}
-//     onClose={this.props.close}
-//     zDepth=5}>
-//     <TextField
-//       style={{ width: '100%', height: '43px' }}
-//       underlineShow={false}
-//       floatingLabelStyle={{ top: '20px' }}
-//       inputStyle={{ margin: '15px 0px 0px 0px', height: '25px', boxShadow: 'none' }}
-//       floatingLabelText='Search ...'
-//     />
-//   </Popover>

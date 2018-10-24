@@ -66,7 +66,6 @@ const SettingsView = ({
           </Tabs>
         </AppBar>
         <form className={classes.form}>
-          <Typography>Update Your Settings</Typography>
           <FormRow small={6}>
             <FormField
               name='visualTheme'
@@ -135,7 +134,7 @@ const SettingsView = ({
                 labelStyle={{ paddingRight: '5px' }}
                 style={{ width: '100px', marginRight: '5px' }}
                 onClick={reset}
-                icon={<ResetIcon style={{ marginTop: '-10px' }} />}
+                icon={<ResetIcon />}
                 className='update-profile-submit'
                 disabled={isFetching}
               />
@@ -146,7 +145,7 @@ const SettingsView = ({
                 labelStyle={{ paddingRight: '5px' }}
                 style={{ width: '100px', marginLeft: '5px' }}
                 onClick={update}
-                icon={<SaveIcon style={{ marginTop: '-10px' }} />}
+                icon={<SaveIcon />}
                 className='update-profile-submit'
                 disabled={disabled}
                 primary
