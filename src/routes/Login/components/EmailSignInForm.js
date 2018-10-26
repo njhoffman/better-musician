@@ -144,6 +144,7 @@ const mapStateToProps = (state) => ({
   isSignedIn:  state.user.isSignedIn,
   loginForm:   state.form.login,
   errors:      state.api.auth.login.errors || [],
+  syncErrors:  state.form.updateProfileForm.syncErrors,
   isLoading:   state.api.auth.login.loading,
   emailSignIn
 });

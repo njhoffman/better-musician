@@ -5,7 +5,7 @@ import { Column } from 'react-foundation';
 import { reduxForm } from 'redux-form';
 import { withRouter } from 'react-router';
 import { MdClose as ResetIcon, MdSave as SaveIcon } from 'react-icons/md';
-import { Paper, Tabs, Tab, AppBar, Typography, Divider, withStyles } from '@material-ui/core';
+import { Paper, Tabs, Tab, AppBar, Divider, withStyles } from '@material-ui/core';
 
 import { updateSettings } from 'actions/api';
 import Button from 'components/Button';
@@ -49,12 +49,13 @@ const SettingsView = ({
   update,
   reset,
   formTouched,
+  isFetching,
   errors,
+  syncErrors,
   setTheme,
-  api: { isFetching },
   ...props
 }) => {
-  const disabled = isFetching || !formTouched || Boolean(errors);
+  const disabled = isFetching || !isTouched || Boolean(syncErrors);
   return (
     <Column className={classes.root} small={12} medium={10} centerOnSmall large={8}>
       <Paper elevation={5}>
@@ -136,7 +137,7 @@ const SettingsView = ({
                 onClick={reset}
                 icon={<ResetIcon />}
                 className='update-profile-submit'
-                disabled={isFetching}
+                disabled={disabled}
               />
               <Button
                 type='submit'
@@ -158,18 +159,24 @@ const SettingsView = ({
   );
 };
 
-SettingsView.propTypes = {
-  api:      PropTypes.object,
-  history:  PropTypes.instanceOf(Object).isRequired,
-  setTheme: PropTypes.func,
-  update:   PropTypes.func.isRequired,
-  reset:    PropTypes.func.isRequired,
-  classes:  PropTypes.instanceOf(Object).isRequired
+SettingsView.defaultProps = {
+  isTouched: false,
+  errors: []
 };
 
+SettingsView.propTypes = {
+  api:         PropTypes.instanceOf(Object).isRequired,
+  history:     PropTypes.instanceOf(Object).isRequired,
+  setTheme:    PropTypes.func.isRequired,
+  update:      PropTypes.func.isRequired,
+  reset:       PropTypes.func.isRequired,
+  classes:     PropTypes.instanceOf(Object).isRequired,
+  isTouched: PropTypes.bool,
+  errors:      PropTypes.arrayOf(PropTypes.object)
+};
 
 const setTheme = (theme) => (dispatch, getState) => {
-  const user = getState().user;
+  const { user } = getState();
   if (user) {
     const attrs = user.attributes;
     attrs.visualTheme = theme;
@@ -187,8 +194,10 @@ const mapStateToProps = (state) => ({
   api:           state.api,
   initialValues: state.user.attributes,
   settings:      state.user.attributes,
-  formTouched:   state.form.updateSettingsForm && state.form.updateSettingsForm.anyTouched,
-  errors:        state.form.updateSettingsForm && state.form.updateSettingsForm.syncErrors
+  isTouched:   state.form.updateSettingsForm && state.form.updateSettingsForm.anyTouched,
+  syncErrors:    state.form.updateSettingsForm.syncErrors,
+  isFetching:    state.api.user.update.loading,
+  errors:        state.api.user.update.errors || []
 });
 
 const updateSettingsForm = reduxForm({ form: 'updateSettingsForm' })(withStyles(styles)(SettingsView));

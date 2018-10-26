@@ -5,7 +5,8 @@ import { Drawer, Divider, withStyles } from '@material-ui/core';
 
 import facebookIcon from 'assets/fb-icon.png';
 import googleIcon from 'assets/google-icon.png';
-import { Email as EmailIcon, Lock as SignOutIcon } from '@material-ui/icons';
+import EmailIcon from '@material-ui/icons/Email';
+import SignOutIcon from '@material-ui/icons/Lock';
 
 import { signOut } from 'actions/auth/signout';
 import { uiHideDrawerMenu } from 'actions/ui';

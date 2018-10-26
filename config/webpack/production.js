@@ -1,14 +1,45 @@
-const { optimize: { DedupePlugin, UglifyJsPlugin } } = require('webpack');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const { DefinePlugin } = require('webpack');
 
 module.exports = (config) => ({
-  plugins: [
-    new DedupePlugin(),
-    new UglifyJsPlugin({
-      compress : {
-        unused    : true,
-        dead_code : true,
-        warnings  : false
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        sourceMap: true,
+        uglifyOptions: {
+          mangle: true,
+          warnings: false, // Suppress uglification warnings
+          pure_getters: true,
+          unsafe: true,
+          unsafe_comps: true,
+          screw_ie8: true,
+          conditionals: true,
+          unused: true,
+          comparisons: true,
+          sequences: true,
+          dead_code: true,
+          evaluate: true,
+          if_return: true,
+          join_vars: true,
+          output: {
+            comments: false,
+          }
+        },
+        exclude: [/\.min\.js$/gi] // skip pre-minified libs
+      })
+    ],
+    runtimeChunk: false,
+    splitChunks: {
+      cacheGroups: {
+        default: false,
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor_app',
+          chunks: 'all',
+          minChunks: 2
+        }
       }
-    })
-  ]
+    }
+  },
+  plugins: [ ]
 });

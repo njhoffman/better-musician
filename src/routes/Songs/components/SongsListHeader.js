@@ -17,13 +17,21 @@ const SongsListHeader = ({
   name,
   classes,
   className,
-  setSort
+  setSort,
+  sortDirection,
+  sortField
 }) => (
   <TableCell
     variant='head'
     className={`${classes.root} ${className}`}>
-    <Tooltip title='Sort' placement='bottom-end' enterDelay={300}>
-      <TableSortLabel active onClick={() => setSort(name)}>
+    <Tooltip
+      title='Sort'
+      placement='bottom-end'
+      enterDelay={300}>
+      <TableSortLabel
+        active={sortField === name}
+        direction={sortDirection}
+        onClick={() => setSort(name)}>
         {displayName}
       </TableSortLabel>
     </Tooltip>

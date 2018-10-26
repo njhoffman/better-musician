@@ -21,7 +21,6 @@ const preprocess = (log, level, ...message) => {
   // add global properties
 
   const msg = _.cloneDeep(message);
-  const logId = uuidv4();
   if (_.isObjectLike(msg[0])) {
     msg[0]._logId = uuidv4();
   } else {
@@ -66,6 +65,17 @@ const preprocess = (log, level, ...message) => {
 };
 
 const timers = {};
+
+const timerShow = (name) => {
+  if (!_.has(timers, name)) {
+    loggerInstance.warn(`timer: ${name} not found`);
+    return;
+  }
+  let fmtTime = new Date().getTime() - timers[name].start;
+  fmtTime = fmtTime > 1000 ? `${(fmtTime / 1000).toFixed(1)}s` : `${fmtTime}ms`;
+  loggerInstance.info({ color: 'logTimer' }, `%${name}: ${fmtTime}%`);
+};
+
 const timerStart = (name, desc) => {
   if (!name) {
     loggerInstance.warn('need to initialize timer with a name/id');
@@ -77,17 +87,6 @@ const timerStart = (name, desc) => {
 const timerEnd = (name) => {
   timerShow(name);
   delete timers[name];
-};
-
-
-const timerShow = (name) => {
-  if (!_.has(timers, name)) {
-    loggerInstance.warn(`timer: ${name} not found`);
-    return;
-  }
-  let fmtTime = new Date().getTime() - timers[name].start;
-  fmtTime = fmtTime > 1000 ? `${(fmtTime / 1000).toFixed(1)}s` : `${fmtTime}ms`;
-  loggerInstance.info({ color: 'logTimer' }, `%${name}: ${fmtTime}%`);
 };
 
 const createInstance = (log) => ({

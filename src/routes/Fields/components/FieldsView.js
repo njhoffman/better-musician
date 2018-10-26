@@ -68,6 +68,7 @@ export const FieldsView = ({
   // const user = props.settings.get('attributes');
   const disabled =  false;
 
+  // TODO: integrate into CustomField model
   const fieldOptions = {
     0: 'Text Box',
     1: 'AutoComplete Box',

@@ -66,6 +66,7 @@ module.exports = {
       host: '45.56.1231.208'
     },
     webpack: {
+      mode: 'production',
       devtool: 'source-map',
       stats           : {
         chunks       : true,

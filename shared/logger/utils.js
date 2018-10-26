@@ -8,7 +8,11 @@ module.exports = {
       _.each(_.keys(parsedCookie), key => {
         try {
           parsedCookie[key] = JSON.parse(parsedCookie[key]);
-        } catch (e) { }
+        } catch (e) {
+          /* eslint-disable no-console */
+          console.error(e);
+          /* eslint-enable no-console */
+        }
       });
       return {
         req: _.merge(_req, { headers: { cookie: parsedCookie } })

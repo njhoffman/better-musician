@@ -39,7 +39,7 @@ class CustomField extends BaseModel {
   }
 
   get typeName() {
-    return this.typeOptions[this.type];
+    return this.constructor.typeOptions[this.type];
   }
 
   get name() {

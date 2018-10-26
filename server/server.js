@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const webpack = require('webpack');
 // TODO: make logger for happypack
-// import compress from 'compression';
+const compression = require('compression');
 const StatsD = require('node-statsd');
 // const memwatch = require('memwatch-next');
 const memwatch = require('node-memwatch');
@@ -35,8 +35,8 @@ setupProxy({ config, logger, app, sdc });
 // Remove this middleware if universal rendering is desired
 app.use(require('connect-history-api-fallback')());
 
-// Apply gzip compression (turned off as it squashes eventsource messages)
-// app.use(compress());
+// Apply gzip compression (could possibly squash eventsource messages?)
+app.use(compression());
 
 if (config.env === 'development') {
   logger.info('Enabling webpack dev and HMR middleware for development environment');

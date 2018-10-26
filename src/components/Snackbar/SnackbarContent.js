@@ -8,13 +8,11 @@ import {
   withStyles
 } from '@material-ui/core';
 
-import {
-  CheckCircle as CheckCircleIcon,
-  Error as ErrorIcon,
-  Info as InfoIcon,
-  Close as CloseIcon,
-  Warning as WarningIcon
-} from '@material-ui/icons';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
+import InfoIcon from '@material-ui/icons/Info';
+import CloseIcon from '@material-ui/icons/Close';
+import WarningIcon from '@material-ui/icons/Warning';
 
 const styles = (theme) => ({
   snackbarContent: {

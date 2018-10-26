@@ -27,6 +27,7 @@ module.exports = {
   resolve: {
     modules: ['src', 'node_modules'],
     extensions: [
+      '.mjs',
       '.js',
       '.jsx',
       '.scss',

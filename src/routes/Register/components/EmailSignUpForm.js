@@ -6,7 +6,7 @@ import { withStyles }  from '@material-ui/core';
 import { Row, Column } from 'react-foundation';
 
 import { MdHelp as HelpIcon } from 'react-icons/md';
-import { Send as ContentSend } from '@material-ui/icons';
+import ContentSend from '@material-ui/icons/Send';
 
 import Button from 'components/Button';
 import FormField from 'components/Field';

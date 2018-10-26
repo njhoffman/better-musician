@@ -60,7 +60,7 @@ const SignedIn = ({ classes, getUserPoints, userDisplayName }) => (
           { getUserPoints }
         </Typography>
       </NavLink>
-      <NavLink to='/stats'>
+      <NavLink to='/profile'>
         <Typography className={classes.profileName} variant='caption'>
           { userDisplayName }
         </Typography>
@@ -77,9 +77,9 @@ const SignedIn = ({ classes, getUserPoints, userDisplayName }) => (
 );
 
 SignedIn.propTypes = {
-  getUserPoints   : PropTypes.string,
-  userDisplayName : PropTypes.string,
-  classes         : PropTypes.object.isRequired
+  getUserPoints   : PropTypes.string.isRequired,
+  userDisplayName : PropTypes.string.isRequired,
+  classes         : PropTypes.instanceOf(Object).isRequired
 };
 
 const SignedOut = ({ classes }) => (
@@ -90,7 +90,7 @@ const SignedOut = ({ classes }) => (
 );
 
 SignedOut.propTypes = {
-  classes         : PropTypes.object.isRequired
+  classes: PropTypes.instanceOf(Object).isRequired
 };
 
 const HeaderRight = ({ isSignedIn, ...props }) => {
@@ -109,7 +109,7 @@ const mapActionCreators = { };
 const mapStateToProps = (state) => ({
   userDisplayName: userDisplaySelector(state),
   getUserPoints:   userPointsSelector(state),
-  isSignedIn: state.user.isSignedIn
+  isSignedIn:      state.user.isSignedIn
 });
 
 export default connect(mapStateToProps, mapActionCreators)(withStyles(styles)(HeaderRight));

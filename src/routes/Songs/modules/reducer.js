@@ -65,7 +65,7 @@ const initialState = {
   currentFilters:     [],
   sortField:          '',
   sortInverse:        false,
-  paginationCurrent:  1,
+  paginationCurrent:  0,
   paginationPerPage:  10
 };
 

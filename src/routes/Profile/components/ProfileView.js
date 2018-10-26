@@ -76,12 +76,13 @@ export const ProfileView = ({
   history,
   classes,
   updateProfile,
-  formTouched,
+  isTouched,
   errors,
-  api: { isFetching },
+  isFetching,
+  syncErrors,
   ...props
 }) => {
-  const disabled = isFetching || !formTouched || Boolean(errors);
+  const disabled = isFetching || !isTouched || Boolean(syncErrors);
   return (
     <Column className={classes.root} small={12} medium={10} large={8}>
       <Paper elevation={5} className={classes.contentContainer}>
@@ -144,11 +145,18 @@ const validateFields = {
   ]
 };
 
+ProfileView.defaultProps = {
+  isTouched: false,
+  errors: []
+};
+
 ProfileView.propTypes = {
   history:       PropTypes.instanceOf(Object).isRequired,
   api:           PropTypes.instanceOf(Object).isRequired,
   updateProfile: PropTypes.func.isRequired,
-  classes:       PropTypes.instanceOf(Object).isRequired
+  classes:       PropTypes.instanceOf(Object).isRequired,
+  isTouched:   PropTypes.bool,
+  errors:        PropTypes.arrayOf(PropTypes.object)
 };
 
 const mapActionCreators = {
@@ -159,8 +167,9 @@ const mapStateToProps = (state) => ({
   api:           state.api,
   initialValues: state.user.attributes,
   settings:      state.user.attributes,
-  formTouched:   state.form.updateProfileForm && state.form.updateProfileForm.anyTouched,
-  errors:        state.form.updateProfileForm && state.form.updateProfileForm.syncErrors
+  isTouched:   state.form.updateProfileForm && state.form.updateProfileForm.anyTouched,
+  isFetching:    state.api.user.update.loading,
+  errors:        state.api.user.update.errors || []
 });
 
 const profileForm = reduxForm({

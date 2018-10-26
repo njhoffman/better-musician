@@ -59,9 +59,6 @@ const styles = (theme) => ({
     color: 'red'
   },
   form: {
-    // padding: '12px'
-    // display: 'flex',
-    // flexDirection: 'column',
     alignSelf: 'center',
     maxHeight: '100%',
 
@@ -81,35 +78,6 @@ const styles = (theme) => ({
     marginBottom: theme.spacing.unit
     // alignItems: 'center'
   }
-
-
-//   form {
-//     .selectOptions {
-//       margin-top: 10px;
-//       max-width: 550px;
-//       max-height: 400px;
-//       overflow-y: auto;
-//       display: flex;
-//       flex-wrap: wrap;
-//       justify-content: center;
-//     }
-//
-//     .videoWrapper {
-//       margin-top: 10px;
-//       max-width: 450px;
-//       overflow-y: auto;
-//       display: flex;
-//       flex-wrap: wrap;
-//       justify-content: center;
-//     }
-//
-//     .viewField {
-//       input[type="text"] {
-//         text-overflow: ellipsis;
-//       }
-//     }
-//   }
-// }
 });
 
 const TabContainer = ({ children }) => (

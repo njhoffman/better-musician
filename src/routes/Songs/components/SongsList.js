@@ -58,9 +58,11 @@ const clickOutside = ({ target }) => {
 const SongsList = ({
   songsCollection,
   setSong,
-  setSort,
   currentSongId,
   classes,
+  setSort,
+  sortField,
+  sortDirection
 }) => (
   <Table padding='dense' className={classes.root}>
     <TableHead>
@@ -70,24 +72,32 @@ const SongsList = ({
           displayName='Title'
           className={classes.columnTitle}
           setSort={setSort}
+          sortDirection={sortDirection}
+          sortField={sortField}
         />
         <SongsListHeader
           name='artist'
           displayName='Artist'
           className={classes.columnArtist}
           setSort={setSort}
+          sortDirection={sortDirection}
+          sortField={sortField}
         />
         <SongsListHeader
           name='progress'
           displayName='Progress'
           className={classes.columnProgress}
           setSort={setSort}
+          sortDirection={sortDirection}
+          sortField={sortField}
         />
         <SongsListHeader
           name='difficulty'
           displayName='Difficulty'
           className={classes.columnDifficulty}
           setSort={setSort}
+          sortDirection={sortDirection}
+          sortField={sortField}
         />
       </TableRow>
     </TableHead>
@@ -107,7 +117,9 @@ const SongsList = ({
 
 SongsList.defaultProps = {
   songsCollection: [],
-  currentSongId: null
+  currentSongId: null,
+  sortDirection: 'desc',
+  sortField: null
 };
 
 SongsList.propTypes = {
@@ -119,11 +131,15 @@ SongsList.propTypes = {
   ),
   setSort:           PropTypes.func.isRequired,
   setSong:           PropTypes.func.isRequired,
+  sortDirection:     PropTypes.string,
+  sortField:         PropTypes.string,
   currentSongId:     PropTypes.string,
   classes:           PropTypes.instanceOf(Object).isRequired
 };
 
 const mapStateToProps = (state, action) => ({
+  sortField:       state.SongsView.sortField,
+  sortDirection:   state.SongsView.sortInverse ? 'desc' : 'asc',
   songsCollection: songsSelector(state),
   currentSongId:   state.SongsView ? state.SongsView.currentSong : null
 });

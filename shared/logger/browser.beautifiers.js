@@ -17,7 +17,7 @@ module.exports = {
     } else if (!_.isUndefined(action.payload)) {
       return [
         `%c${padRight(action.type, 30)} %c `
-        + `${!action.payload ? JSON.stringify(action.payload) : ''} `
+        + `${JSON.stringify(action.payload)} `
         + ` ${!_.isUndefined(action.meta) ? JSON.stringify(action.meta) : ''}`,
         'color: #88aaff;',
         'color: #886688;'
