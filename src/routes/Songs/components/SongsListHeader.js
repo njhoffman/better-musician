@@ -21,9 +21,9 @@ const SongsListHeader = ({
 }) => (
   <TableCell
     variant='head'
-    className={`${classes.root} ${className}`} >
+    className={`${classes.root} ${className}`}>
     <Tooltip title='Sort' placement='bottom-end' enterDelay={300}>
-      <TableSortLabel active={true} onClick={() => setSort(name)}>
+      <TableSortLabel active onClick={() => setSort(name)}>
         {displayName}
       </TableSortLabel>
     </Tooltip>

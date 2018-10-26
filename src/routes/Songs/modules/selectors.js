@@ -1,7 +1,7 @@
 import { orm } from 'store/orm';
 import { createSelector as ormCreateSelector } from 'redux-orm';
 import { createSelector } from 'reselect';
-import { find, isEmpty, omit, unset, cloneDeep } from 'lodash';
+import { find, isEmpty } from 'lodash';
 
 export const ormSelector = state => state.orm;
 
@@ -25,7 +25,7 @@ const songsSelector = ormCreateSelector(orm, (Session, SongsView) => {
   }
 
   if (perPage) {
-    const start = (paginationCurrent - 1) * perPage;
+    const start = (paginationCurrent) * perPage;
     const end = start + parseInt(perPage, 10);
     retObj = retObj.slice(start, end);
   }
@@ -38,10 +38,12 @@ const currentSongSelector = ormCreateSelector(orm, (Session, SongsView) => {
     // TODO: find a better solution
     song.progress = parseInt(song.progress, 10);
     song.difficulty = parseInt(song.difficulty, 10);
-    song.customFields = Session.CustomField.all().toModelArray().map((cf/* , idx */) => {
-      const found = find(song.customFields, { id: cf.id });
-      return found ? found.value : '';
-    });
+    song.customFields = Session.CustomField.all()
+      .toModelArray()
+      .map((cf/* , idx */) => {
+        const found = find(song.customFields, { id: cf.id });
+        return found ? found.value : '';
+      });
     return song;
   }
   return null;
@@ -70,16 +72,18 @@ const songStatsSelector = ormCreateSelector(orm, (Session, state) => (
 
 const savedTabsSelector = ormCreateSelector(orm, (Session, currentSong) => {
   const tabs = {};
-  Session.CustomField.all().toModelArray().forEach((field, idx) => {
-    // TODO: find a better way through the model
-    const cField = field;
-    cField.idx = idx;
+  Session.CustomField.all()
+    .toModelArray()
+    .forEach((field, idx) => {
+      // TODO: find a better way through the model
+      const cField = field;
+      cField.idx = idx;
 
-    if (!tabs[cField.tabName]) {
-      tabs[cField.tabName] = [];
-    }
-    tabs[cField.tabName].push({ ...cField.fieldProps });
-  });
+      if (!tabs[cField.tabName]) {
+        tabs[cField.tabName] = [];
+      }
+      tabs[cField.tabName].push({ ...cField.fieldProps });
+    });
 
   return Object.keys(tabs).map((tabKey, idx) => (
     { name: tabKey, fields: tabs[tabKey], idx }

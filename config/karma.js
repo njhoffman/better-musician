@@ -43,7 +43,7 @@ const karmaConfig = {
     terminal: true
   },
   customLaunchers: {
-    'PhantomJS_custom': {
+    PhantomJS_custom: {
       base: 'PhantomJS',
       options: {
         windowName: 'instrumental',
@@ -123,10 +123,10 @@ if (project.globals.__COVERAGE__) {
   }];
 }
 
-console.log(`Creating karma configuration. \n` +
-  `Reporter: %${karmaConfig.reporters}%\n` +
-  `Test Framework: %${karmaConfig.frameworks}%\n` +
-  `Browsers: %${karmaConfig.browsers}%\n`,
+console.log('Creating karma configuration. \n'
+  + `Reporter: %${karmaConfig.reporters}%\n`
+  + `Test Framework: %${karmaConfig.frameworks}%\n`
+  + `Browsers: %${karmaConfig.browsers}%\n`,
 { color: 'bold' }, { color: 'bold' }, { color: 'bold' });
 
 console.info('Created karma Configuration', karmaConfig, { _depth_ : 2 });

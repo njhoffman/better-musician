@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Select, InputLabel, FormControl, MenuItem } from '@material-ui/core';
 import createComponent from './createFormField';
 import mapError from './mapError';
-import { Select, InputLabel, FormControl, MenuItem } from '@material-ui/core';
 
 const generateMenu = (dataSource) => {
-  let items = [
+  const items = [
     <MenuItem key={-1} value='' disabled>Select...</MenuItem>
   ];
   const isArray = Array.isArray(dataSource);
@@ -23,14 +23,14 @@ const generateMenu = (dataSource) => {
 };
 
 const SelectForm = createComponent(Select, ({
-    input: { onChange, value, onBlur, ...inputProps },
-    onChange: onChangeFromField,
-    defaultValue,
-    ...props
+  input: { onChange, value, onBlur, ...inputProps },
+  onChange: onChangeFromField,
+  defaultValue,
+  ...props
 }) => ({
   ...mapError({ ...props, hasHelperText: false }),
   ...inputProps,
-  value: value,
+  value,
   onChange: event => {
     onChange(event.target.value);
     if (onChangeFromField) {

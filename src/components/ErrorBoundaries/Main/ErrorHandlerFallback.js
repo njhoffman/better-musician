@@ -53,7 +53,7 @@ const componentSourceStyle = {
 const ErrorHandlerFallback = (props) => {
   const { error, errorInfo, closeErrorModal } = props;
   const errorTitle = error.message.split('\n')[0];
-  let errorComponents = [];
+  const errorComponents = [];
   error.message.split('\n').forEach((msg, i) => {
     if (i > 0) {
       const matches = msg.match(/(in) ([^ ]+) \((.*)\)$/);
@@ -71,15 +71,17 @@ const ErrorHandlerFallback = (props) => {
     .split('\n')
     .map((sl, i) => {
       const matches = sl.match(stackLineRE);
-      if (matches &&
-        matches.length === 6 &&
-        matches[3].indexOf('node_modules') === -1) {
+      if (matches
+        && matches.length === 6
+        && matches[3].indexOf('node_modules') === -1) {
         return (
           <span key={i}>
             <span style={{ color: '#ffffff' }}>{matches[1]}</span>
             <span>{matches[2]}</span>
-            <span style={{ color: '#ffffff' }}>{matches[3]}</span>:
-            <span style={{ color: '#aaccff', fontWeight: 'bold' }}>{matches[5]}</span>:
+            <span style={{ color: '#ffffff' }}>{matches[3]}</span>
+:
+            <span style={{ color: '#aaccff', fontWeight: 'bold' }}>{matches[5]}</span>
+:
             <span style={{ color: '#ccddff' }}>{matches[4]}</span>
           </span>
         );
@@ -98,12 +100,12 @@ const ErrorHandlerFallback = (props) => {
           <div style={{ ...preStyle }}>
             <table style={{ ...componentTableStyle }}>
               <tbody>
-                {errorComponents && errorComponents.map((ec, i) =>
+                {errorComponents && errorComponents.map((ec, i) => (
                   <tr key={i}>
                     <td style={{ ...componentNameStyle }}>{ec.component}</td>
                     <td style={{ ...componentSourceStyle }}>{ec.source}</td>
                   </tr>
-                )}
+                ))}
               </tbody>
             </table>
           </div>

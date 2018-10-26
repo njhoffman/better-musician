@@ -1,8 +1,9 @@
-import React, { PureComponent}  from 'react';
+import React, { PureComponent }  from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import { init as initLog } from 'shared/logger';
+
 const { warn } = initLog('newWindow');
 
 class NewWindow extends PureComponent {
@@ -31,8 +32,7 @@ class NewWindow extends PureComponent {
   render() {
     if (!this.state.mounted) return null;
     const children = React.Children.map(this.props.children, child =>
-      React.cloneElement(child, { ...{ parentWindow: this.window } })
-    );
+      React.cloneElement(child, { ...{ parentWindow: this.window } }));
     return ReactDOM.createPortal(children, this.container);
   }
 
@@ -49,22 +49,18 @@ class NewWindow extends PureComponent {
 
     // Prepare position of the new window to be centered against the 'parent' window or 'screen'.
     if (
-      typeof center === 'string' &&
-      (features.width === undefined || features.height === undefined)
+      typeof center === 'string'
+      && (features.width === undefined || features.height === undefined)
     ) {
       warn(
         'width and height window features must be present when a center prop is provided'
       );
     } else if (center === 'parent') {
-      features.left =
-        window.top.outerWidth / 2 + window.top.screenX - features.width / 2;
-      features.top =
-        window.top.outerHeight / 2 + window.top.screenY - features.height / 2;
+      features.left = window.top.outerWidth / 2 + window.top.screenX - features.width / 2;
+      features.top = window.top.outerHeight / 2 + window.top.screenY - features.height / 2;
     } else if (center === 'screen') {
-      const screenLeft =
-        window.screenLeft !== undefined ? window.screenLeft : screen.left;
-      const screenTop =
-        window.screenTop !== undefined ? window.screenTop : screen.top;
+      const screenLeft =        window.screenLeft !== undefined ? window.screenLeft : screen.left;
+      const screenTop =        window.screenTop !== undefined ? window.screenTop : screen.top;
 
       const width = window.innerWidth
         ? window.innerWidth

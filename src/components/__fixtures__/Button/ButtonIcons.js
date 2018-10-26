@@ -3,8 +3,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 import ComponentLayout from 'components/DevTools/Cosmos/ComponentLayout';
-import buttonGroups from './ButtonIcons.props.js';
 import Button from 'components/Button';
+import buttonGroups from './ButtonIcons.props.js';
 
 const titleStyle = {
   width: '100%',

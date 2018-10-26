@@ -5,4 +5,3 @@ if (isNodeJS) {
 } else {
   module.exports = exports = require('./browser');
 }
-

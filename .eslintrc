@@ -36,6 +36,7 @@
   },
   "rules": {
     "implicit-arrow-linebreak":           0,
+    "newline-per-chained-call":           [2, { "ignoreChainWithDepth" : 2 }],
     "object-curly-newline":               [2, { "consistent": true }],
     "no-else-return":                     [2, { "allowElseIf" : true }],
     "arrow-parens":                       0,
@@ -46,7 +47,7 @@
     "key-spacing":                        [0, { align: "value" }],
     "jsx-quotes":                         [2, "prefer-single"],
     "no-multi-spaces":                    ["error", { exceptions: { "VariableDeclarator": true, "ImportDeclaration" : true } }],
-    "space-before-function-paren":        ["error", {"anonymous": "always", "named": "never", "asyncArrow" : "always"}],
+    "space-before-function-paren":        ["error", {"anonymous": "never", "named": "never", "asyncArrow" : "always"}],
     "semi":                               [2, "always" ],
     "react/no-typos":                     "error",
     "no-console":                         "warn",

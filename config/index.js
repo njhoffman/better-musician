@@ -47,7 +47,7 @@ const config = {
 
 const base = (...args) => {
   const baseArgs = [config.base].concat([].slice.call(args));
-  return path.resolve.apply(path, baseArgs);
+  return path.resolve(...baseArgs);
 };
 
 Object.keys(config.paths).forEach(pathKey => {

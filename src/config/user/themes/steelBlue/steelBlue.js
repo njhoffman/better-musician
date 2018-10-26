@@ -8,7 +8,7 @@ import {
 import spacing from '@material-ui/core/styles/spacing';
 
 export default {
-  spacing: spacing,
+  spacing,
   themeName: 'Steel Blue',
   overrides: {
     MuiDrawer: {

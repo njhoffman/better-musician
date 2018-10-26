@@ -43,7 +43,7 @@ const getAnchorQs = function (location) {
 };
 
 const stripKeys = function (obj, keys) {
-  for (var q in keys) {
+  for (const q in keys) {
     delete obj[keys[q]];
   }
 
@@ -58,7 +58,7 @@ const buildCredentials = function (location, keys) {
   const params = getAllParams(location);
   const authHeaders = {};
 
-  for (var key of keys) {
+  for (const key of keys) {
     authHeaders[key] = params[key];
   }
 
@@ -73,24 +73,24 @@ const buildCredentials = function (location, keys) {
 // 4. url protocol, host, and path are preserved
 const getLocationWithoutParams = function (currentLocation, keys) {
   // strip all values from both actual and anchor search params
-  var newSearch   = querystring.stringify(stripKeys(getSearchQs(currentLocation), keys));
-  var newAnchorQs = querystring.stringify(stripKeys(getAnchorQs(currentLocation), keys));
-  var newAnchor   = (currentLocation.hash || '').split('?')[0];
+  let newSearch   = querystring.stringify(stripKeys(getSearchQs(currentLocation), keys));
+  const newAnchorQs = querystring.stringify(stripKeys(getAnchorQs(currentLocation), keys));
+  let newAnchor   = (currentLocation.hash || '').split('?')[0];
 
   if (newSearch) {
-    newSearch = '?' + newSearch;
+    newSearch = `?${newSearch}`;
   }
 
   if (newAnchorQs) {
-    newAnchor += '?' + newAnchorQs;
+    newAnchor += `?${newAnchorQs}`;
   }
 
   if (newAnchor && !newAnchor.match(/^#/)) {
-    newAnchor = '#/' + newAnchor;
+    newAnchor = `#/${newAnchor}`;
   }
 
   // reconstruct location with stripped auth keys
-  var newLocation = currentLocation.pathname + newSearch + newAnchor;
+  const newLocation = currentLocation.pathname + newSearch + newAnchor;
 
   return newLocation;
 };
@@ -98,27 +98,25 @@ const getLocationWithoutParams = function (currentLocation, keys) {
 export default function getRedirectInfo(currentLocation) {
   if (!currentLocation) {
     return {};
-  } else {
-    let authKeys = [
-      'access-token',
-      'token',
-      'auth_token',
-      'config',
-      'client',
-      'client_id',
-      'expiry',
-      'uid',
-      'reset_password',
-      'account_confirmation_success'
-    ];
-
-    var authRedirectHeaders = buildCredentials(currentLocation, authKeys);
-    var authRedirectPath = getLocationWithoutParams(currentLocation, authKeys);
-
-    if (authRedirectPath !== currentLocation) {
-      return { authRedirectHeaders, authRedirectPath };
-    } else {
-      return {};
-    }
   }
+  const authKeys = [
+    'access-token',
+    'token',
+    'auth_token',
+    'config',
+    'client',
+    'client_id',
+    'expiry',
+    'uid',
+    'reset_password',
+    'account_confirmation_success'
+  ];
+
+  const authRedirectHeaders = buildCredentials(currentLocation, authKeys);
+  const authRedirectPath = getLocationWithoutParams(currentLocation, authKeys);
+
+  if (authRedirectPath !== currentLocation) {
+    return { authRedirectHeaders, authRedirectPath };
+  }
+  return {};
 }

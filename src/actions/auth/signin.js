@@ -83,65 +83,62 @@ export const oAuthSignInError = (errors, endpoint) =>
   ({ type: AUTH.OAUTH_SIGN_IN_ERROR, errors, endpoint });
 
 // hook for rewire
-var openPopup = _openPopup;
+const openPopup = _openPopup;
 const listenForCredentials = (endpointKey, popup, provider, resolve, reject) => {
   if (!resolve) {
     return new Promise((resolve, reject) => {
       listenForCredentials(endpointKey, popup, provider, resolve, reject);
     });
+  }
+  let creds;
+
+  try {
+    creds = getAllParams(popup.location);
+  } catch (err) { throw Error(err); }
+
+  if (creds && creds.uid) {
+    popup.close();
+    persistData(AUTH.SAVED_CREDS_KEY, normalizeTokenKeys(creds));
+    fetch(getTokenValidationPath(endpointKey))
+      .then(parseResponse)
+      .then(({ data }) => resolve(data))
+      .catch(({ errors }) => reject({ errors }));
+  } else if (popup.closed) {
+    reject({ errors: 'Authentication was cancelled.' });
   } else {
-    let creds;
-
-    try {
-      creds = getAllParams(popup.location);
-    } catch (err) { throw Error(err); }
-
-    if (creds && creds.uid) {
-      popup.close();
-      persistData(AUTH.SAVED_CREDS_KEY, normalizeTokenKeys(creds));
-      fetch(getTokenValidationPath(endpointKey))
-        .then(parseResponse)
-        .then(({ data }) => resolve(data))
-        .catch(({ errors }) => reject({ errors }));
-    } else if (popup.closed) {
-      reject({ errors: 'Authentication was cancelled.' });
-    } else {
-      setTimeout(() => {
-        listenForCredentials(endpointKey, popup, provider, resolve, reject);
-      }, 0);
-    }
+    setTimeout(() => {
+      listenForCredentials(endpointKey, popup, provider, resolve, reject);
+    }, 0);
   }
 };
 
 const authenticate = ({ endpointKey, provider, url, tab = false }) => {
-  let name = (tab) ? '_blank' : provider;
-  let popup = openPopup(provider, url, name);
+  const name = (tab) ? '_blank' : provider;
+  const popup = openPopup(provider, url, name);
   return listenForCredentials(endpointKey, popup, provider);
 };
 
-export const oAuthSignIn = ({ provider, params, endpointKey }) => {
-  return dispatch => {
-    // save previous endpoint key in case of failure
-    var prevEndpointKey = getCurrentEndpointKey();
+export const oAuthSignIn = ({ provider, params, endpointKey }) => dispatch => {
+  // save previous endpoint key in case of failure
+  const prevEndpointKey = getCurrentEndpointKey();
 
-    // necessary for `fetch` to recognize the response as an api request
-    setCurrentEndpointKey(endpointKey);
-    dispatch(storeCurrentEndpointKey(endpointKey));
+  // necessary for `fetch` to recognize the response as an api request
+  setCurrentEndpointKey(endpointKey);
+  dispatch(storeCurrentEndpointKey(endpointKey));
 
-    var currentEndpointKey = getCurrentEndpointKey();
+  const currentEndpointKey = getCurrentEndpointKey();
 
-    dispatch(oAuthSignInStart(provider, currentEndpointKey));
+  dispatch(oAuthSignInStart(provider, currentEndpointKey));
 
-    let url = getOAuthUrl({ provider, params, currentEndpointKey });
+  const url = getOAuthUrl({ provider, params, currentEndpointKey });
 
-    return authenticate({ endpointKey, provider, url })
-      .then(user => dispatch(oAuthSignInComplete(user, currentEndpointKey)))
-      .catch(({ errors }) => {
-        // revert endpoint key to what it was before failed request
-        setCurrentEndpointKey(prevEndpointKey);
-        dispatch(storeCurrentEndpointKey(prevEndpointKey));
-        dispatch(oAuthSignInError(errors, currentEndpointKey));
-        throw errors;
-      });
-  };
+  return authenticate({ endpointKey, provider, url })
+    .then(user => dispatch(oAuthSignInComplete(user, currentEndpointKey)))
+    .catch(({ errors }) => {
+      // revert endpoint key to what it was before failed request
+      setCurrentEndpointKey(prevEndpointKey);
+      dispatch(storeCurrentEndpointKey(prevEndpointKey));
+      dispatch(oAuthSignInError(errors, currentEndpointKey));
+      throw errors;
+    });
 };

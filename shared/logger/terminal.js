@@ -3,10 +3,11 @@ const uuidv4 = require('uuid/v4');
 const _ = require('lodash');
 const { serializers } = require('./utils');
 
-let loggerInstance, logParent;
+let loggerInstance; let
+  logParent;
 
 const isTestEnv = process.env.NODE_ENV === 'test';
-const logName = process.env['_APP_NAME_'] ? process.env['_APP_NAME_'] : 'instrumental';
+const logName = process.env._APP_NAME_ ? process.env._APP_NAME_ : 'instrumental';
 const logConfig = {
   name: logName,
   streams: [{
@@ -80,7 +81,7 @@ const timerEnd = (name) => {
 
 
 const timerShow = (name) => {
-  if (! _.has(timers, name)) {
+  if (!_.has(timers, name)) {
     loggerInstance.warn(`timer: ${name} not found`);
     return;
   }
@@ -89,23 +90,21 @@ const timerShow = (name) => {
   loggerInstance.info({ color: 'logTimer' }, `%${name}: ${fmtTime}%`);
 };
 
-const createInstance = (log) => {
-  return {
-    _dbg:    preprocess.bind(undefined, log, 'fatal'),
-    silly:   preprocess.bind(undefined, log, 'silly'),
-    trace:   preprocess.bind(undefined, log, 'trace'),
-    debug:   preprocess.bind(undefined, log, 'debug'),
-    info:    preprocess.bind(undefined, log, 'info'),
-    warn:    preprocess.bind(undefined, log, 'warn'),
-    error:   preprocess.bind(undefined, log, 'error'),
-    fatal:   preprocess.bind(undefined, log, 'fatal'),
-    streams: log.streams,
-    parent:  log,
-    timerStart,
-    timerEnd,
-    timerShow
-  };
-};
+const createInstance = (log) => ({
+  _dbg:    preprocess.bind(undefined, log, 'fatal'),
+  silly:   preprocess.bind(undefined, log, 'silly'),
+  trace:   preprocess.bind(undefined, log, 'trace'),
+  debug:   preprocess.bind(undefined, log, 'debug'),
+  info:    preprocess.bind(undefined, log, 'info'),
+  warn:    preprocess.bind(undefined, log, 'warn'),
+  error:   preprocess.bind(undefined, log, 'error'),
+  fatal:   preprocess.bind(undefined, log, 'fatal'),
+  streams: log.streams,
+  parent:  log,
+  timerStart,
+  timerEnd,
+  timerShow
+});
 
 const logger = (subsystem, extra = {}) => {
   const childParams = _.merge(extra, { subsystem });

@@ -11,6 +11,7 @@ import DevToolsChart  from 'components/DevTools/Chart';
 import { reducer as chartToolbarReducer } from 'components/DevTools/Chart/Toolbar';
 
 import { init as initLog } from 'shared/logger';
+
 const { info, warn } = initLog('custom-launcher');
 
 const styles = (theme) => ({
@@ -78,7 +79,7 @@ class Launcher extends Component {
   }
 
   getTheme() {
-    let { theme } = this.props;
+    const { theme } = this.props;
     if (typeof theme !== 'string') {
       return theme;
     }
@@ -87,7 +88,7 @@ class Launcher extends Component {
       return themes[theme];
     }
 
-    warn('DevTools theme ' + theme + ' not found, defaulting to nicinabox');
+    warn(`DevTools theme ${theme} not found, defaulting to nicinabox`);
     return themes.nicinabox;
   }
 
@@ -141,7 +142,7 @@ class Launcher extends Component {
             values={['Chart']}
             onClick={this.toggleChart}
             selected={this.state.showChart ? 'Chart' : ''}
-            />
+          />
         </div>
         {this.state.showChart && (
           <NewWindow

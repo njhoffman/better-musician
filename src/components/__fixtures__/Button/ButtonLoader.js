@@ -5,8 +5,8 @@ import {
 } from '@material-ui/core';
 
 import ComponentLayout from 'components/DevTools/Cosmos/ComponentLayout';
-import buttonGroups from './ButtonLoader.props.js';
 import Button from 'components/Button';
+import buttonGroups from './ButtonLoader.props.js';
 
 // const titleWrapperStyle = {
 //   width: '100%',
@@ -21,7 +21,7 @@ const titleStyle = {
 };
 
 const propOverride = { loading: false };
-let modifyCounter = 0;
+const modifyCounter = 0;
 const handleLoadStatus = function (count) {
   propOverride.loading = !propOverride.loading;
   this.setState({ modifyCounter:  count });

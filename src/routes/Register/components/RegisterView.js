@@ -5,9 +5,9 @@ import { Row, Column } from 'react-foundation';
 import { Typography, withStyles, Paper } from '@material-ui/core';
 
 import OAuthSignInButton from 'components/OAuthSignInButton';
-import EmailSignUpForm from './EmailSignUpForm';
 import SocialIcon from 'components/SocialIcon';
 import { withRouter } from 'react-router';
+import EmailSignUpForm from './EmailSignUpForm';
 
 const styles = () => ({
   registerContainer: {
@@ -61,7 +61,8 @@ export const RegisterView = ({
               iconAlign='left'
               style={{ width: '250px', margin: '5px' }}
               icon={<SocialIcon name='facebook' style={{ height: '1.8em' }} />}
-              provider='facebook' />
+              provider='facebook'
+            />
           </Column>
         </Row>
         <Row>
@@ -71,8 +72,9 @@ export const RegisterView = ({
               primary
               iconAlign='left'
               style={{ width: '250px', margin: '5px' }}
-              icon={<SocialIcon name='google'style={{ height: '1.8em' }} />}
-              provider='google' />
+              icon={<SocialIcon name='google' style={{ height: '1.8em' }} />}
+              provider='google'
+            />
           </Column>
         </Row>
         <div className={classes.divider}>

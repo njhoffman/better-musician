@@ -1,9 +1,9 @@
 import * as A from 'constants/auth';
 import extend from 'extend';
 import fetch from 'utils/fetch';
+import { setEndpointKeys } from 'actions/auth';
 import parseEndpointConfig from './parseEndpointConfig';
 
-import { setEndpointKeys } from 'actions/auth';
 import {
   getApiUrl,
   getCurrentSettings,
@@ -39,7 +39,7 @@ const defaultSettings = {
   },
 
   // convert from ruby time (seconds) to js time (millis)
-  parseExpiry: (headers) => ((parseInt(headers['expiry'], 10) * 1000) || null),
+  parseExpiry: (headers) => ((parseInt(headers.expiry, 10) * 1000) || null),
   handleLoginResponse: (resp) => resp.data,
   handleAccountUpdateResponse: (resp) => resp.data,
   handleTokenValidationResponse: (resp) => resp.data
@@ -59,7 +59,7 @@ export const applyConfig = ({ dispatch, endpoints = {}, settings = {}, reset = f
 
   setCurrentSettings(extend({}, defaultSettings, settings));
 
-  let { defaultEndpointKey, currentEndpoints } = parseEndpointConfig(endpoints, getInitialEndpointKey());
+  const { defaultEndpointKey, currentEndpoints } = parseEndpointConfig(endpoints, getInitialEndpointKey());
 
   if (!currentEndpointKey) {
     currentEndpointKey = defaultEndpointKey;
@@ -72,11 +72,11 @@ export const applyConfig = ({ dispatch, endpoints = {}, settings = {}, reset = f
   dispatch(setEndpointKeys(Object.keys(currentEndpoints), currentEndpointKey, defaultEndpointKey));
   setCurrentEndpointKey(currentEndpointKey);
 
-  let savedCreds = retrieveData(A.SAVED_CREDS_KEY);
+  const savedCreds = retrieveData(A.SAVED_CREDS_KEY);
 
   if (getCurrentSettings().initialCredentials) {
     // skip initial headers check (i.e. check was already done server-side)
-    let { user, headers } = getCurrentSettings().initialCredentials;
+    const { user, headers } = getCurrentSettings().initialCredentials;
     persistData(A.SAVED_CREDS_KEY, headers);
     return Promise.resolve(user);
   } else if (savedCreds) {
@@ -90,7 +90,6 @@ export const applyConfig = ({ dispatch, endpoints = {}, settings = {}, reset = f
         removeData(A.SAVED_CREDS_KEY);
         return Promise.reject({ reason: 'No credentials.' });
       });
-  } else {
-    return Promise.reject({ reason: 'No credentials.' });
   }
+  return Promise.reject({ reason: 'No credentials.' });
 };

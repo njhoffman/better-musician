@@ -54,7 +54,7 @@ const Song = ({
   currentSongId,
   showSongModal,
   maxDifficulty,
-  theme: {app: { starColor }},
+  theme: { app: { starColor } },
   ...props
 }) => (
   <Tappable

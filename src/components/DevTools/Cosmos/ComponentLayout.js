@@ -78,12 +78,21 @@ export class ComponentLayout extends React.Component {
       <MuiThemeProvider theme={theme}>
         <Paper style={cs(theme)}>
           <Typography variant='h3' style={{ display: 'block', width: '100%', textAlign: 'center' }}>
-            {theme.themeName} ({theme.palette.type.replace(/^\w/, (c) => c.toUpperCase())})
+            {theme.themeName}
+            {' '}
+(
+            {theme.palette.type.replace(/^\w/, (c) => c.toUpperCase())}
+)
           </Typography>
           <Divider className={classes.divider} />
           {this.propModifyTimer && (
             <Typography variant='caption' style={titleStyle}>
-              (setting in {(this.state.remainingTime / 1000).toFixed(0)}s - #{this.state.modifyCounter})
+              (setting in
+              {' '}
+              {(this.state.remainingTime / 1000).toFixed(0)}
+s - #
+              {this.state.modifyCounter}
+)
             </Typography>
           )}
           {children.map((ComponentGroup, j) => ComponentGroup)}
@@ -97,10 +106,10 @@ export class ComponentLayout extends React.Component {
       <div>
         {chunk(Object.keys(themes), 2).map((key, i) => (
           <Grid container justify='space-around' key={i}>
-            <Grid item >
+            <Grid item>
               {this.renderThemeGroup(themes[key[0]])}
             </Grid>
-            <Grid item >
+            <Grid item>
               {this.renderThemeGroup(themes[key[1]])}
             </Grid>
           </Grid>

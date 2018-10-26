@@ -1,5 +1,5 @@
-import { PureComponent }from 'react';
-import { createPortal }from 'react-dom';
+import { PureComponent } from 'react';
+import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 
 export default class Modal extends PureComponent {

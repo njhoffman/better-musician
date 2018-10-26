@@ -5,6 +5,10 @@ import { Paper, withStyles, TablePagination } from '@material-ui/core';
 import { Column } from 'react-foundation';
 
 // import SongsPagination from './SongsPagination';
+import {
+  setPaginationPerPage,
+  setPaginationCurrent
+} from 'routes/Songs/modules/reducer';
 import SongsList from './SongsList';
 import FiltersModal from './FiltersModal';
 import SongModal from './SongModal';
@@ -32,7 +36,15 @@ const styles = (theme) => ({
   },
 });
 
-export const SongsView = ({ classes, ...props }) => (
+export const SongsView = ({
+  setPerPage,
+  setCurrent,
+  currentPage,
+  perPage,
+  songCount,
+  classes,
+  ...props
+}) => (
   <Column small={12} medium={11} large={10} className={classes.root}>
     <Paper elevation={5} className={classes.contentContainer}>
       <div className={classes.songsContainer}>
@@ -41,17 +53,17 @@ export const SongsView = ({ classes, ...props }) => (
         <SongsList {...props} />
         <TablePagination
           component='div'
-          count={30}
-          rowsPerPage={10}
-          page={1}
+          count={songCount}
+          rowsPerPage={perPage}
+          page={currentPage}
           backIconButtonProps={{
             'aria-label': 'Previous Page',
           }}
           nextIconButtonProps={{
             'aria-label': 'Next Page',
           }}
-          onChangePage={() => {}}
-          onChangeRowsPerPage={() => {}}
+          onChangePage={(e, page) => setCurrent(page)}
+          onChangeRowsPerPage={(e) => setPerPage(e.target.value)}
         />
       </div>
     </Paper>
@@ -59,11 +71,21 @@ export const SongsView = ({ classes, ...props }) => (
 );
 
 SongsView.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes:    PropTypes.instanceOf(Object).isRequired,
+  setPerPage: PropTypes.func.isRequired,
+  setCurrent: PropTypes.func.isRequired
 };
 
-const mapActionCreators = {};
-const mapStateToProps = (state) => ({});
+const mapActionCreators = {
+  setPerPage: setPaginationPerPage,
+  setCurrent: setPaginationCurrent
+};
+
+const mapStateToProps = (state) => ({
+  currentPage: state.SongsView.paginationCurrent,
+  perPage:     state.SongsView.paginationPerPage,
+  songCount:   state.orm.Song.items.length
+});
 
 const withConnect = connect(mapStateToProps, mapActionCreators);
 const decorators = (View) => withConnect(withStyles(styles)(View));

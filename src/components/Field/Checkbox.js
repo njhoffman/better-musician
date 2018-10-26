@@ -11,7 +11,7 @@ export const CheckboxForm = createComponent(MaterialCheckbox, ({
 }) => ({
   ...inputProps,
   ...props,
-  checked: value ? true : false,
+  checked: !!value,
   onChange: (event, isInputChecked) => {
     onChange(isInputChecked);
   }

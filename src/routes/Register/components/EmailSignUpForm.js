@@ -53,16 +53,16 @@ export class EmailSignUpForm extends React.Component {
 
   getEndpoint() {
     return (
-      this.props.endpoint ||
-      this.props.config.auth.currentEndpointKey ||
-      this.props.config.auth.defaultEndpointkey
+      this.props.endpoint
+      || this.props.config.auth.currentEndpointKey
+      || this.props.config.auth.defaultEndpointkey
     );
   }
 
   handleSubmit(event) {
     event.preventDefault();
 
-    let formData = this.props.registerForm.values;
+    const formData = this.props.registerForm.values;
     this.props.dispatch(this.props.emailSignUp(formData, this.getEndpoint()))
       .then(this.props.next)
       .catch(() => {});
@@ -77,14 +77,14 @@ export class EmailSignUpForm extends React.Component {
     const { errors } = this.props.api.auth.register;
 
     return (
-      <form className='redux-auth email-sign-up-form clearfix'
+      <form
+        className='redux-auth email-sign-up-form clearfix'
         style={{ clear: 'both', overflow: 'hidden' }}
         onSubmit={this.handleSubmit}>
         <Row>
           <Column>
             {errors && errors.map((error, i) =>
-              <p key={i} className='error'>{error}</p>
-            )}
+              <p key={i} className='error'>{error}</p>)}
           </Column>
         </Row>
         <Row>
@@ -102,7 +102,8 @@ export class EmailSignUpForm extends React.Component {
             label='Password'
             name='email-sign-up-password'
             disabled={disabled}
-            {...this.props.inputProps.password} />
+            {...this.props.inputProps.password}
+          />
         </Row>
         <Row>
           <FormField
@@ -110,7 +111,8 @@ export class EmailSignUpForm extends React.Component {
             label='Password Confirmation'
             name='email-sign-up-password-confirmation'
             disabled={disabled}
-            {...this.props.inputProps.passwordConfirmation} />
+            {...this.props.inputProps.passwordConfirmation}
+          />
         </Row>
         <Row className={css.buttonWrapper}>
           <Column centerOnSmall small={12} medium={5} pushOnMedium={7}>
@@ -121,7 +123,8 @@ export class EmailSignUpForm extends React.Component {
               loading={this.props.isLoading}
               disabled={disabled}
               onClick={() => this.handleSubmit()}
-              {...this.props.inputProps.submit} />
+              {...this.props.inputProps.submit}
+            />
           </Column>
           <Column centerOnSmall small={12} medium={7} pullOnMedium={5}>
             <Button
@@ -137,20 +140,19 @@ export class EmailSignUpForm extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    registerForm: state.form.register,
-    emailSignUp:  emailSignUp,
-    config:       state.config,
-    api:          state.api,
-    isSignedIn:   state.user.isSignedIn,
-    isLoading:    state.api.auth.register.loading
-  };
-};
+const mapStateToProps = (state) => ({
+  registerForm: state.form.register,
+  emailSignUp,
+  config:       state.config,
+  api:          state.api,
+  isSignedIn:   state.user.isSignedIn,
+  isLoading:    state.api.auth.register.loading
+});
 
 export default withStyles(styles)(
   connect(mapStateToProps)(
     reduxForm({ form: 'register' })(
       EmailSignUpForm
-    ))
+    )
+  )
 );

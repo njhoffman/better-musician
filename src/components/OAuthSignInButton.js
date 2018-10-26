@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Button from './Button';
 import { ExitToApp } from '@material-ui/icons';
+import Button from './Button';
 // import { oAuthSignIn as _oAuthSignIn } from 'redux-auth';
 
 // hook for rewire
@@ -41,18 +41,19 @@ class OAuthSignInButton extends React.Component {
   }
 
   render() {
-    let disabled = false;
-    let loading = false;
+    const disabled = false;
+    const loading = false;
 
     return (
       <Button
         loading={loading}
         primary
         icon={this.props.icon}
-        className={this.props.className + ' oauth-sign-in-submit'}
+        className={`${this.props.className} oauth-sign-in-submit`}
         disabled={disabled}
         onClick={() => this.handleClick()}
-        {...this.props} />
+        {...this.props}
+      />
     );
   }
 }

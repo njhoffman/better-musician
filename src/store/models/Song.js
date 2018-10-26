@@ -1,7 +1,5 @@
 import { uniq } from 'lodash';
 import { fk } from 'redux-orm';
-import BaseModel from './BaseModel';
-
 import {
   ADD_SONG,
   DELETE_SONG,
@@ -9,13 +7,13 @@ import {
   SONGS_FETCH_START,
   LOAD_SONGS
 } from 'constants/api';
+import BaseModel from './BaseModel';
+
 
 class Song extends BaseModel {
   static getPointTotal() {
     const songs = this.all().toModelArray();
-    return songs.reduce((a, b) => {
-      return a + parseInt(b.progress * b.difficulty * 10);
-    }, 0);
+    return songs.reduce((a, b) => a + parseInt(b.progress * b.difficulty * 10), 0);
   }
 
   static getMaxDifficulty() {
@@ -32,13 +30,10 @@ class Song extends BaseModel {
 
   static getStats() {
     const songs = this.all().toModelArray();
-    const artists = uniq(songs.map(song => {
-      return song.artist.fullName;
-    }));
-    const genres = uniq(songs.map(song => {
+    const artists = uniq(songs.map(song => song.artist.fullName));
+    const genres = uniq(songs.map(song =>
       // TODO: investigate whhy navigating through time quickly this can throw bc song is undefined
-      return song.genre.name;
-    }));
+      song.genre.name));
 
     return {
       songCount: this.count(),

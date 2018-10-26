@@ -48,7 +48,8 @@ const MultiSelect = ({
           options={options}
           name='optionText'
         />
-        {!disabled &&
+        {!disabled
+            && (
             <Button
               variant='contained'
               color='secondary'
@@ -56,6 +57,7 @@ const MultiSelect = ({
               onClick={() => addOption(input.value)}>
               Add
             </Button>
+            )
         }
       </Column>
     </Row>
@@ -65,23 +67,24 @@ const MultiSelect = ({
         centerOnSmall
         className={classes.values}
         small={10}>
-        {input.value && input.value.map((value, idx, values) => {
-          return (disabled ?
+        {input.value && input.value.map((value, idx, values) => (disabled
+          ? (
             <Chip
               key={idx}
               label={value}
               onChange={() => { }}
               style={{ margin: '5px 2px', fontSize: '0.8em' }}
             />
-            :
+          )
+          : (
             <Chip
               key={idx}
               label={value}
               onDelete={() => values.remove(idx)}
               style={{ margin: '5px 2px', fontSize: '0.8em' }}
             />
-          );
-        })}
+          )
+        ))}
       </Column>
     </Row>
   </Fragment>

@@ -37,7 +37,7 @@ const ACTION_HANDLERS = {
   [API.CONFIGURE_LOAD]: (state, { payload: { devConfig, endpoints, clientInfo } }) => ({
     ...state,
     client:    { ...state.client, ...clientInfo },
-    endpoints: { ...state.endpoints, ...endpoints},
+    endpoints: { ...state.endpoints, ...endpoints },
     dev:       { ...state.dev, ...devConfig }
   }),
 

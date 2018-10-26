@@ -39,18 +39,17 @@ module.exports = (config, sharedUtils, outputHeap) =>
         }
 
         mod.warnings.forEach(mw =>
-          log.warn(`app-module warning: ${mw.name} ${mw.message.replace(/\n/g, '')} (${mw.origin})`)
-        );
+          log.warn(`app-module warning: ${mw.name} ${mw.message.replace(/\n/g, '')} (${mw.origin})`));
         mod.errors.forEach(me => log.error(me));
 
-        const prefix = `(${mod.depth} ${mod.dependencies.length} ` +
-          `deps ${mod.type.replace('javascript/', '')})`;
+        const prefix = `(${mod.depth} ${mod.dependencies.length} `
+          + `deps ${mod.type.replace('javascript/', '')})`;
 
         if (config.showAppModulesBuild) {
           log.trace(
-            `    app-module ${padLeft(('#' + (i + 1)), 3)} ${padRight(prefix, 20)} => ${mod.id}` +
-            (mod.useSourceMap ? ' (source-map)' : '') +
-            (mod.buildMeta.moduleConcatenationBailout ? ` (bailout: ${mod.buildMeta.moduleConcatenationBailout})` : '')
+            `    app-module ${padLeft((`#${i + 1}`), 3)} ${padRight(prefix, 20)} => ${mod.id}${
+              mod.useSourceMap ? ' (source-map)' : ''
+            }${mod.buildMeta.moduleConcatenationBailout ? ` (bailout: ${mod.buildMeta.moduleConcatenationBailout})` : ''}`
           );
         }
       });
@@ -63,8 +62,7 @@ module.exports = (config, sharedUtils, outputHeap) =>
 
         // name, message, module, origin, originLoc, dependencies
         mod.warnings.forEach(mw =>
-          log.warn(`node-module warning: ${mw.name} ${mw.message.replace(/\n/g, '')} (${mw.origin})`)
-        );
+          log.warn(`node-module warning: ${mw.name} ${mw.message.replace(/\n/g, '')} (${mw.origin})`));
 
         mod.errors.forEach(me => log.error(me));
         // TODO: implement silly level
@@ -104,18 +102,17 @@ module.exports = (config, sharedUtils, outputHeap) =>
       };
 
       log.info({ _wpDone },
-        `Built ${_wpDone.modules} modules into ${_wpDone.chunks} ` +
-        `chunks totaling ${humanMemorySize(totalSize)} in ${fmtDuration}`
+        `Built ${_wpDone.modules} modules into ${_wpDone.chunks} `
+        + `chunks totaling ${humanMemorySize(totalSize)} in ${fmtDuration}`);
+
+      log.debug(
+        `    ${padRight('app:', 16)} ${padRight(`${modInfo.app.mods.length} modules`, 15)} `
+        + ` ${numCommas(modInfo.app.deps)} dependenciess x${modInfo.app.maxDepth}`
       );
 
       log.debug(
-        `    ${padRight('app:', 16)} ${padRight(modInfo.app.mods.length + ' modules', 15)} ` +
-        ` ${numCommas(modInfo.app.deps)} dependenciess x${modInfo.app.maxDepth}`
-      );
-
-      log.debug(
-        `    ${padRight('node_modules:', 16)} ${padRight(numCommas(modInfo.node.mods.length + ' modules'), 15)}` +
-        ` ${numCommas(modInfo.node.deps)} dependencies x${modInfo.node.maxDepth}`
+        `    ${padRight('node_modules:', 16)} ${padRight(numCommas(`${modInfo.node.mods.length} modules`), 15)}`
+        + ` ${numCommas(modInfo.node.deps)} dependencies x${modInfo.node.maxDepth}`
       );
 
       // stats.compilation.chunkGroups.forEach(cg => { console.info(cg.name, cg.runtimeChunk);  });
@@ -126,6 +123,6 @@ module.exports = (config, sharedUtils, outputHeap) =>
         log.info(`Compiled with ${stats.compilation.warnings.length} warnings in ${fmtDuration}`);
       }
     } else {
-      log.info(`Webpack rebuild initiated`);
+      log.info('Webpack rebuild initiated');
     }
   };

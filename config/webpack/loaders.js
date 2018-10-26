@@ -18,8 +18,8 @@ module.exports = (config) => [{
     options : {
       cacheDirectory : true,
       presets        : [
-        ["@babel/preset-env" ],
-        ["@babel/preset-react"]
+        ['@babel/preset-env'],
+        ['@babel/preset-react']
       ]
     }
   }]

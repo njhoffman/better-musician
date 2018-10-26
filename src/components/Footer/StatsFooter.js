@@ -15,9 +15,26 @@ const StatsFooter = ({ classes, stats }) => (
     <Column small={6} centerOnSmall className={classes.middleColumn}>
       <div className={classes.fieldWrapper}>
         <div className={classes.field}>
-          <Typography>Total {stats.songCount} songs</Typography>
-          <Typography>from {stats.artistCount} artists</Typography>
-          <Typography> in {stats.genreCount} genres </Typography>
+          <Typography>
+Total
+            {stats.songCount}
+            {' '}
+songs
+          </Typography>
+          <Typography>
+from
+            {stats.artistCount}
+            {' '}
+artists
+          </Typography>
+          <Typography>
+            {' '}
+in
+            {stats.genreCount}
+            {' '}
+genres
+            {' '}
+          </Typography>
         </div>
       </div>
     </Column>

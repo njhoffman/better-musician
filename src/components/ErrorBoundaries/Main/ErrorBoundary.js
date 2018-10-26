@@ -6,7 +6,8 @@ const curry = (fn) => {
   if (typeof fn !== 'function') {
     throw Error('curry only receive function params!');
   }
-  let _len = fn.length, _args = [];
+  const _len = fn.length; let
+    _args = [];
 
   const _curry = () => {
     const args = [].concat(_args);
@@ -19,7 +20,7 @@ const curry = (fn) => {
     _args = _args.concat([].slice.call(arguments));
     /* eslint-enable no-undef */
     if (_args.length === _len) {
-      const rst = fn.apply(null, _args);
+      const rst = fn(..._args);
       _args = args;
       return rst;
     }
@@ -30,7 +31,7 @@ const curry = (fn) => {
 };
 
 let __ErrorBoundary;
-let exports = {};
+const exports = {};
 if (process.env.NODE_ENV === 'development' || process.env.ERROR_ENV === 'development') {
   const { ErrorBoundary, FallbackView } = require('./WithErrorHandler');
 

@@ -28,5 +28,5 @@ export const DevTools = createDevTools(
 
 export default function DevToolsInit(devConfig) {
   console.info('devConfig', devConfig);
-  return <DevTools devConfig={devConfig} />
+  return <DevTools devConfig={devConfig} />;
 }

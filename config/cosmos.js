@@ -46,9 +46,7 @@ module.exports = {
   webpackConfigPath: './config/',
 
   // Customize webpack config
-  webpack: (config, { env }) => {
-    return config.webpack;
-  },
+  webpack: (config, { env }) => config.webpack,
 
   // Specify where should webpack watch for fixture files (defaults to rootPath)
   watchDirs: ['src'],

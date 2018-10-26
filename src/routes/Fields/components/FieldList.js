@@ -214,7 +214,7 @@ const FieldList = (props) => {
             onClick={field.id === editingId ? cancelEdit : () => editField(field)}
             className={classes.flexButton}
             style={{ color: '#bbbbff' }}
-            icon={field.id === editingId ? <CancelIcon onClick={cancelEdit} /> : <EditIcon /> }
+            icon={field.id === editingId ? <CancelIcon onClick={cancelEdit} /> : <EditIcon />}
           />
           {!(field.id === editingId) && (
             <Button

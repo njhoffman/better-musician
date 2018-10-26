@@ -6,7 +6,7 @@ module.exports = () =>
       ? req.logger.child({ subsystem: 'app:proxy' })
       : req.logger.child({ subsystem: 'app:server' });
 
-    const fmtTime = `${_.isNumber(time) ? time.toFixed(2) + 'ms' : time}`;
+    const fmtTime = `${_.isNumber(time) ? `${time.toFixed(2)}ms` : time}`;
     if (req.url === '/health') {
       logger.debug(`❤ ${req._requestIp}`);
     } else {

@@ -8,7 +8,7 @@ const Difficulty = ({ difficulty, maxDifficulty, style }) => {
   const green = parseInt(((ratio * 120) / 1.5) + 20);
   const blue  = parseInt(((ratio * 120) / 1.8) + 20);
   const color = `rgba(${red}, ${green}, ${blue}, 1)`;
-  const numberStyle = { ...style, color: color };
+  const numberStyle = { ...style, color };
   return (
     <Typography style={numberStyle}>
       {difficulty}

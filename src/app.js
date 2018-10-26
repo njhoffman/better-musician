@@ -68,7 +68,7 @@ const renderDev = () => {
 // This code is excluded from production bundle
 if (__DEV__) {
   if (module.hot) {
-     // reload components
+    // reload components
     module.hot.accept('components/AppContainer', (() => {
       // console.clear();
       info('HMR reloading ...');

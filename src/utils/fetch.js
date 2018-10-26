@@ -2,6 +2,7 @@ import _ from 'lodash';
 import originalFetch from 'isomorphic-fetch';
 import * as C from 'constants/auth';
 import extend from 'extend';
+import { init as initLog } from 'shared/logger';
 import {
   getApiUrl,
   retrieveData,
@@ -10,7 +11,6 @@ import {
   getSessionEndpointKey
 } from './auth/sessionStorage';
 
-import { init as initLog } from 'shared/logger';
 const { debug } = initLog('auth:fetch');
 
 const isApiRequest = (url) => (url.match(getApiUrl(getSessionEndpointKey())));
@@ -27,7 +27,7 @@ const getAuthHeaders = (url) => {
   nextHeaders['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
 
   // set header for each key in `tokenFormat` config
-  for (var key in getTokenFormat()) {
+  for (const key in getTokenFormat()) {
     nextHeaders[key] = currentHeaders[key];
   }
   return addAuthorizationHeader(currentHeaders['access-token'], nextHeaders);
@@ -39,7 +39,7 @@ const updateAuthCredentials = (resp) => {
     // if the response tokens aren't sent back from the API
     let blankHeaders = true;
     const newHeaders = {};
-    for (var key in getTokenFormat()) {
+    for (const key in getTokenFormat()) {
       newHeaders[key] = resp.headers.get(key);
       if (newHeaders[key]) {
         blankHeaders = false;
@@ -56,19 +56,18 @@ export const addAuthorizationHeader = (accessToken, headers) =>
   ({ ...{ headers }, ...{ Authorization: `Bearer ${accessToken}` } });
 
 export const parseResponse = (response) => {
-  let json = response.json();
+  const json = response.json();
   if (response.status >= 200 && response.status < 300) {
     return json;
-  } else {
-    return json.then(err => Promise.reject(err.errors ? err.errors : err));
   }
+  return json.then(err => Promise.reject(err.errors ? err.errors : err));
 };
 
 export default (url, options = {}) => {
   options.headers = options.headers || {};
   extend(options.headers, getAuthHeaders(url));
   debug(`Fetching ${url}`, {
-    'Authorization' : options.headers.Authorization,
+    Authorization : options.headers.Authorization,
     headers: _.pickBy(options.headers.headers)
   });
   return originalFetch(url, options)

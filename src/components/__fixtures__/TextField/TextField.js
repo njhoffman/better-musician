@@ -3,8 +3,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 import ComponentLayout from 'components/DevTools/Cosmos/ComponentLayout';
-import textGroups from './TextField.props.js';
 import TextField from '@material-ui/core/TextField';
+import textGroups from './TextField.props.js';
 
 const titleStyle = {
   width: '100%',

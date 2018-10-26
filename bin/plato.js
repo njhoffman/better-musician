@@ -8,9 +8,9 @@ const path = require('path');
 const reportsDir = path.join(__dirname, '/../reports/plato');
 const srcFiles = path.join(__dirname, '/../src');
 const serverFiles = path.join(__dirname, '/../server');
-const outputDir = path.join(reportsDir, '/' + Date.now());
+const outputDir = path.join(reportsDir, `/${Date.now()}`);
 
-var platoOptions = {
+const platoOptions = {
   title: 'Plato Report'
 };
 

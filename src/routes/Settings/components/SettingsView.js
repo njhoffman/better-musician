@@ -180,7 +180,7 @@ const setTheme = (theme) => (dispatch, getState) => {
 const mapActionCreators = {
   reset:    updateSettings,
   update:   updateSettings,
-  setTheme: setTheme
+  setTheme
 };
 
 const mapStateToProps = (state) => ({

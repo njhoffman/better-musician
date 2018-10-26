@@ -2,7 +2,6 @@ import _ from 'lodash';
 import BaseModel from './BaseModel';
 
 class Genre extends BaseModel {
-
   static get path() {
     return `/images/genre`;
   }
@@ -16,9 +15,7 @@ class Genre extends BaseModel {
   }
 
   static findByDisplayName(name) {
-    return this.all().toModelArray().filter(genre => {
-      return genre.displayName === name;
-    })[0];
+    return this.all().toModelArray().filter(genre => genre.displayName === name)[0];
   }
 
   static imagesByDisplayName(name) {

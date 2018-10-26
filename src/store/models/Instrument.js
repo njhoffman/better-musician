@@ -1,8 +1,7 @@
-import BaseModel from './BaseModel';
 import _ from 'lodash';
+import BaseModel from './BaseModel';
 
 class Instrument extends BaseModel {
-
   static get path() {
     return `/images/instrument`;
   }
@@ -16,9 +15,7 @@ class Instrument extends BaseModel {
   }
 
   static findByDisplayName(name) {
-    return this.all().toModelArray().filter(instrument => {
-      return instrument.displayName === name;
-    })[0];
+    return this.all().toModelArray().filter(instrument => instrument.displayName === name)[0];
   }
 
   static imagesByDisplayName(name) {

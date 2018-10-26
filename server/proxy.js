@@ -11,7 +11,7 @@ module.exports = ({ config, app, logger, sdc }) => {
     ws: false
   });
   app.use('/api', (req, res) => { proxy.web(req, res, { target: targetUrl }); });
-  app.use('/ws', (req, res) => { proxy.web(req, res, { target: targetUrl + '/ws' }); });
+  app.use('/ws', (req, res) => { proxy.web(req, res, { target: `${targetUrl}/ws` }); });
   server.on('upgrade', (req, socket, head) => { proxy.ws(req, socket, head); });
 
   proxy.on('proxyReq', (proxyReq, req, res, options) => {

@@ -15,11 +15,10 @@ module.exports = (sdc, logger) =>
     if (req.params) reqObj.data = _.omit(req.params, ['0', '1']);
     if (req.session && req.session.user) reqObj.user = req.session.user;
     if (req.sessionID) reqObj.sessionId = req.sessionID;
-    reqObj.sourceIp =
-      (req.headers['x-forwarded-for'] || req.connection.remoteAddress)
-        .split(',')
-        .shift()
-        .replace('::ffff:', '');
+    reqObj.sourceIp = (req.headers['x-forwarded-for'] || req.connection.remoteAddress)
+      .split(',')
+      .shift()
+      .replace('::ffff:', '');
 
     reqObj.userAgent = req['user-agent'];
     reqObj.url = `${pUrl.href.replace(pUrl.query, '').replace(pUrl.hash, '')}`;
@@ -27,9 +26,9 @@ module.exports = (sdc, logger) =>
     const loc = geoip.lookup(reqObj.sourceIp);
     let locDesc = !loc
       ? ''
-      : ((loc.city ? loc.city + ', ' : '') +
-        (loc.region ? loc.region : '') +
-        (loc.country && loc.country !== 'US' ? ' ' + loc.country : ''));
+      : ((loc.city ? `${loc.city}, ` : '')
+        + (loc.region ? loc.region : '')
+        + (loc.country && loc.country !== 'US' ? ` ${loc.country}` : ''));
 
     if (/^192.168|^172|^10/.test(reqObj.sourceIp)) {
       locDesc = 'Reserved';

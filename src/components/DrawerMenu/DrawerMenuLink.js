@@ -59,7 +59,7 @@ const MenuLink = ({ classes, label, Icon, loginLink }) => (
   <Fragment>
     {Icon && (
       <ListItemIcon>
-      <Icon className={classes.icon}/>
+        <Icon className={classes.icon} />
       </ListItemIcon>
     )}
     <ListItemText

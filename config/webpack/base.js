@@ -13,16 +13,16 @@ module.exports = {
   },
   output: {
     publicPath : '/',
-    filename : `[name].[hash].js`,
-    chunkFilename: `[name].[hash].js`
+    filename : '[name].[hash].js',
+    chunkFilename: '[name].[hash].js'
   },
   node: {
     console: false,
-    'child_process': 'empty',
+    child_process: 'empty',
     // https://github.com/webpack-contrib/css-loader/issues/447
-    'fs': 'empty',
+    fs: 'empty',
     // https://github.com/evanw/node-source-map-support/issues/155
-    'module': 'empty'
+    module: 'empty'
   },
   resolve: {
     modules: ['src', 'node_modules'],
@@ -49,7 +49,7 @@ module.exports = {
     'react/lib/ExecutionEnvironment' : true,
     'react/lib/ReactContext' : true,
     'react/addons' : true,
-    'webpackVariables': {}
+    webpackVariables: {}
   },
   module: {},
   optimization: {

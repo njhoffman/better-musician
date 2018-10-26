@@ -17,7 +17,7 @@ const loadApiEndpoints = (endpoints, roles = []) => {
     return _.mapValues(ep1, ep2 => {
       // first order route
       if (_.isString(ep2)) {
-       return {
+        return {
           loading: false,
           errors: false,
           success: false

@@ -5,7 +5,7 @@ import spacing from '@material-ui/core/styles/spacing';
 // const fullWhite = '#ffffff';
 
 export default {
-  spacing:              spacing,
+  spacing,
   themeName:            'Crimson Red',
   palette:              {
     primary: {

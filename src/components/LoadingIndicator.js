@@ -26,15 +26,16 @@ const LoadingIndicator = ({ isLoading, pastDelay, error, classes, theme }) => (
       <Paper className={classes.paper}>
         <Typography variant='h5'>
           Loading...
-      </Typography>
-      <BarLoader
-        width={100}
-        widthUnit={'%'}
-        height={20}
-        color={theme.palette.text.primary}
-        className={classes.barLoader}
-        loading={isLoading} />
-    </Paper>
+        </Typography>
+        <BarLoader
+          width={100}
+          widthUnit='%'
+          height={20}
+          color={theme.palette.text.primary}
+          className={classes.barLoader}
+          loading={isLoading}
+        />
+      </Paper>
     )}
     {!isLoading && error && (
       <Paper className={`${classes.paper} ${classes.error}`}>

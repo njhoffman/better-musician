@@ -28,9 +28,8 @@ const FormRow = ({
 }) => (
   <Row className={`${classes.formRow} ${className || ''}`}>
     {[].concat(children).map((child, i) =>
-      React.isValidElement(child) ?
-      React.cloneElement(child, { ...props, key: i }) : child
-    )}
+      (React.isValidElement(child)
+        ? React.cloneElement(child, { ...props, key: i }) : child))}
   </Row>
 );
 FormRow.propTypes = {
@@ -39,4 +38,3 @@ FormRow.propTypes = {
 };
 
 export default withStyles(styles)(FormRow);
-

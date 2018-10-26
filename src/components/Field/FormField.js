@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Field } from 'redux-form';
 import { Column } from 'react-foundation';
 
+import { FIELD_VIEW, FIELD_EDIT, FIELD_ADD } from 'constants/ui';
 import FormRow from './FormRow';
 import Select from './Select';
 import MultiSelect from './MultiSelect';
@@ -16,7 +17,6 @@ import AutoComplete from './AutoComplete';
 import YouTubeLink from './YouTubeLink';
 import Chip from './Chip';
 
-import { FIELD_VIEW, FIELD_EDIT, FIELD_ADD } from 'constants/ui';
 
 /* eslint-disable no-multi-spaces */
 // const fieldOptions = {
@@ -55,7 +55,7 @@ const renderField = ({ type, ...props }) => {
   if (type === 'youtube' || type === 'YouTube Link' || type === 7) {
     return (<YouTubeLink {...props} />);
   }
-  return  (<Checkbox {...props} />);
+  return (<Checkbox {...props} />);
 };
 
 const styles = (theme) => ({

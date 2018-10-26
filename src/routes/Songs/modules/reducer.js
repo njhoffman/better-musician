@@ -22,8 +22,19 @@ export const setSortColumn = (sortField) => (dispatch, getState) => (
   dispatch({ type: SET_SORT, payload: sortField })
 );
 
+export const setPaginationPerPage = (num) => (dispatch, getState) => (
+  dispatch({ type: SET_PAGINATION_PER_PAGE, payload: num })
+);
+
+export const setPaginationCurrent = (page) => (dispatch, getState) => (
+  dispatch({ type: SET_PAGINATION_CURRENT, payload: page })
+);
+
 export const actions = {
-  setSortColumn, setCurrentSong
+  setSortColumn,
+  setCurrentSong,
+  setPaginationPerPage,
+  setPaginationCurrent
 };
 
 // ------------------------------------

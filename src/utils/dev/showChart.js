@@ -2,6 +2,7 @@ import React from 'react';
 import NewWindow from 'components/NewWindow';
 import DevToolsChart  from 'components/DevTools/DevToolsChart';
 import { init as initLog } from 'shared/logger';
+
 const { info } = initLog('showChart');
 
 const ChartWindow = (store, props) => {

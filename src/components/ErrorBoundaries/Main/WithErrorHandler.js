@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import FallbackView from './ErrorHandlerFallback';
 import { init as initLog } from 'shared/logger';
+import FallbackView from './ErrorHandlerFallback';
+
 const logger = initLog('error-handler');
 
 class ErrorBoundary extends PureComponent {

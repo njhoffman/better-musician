@@ -1,7 +1,7 @@
 import spacing from '@material-ui/core/styles/spacing';
 
 export default {
-  spacing: spacing,
+  spacing,
   fontFamily: 'Roboto, sans-serif',
   themeName: 'Default',
   breakpoints: {

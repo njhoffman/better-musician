@@ -1,4 +1,5 @@
 import { Component, createElement } from 'react';
+
 const isStateLess = Component => !Component.prototype.render;
 
 // A mapping of props provided by redux-form to the props the Material UI component needs

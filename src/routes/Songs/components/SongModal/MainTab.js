@@ -105,7 +105,7 @@ export const SongMainTab = ({
     );
   };
 
-  const renderStars = (number) => ( <Stars className={classes.progressStars} number={parseInt(number)} />);
+  const renderStars = (number) => (<Stars className={classes.progressStars} number={parseInt(number)} />);
 
   const renderViewFields = (classes) => (
     <FormRow className={classes.row}>

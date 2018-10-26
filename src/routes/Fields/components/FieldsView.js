@@ -66,7 +66,7 @@ export const FieldsView = ({
   ...props
 }) => {
   // const user = props.settings.get('attributes');
-  let disabled =  false;
+  const disabled =  false;
 
   const fieldOptions = {
     0: 'Text Box',

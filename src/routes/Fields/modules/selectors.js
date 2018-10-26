@@ -4,9 +4,7 @@ import { createSelector } from 'reselect';
 
 export const ormSelector = state => state.orm;
 
-const savedFieldsSelector = ormCreateSelector(orm, (session, user) => {
-  return session.CustomField.all().toModelArray();
-});
+const savedFieldsSelector = ormCreateSelector(orm, (session, user) => session.CustomField.all().toModelArray());
 
 export const savedFields = createSelector(
   ormSelector,
@@ -15,7 +13,7 @@ export const savedFields = createSelector(
 );
 
 const savedTabsSelector = ormCreateSelector(orm, (session, user) => {
-  let tabs = {};
+  const tabs = {};
   session.CustomField.all().toModelArray().forEach(field => {
     if (tabs[field.tabName]) {
       tabs[field.tabName].push(field);
@@ -23,7 +21,7 @@ const savedTabsSelector = ormCreateSelector(orm, (session, user) => {
       tabs[field.tabName] = [field];
     }
   });
-  let ret = [];
+  const ret = [];
   Object.keys(tabs).forEach(tabKey => {
     ret.push({ name: tabKey, fields: tabs[tabKey] });
   });

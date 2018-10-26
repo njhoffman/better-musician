@@ -10,10 +10,12 @@ const SongFooter = ({ classes, maxDifficulty, song }) => (
     <Column small={3} className={classes.leftColumn}>
       <img
         className={classes.instrumentPicture}
-        src={song.instrument.primaryImage} />
+        src={song.instrument.primaryImage}
+      />
       <img
         className={classes.artistPicture}
-        src={song.artist.primaryImage} />
+        src={song.artist.primaryImage}
+      />
     </Column>
     <Column small={9} className={classes.rightColumn}>
       <Row className={classes.rightTop}>
@@ -28,17 +30,19 @@ const SongFooter = ({ classes, maxDifficulty, song }) => (
           <Typography variant='caption' className={classes.artistName}>
             {song.artist.fullName}
           </Typography>
-          <Typography variant='overline' className={classes.genreName} color="secondary">
+          <Typography variant='overline' className={classes.genreName} color='secondary'>
             {song.genre.name}
           </Typography>
         </Column>
         <Column style={{ textAlign: 'center', display: 'flex-inline', maxWidth: '100px' }}>
           <Difficulty
             difficulty={song.difficulty}
-            maxDifficulty={maxDifficulty} />
+            maxDifficulty={maxDifficulty}
+          />
           <Stars
             number={song.progress}
-            className={classes.stars} />
+            className={classes.stars}
+          />
         </Column>
       </Row>
     </Column>
@@ -52,4 +56,3 @@ SongFooter.propTypes = {
 };
 
 export default SongFooter;
-

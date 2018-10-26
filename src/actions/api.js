@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { CALL_API } from 'middleware/api';
 import { init as initLog } from 'shared/logger';
-import { clearFields } from 'redux-form';
+import { reset } from 'redux-form';
 import * as API from 'constants/api';
 import * as UI from 'constants/ui';
 
@@ -56,7 +56,7 @@ export const addSong = () => (dispatch, getState) => {
 };
 
 
-export const songsFetchComplete = ({ tables }) => (dispatch) => {
+export const songsFetchComplete = (tables) => (dispatch) => {
   // info('songsFetchComplete', response);
   info(`songsFetchComplete: ${tables.songs.length} songs and ${tables.artists.length} artists`);
 
@@ -177,6 +177,11 @@ export const updateSettings = () => (dispatch, getState) => {
 };
 
 /* fields */
+export const cancelEdit = () => (dispatch) =>
+  dispatch({
+    type: API.FIELDS_EDIT,
+    payload: null
+  });
 
 export const fieldUpdateComplete = (data) => (dispatch, getState) => {
   dispatch(cancelEdit());
@@ -246,10 +251,4 @@ export const editField = ({ type, label, tabName, options, id }) => (dispatch) =
   dispatch({
     type: API.FIELDS_EDIT,
     payload: { type: type.toString(), label, tabName, options, id }
-  });
-
-export const cancelEdit = () => (dispatch) =>
-  dispatch({
-    type: API.FIELDS_EDIT,
-    payload: null
   });

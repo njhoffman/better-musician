@@ -1,5 +1,8 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
+import { connectRouter } from 'connected-react-router';
+import { routerReducer } from 'react-router-redux';
+import { init as initLog } from 'shared/logger';
 import uiReducer from './ui';
 import apiReducer from './api';
 import userReducer from './user';
@@ -8,9 +11,6 @@ import ormReducer from './orm';
 
 // selectors need access to ORM
 // TODO: put orm in own module
-import { connectRouter } from 'connected-react-router';
-import { routerReducer } from 'react-router-redux';
-import { init as initLog } from 'shared/logger';
 
 const { info } = initLog('reducers');
 
@@ -34,7 +34,7 @@ const makeRootReducer = (asyncReducers, injectedModels = []) => {
   return combineReducers(reducers);
 };
 
-export const injectReducer = ({ key, history, reducer, store, clearOld = false}, models = []) => {
+export const injectReducer = ({ key, history, reducer, store, clearOld = false }, models = []) => {
   info(`Injecting reducer: ${key}`);
   // if (Object.hasOwnProperty.call(store.asyncReducers, key)) {
   //   return;

@@ -9,16 +9,18 @@ module.exports = {
     } else if (action.callApi) {
       return [
         `%cCALL_API %c${padRight(action.endpoint, 21)} %c `
-        + `${action.payload ? JSON.stringify(action.payload) : ''} `
-        + ` ${action.meta ? JSON.stringify(action.meta) : ''}`,
-        'color: #aa66ff; font-weight: bold', 'color: #22ccff', 'color: #886688;'
+        + `${!_.isUndefined(action.payload) ? JSON.stringify(action.payload) : ''} `
+        + ` ${!_.isUndefined(action.meta) ? JSON.stringify(action.meta) : ''}`,
+        'color: #aa66ff; font-weight: bold',
+        'color: #22ccff', 'color: #886688;'
       ];
-    } else if (action.payload) {
+    } else if (!_.isUndefined(action.payload)) {
       return [
         `%c${padRight(action.type, 30)} %c `
-        + `${action.payload ? JSON.stringify(action.payload) : ''} `
-        + ` ${action.meta ? JSON.stringify(action.meta) : ''}`,
-        'color: #88aaff;', 'color: #886688;'
+        + `${!action.payload ? JSON.stringify(action.payload) : ''} `
+        + ` ${!_.isUndefined(action.meta) ? JSON.stringify(action.meta) : ''}`,
+        'color: #88aaff;',
+        'color: #886688;'
       ];
     }
     return [
