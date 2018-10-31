@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 
 export default class Modal extends PureComponent {
   static propTypes = {
-    children: PropTypes.any.isRequired
+    children: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.node),
+      PropTypes.object
+    ]).isRequired
   };
 
   constructor(props) {
@@ -28,9 +31,10 @@ export default class Modal extends PureComponent {
 
   render() {
     // Use a portal to render the children into the element
+    const { children } = this.props;
     return createPortal(
       // Any valid React child: JSX, strings, arrays, etc.
-      this.props.children,
+      children,
       // A DOM element
       this.el
     );

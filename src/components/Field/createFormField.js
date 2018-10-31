@@ -1,6 +1,6 @@
 import { Component, createElement } from 'react';
 
-const isStateLess = Component => !Component.prototype.render;
+const isStateLess = Comp => !Comp.prototype.render;
 
 // A mapping of props provided by redux-form to the props the Material UI component needs
 const createFormField = (MaterialUIComponent, mapProps) => {
@@ -12,7 +12,9 @@ const createFormField = (MaterialUIComponent, mapProps) => {
     render() {
       return createElement(MaterialUIComponent, {
         ...mapProps(this.props),
-        ref: (!isStateLess(MaterialUIComponent) ? el => (this.component = el) : null)
+        ref: (!isStateLess(MaterialUIComponent) ? el => {
+          this.component = el;
+        } : null)
       });
     }
   }

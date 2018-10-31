@@ -9,10 +9,12 @@ const SongFooter = ({ classes, maxDifficulty, song }) => (
   <Row className={classes.footerSong}>
     <Column small={3} className={classes.leftColumn}>
       <img
+        alt='Instrument'
         className={classes.instrumentPicture}
         src={song.instrument.primaryImage}
       />
       <img
+        alt='Artist'
         className={classes.artistPicture}
         src={song.artist.primaryImage}
       />
@@ -50,8 +52,8 @@ const SongFooter = ({ classes, maxDifficulty, song }) => (
 );
 
 SongFooter.propTypes = {
-  classes:       PropTypes.object.isRequired,
-  song:          PropTypes.object.isRequired,
+  classes:       PropTypes.instanceOf(Object).isRequired,
+  song:          PropTypes.instanceOf(Object).isRequired,
   maxDifficulty: PropTypes.number.isRequired
 };
 

@@ -46,8 +46,10 @@ export default (initialState = {}, history, devConfig) => {
     const devExt = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
     middleware.push(reduxFreeze);
     if (devExt && devConfig.showExtension) {
+      debug('Enabling DevTools Chrome Extension');
       composeEnhancers = devExt(devConfig.extensionOptions);
     } else if (devConfig.showInspector) {
+      debug('Enabling On-Screen DevTools');
       enhancers.push(DevTools.instrument({ shouldCatchErrors: true }));
     }
   }

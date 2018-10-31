@@ -1,4 +1,5 @@
 /* eslint key-spacing:0 spaced-comment:0 */
+const _ = require('lodash');
 const path = require('path');
 const { argv } = require('yargs');
 const ip = require('ip');
@@ -75,11 +76,12 @@ config.globals = {
   __TEST__     : config.env === 'test',
   __COVERAGE__ : !argv.watch && config.env === 'test',
   __VERBOSE__  : config.envFlag === 'verbose',
-  __API_URL__ : `"http://${config.server.host}:${config.server.port}/api"`,
+  __API_URL__  : `"http://${config.server.host}:${config.server.port}/api"`,
   __BASENAME__ : JSON.stringify(process.env.BASENAME || name || '')
 };
 
-configWebpack(config);
+const webpackConfig = configWebpack(config);
+_.merge(config.webpack, webpackConfig);
 
 logger.debug({ _trace: { config } }, `Finished configuring for environment: ${config.env}`);
 module.exports = config;

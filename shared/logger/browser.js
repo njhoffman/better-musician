@@ -11,16 +11,27 @@ const consoleLog = console.log;
 const subsystems = ['hot-module'];
 const lineLimit = 150;
 
+// const deleteNull = (test, recurse) => {
+//   const filtered = { ...test };
+//   _.keys(filtered, i => {
+//     if (filtered[i] == null) {
+//       delete filtered[i];
+//     } else if (recurse && typeof filtered[i] === 'object') {
+//       deleteNull(filtered[i], recurse);
+//     }
+//   });
+//   return filtered;
+// };
+
 const deleteNull = (test, recurse) => {
   const filtered = test;
-  let i;
-  for (i in filtered) {
+  _.keys(filtered, i => {
     if (filtered[i] == null) {
       delete filtered[i];
     } else if (recurse && typeof filtered[i] === 'object') {
       deleteNull(filtered[i], recurse);
     }
-  }
+  });
   return filtered;
 };
 
@@ -49,8 +60,12 @@ const createLogLine = (messages) => {
 };
 
 const parse = (subsystem, style, messages) => {
-  subsystems.indexOf(subsystem) === -1 && subsystems.push(subsystem);
-  const ssLength = 6 + _.maxBy(subsystems, (ss) => ss.length).length - subsystem.length;
+  if (subsystems.indexOf(subsystem) === -1) {
+    subsystems.push(subsystem);
+  }
+  const ssLength = 6 + _.maxBy(
+    subsystems, (ss) => ss.length
+  ).length - subsystem.length;
 
   let toProcess = messages;
   if (_.isArray(messages)) {
@@ -65,46 +80,48 @@ const parse = (subsystem, style, messages) => {
   }
 
   const logMessages = [];
-  [].concat(toProcess).filter((msg) => !_.isEmpty(msg)).forEach((message, i) => {
-    // if (msg.method === 'POST') debugger;
-    const msg = deleteNull(message, true);
-    let rendered = [];
-    if (_.isArray(msg) && msg[0].split('%c').length === msg.length) {
-      // if has own color code formatting, don't send it through json parser
-      const tmp = pjson.render(msg.shift());
-      rendered.push([tmp[0], tmp[1][0]].concat(msg));
-    } else {
-      // parser returns rendered messages in first array, colors in second
-      const indent = i > 0 ? ssLength + subsystem.length + ((i + 1) * 3) : 0;
-      rendered = pjson.render(msg, indent);
-      rendered = _.zip(rendered[0], rendered[1]);
-    }
+  [].concat(toProcess)
+    .filter((msg) => !_.isEmpty(msg))
+    .forEach((message, i) => {
+      // if (msg.method === 'POST') debugger;
+      const msg = deleteNull(message, true);
+      let rendered = [];
+      if (_.isArray(msg) && msg[0].split('%c').length === msg.length) {
+        // if has own color code formatting, don't send it through json parser
+        const tmp = pjson.render(msg.shift());
+        rendered.push([tmp[0], tmp[1][0]].concat(msg));
+      } else {
+        // parser returns rendered messages in first array, colors in second
+        const indent = i > 0 ? ssLength + subsystem.length + ((i + 1) * 3) : 0;
+        rendered = pjson.render(msg, indent);
+        rendered = _.zip(rendered[0], rendered[1]);
+      }
 
-    // add subsystem to first line
-    if (i === 0) {
-      rendered[0][0] += '%i';
-      rendered.unshift([
-        `%c ${subsystem} ${Array(ssLength).join(' ')}`,
-        style
-      ]);
-    }
-    const logLine = createLogLine(rendered);
-    logMessages.push(logLine);
-  });
+      // add subsystem to first line
+      if (i === 0) {
+        rendered[0][0] += '%i';
+        rendered.unshift([
+          `%c ${subsystem} ${Array(ssLength).join(' ')}`,
+          style
+        ]);
+      }
+      const logLine = createLogLine(rendered);
+      logMessages.push(logLine);
+    });
 
   logMessages.forEach(([msg, ...colors]) => msg.split('\n').forEach(
     (line) => consoleLog(line, ...colors.splice(0, line.split('%c').length - 1))
   ));
 };
 
-console.log = function consoleLogEnhanced(arg1) {
-  if (arg1 && arg1.indexOf && arg1.indexOf('[HMR]') !== -1) {
-    if (arg1.indexOf('bundle rebuilding') !== -1) {
+console.log = function consoleLogEnhanced(...args) {
+  if (args[0] && args[0].indexOf && args[0].indexOf('[HMR]') !== -1) {
+    if (args[0].indexOf('bundle rebuilding') !== -1) {
       console.clear();
     }
-    return parse('hot-module', 'color: #ff8800', `${arg1}`);
+    return parse('hot-module', 'color: #ff8800', `${args[0]}`);
   }
-  return consoleLog.apply(console, arguments);
+  return consoleLog.apply(console, args);
 };
 
 export const trace = (subsystem, ...inputs) => parse(subsystem, 'color: #ccffff', inputs);

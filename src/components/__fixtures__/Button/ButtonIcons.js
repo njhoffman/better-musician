@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 
 import ComponentLayout from 'components/DevTools/Cosmos/ComponentLayout';
 import Button from 'components/Button';
-import buttonGroups from './ButtonIcons.props.js';
+import buttonGroups from './ButtonIcons.props';
 
 const titleStyle = {
   width: '100%',
@@ -18,18 +18,23 @@ export default {
   name: 'Icons',
   url: '/',
   component: ComponentLayout,
-  children: buttonGroups.map((buttonGroup, i) => (
-    <Grid item key={i}>
-      <Typography variant='body2' style={titleStyle}>
-        {buttonGroup.title}
-      </Typography>
-      <Grid container spacing={16} justify='center'>
-        {buttonGroup.props.map((propGroup, i) => (
-          <Grid item key={i}>
-            <Button {...propGroup} />
-          </Grid>
-        ))}
+  children: buttonGroups
+    .map((bg, bgIdx) => {
+      const propIds = bg.props.map((bgp, idx) => ({ ...bgp, idx }));
+      return { ...bg, idx: bgIdx, props: propIds };
+    })
+    .map((buttonGroup) => (
+      <Grid item key={buttonGroup.idx}>
+        <Typography variant='body2' style={titleStyle}>
+          {buttonGroup.title}
+        </Typography>
+        <Grid container spacing={16} justify='center'>
+          {buttonGroup.props.map((propGroup) => (
+            <Grid item key={propGroup.idx}>
+              <Button {...propGroup} />
+            </Grid>
+          ))}
+        </Grid>
       </Grid>
-    </Grid>
-  ))
+    ))
 };

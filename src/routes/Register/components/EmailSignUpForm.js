@@ -2,157 +2,186 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
-import { withStyles }  from '@material-ui/core';
-import { Row, Column } from 'react-foundation';
+import { withStyles, Typography, Divider }  from '@material-ui/core';
+import { Column } from 'react-foundation';
 
 import { MdHelp as HelpIcon } from 'react-icons/md';
 import ContentSend from '@material-ui/icons/Send';
 
+import { init as initLog } from 'shared/logger';
+import validate from 'utils/validate';
+import { changedFields } from 'selectors/form';
 import Button from 'components/Button';
-import FormField from 'components/Field';
+import FormField, { FormRow } from 'components/Field';
 import { emailSignUp } from 'actions/auth/register';
-import css from './EmailSignUpForm.scss';
+
+const { error } = initLog('emailSignInForm');
 
 const styles = theme => ({
   button: {
     width: '250px',
     display: 'none'
-  }
+  },
+  divider: {
+    margin: '20px 0px 5px 0px'
+  },
 });
 
-export class EmailSignUpForm extends React.Component {
-  static propTypes = {
-    config:                 PropTypes.object.isRequired,
-    endpoint:               PropTypes.string,
-    next:                   PropTypes.func.isRequired,
-    emailSignUp:            PropTypes.func.isRequired,
-    dispatch:               PropTypes.func.isRequired,
-    isSignedIn:             PropTypes.bool,
-    registerForm:           PropTypes.object,
-    inputProps:             PropTypes.shape({
-      email:                PropTypes.object,
-      password:             PropTypes.object,
-      passwordConfirmation: PropTypes.object,
-      submit:               PropTypes.object
-    })
-  };
+const getEndpoint = ({ endpoint, config }) => (
+  endpoint || config.auth.currentEndpointKey || config.auth.defaultEndpointkey
+);
 
-  static defaultProps = {
-    next:       () => {},
-    inputProps: {
-      email:    {},
-      password: {},
-      submit:   {}
+const getFormValues = (formKeys) => {
+  const formData = {};
+  formKeys.forEach((key) => {
+    if (!formData[key]) {
+      formData[key] = document.querySelector(`input[name="${key}"]`).value || '';
     }
-  };
+  });
+  return formData;
+};
 
-  constructor() {
-    super();
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+const handleSubmit = (event, props) => {
+  event.preventDefault();
 
-  getEndpoint() {
-    return (
-      this.props.endpoint
-      || this.props.config.auth.currentEndpointKey
-      || this.props.config.auth.defaultEndpointkey
-    );
-  }
+  const formData = getFormValues([
+    'email-sign-up-email',
+    'email-sign-up-password',
+    'email-sign-up-password-confirmation'
+  ]);
+  // TODO: dev/production check
+  props.dispatch(props.emailSignUp(formData, getEndpoint(props)))
+    .then(() => props.next(props.dispatch))
+    .catch((e) => { error(e); });
+};
 
-  handleSubmit(event) {
-    event.preventDefault();
 
-    const formData = this.props.registerForm.values;
-    this.props.dispatch(this.props.emailSignUp(formData, this.getEndpoint()))
-      .then(this.props.next)
-      .catch(() => {});
-  }
+const EmailSignUpForm = ({
+  classes,
+  isFetching,
+  errors,
+  registerForm,
+  isSignedIn,
+  ...props
+}) => (
+  <form>
+    <FormRow small={10} medium={8}>
+      <Column>
+        {errors && [].concat(errors).map((err, i) => (
+          <div key={err.name}>
+            <Typography variant='body1' className={classes.errorTitle}>
+              {err && err.name ? err.name : ''}
+              {err && err.err ? err.err : ''}
+            </Typography>
+            <Typography variant='caption' className={classes.errorMessage}>
+              {err && err.message ? err.message : ''}
+              {err && err.reason ? err.reason : ''}
+            </Typography>
+          </div>
+        ))}
+      </Column>
+    </FormRow>
+    <FormRow small={10} medium={8}>
+      <FormField
+        type='text'
+        className='_inst_email-sign-up'
+        label='Email'
+        name='email-sign-up-email'
+        disabled={isSignedIn}
+      />
+    </FormRow>
+    <FormRow small={10} medium={8}>
+      <FormField
+        type='text'
+        label='Password'
+        name='email-sign-up-password'
+        disabled={isSignedIn}
+      />
+    </FormRow>
+    <FormRow small={10} medium={8}>
+      <FormField
+        type='text'
+        label='Password Confirmation'
+        name='email-sign-up-password-confirmation'
+        disabled={isSignedIn}
+      />
+    </FormRow>
+    <Divider className={classes.divider} />
+    <FormRow small={10} className={classes.buttonWrapper}>
+      <Column centerOnSmall small={12} medium={7} pullOnMedium={5}>
+        <Button
+          className={classes.resetButton}
+          variant='outlined'
+          label='Reset Password'
+          color='secondary'
+          icon={<HelpIcon />}
+        />
+      </Column>
+      <Column centerOnSmall small={12} medium={5} pushOnMedium={7}>
+        <Button
+          label='Sign Up'
+          icon={<ContentSend />}
+          className={classes.signupButton}
+          loading={isFetching}
+          disabled={Boolean(isSignedIn || registerForm.syncErrors || isFetching)}
+          onClick={(e) => handleSubmit(e, props)}
+        />
+      </Column>
+    </FormRow>
+  </form>
+);
 
-  render() {
-    // let disabled = (this.props.isSignedIn ||
-    //   this.props.auth.getIn(['emailSignUp', this.getEndpoint(), 'loading'])
-    // );
-    // const errors = this.props.auth.getIn(['emailSignUp', this.getEndpoint(), 'errors']);
-    const disabled = this.props.isSignedIn;
-    const { errors } = this.props.api.auth.register;
+const validateFields = {
+  'email-sign-up-email': [
+    ['required', 'Required'],
+    ['isEmail', 'Invalid Email']
+  ],
+  'email-sign-up-password': [
+    ['required', 'Required'],
+  ],
+  'email-sign-up-password-confirmation': [
+    ['required', 'Required'],
+  ]
+};
 
-    return (
-      <form
-        className='redux-auth email-sign-up-form clearfix'
-        style={{ clear: 'both', overflow: 'hidden' }}
-        onSubmit={this.handleSubmit}>
-        <Row>
-          <Column>
-            {errors && errors.map((error, i) =>
-              <p key={i} className='error'>{error}</p>)}
-          </Column>
-        </Row>
-        <Row>
-          <FormField
-            type='text'
-            className='_inst_email-sign-up'
-            label='Email'
-            name='email-sign-up-email'
-            disabled={disabled}
-          />
-        </Row>
-        <Row>
-          <FormField
-            type='text'
-            label='Password'
-            name='email-sign-up-password'
-            disabled={disabled}
-            {...this.props.inputProps.password}
-          />
-        </Row>
-        <Row>
-          <FormField
-            type='text'
-            label='Password Confirmation'
-            name='email-sign-up-password-confirmation'
-            disabled={disabled}
-            {...this.props.inputProps.passwordConfirmation}
-          />
-        </Row>
-        <Row className={css.buttonWrapper}>
-          <Column centerOnSmall small={12} medium={5} pushOnMedium={7}>
-            <Button
-              label='Sign Up'
-              icon={<ContentSend />}
-              className={css.signupButton}
-              loading={this.props.isLoading}
-              disabled={disabled}
-              onClick={() => this.handleSubmit()}
-              {...this.props.inputProps.submit}
-            />
-          </Column>
-          <Column centerOnSmall small={12} medium={7} pullOnMedium={5}>
-            <Button
-              className={css.resetButton}
-              label='Reset Password'
-              color='secondary'
-              icon={<HelpIcon />}
-            />
-          </Column>
-        </Row>
-      </form>
-    );
-  }
-}
+EmailSignUpForm.propTypes = {
+  classes:      PropTypes.instanceOf(Object).isRequired,
+  config:       PropTypes.instanceOf(Object).isRequired,
+  registerForm: PropTypes.instanceOf(Object),
+  isFetching:   PropTypes.bool.isRequired,
+  errors:       PropTypes.arrayOf(PropTypes.object),
+  dispatch:     PropTypes.func.isRequired,
+  endpoint:     PropTypes.string,
+  next:         PropTypes.func,
+  emailSignUp:  PropTypes.func.isRequired,
+  isSignedIn:   PropTypes.bool.isRequired
+};
+
+EmailSignUpForm.defaultProps = {
+  next:         () => {},
+  errors:       [],
+  endpoint:     null,
+  registerForm: {}
+};
+
 
 const mapStateToProps = (state) => ({
-  registerForm: state.form.register,
   emailSignUp,
-  config:       state.config,
+  registerForm: state.form.register,
   api:          state.api,
   isSignedIn:   state.user.isSignedIn,
-  isLoading:    state.api.auth.register.loading
+  config:       state.config,
+  errors:       state.api.auth.register.errors || [],
+  syncErrors:   state.form.register ? state.form.register.syncErrors : {},
+  isFetching:   state.api.auth.register.loading,
+  changed:      changedFields(state.form.register),
 });
 
 export default withStyles(styles)(
   connect(mapStateToProps)(
-    reduxForm({ form: 'register' })(
-      EmailSignUpForm
-    )
+    reduxForm({
+      form: 'register',
+      validate: validate(validateFields)
+    })(EmailSignUpForm)
   )
 );

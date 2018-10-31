@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
-const argv = require('yargs').argv;
-const project = require('./project.config');
-const webpackConfig = require('./webpack.config');
+const { argv } = require('yargs');
+const config = require('./index');
+
+const { webpack: wpConfig } = config;
 // const { info } = require('debugger-256')('app:config:karma');
 
 const karmaConfig = {
@@ -10,7 +11,7 @@ const karmaConfig = {
     './node_modules/babel-polyfill/dist/polyfill.js',
     './node_modules/promise-polyfill/promise.js',
     {
-      pattern  : `./${project.dir_test}/unit/test-bundler.js`,
+      pattern  : `./${config.dir_test}/unit/test-bundler.js`,
       watched  : false,
       served   : true,
       included : true
@@ -61,18 +62,18 @@ const karmaConfig = {
   },
   webpack  : {
     devtool : 'cheap-module-source-map',
-    resolve : Object.assign({}, webpackConfig.resolve, {
-      alias : Object.assign({}, webpackConfig.resolve.alias, {
+    resolve : Object.assign({}, wpConfig.resolve, {
+      alias : Object.assign({}, wpConfig.resolve.alias, {
         sinon : 'sinon/pkg/sinon.js'
       })
     }),
-    plugins : webpackConfig.plugins,
+    plugins : wpConfig.plugins,
     module  : {
       noParse : [
         /\/sinon\.js/,
         /\/interfaces\/.js/
       ],
-      loaders : webpackConfig.module.loaders.concat([
+      loaders : wpConfig.module.loaders.concat([
         {
           test   : /sinon(\\|\/)pkg(\\|\/)sinon\.js/,
           loader : 'imports?define=>false,require=>false'
@@ -81,15 +82,15 @@ const karmaConfig = {
     },
     // Enzyme fix, see:
     // https://github.com/airbnb/enzyme/issues/47
-    externals : Object.assign({}, webpackConfig.externals, {
+    externals : Object.assign({}, wpConfig.externals, {
       'react/addons'                   : true,
       'react/lib/ExecutionEnvironment' : true,
       'react/lib/ReactContext'         : 'window'
     }),
-    sassLoader : webpackConfig.sassLoader
+    sassLoader : wpConfig.sassLoader
   },
   preprocessors : {
-    [`${project.dir_test}/unit/test-bundler.js`] : ['webpack']
+    [`${config.dir_test}/unit/test-bundler.js`] : ['webpack']
   },
   webpackMiddleware : {
     noInfo : true,
@@ -103,22 +104,22 @@ const karmaConfig = {
     }
   },
   coverageReporter : {
-    reporters : project.coverage_reporters
+    reporters : config.coverage_reporters
   }
 };
 
-if (project.globals.__COVERAGE__) {
-  if (project.globals.__VERBOSE__) {
+if (config.globals.__COVERAGE__) {
+  if (config.globals.__VERBOSE__) {
     karmaConfig.coverageReporter.reporters.unshift({ type: 'text' });
   }
   karmaConfig.reporters.push('coverage');
   karmaConfig.webpack.module.preLoaders = [{
     test    : /\.(js|jsx)$/,
-    include : new RegExp(project.dir_client),
+    include : new RegExp(config.dir_client),
     exclude : [/node_modules/, '/src/interfaces/'],
     loader  : 'babel',
-    query   : Object.assign({}, project.compiler_babel, {
-      plugins : (project.compiler_babel.plugins || []).concat('istanbul')
+    query   : Object.assign({}, config.compiler_babel, {
+      plugins : (config.compiler_babel.plugins || []).concat('istanbul')
     })
   }];
 }

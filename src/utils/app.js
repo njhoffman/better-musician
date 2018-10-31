@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { humanMemorySize } from 'shared/util';
 import { init as initLog } from 'shared/logger';
 
@@ -36,3 +37,26 @@ export const domStats = () => {
 };
 
 window.domStats = domStats;
+
+const customizer = (baseValue, value) => {
+  if (Array.isArray(baseValue) && Array.isArray(value)) {
+    return _.isEqual(baseValue.sort(), value.sort());
+  }
+  return _.isEqual(baseValue, value);
+};
+
+/* eslint-disable no-param-reassign */
+// TODO: i guess try to figure something out
+export const difference = (primaryObject, primaryBase) => {
+  const changes = (object, base) => (
+    _.transform(object, (result, value, key) => {
+      if (!_.isEqualWith(value, base[key], customizer)) {
+        result[key] = (_.isObject(value) && _.isObject(base[key]))
+          ? changes(value, base[key])
+          : value;
+      }
+    })
+  );
+  return changes(primaryObject, primaryBase);
+};
+/* eslint-enable no-param-reassign */

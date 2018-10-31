@@ -86,8 +86,14 @@ export const oAuthSignInError = (errors, endpoint) =>
 const openPopup = _openPopup;
 const listenForCredentials = (endpointKey, popup, provider, resolve, reject) => {
   if (!resolve) {
-    return new Promise((resolve, reject) => {
-      listenForCredentials(endpointKey, popup, provider, resolve, reject);
+    return new Promise((listenerResolve, listenerReject) => {
+      listenForCredentials(
+        endpointKey,
+        popup,
+        provider,
+        listenerResolve,
+        listenerReject
+      );
     });
   }
   let creds;
@@ -99,17 +105,16 @@ const listenForCredentials = (endpointKey, popup, provider, resolve, reject) => 
   if (creds && creds.uid) {
     popup.close();
     persistData(AUTH.SAVED_CREDS_KEY, normalizeTokenKeys(creds));
-    fetch(getTokenValidationPath(endpointKey))
+    return fetch(getTokenValidationPath(endpointKey))
       .then(parseResponse)
       .then(({ data }) => resolve(data))
       .catch(({ errors }) => reject({ errors }));
   } else if (popup.closed) {
-    reject({ errors: 'Authentication was cancelled.' });
-  } else {
-    setTimeout(() => {
-      listenForCredentials(endpointKey, popup, provider, resolve, reject);
-    }, 0);
+    return reject({ errors: 'Authentication was cancelled.' });
   }
+  return setTimeout(() => {
+    listenForCredentials(endpointKey, popup, provider, resolve, reject);
+  }, 0);
 };
 
 const authenticate = ({ endpointKey, provider, url, tab = false }) => {

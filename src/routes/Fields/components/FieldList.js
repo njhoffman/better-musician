@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   ExpansionPanel,
@@ -15,7 +16,13 @@ import {
 } from 'react-icons/md';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import {
+  editField,
+  deleteField,
+  cancelEdit
+} from 'actions/api';
 import Button from 'components/Button';
+import { savedTabs as savedTabsSelector } from '../modules/selectors';
 
 const styles = (theme) => ({
   root: {
@@ -162,9 +169,9 @@ const styles = (theme) => ({
 const FieldList = (props) => {
   const {
     editingField,
-    editField,
-    cancelEdit,
-    deleteField,
+    edit,
+    cancel,
+    delete: remove,
     savedTabs,
     classes
   } = props;
@@ -211,15 +218,15 @@ const FieldList = (props) => {
         <Column small={3} className={`${classes.fieldButtons}`}>
           <Button
             variant='text'
-            onClick={field.id === editingId ? cancelEdit : () => editField(field)}
+            onClick={field.id === editingId ? cancel() : edit(field)}
             className={classes.flexButton}
             style={{ color: '#bbbbff' }}
-            icon={field.id === editingId ? <CancelIcon onClick={cancelEdit} /> : <EditIcon />}
+            icon={field.id === editingId ? <CancelIcon onClick={cancel} /> : <EditIcon />}
           />
           {!(field.id === editingId) && (
             <Button
               variant='text'
-              onClick={() => deleteField(field.id)}
+              onClick={() => remove(field.id)}
               className={classes.flexButton}
               style={{ color: '#ffbbbb' }}
               icon={<DeleteIcon />}
@@ -234,7 +241,7 @@ const FieldList = (props) => {
     <Fragment>
       {savedTabs.map((tab, i) => (
         <ExpansionPanel
-          key={i}
+          key={tab.idx}
           className={classes.expansionPanel}
           defaultExpanded={i === 0}>
           <ExpansionPanelSummary
@@ -248,8 +255,7 @@ const FieldList = (props) => {
             }}>
             <Column>
               <Typography variant='subtitle2' className={classes.tabNumber}>
-                {'Tab '}
-                {i + 1}
+                {`Tab ${i + 1}`}
               </Typography>
             </Column>
             <Column>
@@ -259,8 +265,7 @@ const FieldList = (props) => {
             </Column>
             <Column>
               <Typography variant='subtitle2' className={classes.tabCount}>
-                {tab.fields.length}
-                {' Fields'}
+                {`${tab.fields.length} Fields`}
               </Typography>
             </Column>
           </ExpansionPanelSummary>
@@ -273,13 +278,27 @@ const FieldList = (props) => {
   );
 };
 
-FieldList.propTypes = {
-  savedTabs    : PropTypes.array.isRequired,
-  cancelEdit   : PropTypes.func.isRequired,
-  editingField : PropTypes.object,
-  editField    : PropTypes.func.isRequired,
-  deleteField  : PropTypes.func.isRequired,
-  classes      : PropTypes.object.isRequired
+const mapActionCreators = {
+  edit:   editField,
+  delete: deleteField,
+  cancel: cancelEdit
 };
 
-export default withStyles(styles)(FieldList);
+const mapStateToProps = (state) => ({
+  savedTabs:     savedTabsSelector(state)
+});
+
+FieldList.propTypes = {
+  savedTabs:    PropTypes.arrayOf(PropTypes.object).isRequired,
+  editingField: PropTypes.shape({
+    type:    PropTypes.string.isRequired,
+    tabName: PropTypes.string.isRequired,
+    id:      PropTypes.string.isRequired,
+    label:   PropTypes.string
+  }).isRequired,
+  classes:      PropTypes.instanceOf(Object).isRequired,
+  edit:         PropTypes.func.isRequired,
+  delete:       PropTypes.func.isRequired,
+  cancel:       PropTypes.func.isRequired
+};
+export default connect(mapStateToProps, mapActionCreators)(withStyles(styles)(FieldList));

@@ -17,10 +17,10 @@ const SliderForm = createComponent(
     ...props,
     name,
     value,
-    onChange: (event, value) => {
-      onChange(value);
+    onChange: (event, fieldVal) => {
+      onChange(fieldVal);
       if (onChangeFromField) {
-        onChangeFromField(value);
+        onChangeFromField(fieldVal);
       }
     }
   })
@@ -50,9 +50,9 @@ const styles = (theme) => ({
 
 class Slider extends Component {
   static propTypes = {
-    classes:      PropTypes.object.isRequired,
+    classes:      PropTypes.instanceOf(Object).isRequired,
     mode:         PropTypes.string.isRequired,
-    input:        PropTypes.object.isRequired,
+    input:        PropTypes.instanceOf(Object).isRequired,
     label:        PropTypes.string,
     valueDisplay: PropTypes.func,
     min:          PropTypes.number,

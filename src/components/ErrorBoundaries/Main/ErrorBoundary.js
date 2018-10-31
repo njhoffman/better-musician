@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ErrorBoundary, FallbackView } from './WithErrorHandler';
 
 // TODO: put this in utils
 const curry = (fn) => {
@@ -30,11 +31,9 @@ const curry = (fn) => {
   return _curry;
 };
 
-let __ErrorBoundary;
 const exports = {};
-if (process.env.NODE_ENV === 'development' || process.env.ERROR_ENV === 'development') {
-  const { ErrorBoundary, FallbackView } = require('./WithErrorHandler');
 
+const getDevBoundary = () => {
   const withErrorHandler = curry((FallbackComponent, Component) => {
     const WithErrorHandler = props => {
       const { onError } = props;
@@ -48,18 +47,18 @@ if (process.env.NODE_ENV === 'development' || process.env.ERROR_ENV === 'develop
     WithErrorHandler.propTypes = { onError: PropTypes.func.isRequired };
     return WithErrorHandler;
   });
-  __ErrorBoundary = ErrorBoundary;
-  exports.ErrorBoundary = ErrorBoundary;
-  exports.FallbackView = FallbackView;
-  exports.withErrorHandler = withErrorHandler;
-  exports.errorHandlerDecorator = withErrorHandler(FallbackView);
-} else {
+  return { withErrorHandler, ErrorBoundary };
+};
+
+const getProdBoundary = () => {
   // production or other env (not development)
   // NOOP ErrorBoundary
-  class ErrorBoundary extends React.Component {
+  class ErrorBoundaryProd extends React.Component {
     static propTypes = {
       onError:  PropTypes.func.isRequired,
-      children: PropTypes.any.isRequired
+      children: PropTypes.anyOfType([
+        PropTypes.node, PropTypes.object
+      ]).isRequired
     }
 
     componentDidCatch(error, info) {
@@ -72,7 +71,8 @@ if (process.env.NODE_ENV === 'development' || process.env.ERROR_ENV === 'develop
     }
 
     render() {
-      return this.props.children;
+      const { children } = this.props;
+      return children;
     }
   }
   // NOOP HOC
@@ -88,11 +88,28 @@ if (process.env.NODE_ENV === 'development' || process.env.ERROR_ENV === 'develop
     WithErrorHandler.propTypes = { onError: PropTypes.func.isRequired };
     return WithErrorHandler;
   });
-  __ErrorBoundary = ErrorBoundary;
-  exports.ErrorBoundary = ErrorBoundary;
-  exports.withErrorHandler = withErrorHandler;
-  exports.errorHandlerDecorator = withErrorHandler(void 0);
-}
+
+  return { withErrorHandler, ErrorBoundary: ErrorBoundaryProd };
+};
+
+const getErrorBoundary = () => {
+  const isDev = process.env.NODE_ENV === 'development' || process.env.ERROR_ENV === 'development';
+  const { ErrorBoundary: __ErrorBoundary, withErrorHandler } = isDev ? getDevBoundary() : getProdBoundary();
+  if (isDev) {
+    exports.ErrorBoundary = ErrorBoundary;
+    exports.FallbackView = FallbackView;
+    exports.withErrorHandler = withErrorHandler;
+    exports.errorHandlerDecorator = withErrorHandler(FallbackView);
+  } else {
+    exports.ErrorBoundary = ErrorBoundary;
+    exports.withErrorHandler = withErrorHandler;
+    exports.errorHandlerDecorator = withErrorHandler();
+  }
+  return __ErrorBoundary;
+};
+
+const errorBoundary = getErrorBoundary();
 
 export { exports };
-export default __ErrorBoundary;
+
+export default errorBoundary;

@@ -16,40 +16,43 @@ import DrawerMenuLink from './DrawerMenuLink';
 const styles = (theme) => ({ });
 
 const GoogleIcon = (props) => (
-  <img src={googleIcon} style={{ height: '1.75em' }} {...props} />
+  <img src={googleIcon} style={{ height: '1.75em' }} alt='Google' {...props} />
 );
 const FacebookIcon = (props) => (
-  <img src={facebookIcon} style={{ height: '1.25em' }} {...props} />
+  <img src={facebookIcon} style={{ height: '1.25em' }} alt='Facebook' {...props} />
 );
-const SignedOut = ({ isOpen, ...props }) => (
-  <Drawer open={isOpen} onClose={props.hideDrawerMenu}>
-    <DrawerMenuLink link='/' label='Home' {...props} />
-    <DrawerMenuLink link='/login' label='Login' {...props} />
-    <DrawerMenuLink link='/register' label='Register' {...props} />
-    <DrawerMenuLink link='/reset' label='Reset' {...props} />
-    <DrawerMenuLink link='/contact' label='Contact' {...props} />
-    <Divider />
-    <DrawerMenuLink
-      Icon={FacebookIcon}
-      label='Facebook Sign In'
-      loginLink='facebook'
-      {...props}
-    />
-    <DrawerMenuLink
-      Icon={GoogleIcon}
-      label='Google Sign In'
-      loginLink='google'
-      {...props}
-    />
-    <DrawerMenuLink
-      link='/login'
-      Icon={EmailIcon}
-      label='Email'
-      loginLink='email'
-      {...props}
-    />
-  </Drawer>
-);
+const SignedOut = ({ isOpen, ...props }) => {
+  const { hideDrawerMenu } = props;
+  return (
+    <Drawer open={isOpen} onClose={hideDrawerMenu}>
+      <DrawerMenuLink link='/' label='Home' {...props} />
+      <DrawerMenuLink link='/login' label='Login' {...props} />
+      <DrawerMenuLink link='/register' label='Register' {...props} />
+      <DrawerMenuLink link='/reset' label='Reset' {...props} />
+      <DrawerMenuLink link='/contact' label='Contact' {...props} />
+      <Divider />
+      <DrawerMenuLink
+        Icon={FacebookIcon}
+        label='Facebook Sign In'
+        loginLink='facebook'
+        {...props}
+      />
+      <DrawerMenuLink
+        Icon={GoogleIcon}
+        label='Google Sign In'
+        loginLink='google'
+        {...props}
+      />
+      <DrawerMenuLink
+        link='/login'
+        Icon={EmailIcon}
+        label='Email'
+        loginLink='email'
+        {...props}
+      />
+    </Drawer>
+  );
+};
 
 SignedOut.propTypes = {
   hideDrawerMenu : PropTypes.func.isRequired,
@@ -69,7 +72,11 @@ const SignedIn = ({ isOpen, endpoint, authSignOut, hideDrawerMenu, ...props }) =
     <DrawerMenuLink
       label='Sign Out'
       Icon={SignOutIcon}
-      onClick={() => authSignOut(endpoint).then(hideDrawerMenu).catch(() => {})}
+      onClick={() => (
+        authSignOut(endpoint)
+          .then(hideDrawerMenu)
+          .catch(() => {})
+      )}
       loginLink
       {...props}
     />

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Chip as MatChip, withStyles } from '@material-ui/core';
+import { FIELD_EDIT } from 'constants/ui';
 
 const styles = (theme) => ({
   root: {
@@ -33,12 +34,18 @@ const Chip = ({
   />
 );
 
+Chip.defaultProps = {
+  label: '',
+  viewType: FIELD_EDIT,
+  style: {}
+};
+
 Chip.propTypes = {
   label:    PropTypes.string,
   viewType: PropTypes.string,
-  meta:     PropTypes.object,
-  style:    PropTypes.object,
-  input:    PropTypes.object.isRequired
+  meta:     PropTypes.instanceOf(Object).isRequired,
+  style:    PropTypes.instanceOf(Object),
+  input:    PropTypes.instanceOf(Object).isRequired
 };
 
 export default withStyles(styles)(Chip);

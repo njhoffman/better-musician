@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'redux-form';
 import { Column } from 'react-foundation';
 
-import { FIELD_VIEW, FIELD_EDIT, FIELD_ADD } from 'constants/ui';
 import FormRow from './FormRow';
 import Select from './Select';
 import MultiSelect from './MultiSelect';
@@ -57,39 +56,6 @@ const renderField = ({ type, ...props }) => {
   }
   return (<Checkbox {...props} />);
 };
-
-const styles = (theme) => ({
-  formColumn: {
-  },
-  dirtyField: {
-    // MuiInputBaseRoot
-    // boxShadow: '0px 0px 20px 1px #18423b',
-    // '&:before': {
-    //   left: 0,
-    //   right: 0,
-    //   bottom: 0,
-    //   content: "&nbsp;",
-    //   position: 'absolute',
-    //   transition: 'border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-    //   borderBottom: '1px solid rgba(0, 0, 0, 0.42)',
-    //   pointerEvents: 'none'
-    // },
-    // '&:after': {
-    //   transform: 'scaleX(1)',
-    //   left: 0,
-    //   right: 0,
-    //   bottom: 0,
-    //   content: "",
-    //   position: 'absolute',
-    //   transform: 'scaleX(0)',
-    //   transition: 'transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms',
-    //   borderBottom: '2px solid #1976d2',
-    //   pointerEvents: 'none',
-    // }
-  }
-});
-
-
 const FormField = ({
   small, medium, large, centerOnSmall, variant, classes, ...props
 }) => (
@@ -106,10 +72,24 @@ const FormField = ({
   </Column>
 );
 
+FormField.defaultProps = {
+  centerOnSmall: false,
+  style:         {},
+  large:         8,
+  medium:        10,
+  small:         12,
+  type:          4 // checkbox
+};
+
 FormField.propTypes = {
   centerOnSmall: PropTypes.bool,
-  type:          PropTypes.any, // TODO: combine type and field.typeName attributes
-  style:         PropTypes.object,
+  type:          PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.node,
+    PropTypes.func
+  ]), // TODO: combine type and field.typeName attributes
+  style:         PropTypes.instanceOf(Object),
   small:         PropTypes.number,
   medium:        PropTypes.number,
   large:         PropTypes.number
@@ -133,7 +113,7 @@ FormField.propTypes = {
 export {
   Select,
   MultiSelect,
-  Textbox,
+  TextboxField,
   Slider,
   Stars,
   NumberField as Number,
@@ -145,3 +125,34 @@ export {
 };
 
 export default FormField;
+
+// const styles = (theme) => ({
+//   dirtyField: {
+//     MuiInputBaseRoot
+//     boxShadow: '0px 0px 20px 1px #18423b',
+//     '&:before': {
+//       left: 0,
+//       right: 0,
+//       bottom: 0,
+//       content: "&nbsp;",
+//       position: 'absolute',
+//       transition: 'border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+//       borderBottom: '1px solid rgba(0, 0, 0, 0.42)',
+//       pointerEvents: 'none'
+//     },
+//     '&:after': {
+//       transform: 'scaleX(1)',
+//       left: 0,
+//       right: 0,
+//       bottom: 0,
+//       content: "",
+//       position: 'absolute',
+//       transform: 'scaleX(0)',
+//       transition: 'transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms',
+//       borderBottom: '2px solid #1976d2',
+//       pointerEvents: 'none',
+//     }
+//   }
+// });
+//
+//

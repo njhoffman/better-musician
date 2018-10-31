@@ -14,7 +14,7 @@ import { init as initLog } from 'shared/logger';
 import ErrorBoundary from 'components/ErrorBoundaries/Main';
 import devTools from 'components/DevTools/DevTools';
 
-const { info, debug, warn } = initLog('app');
+const { info, debug, error } = initLog('app');
 const initialState = window.__INITIAL_STATE__;
 const history = createBrowserHistory();
 const store = createStore(initialState, history, appConfig.dev);
@@ -25,8 +25,16 @@ const themes = processThemes(appConfig.themes);
 const theme = themes.steelBlue.dark;
 const RedBox = require('redbox-react').default;
 
-const onError = (error, errorInfo, props) => {
-  warn('App.onError:', error, errorInfo, props);
+const onError = (err, { componentStack }, props) => {
+  error(`Application Error: ${err.name} ${componentStack.split('\n')[0]}`);
+  // error.framesToPop
+  componentStack.split('\n').forEach(cs => {
+    error(cs);
+  });
+  /* eslint-disable no-console */
+  console.error(err);
+  console.info('Available Props during error capture', props);
+  /* eslint-enable no-console */
 };
 
 const render = (Component) => {
@@ -50,8 +58,8 @@ const render = (Component) => {
   startMemoryStats();
 };
 
-const renderError = (error) => {
-  ReactDOM.render(<RedBox error={error} />, MOUNT_NODE);
+const renderError = (err) => {
+  ReactDOM.render(<RedBox error={err} />, MOUNT_NODE);
 };
 
 const renderDev = () => {
@@ -60,8 +68,8 @@ const renderDev = () => {
     const NextApp = require('components/AppContainer').default;
     /* eslint-enable global-require */
     render(NextApp);
-  } catch (error) {
-    renderError(error);
+  } catch (err) {
+    renderError(err);
   }
 };
 

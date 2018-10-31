@@ -32,10 +32,8 @@ const createTextbox = (Component) => ({
       disableUnderline: mode === FIELD_VIEW || disableUnderline,
       disabled: mode === FIELD_VIEW || disabled,
       autoComplete: 'off',
+      style,
       ...inputProps
-    }}
-    inputProps={{
-      style
     }}
     {...{ ...props, meta, fullWidth: fullWidth !== false }}
   />

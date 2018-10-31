@@ -1,33 +1,34 @@
-const argv = require('yargs').argv;
-const webpack = require('webpack');
 const _ = require('lodash');
+const { argv } = require('yargs');
+const webpack = require('webpack');
 
 const logger = require('../../shared/logger')('app:config:webpack');
+const initLoader = require('./loaders');
 const baseConfig = require('./base.js');
+const devConfig = require('./development');
+const prodConfig = require('./production');
 
 module.exports = (config) => {
   const { __TEST__, __API_URL__ } = config.globals;
-
-  _.merge(config.webpack, baseConfig);
-  const loaders = require('./loaders')(config);
-
   logger.info(`API Path Global: ${__API_URL__}`);
-
-  config.webpack.mode = config.env === 'production' ? 'production' : 'development';
-
   const APP_ENTRY = config.paths.client('app.js');
-  config.webpack.entry.app.push(APP_ENTRY);
-  config.webpack.output.path = config.paths.dist();
 
-  _.merge(config.webpack.externals.webpackVariables, { apiUrl: `${__API_URL__}` });
+  const wpConfig = {
+    ...baseConfig,
+    module: { rules: initLoader(config) },
+    mode: config.env === 'production' ? 'production' : 'development',
+    output: { path: config.paths.dist() },
+    plugins: [
+      new webpack.DefinePlugin(config.globals)
+    ],
+    externals: []
+  };
 
-  config.webpack.plugins = [
-    new webpack.DefinePlugin(config.globals)
-  ];
+  wpConfig.entry.app.push(APP_ENTRY);
 
   // exit on errors during testing so that they do not get skipped and misreported
   if (__TEST__ && !argv.watch) {
-    config.webpack.plugins.push(function () {
+    config.webpack.plugins.push(function handleTestingErrors() {
       this.plugin('done', (stats) => {
         if (stats.compilation.errors.length) {
           // pretend no assets were generated, prevents tests from running to make warnings noticeable
@@ -39,16 +40,17 @@ module.exports = (config) => {
     // TODO: Don't split bundles during testing, since we only want import one bundle
   }
 
-  config.webpack.module.rules = loaders;
-
-  const webpackEnv = config.webpack.mode === 'production'
-    ? require('./production')(config)
-    : require('./development')(config);
-
-  _.merge(config.webpack, webpackEnv, { plugins: [].concat(webpackEnv.plugins, config.webpack.plugins) });
-  return config.webpack;
+  _.merge(wpConfig.externals.webpackVariables, { apiUrl: `${__API_URL__}` });
+  const webpackEnv = config.webpack.mode === 'production' ? prodConfig(config) : devConfig(config);
 
   // const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
   // const smp = new SpeedMeasurePlugin({ outputFormat: 'human' });
   // return smp.wrap(config.webpack);
+
+  _.merge(
+    wpConfig,
+    webpackEnv,
+    { plugins: [].concat(wpConfig.plugins, webpackEnv.plugins) }
+  );
+  return wpConfig;
 };

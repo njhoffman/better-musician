@@ -1,7 +1,9 @@
 const isNodeJS = process.env.NODE;
+const browserLogger = require('./browser');
+const terminalLogger = require('./terminal');
 
 if (isNodeJS) {
-  module.exports = exports = require('./terminal');
+  module.exports = terminalLogger;
 } else {
-  module.exports = exports = require('./browser');
+  module.exports = browserLogger;
 }

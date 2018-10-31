@@ -4,10 +4,10 @@ import * as API from 'constants/api';
 const initialState = {
   loading: false,
   auth: {
-    loading: true,
-    errors: null,
-    config: null,
-    endpointKeys: null,
+    loading:            true,
+    errors:             null,
+    config:             null,
+    endpointKeys:       null,
     defaultEndpointKey: null,
     currentEndpointKey: null
   },
@@ -17,13 +17,13 @@ const initialState = {
     screen: {}
   },
   dev: {
-    showInspector: false,
-    showChart: false,
-    showToolbar: false,
-    showExtension: false,
+    showInspector:    false,
+    showChart:        false,
+    showToolbar:      false,
+    showExtension:    false,
     inspectorOptions: {},
-    chartOptions: {},
-    loggerOptions: {}
+    chartOptions:     {},
+    loggerOptions:    {}
   }
 };
 

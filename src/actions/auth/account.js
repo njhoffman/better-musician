@@ -2,11 +2,11 @@ import {
   getDestroyAccountUrl,
   setCurrentEndpointKey,
   getDefaultEndpointKey,
-  getPasswordUpdateUrl
+  getPasswordResetUrl
 }  from 'utils/auth/sessionStorage';
 import fetch, { parseResponse } from 'utils/fetch';
 import * as A from 'constants/auth';
-import { storeCurrentEndpointKey } from './configure';
+import { storeCurrentEndpointKey } from 'actions/auth';
 
 export const updatePasswordFormUpdate = (endpoint, key, value) =>
   ({ type: A.UPDATE_PASSWORD_FORM_UPDATE, endpoint, key, value });
@@ -32,7 +32,7 @@ export const destroyAccountError = (errors, endpoint) =>
 export const updatePassword = (body, endpoint) => dispatch => {
   dispatch(updatePasswordStart(endpoint));
 
-  return fetch(getPasswordUpdateUrl(endpoint), {
+  return fetch(getPasswordResetUrl(endpoint), {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'

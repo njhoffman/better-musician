@@ -53,12 +53,16 @@ const LoadingIndicator = ({ isLoading, pastDelay, error, classes, theme }) => (
   </Column>
 );
 
+LoadingIndicator.defaultProps = {
+  error: null
+};
+
 LoadingIndicator.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
+  classes:   PropTypes.instanceOf(Object).isRequired,
+  theme:     PropTypes.instanceOf(Object).isRequired,
   isLoading: PropTypes.bool.isRequired,
   pastDelay: PropTypes.bool.isRequired,
-  error: PropTypes.object
+  error:     PropTypes.instanceOf(Object)
 };
 
 export default withTheme()(withStyles(styles)(LoadingIndicator));

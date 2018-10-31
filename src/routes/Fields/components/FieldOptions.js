@@ -31,15 +31,20 @@ const styles = (theme) => ({
 
 class FieldOptions extends Component {
   static propTypes = {
-    fields: PropTypes.any.isRequired
+    classes: PropTypes.instanceOf(Object).isRequired,
+    fields: PropTypes.oneOfType([
+      PropTypes.array,
+      PropTypes.object
+    ]).isRequired
   }
 
   state = {
     optionText : ''
   };
 
-  addOption(fields) {
+  addOption() {
     const { optionText } = this.state;
+    const { fields } = this.props;
     fields.push(optionText.trim());
     this.setState({
       optionText: ''
@@ -47,7 +52,7 @@ class FieldOptions extends Component {
   }
 
   render() {
-    const { classes, fields } = this.props;
+    const { classes, fields: subFields } = this.props;
     const { optionText } = this.state;
     return (
       <Fragment>
@@ -61,7 +66,7 @@ class FieldOptions extends Component {
             />
             <Button
               variant='contained'
-              onClick={() => this.addOption(fields)}
+              onClick={() => this.addOption()}
               className={classes.addButton}
               size='small'
               secondary
@@ -71,9 +76,9 @@ class FieldOptions extends Component {
         </FormRow>
         <FormRow>
           <Column small={12} className={classes.chips}>
-            {fields.map((option, index, fieldsRef) => (
+            {subFields.map((option, index, fieldsRef) => (
               <Field
-                key={index}
+                key={option.id}
                 name={`${option}`}
                 component={Chip}
                 onDelete={() => fieldsRef.remove(index)}

@@ -2,60 +2,70 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { oAuthSignIn } from 'actions/auth/signin';
 import Button from './Button';
-// import { oAuthSignIn as _oAuthSignIn } from 'redux-auth';
 
-// hook for rewire
-// var oAuthSignIn = _oAuthSignIn;
+const handleClick = (e, { next, dispatch, provider, signInParams }) => (
+  dispatch(oAuthSignIn({
+    provider,
+    params: signInParams,
+    endpointKey: this.getEndpoint()
+  }))
+    .then(next)
+    .catch(() => {})
+);
 
-class OAuthSignInButton extends React.Component {
-  static propTypes = {
-    auth: PropTypes.object,
-    provider: PropTypes.string.isRequired,
-    signInParams: PropTypes.object,
-    icon: PropTypes.object,
-    endpoint: PropTypes.string,
-    dispatch: PropTypes.func.isRequired,
-    next: PropTypes.func,
-    className: PropTypes.string
-  };
+const OAuthSignInButton = ({
+  provider,
+  isFetching,
+  signInParams,
+  syncErrors,
+  icon,
+  isSignedIn,
+  endpoint,
+  dispatch,
+  next,
+  className,
+  label,
+  ...props
+}) => (
+  <Button
+    loading={isFetching}
+    primary
+    icon={icon}
+    className={`${className} oauth-sign-in-submit`}
+    disabled={Boolean(isSignedIn || syncErrors || isFetching)}
+    onClick={(e) => handleClick(e, { next, dispatch, provider, signInParams })}
+    {...props}
+  />
+);
 
-  static defaultProps = {
-    signInParams: {},
-    label: 'OAuth Sign In',
-    icon: ExitToAppIcon
-  };
+OAuthSignInButton.propTypes = {
+  auth:         PropTypes.instanceOf(Object).isRequired,
+  provider:     PropTypes.string.isRequired,
+  signInParams: PropTypes.instanceOf(Object),
+  icon:         PropTypes.instanceOf(Object),
+  endpoint:     PropTypes.string.isRequired,
+  dispatch:     PropTypes.func.isRequired,
+  next:         PropTypes.func,
+  className:    PropTypes.string,
+  label:        PropTypes.string
+};
 
-  getEndpoint() {
-    return (this.props.endpoint || false);
-  }
+OAuthSignInButton.defaultProps = {
+  className: '',
+  next: (() => {}),
+  signInParams: {},
+  label: 'OAuth Sign In',
+  icon: ExitToAppIcon
+};
 
-  handleClick() {
-    // this.props.dispatch(oAuthSignIn({
-    //   provider: this.props.provider,
-    //   params: this.props.signInParams,
-    //   endpointKey: this.getEndpoint()
-    // }))
-    //   .then(this.props.next)
-    //   .catch(() => {});
-  }
+const mapStateToProps = (state) => ({
+  config:      state.config,
+  isSignedIn:  state.user.isSignedIn,
+  errors:      state.api.auth.login.errors || [],
+  syncErrors:  state.form.login && state.form.login.syncErrors,
+  isFetching:  state.api.auth.login.loading
+});
 
-  render() {
-    const disabled = false;
-    const loading = false;
-
-    return (
-      <Button
-        loading={loading}
-        primary
-        icon={this.props.icon}
-        className={`${this.props.className} oauth-sign-in-submit`}
-        disabled={disabled}
-        onClick={() => this.handleClick()}
-        {...this.props}
-      />
-    );
-  }
-}
-
-export default connect(({ auth }) => ({ auth }))(OAuthSignInButton);
+export default connect(mapStateToProps)(OAuthSignInButton);

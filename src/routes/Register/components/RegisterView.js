@@ -9,7 +9,13 @@ import SocialIcon from 'components/SocialIcon';
 import { withRouter } from 'react-router';
 import EmailSignUpForm from './EmailSignUpForm';
 
-const styles = () => ({
+const styles = (theme) => ({
+  root: {
+    textAlign: 'center',
+    [theme.breakpoints.down('sm')]: {
+      padding: '0px'
+    }
+  },
   registerContainer: {
     textAlign: 'center',
     margin: '30px',
@@ -22,24 +28,34 @@ const styles = () => ({
     width: '100%',
     marginBottom: '2em',
     '&:before': {
-      content: ' ',
+      content: '""',
       display: 'table-cell',
       width: '42%',
       borderBottom: '1px solid rgba(255,255,255,0.1)'
     },
     '&:after': {
-      content: ' ',
+      content: '""',
       display: 'table-cell',
       width: '42%',
       borderBottom: '1px solid rgba(255,255,255,0.1)'
-    }
-    // span {
-    //   display: table-cell;
-    //   width: 16%;
-    //   padding: 0 0.5em;
-    //   position: relative;
-    //   top: .6em;
-    // }
+    },
+  },
+  dividerText: {
+    display: 'table-cell',
+    width: '16%',
+    padding: '0 0.5em',
+    position: 'relative',
+    top: '.6em'
+  },
+  facebookButton: {
+    width: '250px',
+    margin: '5px',
+    background: '#4c69ba'
+  },
+  googleButton: {
+    width: '250px',
+    margin: '5px',
+    background: '#4285f4'
   }
 });
 
@@ -48,10 +64,14 @@ export const RegisterView = ({
   classes,
   ...props
 }) => (
-  <Column small={12} medium={10} large={8}>
+  <Column small={12} medium={8} large={6} className={classes.root}>
     <Paper elevation={5} className={classes.contentContainer}>
       <div className={classes.registerContainer}>
-        <Typography variant='h2'>Sign Up for instrumental.io</Typography>
+        <Typography variant='body1'>
+          Register for
+          <br />
+          <i>BetterMusician.io</i>
+        </Typography>
         <Typography>It&rsquo;s free. It&rsquo;s easy. It takes 5 seconds.</Typography>
         <Row>
           <Column>
@@ -59,6 +79,7 @@ export const RegisterView = ({
               label='Sign Up with Facebook'
               primary
               iconAlign='left'
+              className={classes.facebookButton}
               style={{ width: '250px', margin: '5px' }}
               icon={<SocialIcon name='facebook' style={{ height: '1.8em' }} />}
               provider='facebook'
@@ -71,6 +92,7 @@ export const RegisterView = ({
               label='Sign Up With Google'
               primary
               iconAlign='left'
+              className={classes.googleButton}
               style={{ width: '250px', margin: '5px' }}
               icon={<SocialIcon name='google' style={{ height: '1.8em' }} />}
               provider='google'
@@ -78,7 +100,7 @@ export const RegisterView = ({
           </Column>
         </Row>
         <div className={classes.divider}>
-          <Typography>or, sign up with email</Typography>
+          <Typography className={classes.dividerText}>or, sign up with email</Typography>
         </div>
         <EmailSignUpForm next={() => history.push('/profile')} />
       </div>
@@ -87,8 +109,8 @@ export const RegisterView = ({
 );
 
 RegisterView.propTypes = {
-  history: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired
+  history: PropTypes.instanceOf(Object).isRequired,
+  classes: PropTypes.instanceOf(Object).isRequired
 };
 
 const mapActionCreators = { };

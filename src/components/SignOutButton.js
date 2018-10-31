@@ -21,12 +21,15 @@ const SignOutButton = ({
   endpoint,
   dispatch,
   config,
-  user,
+  isFetching,
+  isSignedIn,
+  syncErrors,
   ...props
 }) => (
   <Button
     icon={ActionLock}
-    disabled={!user.isSignedIn}
+    disabled={Boolean(isSignedIn || syncErrors || isFetching)}
+    loading={isFetching}
     label='Sign Out'
     primary
     className='sign-out-submit'
@@ -37,7 +40,8 @@ const SignOutButton = ({
 
 SignOutButton.defaultProps = {
   endpoint:  null,
-  next: () => {}
+  next: () => {},
+  syncErrors: null
 };
 
 
@@ -46,7 +50,17 @@ SignOutButton.propTypes = {
   endpoint: PropTypes.string,
   dispatch: PropTypes.func.isRequired,
   config:   PropTypes.instanceOf(Object).isRequired,
-  user:     PropTypes.instanceOf(Object).isRequired
+  syncErrors:   PropTypes.instanceOf(Object),
+  isFetching:  PropTypes.bool.isRequired,
 };
 
-export default connect(({ config, user }) => ({ config, user }))(SignOutButton);
+const mapStateToProps = (state) => ({
+  config:      state.config,
+  isSignedIn:  state.user.isSignedIn,
+  errors:      state.api.auth.login.errors || [],
+  syncErrors:  state.form.login && state.form.login.syncErrors,
+  isFetching:  state.api.auth.login.loading,
+  signOut
+});
+
+export default connect(mapStateToProps)(SignOutButton);

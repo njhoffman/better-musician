@@ -39,9 +39,9 @@ export const injectReducer = ({ key, history, reducer, store, clearOld = false }
   // if (Object.hasOwnProperty.call(store.asyncReducers, key)) {
   //   return;
   // }
-  store.asyncReducers = clearOld ? {} : store.asyncReducers;
-  store.asyncReducers[key] = reducer;
-  const newReducer = connectRouter(history)(makeRootReducer(store.asyncReducers, models));
+  const asyncRed = clearOld ? {} : store.asyncReducers;
+  asyncRed[key] = reducer;
+  const newReducer = connectRouter(history)(makeRootReducer(asyncRed, models));
   store.replaceReducer(newReducer);
 };
 

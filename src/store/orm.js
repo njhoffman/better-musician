@@ -5,18 +5,22 @@ import models from './models';
 
 const { info } = initLog('orm');
 
-let orm;
+info('Registering new orm');
+const orm = new ORM();
+const clonedModels = _.clone(models);
+orm.register(...clonedModels);
 
-if (!orm) {
-  // don't register again if hot loaded
-  info('Registering new orm');
-  orm = new ORM();
-  // clone to get around redefinining property error
-  // https://github.com/tommikaikkonen/redux-orm/issues/156
-  // TODO: make this work as a singleton!
-  const clonedModels = _.clone(models);
-  orm.register(...clonedModels);
-}
+// // let orm
+// if (!orm) {
+//   // don't register again if hot loaded
+//   info('Registering new orm');
+//   orm = new ORM();
+//   // clone to get around redefinining property error
+//   // https://github.com/tommikaikkonen/redux-orm/issues/156
+//   // TODO: make this work as a singleton!
+//   const clonedModels = _.clone(models);
+//   orm.register(...clonedModels);
+// }
 
 // for users and songs selectors selector
 export { orm };

@@ -25,16 +25,30 @@ const FormRow = ({
   className,
   children,
   ...props
-}) => (
-  <Row className={`${classes.formRow} ${className || ''}`}>
-    {[].concat(children).map((child, i) =>
-      (React.isValidElement(child)
-        ? React.cloneElement(child, { ...props, key: i }) : child))}
-  </Row>
-);
+}) => {
+  const nodes = [].concat(children).map((child, idx) => ({ ...child, idx }));
+  return (
+    <Row className={`${classes.formRow} ${className || ''}`}>
+      {nodes.map((node, i) => (
+        (React.isValidElement(node)
+          ? React.cloneElement(node, { ...props, key: node.idx })
+          : node
+        )
+      ))}
+    </Row>
+  );
+};
+FormRow.defaultProps = {
+  className: ''
+};
+
 FormRow.propTypes = {
-  classes:       PropTypes.object.isRequired,
-  children:      PropTypes.any.isRequired
+  className:   PropTypes.string,
+  classes:     PropTypes.instanceOf(Object).isRequired,
+  children:    PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]).isRequired
 };
 
 export default withStyles(styles)(FormRow);

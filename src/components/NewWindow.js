@@ -6,157 +6,19 @@ import { init as initLog } from 'shared/logger';
 
 const { warn } = initLog('newWindow');
 
-class NewWindow extends PureComponent {
-  static defaultProps = {
-    url: '',
-    name: '',
-    title: '',
-    features: { width: '600px', height: '640px' },
-    onBlock: null,
-    onUnload: null,
-    center: 'parent',
-    copyStyles: true
-  }
-
-  constructor(props) {
-    super(props);
-    this.container = document.createElement('div');
-    this.window = null;
-    this.windowCheckerInterval = null;
-    this.released = false;
-    this.state = {
-      mounted: false
-    };
-  }
-
-  render() {
-    if (!this.state.mounted) return null;
-    const children = React.Children.map(this.props.children, child =>
-      React.cloneElement(child, { ...{ parentWindow: this.window } }));
-    return ReactDOM.createPortal(children, this.container);
-  }
-
-  componentDidMount() {
-    this.openChild();
-    this.setState({ mounted: true });
-  }
-
-  /**
-   * Create the new window when NewWindow component mount.
-   */
-  openChild() {
-    const { url, title, name, features, onBlock, center } = this.props;
-
-    // Prepare position of the new window to be centered against the 'parent' window or 'screen'.
-    if (
-      typeof center === 'string'
-      && (features.width === undefined || features.height === undefined)
-    ) {
-      warn(
-        'width and height window features must be present when a center prop is provided'
-      );
-    } else if (center === 'parent') {
-      features.left = window.top.outerWidth / 2 + window.top.screenX - features.width / 2;
-      features.top = window.top.outerHeight / 2 + window.top.screenY - features.height / 2;
-    } else if (center === 'screen') {
-      const screenLeft =        window.screenLeft !== undefined ? window.screenLeft : screen.left;
-      const screenTop =        window.screenTop !== undefined ? window.screenTop : screen.top;
-
-      const width = window.innerWidth
-        ? window.innerWidth
-        : document.documentElement.clientWidth
-          ? document.documentElement.clientWidth
-          : screen.width;
-      const height = window.innerHeight
-        ? window.innerHeight
-        : document.documentElement.clientHeight
-          ? document.documentElement.clientHeight
-          : screen.height;
-
-      features.left = width / 2 - features.width / 2 + screenLeft;
-      features.top = height / 2 - features.height / 2 + screenTop;
-    }
-
-    // Open a new window.
-    this.window = window.open(url, name, toWindowFeatures(features));
-
-    // When a new window use content from a cross-origin there's no way we can attach event
-    // to it. Therefore, we need to detect in a interval when the new window was destroyed
-    // or was closed.
-    this.windowCheckerInterval = setInterval(() => {
-      if (!this.window || this.window.closed) {
-        this.release();
-      }
-    }, 50);
-
-    // Check if the new window was succesfully opened.
-    if (this.window) {
-      this.window.document.title = title;
-      this.window.document.body.appendChild(this.container);
-
-      // If specified, copy styles from parent window's document.
-      if (this.props.copyStyles) {
-        setTimeout(() => copyStyles(document, this.window.document), 0);
-      }
-
-      // Release anything bound to this component before the new window unload.
-      this.window.addEventListener('beforeunload', () => this.release());
-      window.onunload = () => {
-        if (this.window) {
-          this.window.close();
-        }
-      };
-    } else {
-      // Handle error on opening of new window.
-      if (typeof onBlock === 'function') {
-        onBlock();
+function toWindowFeatures(obj) {
+  return Object.keys(obj)
+    .reduce((features, name) => {
+      const value = obj[name];
+      if (typeof value === 'boolean') {
+        features.push(`${name}=${value ? 'yes' : 'no'}`);
       } else {
-        warn('A new window could not be opened. Maybe it was blocked.');
+        features.push(`${name}=${value}`);
       }
-    }
-  }
-
-  componentWillUnmount() {
-    // close the opened window (if any) when NewWindow will unmount.
-    if (this.window) {
-      this.window.close();
-    }
-  }
-
-  release() {
-    // Release the new window and anything that was bound to it.
-    if (this.released) {
-      return;
-    }
-    this.released = true;
-
-    // Remove checker interval.
-    clearInterval(this.windowCheckerInterval);
-
-    // Call any function bound to the `onUnload` prop.
-    const { onUnload } = this.props;
-
-    if (typeof onUnload === 'function') {
-      onUnload();
-    }
-  }
+      return features;
+    }, [])
+    .join(',');
 }
-
-NewWindow.propTypes = {
-  children: PropTypes.node,
-  url: PropTypes.string,
-  name: PropTypes.string,
-  title: PropTypes.string,
-  features: PropTypes.object,
-  onUnload: PropTypes.func,
-  onBlock: PropTypes.func,
-  center: PropTypes.oneOf(['parent', 'screen']),
-  copyStyles: PropTypes.bool
-};
-
-/**
- * Copy styles from a source document to a target.
- */
 
 function createNewStyleElement(source, rules) {
   const newStyleEl = source.createElement('style');
@@ -186,7 +48,7 @@ function createNewStyleElement(source, rules) {
   return newStyleEl;
 }
 
-function copyStyles(source, target) {
+const copySourceStyles = (source, target) => {
   Array.from(source.styleSheets).forEach(styleSheet => {
     const isStyledComponent = styleSheet.ownerNode.attributes['data-styled-components'];
     // For <style> elements
@@ -219,28 +81,149 @@ function copyStyles(source, target) {
       target.head.appendChild(newLinkEl);
     }
   });
-}
+};
 
-/**
- * Convert features props to window features format (name=value,other=value).
- */
 
-function toWindowFeatures(obj) {
-  return Object.keys(obj)
-    .reduce((features, name) => {
-      const value = obj[name];
-      if (typeof value === 'boolean') {
-        features.push(`${name}=${value ? 'yes' : 'no'}`);
-      } else {
-        features.push(`${name}=${value}`);
+class NewWindow extends PureComponent {
+  static defaultProps = {
+    url: '',
+    name: '',
+    title: '',
+    features: { width: '600px', height: '640px' },
+    onBlock: null,
+    onUnload: null,
+    center: 'parent',
+    copyStyles: true
+  }
+
+  constructor(props) {
+    super(props);
+    this.container = document.createElement('div');
+    this.window = null;
+    this.windowCheckerInterval = null;
+    this.released = false;
+    this.state = {
+      mounted: false
+    };
+  }
+
+  componentDidMount() {
+    this.openChild();
+    this.setState({ mounted: true });
+  }
+
+  componentWillUnmount() {
+    // close the opened window (if any) when NewWindow will unmount.
+    if (this.window) {
+      this.window.close();
+    }
+  }
+
+  openChild() {
+    const { url, title, name, features, onBlock, center, copyStyles } = this.props;
+    const { top, innerWidth, innerHeight, screenTop, screenLeft } = window;
+    const { clientWidth, clientHeight } = document.documentElement;
+    /* eslint-disable no-restricted-globals */
+    const { width: scrWidth, height: scrHeight, left: scrLeft, top: scrTop } = screen;
+    /* eslint-enable no-restricted-globals */
+
+    // Prepare position of the new window to be centered against the 'parent' window or 'screen'.
+    if (typeof center === 'string' && (!features.width || !features.height)) {
+      warn('width and height window features must be present when a center prop is provided');
+    } else if (center === 'parent') {
+      features.left = top.outerWidth / 2 + top.screenX - features.width / 2;
+      features.top = top.outerHeight / 2 + top.screenY - features.height / 2;
+    } else if (center === 'screen') {
+      const width = innerWidth || clientWidth || scrWidth;
+      const height = innerHeight || clientHeight || scrHeight;
+
+      features.left = width / 2 - features.width / 2 + (screenLeft || scrLeft);
+      features.top = height / 2 - features.height / 2 + (screenTop || scrTop);
+    }
+
+    // Open a new window.
+    this.window = window.open(url, name, toWindowFeatures(features));
+
+    // When a new window use content from a cross-origin there's no way we can attach event
+    // to it. Therefore, we need to detect in a interval when the new window was destroyed
+    // or was closed.
+    this.windowCheckerInterval = setInterval(() => {
+      if (!this.window || this.window.closed) {
+        this.release();
       }
-      return features;
-    }, [])
-    .join(',');
+    }, 50);
+
+    // Check if the new window was succesfully opened.
+    if (this.window) {
+      this.window.document.title = title;
+      this.window.document.body.appendChild(this.container);
+
+      // If specified, copy styles from parent window's document.
+      if (copyStyles) {
+        setTimeout(() => copySourceStyles(document, this.window.document), 0);
+      }
+
+      // Release anything bound to this component before the new window unload.
+      this.window.addEventListener('beforeunload', () => this.release());
+      window.onunload = () => {
+        if (this.window) {
+          this.window.close();
+        }
+      };
+    } else if (typeof onBlock === 'function') {
+      // Handle error on opening of new window.
+      onBlock();
+    } else {
+      warn('A new window could not be opened. Maybe it was blocked.');
+    }
+  }
+
+
+  release() {
+    // Release the new window and anything that was bound to it.
+    if (this.released) {
+      return;
+    }
+    this.released = true;
+
+    // Remove checker interval.
+    clearInterval(this.windowCheckerInterval);
+
+    // Call any function bound to the `onUnload` prop.
+    const { onUnload } = this.props;
+
+    if (typeof onUnload === 'function') {
+      onUnload();
+    }
+  }
+
+  render() {
+    const { children } = this.props;
+    const { mounted } = this.state;
+    if (!mounted) {
+      return null;
+    }
+    const newChildren = React.Children.map(children, child => (
+      React.cloneElement(child, ...{ parentWindow: this.window })
+    ));
+    return ReactDOM.createPortal(newChildren, this.container);
+  }
 }
 
+NewWindow.propTypes = {
+  children:   PropTypes.node.isRequired,
+  url:        PropTypes.string,
+  name:       PropTypes.string,
+  title:      PropTypes.string,
+  features:   PropTypes.instanceOf(Object),
+  onUnload:   PropTypes.func,
+  onBlock:    PropTypes.func,
+  center:     PropTypes.oneOf(['parent', 'screen']),
+  copyStyles: PropTypes.bool
+};
+
 /**
- * Component export.
+ * Copy styles from a source document to a target.
  */
 
 export default NewWindow;

@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 
 import ComponentLayout from 'components/DevTools/Cosmos/ComponentLayout';
 import TextField from '@material-ui/core/TextField';
-import textGroups from './TextField.props.js';
+import textGroups from './TextField.props';
 
 const titleStyle = {
   width: '100%',
@@ -17,18 +17,23 @@ export default {
   namespace: 'TextInput',
   name: 'Types',
   component: ComponentLayout,
-  children: textGroups.map((textGroup, i) => (
-    <Grid item key={i}>
-      <Typography variant='body2' style={titleStyle}>
-        {textGroup.title}
-      </Typography>
-      <Grid container spacing={16} justify='center'>
-        {textGroup.props.map((propGroup, i) => (
-          <Grid item key={i}>
-            <TextField {...propGroup} />
-          </Grid>
-        ))}
+  children: textGroups
+    .map((tg, tgIdx) => {
+      const propIds = tg.props.map((tgp, idx) => ({ ...tgp, idx }));
+      return { ...tg, idx: tgIdx, props: propIds };
+    })
+    .map((textGroup) => (
+      <Grid item key={textGroup.idx}>
+        <Typography variant='body2' style={titleStyle}>
+          {textGroup.title}
+        </Typography>
+        <Grid container spacing={16} justify='center'>
+          {textGroup.props.map((propGroup) => (
+            <Grid item key={propGroup.idx}>
+              <TextField {...propGroup} />
+            </Grid>
+          ))}
+        </Grid>
       </Grid>
-    </Grid>
-  ))
+    ))
 };

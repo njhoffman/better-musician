@@ -1,5 +1,4 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const { DefinePlugin } = require('webpack');
 
 module.exports = (config) => ({
   optimization: {
@@ -41,5 +40,5 @@ module.exports = (config) => ({
       }
     }
   },
-  plugins: [ ]
+  plugins: []
 });

@@ -1,9 +1,7 @@
-import FormField from './FormField';
-
-import {
+import FormField, {
   Select,
   MultiSelect,
-  Textbox,
+  TextboxField,
   Slider,
   Stars,
   Number,
@@ -17,7 +15,7 @@ import {
 export {
   Select,
   MultiSelect,
-  Textbox,
+  TextboxField as Text,
   Slider,
   Stars,
   Number,

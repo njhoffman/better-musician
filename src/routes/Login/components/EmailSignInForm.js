@@ -10,6 +10,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Button from 'components/Button';
 import FormField, { FormRow } from 'components/Field';
 import validate from 'utils/validate';
+import { changedFields } from 'selectors/form';
 import { emailSignIn } from 'actions/auth/signin';
 import { init as initLog } from 'shared/logger';
 
@@ -52,7 +53,7 @@ const handleSubmit = (event, props) => {
 
 const EmailSignInForm = ({
   classes,
-  isLoading,
+  isFetching,
   errors,
   loginForm,
   isSignedIn,
@@ -100,8 +101,8 @@ const EmailSignInForm = ({
           label='Sign In'
           primary
           icon={<ExitToAppIcon />}
-          disabled={Boolean(isSignedIn || loginForm.syncErrors)}
-          loading={isLoading}
+          disabled={Boolean(isSignedIn || loginForm.syncErrors || isFetching)}
+          loading={isFetching}
           onClick={(e) => handleSubmit(e, props)}
         />
       </Column>
@@ -123,7 +124,7 @@ EmailSignInForm.propTypes = {
   classes:     PropTypes.instanceOf(Object).isRequired,
   config:      PropTypes.instanceOf(Object).isRequired,
   loginForm:   PropTypes.instanceOf(Object),
-  isLoading:   PropTypes.bool.isRequired,
+  isFetching:  PropTypes.bool.isRequired,
   errors:      PropTypes.arrayOf(PropTypes.object),
   dispatch:    PropTypes.func.isRequired,
   endpoint:    PropTypes.string,
@@ -144,8 +145,9 @@ const mapStateToProps = (state) => ({
   isSignedIn:  state.user.isSignedIn,
   loginForm:   state.form.login,
   errors:      state.api.auth.login.errors || [],
-  syncErrors:  state.form.updateProfileForm.syncErrors,
-  isLoading:   state.api.auth.login.loading,
+  syncErrors:  state.form.login && state.form.login.syncErrors,
+  isFetching:  state.api.auth.login.loading,
+  changed:     changedFields(state.form.login),
   emailSignIn
 });
 

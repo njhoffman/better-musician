@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Column } from 'react-foundation';
 import { reduxForm } from 'redux-form';
-import { updateUser } from 'actions/api';
 import { withRouter } from 'react-router';
 
 import {
@@ -16,9 +15,11 @@ import {
   AppBar, Typography, withStyles
 } from '@material-ui/core';
 
+import { FIELD_VIEW } from 'constants/ui';
+import { updateUser } from 'actions/api';
+import { changedFields } from 'selectors/form';
 import validate from 'utils/validate';
 import Button from 'components/Button';
-import { FIELD_VIEW } from 'constants/ui';
 import FormField, { FormRow }  from 'components/Field';
 
 const styles = (theme) => ({
@@ -78,11 +79,12 @@ export const ProfileView = ({
   updateProfile,
   isTouched,
   errors,
+  changed,
   isFetching,
   syncErrors,
   ...props
 }) => {
-  const disabled = isFetching || !isTouched || Boolean(syncErrors);
+  const disabled = isFetching || Object.keys(changed).length === 0 || Boolean(syncErrors);
   return (
     <Column className={classes.root} small={12} medium={10} large={8}>
       <Paper elevation={5} className={classes.contentContainer}>
@@ -147,6 +149,8 @@ const validateFields = {
 
 ProfileView.defaultProps = {
   isTouched: false,
+  isFetching: false,
+  syncErrors: {},
   errors: []
 };
 
@@ -154,8 +158,11 @@ ProfileView.propTypes = {
   history:       PropTypes.instanceOf(Object).isRequired,
   api:           PropTypes.instanceOf(Object).isRequired,
   updateProfile: PropTypes.func.isRequired,
+  changed:       PropTypes.arrayOf(PropTypes.object).isRequired,
   classes:       PropTypes.instanceOf(Object).isRequired,
-  isTouched:   PropTypes.bool,
+  isTouched:     PropTypes.bool,
+  isFetching:    PropTypes.bool,
+  syncErrors:    PropTypes.instanceOf(Object),
   errors:        PropTypes.arrayOf(PropTypes.object)
 };
 
@@ -167,13 +174,14 @@ const mapStateToProps = (state) => ({
   api:           state.api,
   initialValues: state.user.attributes,
   settings:      state.user.attributes,
-  isTouched:   state.form.updateProfileForm && state.form.updateProfileForm.anyTouched,
+  syncErrors:    state.form.profile ? state.form.profile.syncErrors : {},
+  changed:       changedFields(state.form.profile),
   isFetching:    state.api.user.update.loading,
   errors:        state.api.user.update.errors || []
 });
 
 const profileForm = reduxForm({
-  form: 'updateProfileForm',
+  form: 'profile',
   validate: validate(validateFields)
 })(withStyles(styles)(ProfileView));
 

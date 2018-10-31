@@ -3,65 +3,64 @@ import extend from 'extend';
 
 export const normalizeTokenKeys = (params) => {
   // normalize keys
-  if (params.token) {
-    params['access-token'] = params.token;
-    delete params.token;
+  const parsed = { ...params };
+  if (parsed.token) {
+    parsed['access-token'] = parsed.token;
+    delete parsed.token;
   }
-  if (params.auth_token) {
-    params['access-token'] = params.auth_token;
-    delete params.auth_token;
+  if (parsed.auth_token) {
+    parsed['access-token'] = parsed.auth_token;
+    delete parsed.auth_token;
   }
-  if (params.client_id) {
-    params.client = params.client_id;
-    delete params.client_id;
+  if (parsed.client_id) {
+    parsed.client = parsed.client_id;
+    delete parsed.client_id;
   }
-  if (params.config) {
-    params.endpointKey = params.config;
-    delete params.config;
+  if (parsed.config) {
+    parsed.endpointKey = parsed.config;
+    delete parsed.config;
   }
-
-  return params;
+  return parsed;
 };
 
-const getAnchorSearch = function (location) {
+const getAnchorSearch = (location) => {
   const rawAnchor = location.anchor || '';
   const arr = rawAnchor.split('?');
   return (arr.length > 1) ? arr[1] : null;
 };
 
-const getSearchQs = function (location) {
+const getSearchQs = (location) => {
   const rawQs = location.search || '';
   const qs = rawQs.replace('?', '');
   const qsObj = (qs) ? querystring.parse(qs) : {};
   return qsObj;
 };
 
-const getAnchorQs = function (location) {
+const getAnchorQs = (location) => {
   const anchorQs = getAnchorSearch(location);
   const anchorQsObj = (anchorQs) ? querystring.parse(anchorQs) : {};
   return anchorQsObj;
 };
 
-const stripKeys = function (obj, keys) {
-  for (const q in keys) {
-    delete obj[keys[q]];
-  }
-
-  return obj;
+const stripKeys = (obj, keys) => {
+  const stripped = { ...obj };
+  Object.keys(obj, key => {
+    delete stripped[key];
+  });
+  return stripped;
 };
 
 export function getAllParams(location) {
   return extend({}, getAnchorQs(location), getSearchQs(location));
 }
 
-const buildCredentials = function (location, keys) {
+const buildCredentials = (location, keys) => {
   const params = getAllParams(location);
   const authHeaders = {};
 
-  for (const key of keys) {
+  Object.keys(keys).forEach(key => {
     authHeaders[key] = params[key];
-  }
-
+  });
   return normalizeTokenKeys(authHeaders);
 };
 
@@ -71,7 +70,7 @@ const buildCredentials = function (location, keys) {
 // 2. anchor search (i.e. `#/?key=val`) contains none of the supplied keys
 // 3. all of the keys NOT supplied are presevered in their original form
 // 4. url protocol, host, and path are preserved
-const getLocationWithoutParams = function (currentLocation, keys) {
+const getLocationWithoutParams = (currentLocation, keys) => {
   // strip all values from both actual and anchor search params
   let newSearch   = querystring.stringify(stripKeys(getSearchQs(currentLocation), keys));
   const newAnchorQs = querystring.stringify(stripKeys(getAnchorQs(currentLocation), keys));

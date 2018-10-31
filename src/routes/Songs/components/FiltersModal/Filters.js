@@ -5,14 +5,14 @@ import { Button, Dialog } from '@material-ui/core';
 import { FILTERS_MODAL } from 'constants/ui';
 import { uiHideModal } from 'actions/ui';
 
-export const FiltersModal = (props) => {
+export const FiltersModal = ({ hideModal, isOpen }) => {
   const actions = [
     <Button
       key={0}
       label='Cancel'
       variant='text'
       primary
-      onTouchTap={props.uiHideModal}
+      onTouchTap={hideModal}
     />,
     <Button
       key={1}
@@ -20,7 +20,7 @@ export const FiltersModal = (props) => {
       variant='text'
       primary
       keyboardFocused
-      onTouchTap={props.uiHideModal}
+      onTouchTap={hideModal}
     />
   ];
   return (
@@ -28,19 +28,23 @@ export const FiltersModal = (props) => {
       title='Filters Dialog'
       modal={false}
       actions={actions}
-      open={props.isOpen}>
+      open={isOpen}>
       <p>Filters</p>
     </Dialog>
   );
 };
 
+FiltersModal.defaultProps = {
+  isOpen: false
+};
+
 FiltersModal.propTypes = {
-  uiHideModal: PropTypes.func,
+  hideModal:   PropTypes.func.isRequired,
   isOpen:      PropTypes.bool
 };
 
 const mapDispatchToProps = {
-  uiHideModal
+  hideModal: uiHideModal
 };
 
 const mapStateToProps = (state) => ({

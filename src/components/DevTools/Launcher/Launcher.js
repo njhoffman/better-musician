@@ -43,19 +43,24 @@ const styles = (theme) => ({
 class Launcher extends Component {
   static update = chartToolbarReducer
 
+  static defaultProps = {
+    devConfig: {
+      showChart: false
+    }
+  };
+
   static propTypes = {
-    dispatch: PropTypes.func,
-    classes: PropTypes.object.isRequired,
-    devConfig: PropTypes.object,
-    computedStates: PropTypes.array,
-    actionsById: PropTypes.object,
-    stagedActionIds: PropTypes.array,
-    skippedActionIds: PropTypes.array,
+    dispatch: PropTypes.func.isRequired,
+    classes: PropTypes.instanceOf(Object).isRequired,
+    devConfig: PropTypes.instanceOf(Object),
+    computedStates: PropTypes.arrayOf(PropTypes.object).isRequired,
+    actionsById: PropTypes.instanceOf(Object).isRequired,
+    stagedActionIds: PropTypes.arrayOf(PropTypes.number).isRequired,
+    skippedActionIds: PropTypes.arrayOf(PropTypes.number).isRequired,
     monitorState: PropTypes.shape({
       initialScrollTop: PropTypes.number,
       consecutiveToggleStartId: PropTypes.number
-    }),
-
+    }).isRequired,
     theme: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.string
@@ -70,11 +75,12 @@ class Launcher extends Component {
 
   constructor(props) {
     super(props);
+    const { devConfig } = props;
     this.getRef = this.getRef.bind(this);
     this.toggleChart = this.toggleChart.bind(this);
     this.popupUnload = this.popupUnload.bind(this);
     this.state = {
-      showChart : props.devConfig && props.devConfig.showChart
+      showChart : devConfig && devConfig.showChart
     };
   }
 
@@ -113,20 +119,21 @@ class Launcher extends Component {
 
   render() {
     const theme = this.getTheme();
-    const { container, elements } = this.props.classes;
+    const { classes: { container, elements } } = this.props;
+    const { showChart } = this.state;
 
     const winOptions =  {
-      menubar: 'no',
-      location: 'no',
-      resizable: 'yes',
+      menubar:    'no',
+      location:   'no',
+      resizable:  'yes',
       scrollbars: 'no',
-      statusbar: 'no',
-      toolbar: 'no',
-      width: 1000,
-      height: 1200,
-      left: 3500,
-      top: 50,
-      margin: 0
+      statusbar:  'no',
+      toolbar:    'no',
+      width:      1000,
+      height:     1200,
+      left:       3500,
+      top:        50,
+      margin:     0
     };
 
     return (
@@ -141,10 +148,10 @@ class Launcher extends Component {
             theme={theme}
             values={['Chart']}
             onClick={this.toggleChart}
-            selected={this.state.showChart ? 'Chart' : ''}
+            selected={showChart ? 'Chart' : ''}
           />
         </div>
-        {this.state.showChart && (
+        {showChart && (
           <NewWindow
             title='DevTools Chart'
             features={winOptions}

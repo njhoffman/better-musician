@@ -6,7 +6,7 @@ import {
 
 import ComponentLayout from 'components/DevTools/Cosmos/ComponentLayout';
 import Button from 'components/Button';
-import buttonGroups from './ButtonLoader.props.js';
+import buttonGroups from './ButtonLoader.props';
 
 // const titleWrapperStyle = {
 //   width: '100%',
@@ -22,7 +22,7 @@ const titleStyle = {
 
 const propOverride = { loading: false };
 const modifyCounter = 0;
-const handleLoadStatus = function (count) {
+const handleLoadStatus = function handleLoadStatus(count) {
   propOverride.loading = !propOverride.loading;
   this.setState({ modifyCounter:  count });
 };
@@ -34,7 +34,7 @@ const drawChild = (buttonGroup) => (
     </Typography>
     <Grid container justify='center' spacing={16}>
       {buttonGroup.props.map((propGroup, i) => (
-        <Grid key={i} item>
+        <Grid key={propGroup.idx} item>
           <Button {...propGroup} override={propOverride} />
         </Grid>
       ))}
@@ -53,7 +53,13 @@ const ButtonLoader = {
     modifyCounter
   },
   url: '/',
-  children: buttonGroups.map(drawChild)
+  children: buttonGroups
+    .map((bg) => {
+      // assign ids to props for stupid index keys
+      const propIds = bg.props.map((bgp, idx) => ({ ...bgp, idx }));
+      return ({ ...bg, props: propIds });
+    })
+    .map(drawChild)
 };
 
 export default ButtonLoader;

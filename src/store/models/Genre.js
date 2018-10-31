@@ -3,19 +3,21 @@ import BaseModel from './BaseModel';
 
 class Genre extends BaseModel {
   static get path() {
-    return `/images/genre`;
+    return '/images/genre';
   }
 
   static get defaultImage() {
-    return `_unknown.png`;
+    return '_unknown.png';
   }
 
   static get imageLabel() {
-    return `Unknown Genre`;
+    return 'Unknown Genre';
   }
 
   static findByDisplayName(name) {
-    return this.all().toModelArray().filter(genre => genre.displayName === name)[0];
+    return this.all()
+      .toModelArray()
+      .filter(genre => genre.displayName === name)[0];
   }
 
   static imagesByDisplayName(name) {
@@ -24,15 +26,15 @@ class Genre extends BaseModel {
     return images.map(img => `${Genre.path}/${img}`);
   }
 
-  static reducer(action, Genre/* , session */) {
+  static reducer(action, model/* , session */) {
     const { type } = action;
     switch (type) {
       case 'SONGS_REQUEST':
         // remove all songs when fetching
-        Genre.all().delete();
+        model.all().delete();
         break;
       case 'LOAD_GENRES':
-        Genre.loadData(action.payload, this);
+        model.loadData(action.payload, this);
         break;
       default:
         break;

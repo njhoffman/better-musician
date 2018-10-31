@@ -16,17 +16,10 @@ import {
 
 import Button from 'components/Button';
 import FormField, { FormRow } from 'components/Field';
-import {
-  updateField,
-  addField,
-  editField,
-  deleteField,
-  cancelEdit
-} from 'actions/api';
+import { updateField, addField } from 'actions/api';
 
 import FieldList from './FieldList';
 import FieldOptions from './FieldOptions';
-import { savedTabs as savedTabsSelector } from '../modules/selectors';
 
 const styles = (theme) => ({
   root: {
@@ -57,8 +50,8 @@ const styles = (theme) => ({
 });
 
 export const FieldsView = ({
-  updateField,
-  addField,
+  update,
+  add,
   editingField,
   formValues,
   history,
@@ -81,12 +74,13 @@ export const FieldsView = ({
     8: 'PDF Link'
   };
 
-  const renderExtraFields = (formValues) => {
-    switch (parseInt(formValues.type)) {
+  const renderExtraFields = () => {
+    switch (parseInt(formValues.type, 10)) {
       case 2:
       case 3:
       case 5:
-        return <FieldArray name='options' component={FieldOptions} />;
+      default:
+        return (<FieldArray name='options' component={FieldOptions} />);
     }
   };
 
@@ -121,7 +115,7 @@ export const FieldsView = ({
       label='Add Field'
       labelStyle={{ paddingRight: '5px' }}
       style={{ width: '160px', marginRight: '15px' }}
-      onClick={addField}
+      onClick={add}
       primary
       size='small'
       icon={<AddIcon style={{ marginTop: '-10px' }} />}
@@ -168,7 +162,7 @@ export const FieldsView = ({
               type='text'
             />
           </FormRow>
-          {formValues && renderExtraFields(formValues)}
+          {renderExtraFields()}
           <FormRow className={classes.buttonBar}>
             {editingField && renderEditButtons()}
             {!editingField && renderAddButtons()}
@@ -181,30 +175,31 @@ export const FieldsView = ({
   );
 };
 
+FieldsView.defaultProps = {
+  editingField: null,
+  formValues: null
+};
+
+
 FieldsView.propTypes = {
   editingField: PropTypes.shape({
-    type: PropTypes.string.isRequired,
+    type:    PropTypes.string.isRequired,
     tabName: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-    label: PropTypes.string
+    id:      PropTypes.string.isRequired,
+    label:   PropTypes.string
   }),
-  formValues:   PropTypes.object,
-  updateField:  PropTypes.func.isRequired,
-  addField:     PropTypes.func.isRequired
+  formValues: PropTypes.instanceOf(Object),
+  update:     PropTypes.func.isRequired,
+  add:        PropTypes.func.isRequired
 };
 
 const mapActionCreators = {
-  addField,
-  updateField,
-  editField,
-  deleteField,
-  cancelEdit
+  update: updateField,
+  add:    addField
 };
 
 const mapStateToProps = (state) => ({
-  initialValues: state.FieldsView.editingField,
   editingField:  state.FieldsView.editingField,
-  savedTabs:     savedTabsSelector(state),
   formValues:    state.form.updateFieldsForm ? state.form.updateFieldsForm.values : null
 });
 

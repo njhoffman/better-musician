@@ -83,6 +83,10 @@ const Song = ({
   </Tappable>
 );
 
+Song.defaultProps = {
+  currentSongId: null
+};
+
 Song.propTypes = {
   classes: PropTypes.instanceOf(Object).isRequired,
   currentSongId: PropTypes.string,
@@ -94,7 +98,7 @@ Song.propTypes = {
   }).isRequired,
   showSongModal: PropTypes.func.isRequired,
   maxDifficulty: PropTypes.number.isRequired,
-  theme: PropTypes.object.isRequired
+  theme: PropTypes.instanceOf(Object).isRequired
 };
 
 const mapStateToProps = (state, action) => ({

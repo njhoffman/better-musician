@@ -3,21 +3,26 @@ const memwatch = require('node-memwatch');
 let sUtils;
 let hd = new memwatch.HeapDiff();
 
-const heapDiff = (logger) => {
+const showHeapDiff = (logger) => {
   const { numCommas } = sUtils;
-  // heapDiff
-  const heapDiff = hd.end();
+  const { before, after, change } = hd.end();
+  const nodesAdded = parseInt(change.allocated_nodes, 10) - parseInt(change.freed_nodes, 10);
   logger.info(
-    { color: ['webpackMemoryLabel', 'webpackMemoryValue'] },
-    `%Heap Diff:%\t%${heapDiff.change.size}%   `
-    + `(${heapDiff.before.size} - ${heapDiff.after.size})   `
-    + `(Nodes Added: ${numCommas(parseInt(heapDiff.change.allocated_nodes) - parseInt(heapDiff.change.freed_nodes))})`
+    { color: ['webpackMemoryLabel', 'webpackMemoryValue'] }, [
+      `%Heap Diff:%\t%${change.size}%`,
+      `(${before.size} - ${after.size})`,
+      `(Nodes Added: ${numCommas(nodesAdded)}`
+    ].join('   ')
   );
 
+  const sortByHeapSize = ({ size_bytes: aBytes }, { size_bytes: bBytes }) =>
+    (parseInt(bBytes, 10) - parseInt(aBytes, 10));
+
+
   // don't show heap objects under 100kb
-  const heapObjs = heapDiff.change.details
-    .filter(ho => parseInt(ho.size_bytes) > 102400)
-    .sort((a, b) => (parseInt(b.size_bytes) - parseInt(a.size_bytes)));
+  const heapObjs = change.details
+    .filter(ho => parseInt(ho.size_bytes, 10) > 102400)
+    .sort(sortByHeapSize);
 
   const maxClassLength = heapObjs.reduce((acc, curr) =>
     (curr.what.length > acc ? curr.what.length : acc), 0);
@@ -36,22 +41,27 @@ const heap = (config, sdc, logger) => {
   const memoryMap = {
     heapTotal: 'Heap Total:',
     heapUsed: 'Heap Used:',
-    rss: 'RSS:',
-    external: 'External:'
+    rss: 'RSS:\t',
+    external: 'External:\t'
   };
   Object.keys(memoryMap).forEach(memoryKey => {
-    const memoryAmount = process.memoryUsage()[memoryKey]
-      ? hms(process.memoryUsage()[memoryKey], true) : false;
+    const memoryAmount = process.memoryUsage()[memoryKey];
+    let memoryColor = ['webpackMemoryLabel', 'webpackMemoryValue'];
     if (memoryAmount) {
+      if (memoryAmount > 1073741824) {
+        memoryColor = memoryAmount > 2147483648
+          ? ['webpackMemoryLabelSevere', 'webpackMemoryValueSevere']
+          : ['webpackMemoryLabelWarn', 'webpackMemoryValueWarn'];
+      }
       logger.info(
-        { color: ['webpackMemoryLabel', 'webpackMemoryValue'] },
-        `  %${memoryMap[memoryKey]}%\t%${memoryAmount}%`
+        { color: memoryColor },
+        `  %${memoryMap[memoryKey]}%\t%${hms(memoryAmount, true)}%`
       );
       sdc.gauge(`app_memory_${memoryKey}`, memoryAmount);
     }
   });
   if (config.showHeapDiff) {
-    heapDiff(logger);
+    showHeapDiff(logger);
   }
 };
 

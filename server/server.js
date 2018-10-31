@@ -1,9 +1,9 @@
 const _ = require('lodash');
 const webpack = require('webpack');
-// TODO: make logger for happypack
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
 const compression = require('compression');
 const StatsD = require('node-statsd');
-// const memwatch = require('memwatch-next');
 const memwatch = require('node-memwatch');
 
 const express = require('express');
@@ -51,8 +51,8 @@ if (config.env === 'development') {
   });
 
   // config.middleware.hot.log: process.stdout.write, // webpackLog
-  app.use(require('webpack-dev-middleware')(compiler, devConfig));
-  app.use(require('webpack-hot-middleware')(compiler, config.middleware.hot));
+  app.use(webpackDevMiddleware(compiler, devConfig));
+  app.use(webpackHotMiddleware(compiler, config.middleware.hot));
 
   // static assets from /public
   app.use(express.static(config.paths.public()));

@@ -1,6 +1,6 @@
 import React from 'react';
 import NewWindow from 'components/NewWindow';
-import DevToolsChart  from 'components/DevTools/DevToolsChart';
+import DevToolsChart  from 'components/DevTools/Chart';
 import { init as initLog } from 'shared/logger';
 
 const { info } = initLog('showChart');

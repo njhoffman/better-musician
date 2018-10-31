@@ -48,7 +48,7 @@ const SettingsView = ({
   classes,
   update,
   reset,
-  formTouched,
+  isTouched,
   isFetching,
   errors,
   syncErrors,
@@ -161,17 +161,22 @@ const SettingsView = ({
 
 SettingsView.defaultProps = {
   isTouched: false,
-  errors: []
+  errors: [],
+  syncErrors: {},
+  isFetching: false
 };
 
 SettingsView.propTypes = {
   api:         PropTypes.instanceOf(Object).isRequired,
+  changed:     PropTypes.arrayOf(PropTypes.object).isRequired,
   history:     PropTypes.instanceOf(Object).isRequired,
   setTheme:    PropTypes.func.isRequired,
   update:      PropTypes.func.isRequired,
   reset:       PropTypes.func.isRequired,
   classes:     PropTypes.instanceOf(Object).isRequired,
-  isTouched: PropTypes.bool,
+  isTouched:   PropTypes.bool,
+  isFetching:  PropTypes.bool,
+  syncErrors:  PropTypes.instanceOf(Object),
   errors:      PropTypes.arrayOf(PropTypes.object)
 };
 
@@ -194,8 +199,8 @@ const mapStateToProps = (state) => ({
   api:           state.api,
   initialValues: state.user.attributes,
   settings:      state.user.attributes,
-  isTouched:   state.form.updateSettingsForm && state.form.updateSettingsForm.anyTouched,
-  syncErrors:    state.form.updateSettingsForm.syncErrors,
+  isTouched:     state.form.updateSettingsForm && state.form.updateSettingsForm.anyTouched,
+  syncErrors:    state.form.updateSettingsForm ? state.form.updateSettingsForm.syncErrors : {},
   isFetching:    state.api.user.update.loading,
   errors:        state.api.user.update.errors || []
 });

@@ -125,8 +125,8 @@ export const userUpdateError = (response) => (dispatch) => {
 };
 
 export const updateUser = () => (dispatch, getState) => {
-  const fieldValues = getState().form.updateProfileForm
-    ? getState().form.updateProfileForm.values
+  const fieldValues = getState().form.profile
+    ? getState().form.profile.values
     : getState().form.updateSettingsForm.values;
 
   return dispatch({
@@ -162,8 +162,8 @@ export const settingsUpdateError = (response) => (dispatch) => {
 };
 
 export const updateSettings = () => (dispatch, getState) => {
-  const fieldValues = getState().form.updateProfileForm
-    ? getState().form.updateProfileForm.values
+  const fieldValues = getState().form.profile
+    ? getState().form.profile.values
     : getState().form.updateSettingsForm.values;
 
   return dispatch({

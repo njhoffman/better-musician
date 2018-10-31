@@ -16,7 +16,7 @@ const processThemes = ({ defaults = {}, ...themes }) => {
   defaultTheme.light = _.defaultsDeep(defaults.light, defaultThemes.light, defaultTheme.base);
   defaultTheme.dark = _.defaultsDeep(defaults.dark, defaultThemes.dark, defaultTheme.base);
 
-  const processed = {
+  const toProcess = {
     default: {
       base: processTheme(defaultTheme.base),
       light: processTheme(defaultTheme.light),
@@ -28,7 +28,7 @@ const processThemes = ({ defaults = {}, ...themes }) => {
   _.each(themes, (theme, key) => {
     info(`Processing theme ${key}`);
     const baseTheme = _.defaultsDeep(theme.base, defaultTheme.base);
-    processed[key] = {
+    toProcess[key] = {
       base: processTheme(baseTheme),
       light: processTheme(baseTheme, theme.light),
       dark: processTheme(baseTheme, theme.dark)
@@ -37,17 +37,18 @@ const processThemes = ({ defaults = {}, ...themes }) => {
 
   // assign empty 'theme.app' properties from initialized palette values
   // pointed to  by 'appMap' property values
-  _.each(processed, (theme, key) => {
-    _.each(theme, (variation) => {
-      variation.app = _.defaultsDeep(
-        variation.app,
-        _.mapValues(variation.appMap, mVal => _.get(processed.palette, mVal))
-      );
-      delete variation.appMap;
-    });
-  });
 
-  return processed;
+  const processed = _.map(toProcess, (theme, key) => {
+    const variations = [];
+    _.each(theme, (variation) => {
+      const appVar =  _.defaultsDeep(variation.app, (
+        _.mapValues(variation.appMap, mVal => _.get(processed.palette, mVal))
+      ));
+      delete appVar.appMap;
+      variations.push(appVar);
+    });
+    return processed;
+  });
 };
 
 export default processThemes;

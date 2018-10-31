@@ -80,12 +80,19 @@ const renderSuggestion = ({
   );
 };
 
+renderSuggestion.defaultProps = {
+  highlightedIndex: null,
+  selectedItem: null
+};
+
 renderSuggestion.propTypes = {
   highlightedIndex: PropTypes.number,
-  index: PropTypes.number,
-  itemProps: PropTypes.object,
+  index: PropTypes.number.isRequired,
+  itemProps: PropTypes.instanceOf(Object).isRequired,
   selectedItem: PropTypes.string,
-  suggestion: PropTypes.shape({ label: PropTypes.string }).isRequired,
+  suggestion: PropTypes.shape({
+    label: PropTypes.string
+  }).isRequired,
 };
 
 const AutoComplete = ({
@@ -149,10 +156,18 @@ const AutoComplete = ({
   </FormControl>
 );
 
+AutoComplete.defaultProps = {
+  label: '',
+  options: []
+};
+
 AutoComplete.propTypes = {
   label:   PropTypes.string,
-  options: PropTypes.array,
-  classes: PropTypes.object.isRequired
+  options: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array
+  ]),
+  classes: PropTypes.instanceOf(Object).isRequired
 };
 
 export default withStyles(styles)(AutoComplete);

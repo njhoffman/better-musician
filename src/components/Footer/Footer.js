@@ -108,7 +108,7 @@ const styles = (theme) => ({
 const BlankFooter = ({ classes }) => <Row className={classes.footer} />;
 
 BlankFooter.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.instanceOf(Object).isRequired
 };
 
 const Footer = ({ song, classes, currentView, isSignedIn, ...props }) => (
@@ -119,10 +119,16 @@ const Footer = ({ song, classes, currentView, isSignedIn, ...props }) => (
   </div>
 );
 
+Footer.defaultProps = {
+  song:        null,
+  currentView: null
+};
+
 Footer.propTypes = {
-  song:          PropTypes.object,
+  song:          PropTypes.instanceOf(Object),
   isSignedIn:    PropTypes.bool.isRequired,
-  classes:       PropTypes.object.isRequired
+  classes:       PropTypes.instanceOf(Object).isRequired,
+  currentView:   PropTypes.string
 };
 
 const mapStateToProps = (state) => ({

@@ -66,7 +66,7 @@ export const SongMainTab = ({
   lastNameOptions,
   instrumentOptions,
   genreOptions,
-  maxDifficulty,
+  maxDiff,
   classes,
   variant,
   ...props
@@ -98,16 +98,18 @@ export const SongMainTab = ({
 
     return (
       <Column>
-        <img className={classes.image} src={`${image}`} />
+        <img alt={`${imageLabel}`} className={classes.image} src={`${image}`} />
         <Typography>{imageLabel}</Typography>
         { variant !== MODAL_VARIANT_EDIT && <Button variant='contained' secondary label={buttonLabel} /> }
       </Column>
     );
   };
 
-  const renderStars = (number) => (<Stars className={classes.progressStars} number={parseInt(number)} />);
+  const renderStars = (number) => (
+    <Stars className={classes.progressStars} number={parseInt(number, 10)} />
+  );
 
-  const renderViewFields = (classes) => (
+  const renderViewFields = () => (
     <FormRow className={classes.row}>
       <FormField
         name='title'
@@ -124,7 +126,7 @@ export const SongMainTab = ({
     </FormRow>
   );
 
-  const renderEditFields = (classes) => (
+  const renderEditFields = () => (
     <Fragment>
       <FormRow className={classes.row}>
         <FormField
@@ -165,8 +167,8 @@ export const SongMainTab = ({
           </Row>
         </Column>
       </FormRow>
-      {variant === MODAL_VARIANT_VIEW && renderViewFields(classes)}
-      {variant !== MODAL_VARIANT_VIEW && renderEditFields(classes)}
+      {variant === MODAL_VARIANT_VIEW && renderViewFields()}
+      {variant !== MODAL_VARIANT_VIEW && renderEditFields()}
       <FormRow className={classes.row}>
         <FormField
           name='genre.displayName'
@@ -191,7 +193,7 @@ export const SongMainTab = ({
           type='slider'
           label='Difficulty'
           min={1}
-          max={maxDifficulty}
+          max={maxDiff}
           step={1}
           {...fieldProps}
         />
@@ -210,15 +212,23 @@ export const SongMainTab = ({
   );
 };
 
+SongMainTab.defaultProps = {
+  matchedArtist:     null,
+  lastNameOptions:   [],
+  genreOptions:      [],
+  instrumentOptions: [],
+  maxDiff:           10
+};
+
 SongMainTab.propTypes = {
   lastActiveField:   PropTypes.string.isRequired,
   activeField:       PropTypes.string.isRequired,
-  matchedArtist:     PropTypes.object,
-  lastNameOptions:   PropTypes.any.isRequired,
-  genreOptions:      PropTypes.any.isRequired,
-  instrumentOptions: PropTypes.any.isRequired,
-  maxDifficulty:     PropTypes.number,
-  classes:           PropTypes.object.isRequired,
+  matchedArtist:     PropTypes.instanceOf(Object),
+  lastNameOptions:   PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  genreOptions:      PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  instrumentOptions: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  maxDiff:           PropTypes.number,
+  classes:           PropTypes.instanceOf(Object).isRequired,
   variant:           PropTypes.string.isRequired
 };
 
@@ -226,7 +236,7 @@ const mapStateToProps = (state) => ({
   matchedGenre:      genreMatch(state),
   matchedInstrument: instrumentMatch(state),
   matchedArtist:     artistMatch(state),
-  maxDifficulty:     maxDifficulty(state),
+  maxDiff:           maxDifficulty(state),
   lastNameOptions:   artistLastNames(state),
   genreOptions:      genres(state),
   instrumentOptions: instruments(state)

@@ -1,12 +1,10 @@
 import React from 'react';
 import Icon from '@material-ui/core/Icon';
-import {
-  AddShoppingCart as AddShoppingCartIcon,
-  FileUpload as FileUploadIcon,
-  KeyboardVoice as KeyboardVoiceIcon,
-  Delete as DeleteIcon,
-  Save as SaveIcon
-} from '@material-ui/icons';
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import FileUploadIcon from '@material-ui/icons/CloudUpload';
+import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
+import DeleteIcon from '@material-ui/icons/Delete';
+import SaveIcon from '@material-ui/icons/Save';
 
 export default [{
   title:'Icon Buttons',

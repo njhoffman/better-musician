@@ -47,7 +47,7 @@ export const StatsView = ({ history }) => (
 );
 
 StatsView.propTypes = {
-  history: PropTypes.object.isRequired
+  history: PropTypes.instanceOf(Object).isRequired
 };
 
 const mapActionCreators = {};

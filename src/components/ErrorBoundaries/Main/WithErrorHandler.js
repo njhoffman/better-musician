@@ -38,9 +38,9 @@ class ErrorBoundary extends PureComponent {
 
   render() {
     const { FallbackComponent, children, ..._props } = this.props;
+    const { hasError, error, errorInfo } = this.state;
     // if state contains error and in development environment we render fallback component
-    if (this.state.hasError) {
-      const { error, errorInfo } = this.state;
+    if (hasError) {
       return (
         <FallbackComponent
           {..._props}
@@ -59,8 +59,11 @@ ErrorBoundary.defaultProps = {
 };
 
 ErrorBoundary.propTypes = {
-  children:          PropTypes.any.isRequired,
-  FallbackComponent: PropTypes.func.isRequired,
+  children:          PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.object
+  ]).isRequired,
+  FallbackComponent: PropTypes.func,
   onError:           PropTypes.func.isRequired
 };
 

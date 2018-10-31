@@ -16,24 +16,13 @@ const StatsFooter = ({ classes, stats }) => (
       <div className={classes.fieldWrapper}>
         <div className={classes.field}>
           <Typography>
-Total
-            {stats.songCount}
-            {' '}
-songs
+            {`Total ${stats.songCount} songs`}
           </Typography>
           <Typography>
-from
-            {stats.artistCount}
-            {' '}
-artists
+            {`from ${stats.artistCount} artists`}
           </Typography>
           <Typography>
-            {' '}
-in
-            {stats.genreCount}
-            {' '}
-genres
-            {' '}
+            {`in ${stats.genreCount} genres`}
           </Typography>
         </div>
       </div>
@@ -51,8 +40,8 @@ genres
 );
 
 StatsFooter.propTypes = {
-  classes: PropTypes.object.isRequired,
-  stats: PropTypes.object.isRequired
+  classes: PropTypes.instanceOf(Object).isRequired,
+  stats: PropTypes.instanceOf(Object).isRequired
 };
 
 export default StatsFooter;

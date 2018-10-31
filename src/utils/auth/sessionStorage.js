@@ -85,9 +85,8 @@ const getUrl = (endpointKey, path) => `${getApiUrl(endpointKey)}${_.get(getSessi
 export const getDestroyAccountUrl        = (eKey) => getUrl(eKey, 'accountDeletePath');
 export const getSignOutUrl               = (eKey) => getUrl(eKey, 'auth.logout');
 export const getEmailSignInUrl           = (eKey) => getUrl(eKey, 'auth.login');
-export const getEmailSignUpUrl           = (eKey) => `${getUrl(eKey, 'emailRegistrationPath')}?config_name=${eKey}`;
-export const getPasswordResetUrl         = (eKey) => `${getUrl(eKey, 'passwordResetPath')}?config_name=${eKey}`;
-export const getPasswordUpdateUrl        = (eKey) => getUrl(eKey, 'passwordUpdatePath');
+export const getEmailSignUpUrl           = (eKey) => getUrl(eKey, 'auth.register'); // ?config_name=${eKey}`;
+export const getPasswordResetUrl         = (eKey) => getUrl(eKey, 'auth.passwordReset'); // ?config_name=${eKey}`;
 export const getTokenValidationPath      = (eKey) => getUrl(eKey, 'auth.validateToken');
 export const getConfirmationSuccessUrl   = () => window.authState.currentSettings.confirmationSuccessUrl();
 export const getPasswordResetRedirectUrl = () => window.authState.currentSettings.confirmationSuccessUrl();

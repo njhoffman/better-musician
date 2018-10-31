@@ -85,7 +85,7 @@ const AppContainer = ({
 );
 
 AppContainer.defaultProps = {
-  currentView: ''
+  currentView: '',
 };
 
 AppContainer.propTypes = {
@@ -96,8 +96,6 @@ AppContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  theme: state.auth && state.auth.get('user') && state.auth.get('user').get('attributes')
-    ? state.auth.get('user').get('attributes').get('visualTheme') : 'steelBlue',
   currentView: state.ui.currentView
 });
 

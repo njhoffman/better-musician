@@ -1,13 +1,13 @@
+import _ from 'lodash';
 import { push } from 'react-router-redux';
 import { deviceDetect } from 'react-device-detect';
-import extend from 'extend';
 import {
   authenticateStart,
   authenticateComplete,
   authenticateError
 } from 'actions/auth';
 import { configureLoad } from 'actions/api';
-import { applyConfig as applyAuthConfig } from 'utils/auth/clientSettings';
+import applyAuthConfig from 'utils/auth/clientSettings';
 import { destroySession } from 'utils/auth/sessionStorage';
 import getRedirectInfo from 'utils/auth/parseUrl';
 import { init as initLog } from 'shared/logger';
@@ -15,6 +15,7 @@ import { init as initLog } from 'shared/logger';
 const { debug } = initLog('config');
 
 const loadConfiguration = ({ endpoints, settings, dev }) => dispatch => {
+  const { inspectorOptions, showInspector } = dev;
   // don't render anything for OAuth redirects
   if (settings.currentLocation && settings.currentLocation.match(/blank=true/)) {
     return Promise.resolve({ blank: true });
@@ -28,9 +29,13 @@ const loadConfiguration = ({ endpoints, settings, dev }) => dispatch => {
     device: deviceDetect()
   };
 
-  dev.showInspector = dev.showInspector && (innerWidth < 600 && dev.inspectorOptions.hideMobile);
+  const devInspector = showInspector && (innerWidth > 600 || !inspectorOptions.hideMobile);
   // dont show osd if mobile viewport
-  dispatch(configureLoad({ endpoints, clientInfo, devConfig: dev }));
+  dispatch(configureLoad({
+    endpoints,
+    clientInfo,
+    devConfig: { ...dev, showInspector: devInspector }
+  }));
   dispatch(authenticateStart());
 
 
@@ -43,12 +48,12 @@ const loadConfiguration = ({ endpoints, settings, dev }) => dispatch => {
   }
 
   if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders['access-token']) {
-    settings.initialCredentials = extend({}, settings.initialCredentials, authRedirectHeaders);
+    _.merge(settings.initialCredentials, authRedirectHeaders);
   }
 
   // if tokens were invalidated by server or from the settings, make sure
   // to clear browser credentials
-  if (!settings.clientOnly && !settings.initialCredentials || settings.cleanSession) {
+  if ((!settings.clientOnly && !settings.initialCredentials) || settings.cleanSession) {
     destroySession();
   }
 

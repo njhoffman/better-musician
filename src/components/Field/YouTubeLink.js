@@ -35,12 +35,15 @@ const TextboxForm = createComponent(TextField, ({
 class YouTubeLink extends Component {
   static defaultProps = {
     preview: false,
+    initialValues: null,
+    style: {},
+    id: null
   };
 
   static propTypes = {
     preview       : PropTypes.bool,
-    initialValues : PropTypes.object,
-    style         : PropTypes.object,
+    initialValues : PropTypes.instanceOf(Object),
+    style         : PropTypes.instanceOf(Object),
     id            : PropTypes.string
   }
 
@@ -75,6 +78,7 @@ class YouTubeLink extends Component {
         />
       );
     }
+    const { videoId } = this.state;
     return (
       <Fragment>
         <Row className={classes.inputRow}>
@@ -93,10 +97,11 @@ class YouTubeLink extends Component {
           <Column centerOnSmall>
             <iframe
               id='player'
+              title={field.id}
               type='text/html'
               width='350'
               height='250'
-              src={`http://www.youtube.com/embed/${this.state.videoId}`}
+              src={`http://www.youtube.com/embed/${videoId}`}
             />
           </Column>
         </Row>

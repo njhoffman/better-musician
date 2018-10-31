@@ -54,45 +54,43 @@ const ErrorHandlerFallback = (props) => {
   const { error, errorInfo, closeErrorModal } = props;
   const errorTitle = error.message.split('\n')[0];
   const errorComponents = [];
-  error.message.split('\n').forEach((msg, i) => {
-    if (i > 0) {
+  error.message.split('\n').forEach((msg, idx) => {
+    if (idx > 0) {
       const matches = msg.match(/(in) ([^ ]+) \((.*)\)$/);
       if (matches && matches.length === 4) {
-        errorComponents.push({ component: matches[2], source: matches[3] });
+        errorComponents.push({ idx, component: matches[2], source: matches[3] });
       } else {
-        errorComponents.push({ component: msg, source: msg });
+        errorComponents.push({ idx, component: msg, source: msg });
       }
     }
   });
   const stackLineRE = /at ([^(]+ )([^.]+.\/)([^:]+):(\d+):(\d+)/;
   const stackTitle = error.stack.split('\n')[0];
-  const stackLines = error.stack
-    .replace(stackTitle, '')
-    .split('\n')
-    .map((sl, i) => {
-      const matches = sl.match(stackLineRE);
-      if (matches
-        && matches.length === 6
-        && matches[3].indexOf('node_modules') === -1) {
-        return (
-          <span key={i}>
-            <span style={{ color: '#ffffff' }}>{matches[1]}</span>
-            <span>{matches[2]}</span>
-            <span style={{ color: '#ffffff' }}>{matches[3]}</span>
-:
-            <span style={{ color: '#aaccff', fontWeight: 'bold' }}>{matches[5]}</span>
-:
-            <span style={{ color: '#ccddff' }}>{matches[4]}</span>
-          </span>
-        );
-      }
-      return <span key={i}>{sl}</span>;
-    });
+  const stackLines = error.stack.replace(stackTitle, '').split('\n')
+    .map((line, idx) => ({ line, idx }));
+
+  stackLines.map(({ line, idx }) => {
+    const matches = line.match(stackLineRE);
+    if (matches && matches.length === 6 && matches[3].indexOf('node_modules') === -1) {
+      return (
+        <span key={idx}>
+          <span style={{ color: '#ffffff' }}>{matches[1]}</span>
+          <span>{matches[2]}</span>
+          <span style={{ color: '#ffffff' }}>{matches[3]}</span>
+          <span>:</span>
+          <span style={{ color: '#aaccff', fontWeight: 'bold' }}>{matches[5]}</span>
+          <span>:</span>
+          <span style={{ color: '#ccddff' }}>{matches[4]}</span>
+        </span>
+      );
+    }
+    return (<span key={idx}>{line}</span>);
+  });
 
   return (
     <Modal>
       <div style={containerStyle}>
-        <button style={btnStyle} onClick={closeErrorModal}>Close</button>
+        <button type='button' style={btnStyle} onClick={closeErrorModal}>Close</button>
         <div>
           <pre style={{ ...preStyle, color: '#ff0404', fontSize: '1.0em' }}>
             {errorTitle}
@@ -101,7 +99,7 @@ const ErrorHandlerFallback = (props) => {
             <table style={{ ...componentTableStyle }}>
               <tbody>
                 {errorComponents && errorComponents.map((ec, i) => (
-                  <tr key={i}>
+                  <tr key={ec.idx}>
                     <td style={{ ...componentNameStyle }}>{ec.component}</td>
                     <td style={{ ...componentSourceStyle }}>{ec.source}</td>
                   </tr>
@@ -119,9 +117,7 @@ const ErrorHandlerFallback = (props) => {
           <pre style={{ ...preStyle, color: '#888888' }}>
             <code>
               {stackLines.map((sl, i) => (
-                <div key={i}>
-                  {sl}
-                </div>
+                <div key={sl.idx}>{sl}</div>
               ))}
             </code>
           </pre>
@@ -137,9 +133,13 @@ const ErrorHandlerFallback = (props) => {
   );
 };
 
+ErrorHandlerFallback.defaultProps = {
+  errorInfo: null
+};
+
 ErrorHandlerFallback.propTypes = {
-  error:           PropTypes.object.isRequired,
-  errorInfo:       PropTypes.object,
+  error:           PropTypes.instanceOf(Object).isRequired,
+  errorInfo:       PropTypes.instanceOf(Object),
   closeErrorModal: PropTypes.func.isRequired
 };
 

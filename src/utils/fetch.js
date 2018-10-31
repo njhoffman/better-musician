@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import originalFetch from 'isomorphic-fetch';
 import * as C from 'constants/auth';
-import extend from 'extend';
 import { init as initLog } from 'shared/logger';
 import {
   getApiUrl,
@@ -15,6 +14,11 @@ const { debug } = initLog('auth:fetch');
 
 const isApiRequest = (url) => (url.match(getApiUrl(getSessionEndpointKey())));
 
+export const addAuthorizationHeader = (accessToken, headers) => ({
+  ...headers,
+  Authorization: `Bearer ${accessToken}`
+});
+
 const getAuthHeaders = (url) => {
   if (!isApiRequest(url)) {
     return {};
@@ -27,9 +31,9 @@ const getAuthHeaders = (url) => {
   nextHeaders['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
 
   // set header for each key in `tokenFormat` config
-  for (const key in getTokenFormat()) {
+  Object.keys(getTokenFormat(), key => {
     nextHeaders[key] = currentHeaders[key];
-  }
+  });
   return addAuthorizationHeader(currentHeaders['access-token'], nextHeaders);
 };
 
@@ -39,12 +43,12 @@ const updateAuthCredentials = (resp) => {
     // if the response tokens aren't sent back from the API
     let blankHeaders = true;
     const newHeaders = {};
-    for (const key in getTokenFormat()) {
+    Object.keys(getTokenFormat(), key => {
       newHeaders[key] = resp.headers.get(key);
       if (newHeaders[key]) {
         blankHeaders = false;
       }
-    }
+    });
     if (!blankHeaders) {
       persistData(C.SAVED_CREDS_KEY, newHeaders);
     }
@@ -52,8 +56,6 @@ const updateAuthCredentials = (resp) => {
   return resp;
 };
 
-export const addAuthorizationHeader = (accessToken, headers) =>
-  ({ ...{ headers }, ...{ Authorization: `Bearer ${accessToken}` } });
 
 export const parseResponse = (response) => {
   const json = response.json();
@@ -63,9 +65,8 @@ export const parseResponse = (response) => {
   return json.then(err => Promise.reject(err.errors ? err.errors : err));
 };
 
-export default (url, options = {}) => {
-  options.headers = options.headers || {};
-  extend(options.headers, getAuthHeaders(url));
+export default (url, defaultOptions = {}) => {
+  const options = { ...defaultOptions, headers: { ...getAuthHeaders(url) } };
   debug(`Fetching ${url}`, {
     Authorization : options.headers.Authorization,
     headers: _.pickBy(options.headers.headers)

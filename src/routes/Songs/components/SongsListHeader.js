@@ -39,12 +39,13 @@ const SongsListHeader = ({
 );
 
 SongsListHeader.propTypes = {
-  name: PropTypes.string.isRequired,
-  className: PropTypes.string.isRequired,
-  displayName: PropTypes.string.isRequired,
-  setSort: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired,
-  centered: PropTypes.bool
+  name:          PropTypes.string.isRequired,
+  className:     PropTypes.string.isRequired,
+  displayName:   PropTypes.string.isRequired,
+  setSort:       PropTypes.func.isRequired,
+  sortDirection: PropTypes.string.isRequired,
+  sortField:     PropTypes.string.isRequired,
+  classes:       PropTypes.instanceOf(Object).isRequired
 };
 
 export default withStyles(styles)(SongsListHeader);

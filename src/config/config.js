@@ -4,11 +4,11 @@ import userConfig from 'config/user';
 
 const config = defaultsDeep(userConfig, defaultConfig);
 
+const { showExtension, showInspector, extensionOptions, monitorProps } = config.dev;
 if (__DEV__) {
-  config.dev.showExtension = !config.dev.showInspector
-    && config.dev.showExtension
+  config.dev.showExtension = !showInspector && showExtension
     && isFunction(window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__);
-  config.dev.extensionOptions.monitorProps = defaultsDeep(config.dev.extensionOptions.monitorProps, config.dev.monitorProps);
+  config.dev.extensionOptions.monitorProps = defaultsDeep(extensionOptions.monitorProps, monitorProps);
 }
 
 export default config;

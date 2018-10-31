@@ -14,16 +14,18 @@ export const savedFields = createSelector(
 
 const savedTabsSelector = ormCreateSelector(orm, (session, user) => {
   const tabs = {};
-  session.CustomField.all().toModelArray().forEach(field => {
-    if (tabs[field.tabName]) {
-      tabs[field.tabName].push(field);
-    } else {
-      tabs[field.tabName] = [field];
-    }
-  });
+  session.CustomField.all()
+    .toModelArray()
+    .forEach(field => {
+      if (tabs[field.tabName]) {
+        tabs[field.tabName].push(field);
+      } else {
+        tabs[field.tabName] = [field];
+      }
+    });
   const ret = [];
-  Object.keys(tabs).forEach(tabKey => {
-    ret.push({ name: tabKey, fields: tabs[tabKey] });
+  Object.keys(tabs).forEach((tabKey, idx) => {
+    ret.push({ name: tabKey, fields: tabs[tabKey], idx });
   });
   return ret;
 });

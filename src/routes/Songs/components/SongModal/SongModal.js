@@ -117,7 +117,7 @@ const SongModal = ({
           value={currentTab}
           onChange={(e, val) => tabChange(val)}>
           <Tab label='Main Fields' />
-          {savedTabs.map((tab, tabIdx) => <Tab key={tab.idx} label={tab.name} />)}
+          {savedTabs.map((tab) => <Tab key={tab.idx} label={tab.name} />)}
         </Tabs>
       </AppBar>
       <DialogContent className={classes.dialogContent}>

@@ -16,9 +16,10 @@ class Artist extends BaseModel {
   }
 
   static findByFullName(name) {
-    return this.all().toModelArray().filter(artist => (
-      artist.fullName === name
-    ))[0];
+    return this.all().toModelArray()
+      .filter(artist => (
+        artist.fullName === name
+      ))[0];
   }
 
 

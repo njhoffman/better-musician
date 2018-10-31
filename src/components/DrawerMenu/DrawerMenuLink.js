@@ -73,6 +73,22 @@ const MenuLink = ({ classes, label, Icon, loginLink }) => (
   </Fragment>
 );
 
+MenuLink.defaultProps = {
+  loginLink: '',
+  label:     '',
+  Icon:      null
+};
+
+MenuLink.propTypes = {
+  classes:        PropTypes.instanceOf(Object).isRequired,
+  label:          PropTypes.string,
+  Icon:           PropTypes.func,
+  loginLink:      PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.bool
+  ])
+};
+
 const DrawerMenuLink = ({
   link,
   hideDrawerMenu,
@@ -97,17 +113,21 @@ const DrawerMenuLink = ({
   </MenuItem>
 );
 
+DrawerMenuLink.defaultProps = {
+  onClick:   (() => {}),
+  link:      '',
+  loginLink: ''
+};
+
 DrawerMenuLink.propTypes = {
   hideDrawerMenu: PropTypes.func.isRequired,
-  classes:        PropTypes.object.isRequired,
+  classes:        PropTypes.instanceOf(Object).isRequired,
   onClick:        PropTypes.func,
   link:           PropTypes.string,
   loginLink:      PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.bool
-  ]),
-  label:          PropTypes.string,
-  Icon:           PropTypes.func
+  ])
 };
 
 const mapStateToProps = (state) => ({});

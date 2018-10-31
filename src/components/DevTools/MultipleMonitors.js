@@ -2,7 +2,10 @@ import React, { Component, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-const childrenMonitorState = (props, state, action) => props.children.map(child => child.type.update(child.props, state, action));
+const childrenMonitorState = (props, state, action) => (
+  props.children.map(child =>
+    child.type.update(child.props, state, action))
+);
 
 const reducer = (props, state = {}, action) => ({
   childrenMonitorState: childrenMonitorState(props, state.childMonitorState, action)
@@ -50,44 +53,51 @@ const monitorStyles = [{
 class MultipleMonitors extends Component {
   static update = reducer;
 
+  static defaultProps = {
+    style: {},
+    monitorState: {}
+  };
+
   static propTypes = {
-    monitorState:        PropTypes.object,
-    changeMonitorKey:    PropTypes.string,
-    changePositionKey:   PropTypes.string,
-    defaultPosition:     PropTypes.string,
-    defaultSize:         PropTypes.number,
-    toggleVisibilityKey: PropTypes.string,
-    children:            PropTypes.array.isRequired,
-    style:               PropTypes.object
+    monitorState:        PropTypes.instanceOf(Object),
+    // changeMonitorKey:    PropTypes.string, // 'ctrl-m'
+    // changePositionKey:   PropTypes.string.isRequired, // 'ctrl-q'
+    // defaultPosition:     PropTypes.string.isRequired, // 'bottom'
+    // defaultSize:         PropTypes.number.isRequired, // 0.3,
+    // toggleVisibilityKey: PropTypes.string.isRequired, // 'ctrl-shift-h'
+    children:            PropTypes.arrayOf(PropTypes.node).isRequired,
+    style:               PropTypes.instanceOf(Object)
   };
 
   render() {
     /* eslint-disable no-unused-vars */
-    const {
-      monitorState, children, style = baseStyle, changeMonitorKey, changePositionKey,
-      defaultPosition, defaultSize, toggleVisibilityKey, ...props
-    } = this.props;
+    const { monitorState, children, style = baseStyle, ...props } = this.props;
     /* eslint-enable no-unused-vars */
 
     const monitors = [];
-    children.forEach(c => (c.props.inline && _.isArray(_.last(monitors))
-      ? _.last(monitors).push(c)
-      : monitors.push([c])));
+    children.forEach((c, idx) => (
+      c.props.inline && _.isArray(_.last(monitors))
+        ? _.last(monitors).push({ ...c, idx })
+        : monitors.push([{ ...c, idx }])
+    ));
 
     let n = -1;
     const monitorsRendered = monitors.map((row, i) => (
-      <div className={`row-${i}`} key={`row-${i}`} style={{ ...rowStyles[i] }}>
-        {row.map((child, j) => {
-          n++;
+      <div
+        className={`row-${row.idx}`}
+        key={`row-${row.idx}`}
+        style={{ ...rowStyles[i] }}>
+        {row.map((monitor, j) => {
+          n += 1;
           return (
             <div
               className={`monitor-${n}`}
-              key={`cell-${j}`}
+              key={`cell-${row.idx}`}
               style={{ ...cellStyle, ...monitorStyles[n] }}>
-              {cloneElement(child, {
+              {cloneElement(monitor, {
                 ...props,
                 monitorState: monitorState.childrenMonitorState[n],
-                key: `monitor-${n}`
+                key: `monitor-${row.idx}`
               })}
             </div>
           );

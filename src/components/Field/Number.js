@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { InputAdornment } from '@material-ui/core';
-import Textbox from './Textbox';
+
+import { FIELD_EDIT } from 'constants/ui';
+import TextboxField from './Textbox';
 
 const NumberField = ({
   meta,
@@ -10,7 +12,7 @@ const NumberField = ({
   unit,
   ...props
 }) => (
-  <Textbox
+  <TextboxField
     type='number'
     min={0}
     style={{
@@ -31,9 +33,14 @@ const NumberField = ({
   />
 );
 
+NumberField.defaultProps = {
+  label: '',
+  viewType: FIELD_EDIT
+};
+
 NumberField.propTypes = {
   label: PropTypes.string,
-  meta: PropTypes.object,
+  meta: PropTypes.instanceOf(Object).isRequired,
   viewType: PropTypes.string
 };
 

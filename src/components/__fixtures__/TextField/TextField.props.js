@@ -42,40 +42,40 @@ export default [{
     href: '#text-link'
   }]
 }, {
-  title:'Contained Buttons',
+  title:'standard Buttons',
   props: [{
     label: 'Default',
-    variant: 'contained'
+    variant: 'standard'
   }, {
     label: 'Primary',
-    variant: 'contained',
+    variant: 'standard',
     primary: true
   }, {
     label: 'Secondary',
-    variant: 'contained',
+    variant: 'standard',
     secondary: true
   }, {
     label: 'Disabled',
-    variant: 'contained',
+    variant: 'standard',
     disabled: true
   }, {
     label: 'Link',
-    variant: 'contained',
+    variant: 'standard',
     href: '#text-link'
   }]
 }, {
   title:'Float Action Buttons',
   props: [{
     icon: AddIcon,
-    variant: 'fab',
+    variant: 'filled',
     primary: true
   }, {
     icon: EditIcon,
-    variant: 'fab',
+    variant: 'filled',
     secondary: true
   }, {
     icon: DeleteIcon,
-    variant: 'fab',
+    variant: 'filled',
     disabled: true
   }]
 }];

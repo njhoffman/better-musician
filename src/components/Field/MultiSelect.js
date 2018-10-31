@@ -30,10 +30,7 @@ const styles = (theme) => ({
 const MultiSelect = ({
   classes,
   label,
-  name,
   disabled,
-  labelStyle,
-  inputStyle,
   options,
   input
 }) => (
@@ -48,20 +45,17 @@ const MultiSelect = ({
           options={options}
           name='optionText'
         />
-        {!disabled
-            && (
-            <Button
-              variant='contained'
-              color='secondary'
-              className={classes.addButton}
-              onClick={() => addOption(input.value)}>
-              Add
-            </Button>
-            )
-        }
+        {!disabled && (
+          <Button
+            variant='contained'
+            color='secondary'
+            className={classes.addButton}
+            onClick={() => addOption(input.value)}>
+            Add
+          </Button>
+        )}
       </Column>
     </Row>
-    {console.info('input', input)}
     <Row>
       <Column
         centerOnSmall
@@ -70,7 +64,7 @@ const MultiSelect = ({
         {input.value && input.value.map((value, idx, values) => (disabled
           ? (
             <Chip
-              key={idx}
+              key={value}
               label={value}
               onChange={() => { }}
               style={{ margin: '5px 2px', fontSize: '0.8em' }}
@@ -78,7 +72,7 @@ const MultiSelect = ({
           )
           : (
             <Chip
-              key={idx}
+              key={value}
               label={value}
               onDelete={() => values.remove(idx)}
               style={{ margin: '5px 2px', fontSize: '0.8em' }}
@@ -90,16 +84,18 @@ const MultiSelect = ({
   </Fragment>
 );
 
+MultiSelect.defaultProps = {
+  disabled: false,
+  label:    '',
+  options:  [],
+};
+
 MultiSelect.propTypes = {
-  input:      PropTypes.object.isRequired,
-  values:     PropTypes.any,
-  name:       PropTypes.string,
+  input:      PropTypes.instanceOf(Object).isRequired,
   disabled:   PropTypes.bool,
-  labelStyle: PropTypes.object,
-  inputStyle: PropTypes.object,
   label:      PropTypes.string,
-  options:    PropTypes.any.isRequired,
-  classes:    PropTypes.object.isRequired
+  options:    PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+  classes:    PropTypes.instanceOf(Object).isRequired
 };
 
 export default withStyles(styles)(MultiSelect);

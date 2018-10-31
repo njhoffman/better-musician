@@ -12,7 +12,7 @@ export const PROFILE_FAILURE = 'PROFILE_FAILURE';
 // ------------------------------------
 
 export const updateProfile = () => (dispatch, getState) => {
-  const fieldValues = getState().form.updateProfileForm.values;
+  const fieldValues = getState().form.profile.values;
   return dispatch({
     [CALL_API]: {
       types: [UPDATE_PROFILE, PROFILE_SUCCESS, PROFILE_FAILURE],

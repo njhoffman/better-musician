@@ -57,8 +57,15 @@ const SelectField = ({
   </FormControl>
 );
 
+SelectField.defaultProps = {
+  label: ''
+};
+
 SelectField.propTypes = {
-  options: PropTypes.any.isRequired, // can be object or array
+  options: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object
+  ]).isRequired, // can be object or array
   label: PropTypes.string
 };
 

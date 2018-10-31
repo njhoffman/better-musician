@@ -4,9 +4,6 @@ module.exports = (config, sharedUtils, outputHeap) =>
   (mwStats, buildStats) => {
     const { state, stats, log } = buildStats;
     const { numCommas, padLeft, padRight, humanMemorySize } = sharedUtils;
-    // compilation, hash, starttime
-    // stats.compilation: hooks, options, profile, outputOptions, performance, chunks, chunkGroupos,
-    // namedChunks, namedChunkGroups, modules, assets, name, fullHash, hash
     if (state) {
       log.info('Building assets ...');
       const { compilation: { modules } } = stats;
@@ -21,10 +18,6 @@ module.exports = (config, sharedUtils, outputHeap) =>
       } else if (stats.hasWarnings()) {
         stats.compilation.warnings.forEach(sw => log.warn(`${sw.message.replace(/\r\n/g, '')}`));
       }
-      // dependencies, blocks, variables, resolveOptions, factoryMeta,  reasons, _chunks,
-      // id, index, index2, depth, issuer, profile,  prefetched, built, used, resource, index, name
-      // issuer: (parent module), sourceStr: js text, binary,
-
       const modInfo = {
         raw   : { deps: 0, mods: _.filter(modules, (mod) => mod.constructor.name === 'RawModule') },
         multi : { deps: 0, mods: _.filter(modules, (mod) => mod.constructor.name === 'MultiModule') },
@@ -33,31 +26,34 @@ module.exports = (config, sharedUtils, outputHeap) =>
       };
 
       modInfo.app.mods.forEach((mod, i) => {
-        modInfo.app.deps += mod.dependencies.length;
-        if (!modInfo.app.maxDepth || modInfo.app.maxDepth < mod.depth) {
-          modInfo.app.maxDepth = mod.depth;
+        const { dependencies, depth, buildMeta, type } = mod;
+        modInfo.app.deps += dependencies.length;
+        if (!modInfo.app.maxDepth || modInfo.app.maxDepth < depth) {
+          modInfo.app.maxDepth = depth;
         }
 
-        mod.warnings.forEach(mw =>
-          log.warn(`app-module warning: ${mw.name} ${mw.message.replace(/\n/g, '')} (${mw.origin})`));
+        mod.warnings.forEach(mw => (
+          log.warn(`app-module warning: ${mw.name} ${mw.message.replace(/\n/g, '')} (${mw.origin})`)
+        ));
         mod.errors.forEach(me => log.error(me));
 
-        const prefix = `(${mod.depth} ${mod.dependencies.length} `
-          + `deps ${mod.type.replace('javascript/', '')})`;
+        const prefix = `(${depth} ${dependencies.length} deps ${type.replace('javascript/', '')})`;
 
         if (config.showAppModulesBuild) {
-          log.trace(
-            `    app-module ${padLeft((`#${i + 1}`), 3)} ${padRight(prefix, 20)} => ${mod.id}${
-              mod.useSourceMap ? ' (source-map)' : ''
-            }${mod.buildMeta.moduleConcatenationBailout ? ` (bailout: ${mod.buildMeta.moduleConcatenationBailout})` : ''}`
-          );
+          log.trace([
+            `    app-module ${padLeft((`#${i + 1}`), 3)}`,
+            `${padRight(prefix, 20)} => ${mod.id}`,
+            `${mod.useSourceMap ? ' (source-map)' : ''}`,
+            `${buildMeta.moduleConcatenationBailout ? ` (bailout: ${buildMeta.moduleConcatenationBailout})` : ''}`
+          ].join(' '));
         }
       });
 
       modInfo.node.mods.forEach(mod => {
-        modInfo.node.deps += mod.dependencies.length;
-        if (!modInfo.node.maxDepth || modInfo.node.maxDepth < mod.depth) {
-          modInfo.node.maxDepth = mod.depth;
+        const { dependencies, depth, rawRequest } = mod;
+        modInfo.node.deps += dependencies.length;
+        if (!modInfo.node.maxDepth || modInfo.node.maxDepth < depth) {
+          modInfo.node.maxDepth = depth;
         }
 
         // name, message, module, origin, originLoc, dependencies
@@ -67,7 +63,7 @@ module.exports = (config, sharedUtils, outputHeap) =>
         mod.errors.forEach(me => log.error(me));
         // TODO: implement silly level
         if (config.showNodeModulesBuild) {
-          log.trace(`node-module (${mod.depth} ${mod.dependencies.length} deps) ${mod.rawRequest}`);
+          log.trace(`node-module (${depth} ${dependencies.length} deps) ${rawRequest}`);
         }
       });
 
@@ -77,7 +73,8 @@ module.exports = (config, sharedUtils, outputHeap) =>
           name: key,
           overLimit: !!stats.compilation.assets[key].isOverSizeLimit,
           size: stats.compilation.assets[key].size()
-        })).sort((a, b) => (a.size > b.size));
+        }))
+        .sort((a, b) => (a.size > b.size));
 
       const oversizeAssets = _.filter(assets, 'overLimit');
 

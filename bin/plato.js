@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable no-console */
+/* eslint-disable no-console, import/no-extraneous-dependencies */
 
 const plato = require('es6-plato');
 const fs = require('fs');
@@ -14,9 +14,9 @@ const platoOptions = {
   title: 'Plato Report'
 };
 
-const mkdirSync = (path) => {
+const mkdirSync = (dirPath) => {
   try {
-    fs.mkdirSync(path);
+    fs.mkdirSync(dirPath);
   } catch (e) {
     if (e.code !== 'EEXIST') throw e;
   }
@@ -24,9 +24,11 @@ const mkdirSync = (path) => {
 
 const walkSync = (dir, fileList = []) => {
   fs.readdirSync(dir).forEach(file => {
+    /* eslint-disable no-param-reassign */
     fileList = fs.statSync(path.join(dir, file)).isDirectory()
       ? walkSync(path.join(dir, file), fileList)
       : fileList.concat(path.join(dir, file));
+    /* eslint-enable no-param-reassign */
   });
   return fileList;
 };
@@ -47,4 +49,4 @@ fileList = fileList.filter(file => {
 console.log(fileList.length);
 mkdirSync(outputDir);
 plato.inspect(fileList, outputDir, platoOptions, platoFinished);
-/* eslint-enable no-console */
+/* eslint-enable no-console, import/no-extraneous-dependencies */

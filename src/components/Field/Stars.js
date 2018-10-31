@@ -3,20 +3,25 @@ import { Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { MdStar as StarIcon } from 'react-icons/md';
 
-const Stars = ({ number, starColor, className, style }) =>
-  // if (isNaN(number)) {
-  //   debugger;
-  // }
-  (
-    <Typography className={className} style={style}>
-      {[...Array(number)].map((x, i) =>
-        <StarIcon key={i} style={{ color: starColor }} />)}
-    </Typography>
-  );
+const Stars = ({ number, starColor, className, style }) => (
+  <Typography className={className} style={style}>
+    {[...Array(number)].map((x, i) => (
+      <StarIcon key={x} style={{ color: starColor }} />
+    ))}
+  </Typography>
+);
+
+Stars.defaultProps = {
+  className: '',
+  style: {},
+  starColor: 'yellow'
+};
+
 Stars.propTypes = {
+  className: PropTypes.string,
   number:    PropTypes.number.isRequired,
   starColor: PropTypes.string,
-  style:     PropTypes.object
+  style:     PropTypes.instanceOf(Object)
 };
 
 export default Stars;

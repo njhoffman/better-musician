@@ -21,12 +21,11 @@ export const DevTools = createDevTools(
     <MultipleMonitors className='multi-monitor'>
       <Launcher theme={twilightMod} />
       <SliderMonitor theme={twilightMod} preserveScrollTop={false} inline />
-      <Inspector theme='twilight' expandDiffs invertTheme={false} supportImmutable />
+      <Inspector theme='twilight' expandDiffs invertTheme={false} />
     </MultipleMonitors>
   </DockMonitor>
 );
 
 export default function DevToolsInit(devConfig) {
-  console.info('devConfig', devConfig);
-  return <DevTools devConfig={devConfig} />;
+  return (<DevTools devConfig={devConfig} />);
 }

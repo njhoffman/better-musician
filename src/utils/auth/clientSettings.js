@@ -45,18 +45,16 @@ const defaultSettings = {
   handleTokenValidationResponse: (resp) => resp.data
 };
 
+// TODO: use promise patterns consistently
+/* eslint-disable prefer-promise-reject-errors */
+
 // save session configuration
-export const applyConfig = ({ dispatch, endpoints = {}, settings = {}, reset = false } = {}) => {
-  let currentEndpointKey;
+export default ({ dispatch, endpoints = {}, settings = {}, reset = false } = {}) => {
+  let { initialCredentials: { currentEndpointKey } } = settings;
 
   if (reset) {
     resetConfig();
   }
-
-  if (settings.initialCredentials) {
-    currentEndpointKey = settings.initialCredentials.currentEndpointKey;
-  }
-
   setCurrentSettings(extend({}, defaultSettings, settings));
 
   const { defaultEndpointKey, currentEndpoints } = parseEndpointConfig(endpoints, getInitialEndpointKey());
@@ -93,3 +91,4 @@ export const applyConfig = ({ dispatch, endpoints = {}, settings = {}, reset = f
   }
   return Promise.reject({ reason: 'No credentials.' });
 };
+/* eslint-enable prefer-promise-reject-errors */

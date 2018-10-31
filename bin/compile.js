@@ -7,7 +7,6 @@ const config = require('../config/');
 const webpackCompiler = (webpackConfig) =>
   new Promise((resolve, reject) => {
     const compiler = webpack(config.webpack);
-
     compiler.run((err, stats) => {
       if (err) {
         debug('Webpack compiler encountered a fatal error.', err);
@@ -28,7 +27,7 @@ const webpackCompiler = (webpackConfig) =>
       } else {
         debug('No errors or warnings encountered.');
       }
-      resolve(jsonStats);
+      return resolve(jsonStats);
     });
   });
 

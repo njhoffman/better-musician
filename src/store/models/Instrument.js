@@ -3,19 +3,20 @@ import BaseModel from './BaseModel';
 
 class Instrument extends BaseModel {
   static get path() {
-    return `/images/instrument`;
+    return '/images/instrument';
   }
 
   static get defaultImage() {
-    return `_unknown.png`;
+    return '_unknown.png';
   }
 
   static get imageLabel() {
-    return `Unknown Instrument`;
+    return 'Unknown Instrument';
   }
 
   static findByDisplayName(name) {
-    return this.all().toModelArray().filter(instrument => instrument.displayName === name)[0];
+    return this.all().toModelArray()
+      .filter(instrument => instrument.displayName === name)[0];
   }
 
   static imagesByDisplayName(name) {
@@ -25,18 +26,18 @@ class Instrument extends BaseModel {
   }
 
   static primaryImage() {
-    return `/images/instrument/_unknown.png`;
+    return '/images/instrument/_unknown.png';
   }
 
-  static reducer(action, Instrument/* , session */) {
+  static reducer(action, model/* , session */) {
     const { type } = action;
     switch (type) {
       case 'SONGS_REQUEST':
         // remove all songs when fetching
-        Instrument.all().delete();
+        model.all().delete();
         break;
       case 'LOAD_INSTRUMENTS':
-        Instrument.loadData(action.payload, this);
+        model.loadData(action.payload, this);
         break;
       default:
         break;
