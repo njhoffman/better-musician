@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/actions/api.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/actions/api.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">73.84</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">255</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">38.69</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.76</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import _ from &#039;lodash&#039;;
+import { CALL_API } from &#039;middleware/api&#039;;
+import { init as initLog } from &#039;shared/logger&#039;;
+import { reset } from &#039;redux-form&#039;;
+import * as API from &#039;constants/api&#039;;
+import * as UI from &#039;constants/ui&#039;;
+
+const { info, warn } = initLog(&#039;api-actions&#039;);
+
+export const configureLoad = (payload) =&gt; ({
+  type: API.CONFIGURE_LOAD, payload
+});
+
+export const configureStart = () =&gt; ({ type: API.CONFIGURE_START });
+export const configureComplete = (config) =&gt; ({
+  type: API.CONFIGURE_COMPLETE,
+  payload: config
+});
+
+/* songs */
+
+export const songsAddComplete = (response) =&gt; (dispatch) =&gt; {
+  dispatch({ type: API.SONGS_ADD_COMPLETE, user: response });
+  dispatch({ type: UI.SNACKBAR_SHOW, payload: &#039;Song Added&#039;, meta: { variant: &#039;success&#039; } });
+};
+
+export const songsAddError = (response) =&gt; (dispatch) =&gt; {
+  dispatch({ type: API.SONGS_ADD_ERROR, user: response });
+
+  dispatch({
+    type: UI.SNACKBAR_SHOW,
+    meta: { variant: &#039;warnining&#039; },
+    payload: &#039;Validation Error: Song Not Added&#039;
+  });
+
+  dispatch({
+    type: UI.MODAL_UPDATE,
+    meta: {
+      type: UI.SONG_MODAL,
+      props: { errors: response.errors }
+    }
+  });
+};
+
+export const addSong = () =&gt; (dispatch, getState) =&gt; {
+  const fieldValues = getState().form.songForm.values;
+
+  return dispatch({
+    [CALL_API]: {
+      types:    [API.SONGS_ADD_START, songsAddComplete, songsAddError],
+      method:   &#039;POST&#039;,
+      endpoint: `${__API_URL__}/songs/add`,
+      payload:  { ...fieldValues }
+    }
+  });
+};
+
+
+export const songsFetchComplete = (tables) =&gt; (dispatch) =&gt; {
+  // info(&#039;songsFetchComplete&#039;, response);
+  info(`songsFetchComplete: ${tables.songs.length} songs and ${tables.artists.length} artists`);
+
+  /* eslint-disable no-multi-spaces */
+  dispatch({ type: API.SONGS_FETCH_COMPLETE, payload: tables });
+  dispatch({ type: API.LOAD_ARTISTS,         payload: tables.artists });
+  dispatch({ type: API.LOAD_INSTRUMENTS,     payload: tables.instruments });
+  dispatch({ type: API.LOAD_GENRES,          payload: tables.genres });
+  dispatch({ type: API.LOAD_FIELDS,          payload: tables.fields });
+  dispatch({ type: API.LOAD_SONGS,           payload: tables.songs });
+  /* eslint-enable no-multi-spaces */
+};
+
+export const fetchSongs = ({ dispatch, getState }) =&gt; {
+  // TODO: make this better dumbass
+  const state = getState();
+  if (_.has(state, &#039;orm.Song.items&#039;) &amp;&amp; _.get(state, &#039;orm.Song.items&#039;).length &gt; 0) {
+    info(&#039;Songs already initialized, skipping&#039;);
+    return false;
+  }
+  info(&#039;Calling CALL_API&#039;);
+  return dispatch({
+    [CALL_API]: {
+      types: [API.SONGS_FETCH_START, songsFetchComplete, API.SONGS_FETCH_ERROR],
+      endpoint: `${__API_URL__}/songs`
+    }
+  });
+};
+
+export const artistsFetchComplete = ({ tables }) =&gt; (dispatch) =&gt; {
+  info(`artistsFetchComplete: ${tables.artists.length} artists`);
+  dispatch({ type: API.LOAD_ARTISTS, payload: tables.artists });
+};
+
+export const fetchArtists = ({ dispatch, getState }) =&gt; {
+  // TODO: make this better dumbass
+  info(&#039;Calling CALL_API&#039;);
+  return dispatch({
+    [CALL_API]: {
+      types: [API.ARTISTS_FETCH_START, artistsFetchComplete, API.ARTISTS_FETCH_ERROR],
+      endpoint: `${__API_URL__}/artists`
+    }
+  });
+};
+
+/* profile */
+
+export const userUpdateComplete = (response) =&gt; (dispatch) =&gt; {
+  dispatch({ type: API.USER_UPDATE_COMPLETE, payload: response });
+  dispatch({
+    type: UI.SNACKBAR_SHOW,
+    payload: &#039;Profile Successfully Updated&#039;,
+    meta: { variant: &#039;success&#039; }
+  });
+};
+
+export const userUpdateError = (response) =&gt; (dispatch) =&gt; {
+  warn(&#039;updateUserError&#039;, response);
+
+  dispatch({ type: API.USER_UPDATE_ERROR, user: response });
+  dispatch({
+    type: UI.SNACKBAR_SHOW,
+    payload: response.message || response.error || &#039;Unknown Error&#039;,
+    meta: { variant: &#039;error&#039;, title: &#039;Profile Update Error&#039; }
+  });
+};
+
+export const updateUser = () =&gt; (dispatch, getState) =&gt; {
+  const fieldValues = getState().form.profile
+    ? getState().form.profile.values
+    : getState().form.updateSettingsForm.values;
+
+  return dispatch({
+    [CALL_API]: {
+      types:    [API.USER_UPDATE_START, userUpdateComplete, userUpdateError],
+      method:   &#039;POST&#039;,
+      endpoint: `${__API_URL__}/users/update`,
+      payload:  { ...fieldValues }
+    }
+  });
+};
+
+/* settings */
+
+export const settingsUpdateComplete = (response) =&gt; (dispatch) =&gt; {
+  dispatch({ type: API.SETTINGS_UPDATE_COMPLETE, payload: response });
+  dispatch({
+    type: UI.SNACKBAR_SHOW,
+    payload: &#039;Profile Successfully Updated&#039;,
+    meta: { variant: &#039;success&#039; }
+  });
+};
+
+export const settingsUpdateError = (response) =&gt; (dispatch) =&gt; {
+  warn(&#039;updateSettingsError&#039;, response);
+
+  dispatch({ type: API.SETTINGS_UPDATE_ERROR, user: response });
+  dispatch({
+    type: UI.SNACKBAR_SHOW,
+    payload: response.message || response.error || &#039;Unknown Error&#039;,
+    meta: { variant: &#039;error&#039;, title: &#039;Profile Update Error&#039; }
+  });
+};
+
+export const updateSettings = () =&gt; (dispatch, getState) =&gt; {
+  const fieldValues = getState().form.profile
+    ? getState().form.profile.values
+    : getState().form.updateSettingsForm.values;
+
+  return dispatch({
+    [CALL_API]: {
+      types:    [API.SETTINGS_UPDATE_START, settingsUpdateComplete, settingsUpdateError],
+      method:   &#039;POST&#039;,
+      endpoint: `${__API_URL__}/users/update`,
+      payload:  { ...fieldValues }
+    }
+  });
+};
+
+/* fields */
+export const cancelEdit = () =&gt; (dispatch) =&gt;
+  dispatch({
+    type: API.FIELDS_EDIT,
+    payload: null
+  });
+
+export const fieldUpdateComplete = (data) =&gt; (dispatch, getState) =&gt; {
+  dispatch(cancelEdit());
+  dispatch({ type: API.FIELDS_UPDATE_COMPLETE, payload: data });
+  dispatch({
+    type: UI.SNACKBAR_SHOW,
+    payload: &#039;Field Successfully Updated&#039;,
+    meta: { variant: &#039;success&#039; }
+  });
+};
+
+export const updateField = () =&gt; (dispatch, getState) =&gt; {
+  const fieldValues = getState().form.updateFieldsForm.values;
+  return dispatch({
+    [CALL_API]: {
+      types: [API.FIELDS_UPDATE_START, fieldUpdateComplete, API.FIELDS_UPDATE_ERROR],
+      method: &#039;POST&#039;,
+      endpoint: `${__API_URL__}/fields/update`,
+      payload: { ...fieldValues }
+    }
+  });
+};
+
+export const fieldAddComplete = (data) =&gt; (dispatch, getState) =&gt; {
+  dispatch(reset(&#039;updateFieldsForm&#039;));
+  dispatch({ type: API.FIELDS_ADD_COMPLETE, payload: data.fields });
+  dispatch({
+    type: UI.SNACKBAR_SHOW,
+    payload: &#039;Field Successfully Added&#039;,
+    meta: { variant: &#039;success&#039; }
+  });
+};
+
+export const addField = () =&gt; (dispatch, getState) =&gt; {
+  const fieldValues = getState().form.updateFieldsForm.values;
+  return dispatch({
+    [CALL_API]: {
+      types: [API.FIELDS_ADD_START, fieldAddComplete, API.FIELDS_ADD_ERROR],
+      method: &#039;POST&#039;,
+      endpoint: `${__API_URL__}/fields/add`,
+      payload: { ...fieldValues }
+    }
+  });
+};
+
+export const fieldsDeleteComplete = (data) =&gt; (dispatch, getState) =&gt; {
+  dispatch(reset(&#039;updateFieldsForm&#039;));
+  dispatch({ type: API.FIELDS_ADD_COMPLETE, payload: data.fields });
+  dispatch({
+    type: UI.SNACKBAR_SHOW,
+    payload: &#039;Field Successfully Deleted&#039;,
+    meta: { variant: &#039;success&#039; }
+  });
+};
+
+export const deleteField = (fieldId) =&gt; (dispatch, getState) =&gt;
+  dispatch({
+    [CALL_API]: {
+      types: [API.FIELDS_DELETE_START, API.FIELDS_DELETE_COMPLETE, API.FIELDS_DELETE_ERROR],
+      method: &#039;POST&#039;,
+      endpoint: `${__API_URL__}/fields/delete`,
+      payload: { id: fieldId }
+    }
+  });
+
+export const editField = ({ type, label, tabName, options, id }) =&gt; (dispatch) =&gt;
+  dispatch({
+    type: API.FIELDS_EDIT,
+    payload: { type: type.toString(), label, tabName, options, id }
+  });
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

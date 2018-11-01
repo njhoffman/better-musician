@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/components/Field/FormField.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/components/Field/FormField.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">59.84</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">159</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">20.54</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">0.67</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import React from &#039;react&#039;;
+import PropTypes from &#039;prop-types&#039;;
+import { Field } from &#039;redux-form&#039;;
+import { Column } from &#039;react-foundation&#039;;
+
+import FormRow from &#039;./FormRow&#039;;
+import Select from &#039;./Select&#039;;
+import MultiSelect from &#039;./MultiSelect&#039;;
+import TextboxField from &#039;./Textbox&#039;;
+import Slider from &#039;./Slider&#039;;
+import NumberField from &#039;./Number&#039;;
+import Checkbox from &#039;./Checkbox&#039;;
+import Stars from &#039;./Stars&#039;;
+import Difficulty from &#039;./Difficulty&#039;;
+import AutoComplete from &#039;./AutoComplete&#039;;
+import YouTubeLink from &#039;./YouTubeLink&#039;;
+import Chip from &#039;./Chip&#039;;
+
+
+/* eslint-disable no-multi-spaces */
+// const fieldOptions = {
+// 0: { name: &#039;Text Box&#039;,          component: Textbox },
+// 1: { name: &#039;AutoComplete Box&#039;,  component: AutoComplete },
+// 2: { name: &#039;Select Menu&#039;,       component: Select },
+// 3: { name: &#039;Multi-Select Menu&#039;, component: Select },
+// 4: { name: &#039;Checkbox&#039;        #&lt;{(| component: RenderCheckbox |)}&gt;# },
+// 5: { name: &#039;Radio Buttons&#039;   #&lt;{(| component: RenderRadioButtons |)}&gt;# },
+// 6: { name: &#039;Date&#039;            #&lt;{(| component: RenderDate |)}&gt;# },
+// 7: { name: &#039;YouTube Link&#039;,      component: &lt;YouTubeLink /&gt; },
+// 8: { name: &#039;PDF Link&#039;        #&lt;{(| component: RenderPdfLink |)}&gt;# }
+// };
+/* eslint-enable no-multi-spaces */
+
+
+const renderField = ({ type, ...props }) =&gt; {
+  if (type === &#039;select&#039; || type === &#039;Select Menu&#039; || type === 2) {
+    return &lt;Select {...props} /&gt;;
+  }
+  if (type === &#039;text&#039; || type === &#039;Text Box&#039; || type === 0) {
+    return (&lt;TextboxField {...props} /&gt;);
+  }
+  if (type === &#039;number&#039;) {
+    return (&lt;NumberField {...props} /&gt;);
+  }
+  if (type === &#039;slider&#039;) {
+    return (&lt;Slider {...props} /&gt;);
+  }
+  if (type === &#039;multiselect&#039; || type === &#039;Multi-Select Menu&#039; || type === 3) {
+    return (&lt;MultiSelect {...props} /&gt;);
+  }
+  if (type === &#039;autocomplete&#039; || type === &#039;AutoComplete Box&#039; || type === 1) {
+    return (&lt;AutoComplete {...props} /&gt;);
+  }
+  if (type === &#039;youtube&#039; || type === &#039;YouTube Link&#039; || type === 7) {
+    return (&lt;YouTubeLink {...props} /&gt;);
+  }
+  return (&lt;Checkbox {...props} /&gt;);
+};
+const FormField = ({
+  small, medium, large, centerOnSmall, variant, classes, ...props
+}) =&gt; (
+  &lt;Column
+    style={{
+      flex: &#039;1 1 auto&#039;,
+      width: &#039;100%&#039;
+    }}
+    {...{ small, medium, large, centerOnSmall }}&gt;
+    &lt;Field
+      component={renderField}
+      {...props}
+    /&gt;
+  &lt;/Column&gt;
+);
+
+FormField.defaultProps = {
+  centerOnSmall: false,
+  style:         {},
+  large:         8,
+  medium:        10,
+  small:         12,
+  type:          4 // checkbox
+};
+
+FormField.propTypes = {
+  centerOnSmall: PropTypes.bool,
+  type:          PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.node,
+    PropTypes.func
+  ]), // TODO: combine type and field.typeName attributes
+  style:         PropTypes.instanceOf(Object),
+  small:         PropTypes.number,
+  medium:        PropTypes.number,
+  large:         PropTypes.number
+};
+
+// { ...{ ...this.props, variant, classes }}
+// className={variant === FIELD_VIEW ? classes.fieldView : variant === FIELD_ADD ? classes.fieldAdd : classes.fieldEdit}
+// disabled={variant === FIELD_VIEW}
+
+// const FormField = ({
+//   small, medium, large, preview,
+//   style, centerOnSmall, classes, tabName,
+//   variant = FIELD_VARIANT_EDIT,
+//   ...props
+// }) =&gt; (
+// );
+//
+// FormField.propTypes = {
+// };
+
+export {
+  Select,
+  MultiSelect,
+  TextboxField,
+  Slider,
+  Stars,
+  NumberField as Number,
+  Checkbox,
+  Difficulty,
+  AutoComplete,
+  Chip,
+  FormRow
+};
+
+export default FormField;
+
+// const styles = (theme) =&gt; ({
+//   dirtyField: {
+//     MuiInputBaseRoot
+//     boxShadow: &#039;0px 0px 20px 1px #18423b&#039;,
+//     &#039;&amp;:before&#039;: {
+//       left: 0,
+//       right: 0,
+//       bottom: 0,
+//       content: &quot;&amp;nbsp;&quot;,
+//       position: &#039;absolute&#039;,
+//       transition: &#039;border-bottom-color 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms&#039;,
+//       borderBottom: &#039;1px solid rgba(0, 0, 0, 0.42)&#039;,
+//       pointerEvents: &#039;none&#039;
+//     },
+//     &#039;&amp;:after&#039;: {
+//       transform: &#039;scaleX(1)&#039;,
+//       left: 0,
+//       right: 0,
+//       bottom: 0,
+//       content: &quot;&quot;,
+//       position: &#039;absolute&#039;,
+//       transform: &#039;scaleX(0)&#039;,
+//       transition: &#039;transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms&#039;,
+//       borderBottom: &#039;2px solid #1976d2&#039;,
+//       pointerEvents: &#039;none&#039;,
+//     }
+//   }
+// });
+//
+//
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

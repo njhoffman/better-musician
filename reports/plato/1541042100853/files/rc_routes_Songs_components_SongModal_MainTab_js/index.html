@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/routes/Songs/components/SongModal/MainTab.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/routes/Songs/components/SongModal/MainTab.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">64.81</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">246</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">31.55</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.59</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import React, { Fragment } from &#039;react&#039;;
+import { connect } from &#039;react-redux&#039;;
+import { withStyles, Typography } from &#039;@material-ui/core&#039;;
+import FormField, { FormRow, Stars } from &#039;components/Field&#039;;
+import { Row, Column } from &#039;react-foundation&#039;;
+import PropTypes from &#039;prop-types&#039;;
+
+import Button from &#039;components/Button&#039;;
+import {
+  genreMatch,
+  instrumentMatch,
+  artistMatch,
+  artistLastNames,
+  instruments,
+  genres
+} from &#039;selectors/songs&#039;;
+import { maxDifficulty } from &#039;selectors/users&#039;;
+import {
+  FIELD_EDIT, FIELD_ADD, FIELD_VIEW,
+  MODAL_VARIANT_EDIT, MODAL_VARIANT_ADD, MODAL_VARIANT_VIEW
+} from &#039;constants/ui&#039;;
+// import css from &#039;./AddSong.scss&#039;;
+
+const styles = (theme) =&gt; ({
+  imageFrame: {
+    textAlign: &#039;center&#039;
+  },
+  image: {
+    height: &#039;200px&#039;,
+    marginBottom: &#039;5px&#039;
+  },
+  progressStars: theme.app.starColor,
+  row: {
+    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit,
+    flexWrap: &#039;nowrap&#039;,
+    [theme.breakpoints.down(&#039;xs&#039;)]: {
+      flexWrap: &#039;wrap&#039;,
+      marginTop: &#039;0px&#039;,
+      marginBottom: &#039;0px&#039;
+    },
+  },
+  field: {
+    [theme.breakpoints.down(&#039;xs&#039;)]: {
+      marginTop: theme.spacing.unit,
+      marginBottom: theme.spacing.unit,
+    },
+  }
+});
+
+const fieldMode = (modalVariant) =&gt; {
+  if (modalVariant === MODAL_VARIANT_VIEW) {
+    return FIELD_VIEW;
+  } else if (modalVariant === MODAL_VARIANT_ADD) {
+    return FIELD_ADD;
+  }
+  return FIELD_EDIT;
+};
+
+export const SongMainTab = ({
+  activeField,
+  lastActiveField,
+  matchedArtist,
+  matchedGenre,
+  matchedInstrument,
+  lastNameOptions,
+  instrumentOptions,
+  genreOptions,
+  maxDiff,
+  classes,
+  variant,
+  ...props
+}) =&gt; {
+  const fieldProps = {
+    ...props,
+    className: classes.field,
+    mode: fieldMode(variant)
+  };
+
+  const matchedImages = () =&gt; {
+    const fieldRE = /^artist|^instrument|^genre/;
+    let field = &#039;artist&#039;;
+    if (activeField &amp;&amp; fieldRE.test(activeField)) {
+      field = activeField;
+    } else if (lastActiveField &amp;&amp; fieldRE.test(lastActiveField)) {
+      field = lastActiveField;
+    }
+    field = field.replace(/\..*/, &#039;&#039;);
+    const matchers = { artist: matchedArtist, genre: matchedGenre, instrument: matchedInstrument };
+    const matched = matchers[field];
+    const buttonLabel =  matched.images &amp;&amp; matched.images.length &gt; 0 ? &#039;Change Picture&#039; : &#039;Add Picture&#039;;
+    return { buttonLabel, imageLabel: matched.imageLabel, image: matched.primaryImage };
+  };
+
+  const renderImage = () =&gt; {
+    // TODO: Find a better way through config!
+    const { buttonLabel, imageLabel, image } = matchedImages();
+
+    return (
+      &lt;Column&gt;
+        &lt;img alt={`${imageLabel}`} className={classes.image} src={`${image}`} /&gt;
+        &lt;Typography&gt;{imageLabel}&lt;/Typography&gt;
+        { variant !== MODAL_VARIANT_EDIT &amp;&amp; &lt;Button variant=&#039;contained&#039; secondary label={buttonLabel} /&gt; }
+      &lt;/Column&gt;
+    );
+  };
+
+  const renderStars = (number) =&gt; (
+    &lt;Stars className={classes.progressStars} number={parseInt(number, 10)} /&gt;
+  );
+
+  const renderViewFields = () =&gt; (
+    &lt;FormRow className={classes.row}&gt;
+      &lt;FormField
+        name=&#039;title&#039;
+        type=&#039;text&#039;
+        label=&#039;Song Title&#039;
+        {...fieldProps}
+      /&gt;
+      &lt;FormField
+        name=&#039;artist.fullName&#039;
+        type=&#039;text&#039;
+        label=&#039;Song Artist&#039;
+        {...fieldProps}
+      /&gt;
+    &lt;/FormRow&gt;
+  );
+
+  const renderEditFields = () =&gt; (
+    &lt;Fragment&gt;
+      &lt;FormRow className={classes.row}&gt;
+        &lt;FormField
+          name=&#039;title&#039;
+          type=&#039;text&#039;
+          small={12}
+          medium={8}
+          centerOnSmall
+          label=&#039;Song Title&#039;
+          {...fieldProps}
+        /&gt;
+      &lt;/FormRow&gt;
+      &lt;FormRow className={classes.row}&gt;
+        &lt;FormField
+          name=&#039;artist.lastName&#039;
+          type=&#039;autocomplete&#039;
+          label=&#039;Last Name / Band&#039;
+          options={lastNameOptions}
+          maxResults={10}
+          {...fieldProps}
+        /&gt;
+        &lt;FormField
+          name=&#039;artist.firstName&#039;
+          type=&#039;text&#039;
+          label=&#039;First Name&#039;
+          {...fieldProps}
+        /&gt;
+      &lt;/FormRow&gt;
+    &lt;/Fragment&gt;
+  );
+
+  return (
+    &lt;Fragment&gt;
+      &lt;FormRow className={classes.row}&gt;
+        &lt;Column&gt;
+          &lt;Row className={classes.imageFrame}&gt;
+            { renderImage() }
+          &lt;/Row&gt;
+        &lt;/Column&gt;
+      &lt;/FormRow&gt;
+      {variant === MODAL_VARIANT_VIEW &amp;&amp; renderViewFields()}
+      {variant !== MODAL_VARIANT_VIEW &amp;&amp; renderEditFields()}
+      &lt;FormRow className={classes.row}&gt;
+        &lt;FormField
+          name=&#039;genre.displayName&#039;
+          type=&#039;autocomplete&#039;
+          label=&#039;Song Genre&#039;
+          options={genreOptions}
+          maxResults={2}
+          {...fieldProps}
+        /&gt;
+        &lt;FormField
+          name=&#039;instrument.displayName&#039;
+          type=&#039;autocomplete&#039;
+          label=&#039;Instrument&#039;
+          options={instrumentOptions}
+          maxResults={10}
+          {...fieldProps}
+        /&gt;
+      &lt;/FormRow&gt;
+      &lt;FormRow className={classes.row}&gt;
+        &lt;FormField
+          name=&#039;difficulty&#039;
+          type=&#039;slider&#039;
+          label=&#039;Difficulty&#039;
+          min={1}
+          max={maxDiff}
+          step={1}
+          {...fieldProps}
+        /&gt;
+        &lt;FormField
+          name=&#039;progress&#039;
+          type=&#039;slider&#039;
+          label=&#039;Progress&#039;
+          min={0}
+          max={4}
+          step={1}
+          valueDisplay={renderStars}
+          {...fieldProps}
+        /&gt;
+      &lt;/FormRow&gt;
+    &lt;/Fragment&gt;
+  );
+};
+
+SongMainTab.defaultProps = {
+  matchedArtist:     null,
+  lastNameOptions:   [],
+  genreOptions:      [],
+  instrumentOptions: [],
+  maxDiff:           10
+};
+
+SongMainTab.propTypes = {
+  lastActiveField:   PropTypes.string.isRequired,
+  activeField:       PropTypes.string.isRequired,
+  matchedArtist:     PropTypes.instanceOf(Object),
+  lastNameOptions:   PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  genreOptions:      PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  instrumentOptions: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  maxDiff:           PropTypes.number,
+  classes:           PropTypes.instanceOf(Object).isRequired,
+  variant:           PropTypes.string.isRequired
+};
+
+const mapStateToProps = (state) =&gt; ({
+  matchedGenre:      genreMatch(state),
+  matchedInstrument: instrumentMatch(state),
+  matchedArtist:     artistMatch(state),
+  maxDiff:           maxDifficulty(state),
+  lastNameOptions:   artistLastNames(state),
+  genreOptions:      genres(state),
+  instrumentOptions: instruments(state)
+});
+
+export default connect(mapStateToProps)(withStyles(styles)(SongMainTab));
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/utils/auth/sessionStorage.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/utils/auth/sessionStorage.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">80.14</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">156</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">42.98</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.74</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import _ from &#039;lodash&#039;;
+import Cookies from &#039;browser-cookies&#039;;
+import * as A from &#039;constants/auth&#039;;
+import { init as initLog } from &#039;shared/logger&#039;;
+
+const { debug } = initLog(&#039;auth-session&#039;);
+
+// even though this code shouldn&#039;t be used server-side, node will throw
+// errors if &quot;window&quot; is used
+// const root = Function(&#039;return this&#039;)() || (42, eval)(&#039;this&#039;);
+
+// stateful variables that persist throughout session
+window.authState = {
+  currentSettings: {},
+  currentEndpoints: {},
+  defaultEndpointKey: null
+};
+
+const unescapeQuotes = (val) =&gt; val &amp;&amp; val.replace(/(&quot;|&#039;)/g, &#039;&#039;);
+
+export const retrieveData = (key) =&gt; {
+  const { storage } = window.authState.currentSettings;
+  const val = storage === &#039;cookies&#039; ? Cookies.get(key) : window.localStorage.getItem(key);
+  let parsedVal;
+  // if value is a simple string, the parser will fail, just return the string
+  try {
+    parsedVal = JSON.parse(val);
+  } catch (e) {
+    parsedVal = unescapeQuotes(val);
+  }
+  debug(
+    `Getting &quot;${key}&quot; from ${storage}`,
+    { _sessionGet: { key, parsedVal, storage } }
+  );
+
+  return parsedVal;
+};
+
+export const persistData = (key, val) =&gt; {
+  const { cookiePath, storage, cookieExpiry } = window.authState.currentSettings;
+  const sVal = JSON.stringify(val);
+  debug(
+    `Saving session to ${storage}: ${key}`,
+    { _sessionSave: { key, val, storage } }
+  );
+  if (storage === &#039;cookies&#039;) {
+    Cookies.set(key, sVal, {
+      expires: cookieExpiry,
+      path:    cookiePath
+    });
+  } else {
+    window.localStorage.setItem(key, sVal);
+  }
+};
+
+export const getCurrentSettings    = () =&gt; window.authState.currentSettings;
+export const setCurrentSettings    = (s) =&gt; { window.authState.currentSettings = s; };
+export const getCurrentEndpoints    = () =&gt; window.authState.currentEndpoints;
+export const setCurrentEndpoints    = (e) =&gt; { window.authState.currentEndpoints = e; };
+export const getDefaultEndpointKey = () =&gt; retrieveData(A.DEFAULT_CONFIG_KEY);
+export const setDefaultEndpointKey = (k) =&gt; (persistData(A.DEFAULT_CONFIG_KEY, k));
+export const getCurrentEndpointKey = () =&gt; (retrieveData(A.SAVED_CONFIG_KEY) || getDefaultEndpointKey());
+export const setCurrentEndpointKey = (k) =&gt; (persistData(A.SAVED_CONFIG_KEY, k || getDefaultEndpointKey()));
+
+export const getSessionEndpointKey = (k) =&gt; {
+  const key = k || getCurrentEndpointKey();
+  if (!key) {
+    throw new Error(&#039;Authorization is not configured&#039;);
+  }
+  return key;
+};
+
+export const getSessionEndpoints    = (k) =&gt; getCurrentEndpoints()[getSessionEndpointKey(k)];
+
+export const getInitialEndpointKey = () =&gt; unescapeQuotes(
+  Cookies.get(A.SAVED_CONFIG_KEY) || (window.localStorage &amp;&amp; window.localStorage.getItem(A.SAVED_CONFIG_KEY))
+);
+
+export const getApiUrl = (key) =&gt; window.authState.currentEndpoints[getSessionEndpointKey(key)].apiUrl;
+
+// only should work for current session
+const getUrl = (endpointKey, path) =&gt; `${getApiUrl(endpointKey)}${_.get(getSessionEndpoints(endpointKey), path)}`;
+
+
+export const getDestroyAccountUrl        = (eKey) =&gt; getUrl(eKey, &#039;accountDeletePath&#039;);
+export const getSignOutUrl               = (eKey) =&gt; getUrl(eKey, &#039;auth.logout&#039;);
+export const getEmailSignInUrl           = (eKey) =&gt; getUrl(eKey, &#039;auth.login&#039;);
+export const getEmailSignUpUrl           = (eKey) =&gt; getUrl(eKey, &#039;auth.register&#039;); // ?config_name=${eKey}`;
+export const getPasswordResetUrl         = (eKey) =&gt; getUrl(eKey, &#039;auth.passwordReset&#039;); // ?config_name=${eKey}`;
+export const getTokenValidationPath      = (eKey) =&gt; getUrl(eKey, &#039;auth.validateToken&#039;);
+export const getConfirmationSuccessUrl   = () =&gt; window.authState.currentSettings.confirmationSuccessUrl();
+export const getPasswordResetRedirectUrl = () =&gt; window.authState.currentSettings.confirmationSuccessUrl();
+export const getTokenFormat              = () =&gt; window.authState.currentSettings.tokenFormat;
+
+export const getOAuthUrl = ({ provider, params, endpointKey }) =&gt; {
+  let oAuthUrl = [
+    `${getApiUrl(endpointKey)}${getSessionEndpoints(endpointKey).authProviderPaths[provider]}`,
+    `?auth_origin_url=${encodeURIComponent(window.location.href)}`,
+    `&amp;config_name=${encodeURIComponent(getSessionEndpointKey(endpointKey))}`
+  ].join(&#039;&#039;);
+
+  if (params) {
+    Object.keys(params).forEach((key) =&gt; {
+      oAuthUrl += &#039;&amp;&#039;;
+      oAuthUrl += encodeURIComponent(key);
+      oAuthUrl += &#039;=&#039;;
+      oAuthUrl += encodeURIComponent(params[key]);
+    });
+  }
+
+  return oAuthUrl;
+};
+
+export const destroySession = () =&gt; {
+  const sessionKeys = [
+    A.SAVED_CREDS_KEY,
+    A.SAVED_CONFIG_KEY
+  ];
+
+  debug(&#039;Destroying session&#039;);
+  Object.keys(sessionKeys).forEach((key) =&gt; {
+    const sessionKey = sessionKeys[key];
+
+    // kill all local storage keys
+    if (window.localStorage) {
+      window.localStorage.removeItem(sessionKey);
+    }
+
+    // remove from base path in case config is not specified
+    Cookies.erase(sessionKey, {
+      path: window.authState.currentSettings.cookiePath || &#039;/&#039;
+    });
+  });
+};
+
+// reset stateful variables
+export const resetConfig = () =&gt; {
+  window.authState = {};
+  window.authState.currentSettings = {};
+  window.authState.currentEndpoints = {};
+  destroySession();
+};
+
+export const removeData = (key) =&gt; {
+  const { storage } = window.authState.currentSettings;
+  if (storage === &#039;cookies&#039;) {
+    Cookies.erase(key);
+  } else {
+    window.localStorage.removeItem(key);
+  }
+  debug(
+    `Removing key ${storage}: ${key}`,
+    { _sessionGet: { key, storage } }
+  );
+};
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

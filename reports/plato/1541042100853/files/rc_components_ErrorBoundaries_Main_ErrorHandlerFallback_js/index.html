@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/components/ErrorBoundaries/Main/ErrorHandlerFallback.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/components/ErrorBoundaries/Main/ErrorHandlerFallback.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">65.68</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">147</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">21.54</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.08</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">// Fallback.jsx
+import React from &#039;react&#039;;
+import PropTypes from &#039;prop-types&#039;;
+
+import Modal from &#039;./Modal&#039;;
+
+const containerStyle = {
+  // opacity: 0.9,
+  boxSizing: &#039;border-box&#039;,
+  backgroundColor: &#039;rgba(0,0,0,1.0)&#039;,
+  color: &#039;#fff&#039;,
+  position: &#039;fixed&#039;,
+  height: &#039;100%&#039;,
+  width: &#039;100%&#039;,
+  top: 0,
+  left: 0,
+  overflowY: &#039;auto&#039;,
+  padding: &#039;50px&#039;
+};
+const btnStyle = {
+  position: &#039;absolute&#039;,
+  right: &#039;16px&#039;,
+  top: &#039;35px&#039;,
+  cursor: &#039;pointer&#039;,
+  minWidth: &#039;40px&#039;,
+  minHeight: &#039;30px&#039;,
+  borderRadius: &#039;5px&#039;,
+  outlineStyle: &#039;none&#039;
+};
+const preStyle = {
+  fontFamily: &#039;monospace, monospace&#039;,
+  whiteSpace: &#039;pre-wrap&#039;,
+  wordWrap: &#039;break-word&#039;,
+  wordBreak: &#039;break-word&#039;,
+  padding: &#039;0 6px&#039;,
+  fontSize: &#039;0.8em&#039;
+};
+const componentTableStyle = {
+  marginLeft: &#039;30px&#039;,
+  marginTop: &#039;15px&#039;,
+  width: &#039;auto&#039;
+};
+
+const componentNameStyle = {
+  paddingRight: &#039;15px&#039;,
+  color: &#039;rgba(255, 215, 215, 1)&#039;
+};
+
+const componentSourceStyle = {
+  color: &#039;#888888&#039;
+};
+
+const ErrorHandlerFallback = (props) =&gt; {
+  const { error, errorInfo, closeErrorModal } = props;
+  const errorTitle = error.message.split(&#039;\n&#039;)[0];
+  const errorComponents = [];
+  error.message.split(&#039;\n&#039;).forEach((msg, idx) =&gt; {
+    if (idx &gt; 0) {
+      const matches = msg.match(/(in) ([^ ]+) \((.*)\)$/);
+      if (matches &amp;&amp; matches.length === 4) {
+        errorComponents.push({ idx, component: matches[2], source: matches[3] });
+      } else {
+        errorComponents.push({ idx, component: msg, source: msg });
+      }
+    }
+  });
+  const stackLineRE = /at ([^(]+ )([^.]+.\/)([^:]+):(\d+):(\d+)/;
+  const stackTitle = error.stack.split(&#039;\n&#039;)[0];
+  const stackLines = error.stack.replace(stackTitle, &#039;&#039;).split(&#039;\n&#039;)
+    .map((line, idx) =&gt; ({ line, idx }));
+
+  stackLines.map(({ line, idx }) =&gt; {
+    const matches = line.match(stackLineRE);
+    if (matches &amp;&amp; matches.length === 6 &amp;&amp; matches[3].indexOf(&#039;node_modules&#039;) === -1) {
+      return (
+        &lt;span key={idx}&gt;
+          &lt;span style={{ color: &#039;#ffffff&#039; }}&gt;{matches[1]}&lt;/span&gt;
+          &lt;span&gt;{matches[2]}&lt;/span&gt;
+          &lt;span style={{ color: &#039;#ffffff&#039; }}&gt;{matches[3]}&lt;/span&gt;
+          &lt;span&gt;:&lt;/span&gt;
+          &lt;span style={{ color: &#039;#aaccff&#039;, fontWeight: &#039;bold&#039; }}&gt;{matches[5]}&lt;/span&gt;
+          &lt;span&gt;:&lt;/span&gt;
+          &lt;span style={{ color: &#039;#ccddff&#039; }}&gt;{matches[4]}&lt;/span&gt;
+        &lt;/span&gt;
+      );
+    }
+    return (&lt;span key={idx}&gt;{line}&lt;/span&gt;);
+  });
+
+  return (
+    &lt;Modal&gt;
+      &lt;div style={containerStyle}&gt;
+        &lt;button type=&#039;button&#039; style={btnStyle} onClick={closeErrorModal}&gt;Close&lt;/button&gt;
+        &lt;div&gt;
+          &lt;pre style={{ ...preStyle, color: &#039;#ff0404&#039;, fontSize: &#039;1.0em&#039; }}&gt;
+            {errorTitle}
+          &lt;/pre&gt;
+          &lt;div style={{ ...preStyle }}&gt;
+            &lt;table style={{ ...componentTableStyle }}&gt;
+              &lt;tbody&gt;
+                {errorComponents &amp;&amp; errorComponents.map((ec, i) =&gt; (
+                  &lt;tr key={ec.idx}&gt;
+                    &lt;td style={{ ...componentNameStyle }}&gt;{ec.component}&lt;/td&gt;
+                    &lt;td style={{ ...componentSourceStyle }}&gt;{ec.source}&lt;/td&gt;
+                  &lt;/tr&gt;
+                ))}
+              &lt;/tbody&gt;
+            &lt;/table&gt;
+          &lt;/div&gt;
+          &lt;hr /&gt;
+          &lt;p&gt;
+            Stack
+          &lt;/p&gt;
+          &lt;pre style={{ ...preStyle, color: &#039;rgba(255, 215, 215, 1)&#039; }}&gt;
+            {stackTitle}
+          &lt;/pre&gt;
+          &lt;pre style={{ ...preStyle, color: &#039;#888888&#039; }}&gt;
+            &lt;code&gt;
+              {stackLines.map((sl, i) =&gt; (
+                &lt;div key={sl.idx}&gt;{sl}&lt;/div&gt;
+              ))}
+            &lt;/code&gt;
+          &lt;/pre&gt;
+          &lt;hr /&gt;
+          &lt;p&gt;
+            ComponentStack
+          &lt;/p&gt;
+          &lt;pre style={{ ...preStyle, color: &#039;#f3d429&#039; }}&gt;{errorInfo.componentStack}&lt;/pre&gt;
+          &lt;hr /&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/Modal&gt;
+  );
+};
+
+ErrorHandlerFallback.defaultProps = {
+  errorInfo: null
+};
+
+ErrorHandlerFallback.propTypes = {
+  error:           PropTypes.instanceOf(Object).isRequired,
+  errorInfo:       PropTypes.instanceOf(Object),
+  closeErrorModal: PropTypes.func.isRequired
+};
+
+export default ErrorHandlerFallback;
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

@@ -34,6 +34,7 @@ const LoadComponent = ({ store, history }, route, importRoute) => Loadable({
 
 // const Admin = userIsAuthenticatedRedir(userIsAdminRedir(AdminComponent));
 
+/* eslint-disable */
 class Routes extends Component {
   constructor(props) {
     super(props);
@@ -106,6 +107,7 @@ class Routes extends Component {
     );
   }
 }
+/* eslint-enable */
 
 const logout = () => ({
   type: 'USER_LOGGED_OUT'

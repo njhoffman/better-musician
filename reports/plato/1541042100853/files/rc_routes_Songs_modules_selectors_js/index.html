@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - rc/routes/Songs/modules/selectors.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato.css" rel="stylesheet" type="text/css">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="https://github.com/the-simian/es6-plato">ES6 Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+      <li class="active">
+        <a href="display.html">Summary Display</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>rc/routes/Songs/modules/selectors.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">81.71</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">107</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">44.58</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.31</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import { orm } from &#039;store/orm&#039;;
+import { createSelector as ormCreateSelector } from &#039;redux-orm&#039;;
+import { createSelector } from &#039;reselect&#039;;
+import { find, isEmpty } from &#039;lodash&#039;;
+
+export const ormSelector = state =&gt; state.orm;
+
+const songsSelector = ormCreateSelector(orm, (Session, SongsView) =&gt; {
+  const sortField = SongsView ? SongsView.sortField : &#039;title&#039;;
+  const perPage = SongsView ? SongsView.paginationPerPage : false;
+  const paginationCurrent = SongsView ? SongsView.paginationCurrent : 1;
+
+  let retObj = Session.Song.all().toModelArray();
+
+  if (sortField) {
+    retObj = retObj.sort((a, b) =&gt; {
+      if (sortField === &#039;artist&#039;) {
+        return a.artist.fullName &gt; b.artist.fullName;
+      }
+      return (a[sortField] &gt; b[sortField]);
+    });
+    if (SongsView.sortInverse) {
+      retObj = retObj.reverse();
+    }
+  }
+
+  if (perPage) {
+    const start = (paginationCurrent) * perPage;
+    const end = start + parseInt(perPage, 10);
+    retObj = retObj.slice(start, end);
+  }
+  return retObj;
+});
+
+const currentSongSelector = ormCreateSelector(orm, (Session, SongsView) =&gt; {
+  if (!isEmpty(SongsView) &amp;&amp; !isEmpty(SongsView.currentSong)) {
+    const song = Session.Song.withId(SongsView.currentSong);
+    // TODO: find a better solution
+    song.progress = parseInt(song.progress, 10);
+    song.difficulty = parseInt(song.difficulty, 10);
+    song.customFields = Session.CustomField.all()
+      .toModelArray()
+      .map((cf/* , idx */) =&gt; {
+        const found = find(song.customFields, { id: cf.id });
+        return found ? found.value : &#039;&#039;;
+      });
+    return song;
+  }
+  return null;
+});
+
+const paginationTotalSelector = ormCreateSelector(orm, Session =&gt; Session.Song.count());
+
+const paginationStartSelector = ormCreateSelector(orm, (Session, SongsView) =&gt; (
+  1 + (SongsView.paginationCurrent - 1) * parseInt(SongsView.paginationPerPage, 10)
+));
+
+const paginationEndSelector = ormCreateSelector(orm, (Session, SongsView) =&gt; (
+  SongsView.paginationCurrent * SongsView.paginationPerPage &gt; Session.Song.count()
+    ? Session.Song.count()
+    : SongsView.paginationCurrent * SongsView.paginationPerPage
+));
+
+const paginationPagesSelector = ormCreateSelector(orm, (Session, SongsView) =&gt; (
+  parseInt(Math.ceil(Session.Song.count() / SongsView.paginationPerPage), 10)
+));
+
+const songStatsSelector = ormCreateSelector(orm, (Session, state) =&gt; (
+  Session.Song ? Session.Song.getStats() : {}
+));
+
+
+const savedTabsSelector = ormCreateSelector(orm, (Session, currentSong) =&gt; {
+  const tabs = {};
+  Session.CustomField.all()
+    .toModelArray()
+    .forEach((field, idx) =&gt; {
+      // TODO: find a better way through the model
+      const cField = field;
+      cField.idx = idx;
+
+      if (!tabs[cField.tabName]) {
+        tabs[cField.tabName] = [];
+      }
+      tabs[cField.tabName].push({ ...cField.fieldProps });
+    });
+
+  return Object.keys(tabs).map((tabKey, idx) =&gt; (
+    { name: tabKey, fields: tabs[tabKey], idx }
+  ));
+});
+
+// TODO: Fix race condition where selectors cause errors before SongsView is initialized
+export const songs = createSelector(ormSelector, state =&gt; state.SongsView, songsSelector);
+export const currentSong = createSelector(ormSelector, state =&gt; state.SongsView, currentSongSelector);
+export const paginationTotal = createSelector(ormSelector, state =&gt; state.SongsView, paginationTotalSelector);
+export const paginationStart = createSelector(ormSelector, state =&gt; state.SongsView, paginationStartSelector);
+export const paginationEnd = createSelector(ormSelector, state =&gt; state.SongsView, paginationEndSelector);
+export const paginationPages = createSelector(ormSelector, state =&gt; state.SongsView, paginationPagesSelector);
+export const songStats = createSelector(ormSelector, state =&gt; state.orm, songStatsSelector);
+
+export const savedTabs = createSelector(
+  ormSelector,
+  state =&gt; (state.SongsView ? state.SongsView.currentSong : null),
+  savedTabsSelector
+);
+</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ complexity.cyclomatic }} <br>
+    Length : {{ complexity.halstead.length }} <br>
+    Difficulty : {{ complexity.halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ complexity.halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>
