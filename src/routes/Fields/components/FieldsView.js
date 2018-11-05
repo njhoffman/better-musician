@@ -91,7 +91,7 @@ export const FieldsView = ({
         label='Update'
         labelStyle={{ paddingRight: '5px' }}
         style={{ width: '100px', marginRight: '15px' }}
-        onClick={updateField}
+        onClick={() => update}
         primary
         icon={<SaveIcon style={{ marginTop: '-10px' }} />}
         size='small'
@@ -115,7 +115,7 @@ export const FieldsView = ({
       label='Add Field'
       labelStyle={{ paddingRight: '5px' }}
       style={{ width: '160px', marginRight: '15px' }}
-      onClick={add}
+      onClick={() => add}
       primary
       size='small'
       icon={<AddIcon style={{ marginTop: '-10px' }} />}
@@ -162,14 +162,13 @@ export const FieldsView = ({
               type='text'
             />
           </FormRow>
-          {renderExtraFields()}
+          {formValues && renderExtraFields()}
           <FormRow className={classes.buttonBar}>
-            {editingField && renderEditButtons()}
-            {!editingField && renderAddButtons()}
+            {editingField ? renderEditButtons() : renderAddButtons()}
           </FormRow>
           <Divider className={classes.buttonDivider} />
-          <FieldList {...{ editingField }} {...props} />
         </form>
+        <FieldList {...{ editingField }} {...props} />
       </Paper>
     </Column>
   );
@@ -179,7 +178,6 @@ FieldsView.defaultProps = {
   editingField: null,
   formValues: null
 };
-
 
 FieldsView.propTypes = {
   editingField: PropTypes.shape({
@@ -199,7 +197,7 @@ const mapActionCreators = {
 };
 
 const mapStateToProps = (state) => ({
-  editingField:  state.FieldsView.editingField,
+  editingField:  state.FieldsView ? state.FieldsView.editingField : null,
   formValues:    state.form.updateFieldsForm ? state.form.updateFieldsForm.values : null
 });
 

@@ -5,9 +5,11 @@ import { MdStar as StarIcon } from 'react-icons/md';
 
 const Stars = ({ number, starColor, className, style }) => (
   <Typography className={className} style={style}>
-    {[...Array(number)].map((x, i) => (
-      <StarIcon key={x} style={{ color: starColor }} />
-    ))}
+    {[...Array(number)]
+      .map((x, i) => ({ idx: `star-${i}` }))
+      .map(star => (
+        <StarIcon key={star.idx} style={{ color: starColor }} />
+      ))}
   </Typography>
 );
 

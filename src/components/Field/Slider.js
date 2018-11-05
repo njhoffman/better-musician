@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FormLabel, withStyles } from '@material-ui/core';
+import { Typography, withStyles } from '@material-ui/core';
 import MaterialSlider from '@material-ui/lab/Slider';
 
 import { FIELD_VIEW } from 'constants/ui';
@@ -45,6 +45,9 @@ const styles = (theme) => ({
   },
   view: {
     display: 'none'
+  },
+  slider: {
+    padding: '12px 0px'
   }
 });
 
@@ -55,6 +58,7 @@ class Slider extends Component {
     input:        PropTypes.instanceOf(Object).isRequired,
     label:        PropTypes.string,
     valueDisplay: PropTypes.func,
+    fullWidth:    PropTypes.bool,
     min:          PropTypes.number,
     max:          PropTypes.number,
     step:         PropTypes.number
@@ -65,6 +69,7 @@ class Slider extends Component {
     max: 10,
     step: 1,
     label: '',
+    fullWidth: true,
     valueDisplay: (currValue) => currValue,
   };
 
@@ -83,15 +88,16 @@ class Slider extends Component {
     input.value = currValue;
     return (
       <div className={`${classes.root} ${fullWidth ? classes.fullWidth : ''}`}>
-        <FormLabel>
+        <Typography>
           <div className={`${classes.label} ${classes.left}`}>
             {label}
           </div>
           <div className={`${classes.label} ${classes.right}`}>
             { valueDisplay(currValue) }
           </div>
-        </FormLabel>
+        </Typography>
         <SliderForm
+          classes={{ container: classes.slider }}
           disabled={mode === FIELD_VIEW}
           onChange={(value) => this.setState({ value })}
           value={currValue}

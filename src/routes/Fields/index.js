@@ -6,3 +6,4 @@ export default Loadable({
   loader: () => import('./components/FieldsView'),
   loading: LoadingIndicator
 });
+/* eslint-enable */

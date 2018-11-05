@@ -7,7 +7,9 @@ import { withRouter } from 'react-router';
 import { MdClose as ResetIcon, MdSave as SaveIcon } from 'react-icons/md';
 import { Paper, Tabs, Tab, AppBar, Divider, withStyles } from '@material-ui/core';
 
+import validate from 'utils/validate';
 import { updateSettings } from 'actions/api';
+import { changedFields } from 'selectors/form';
 import Button from 'components/Button';
 import FormField, { FormRow } from 'components/Field';
 
@@ -168,7 +170,7 @@ SettingsView.defaultProps = {
 
 SettingsView.propTypes = {
   api:         PropTypes.instanceOf(Object).isRequired,
-  changed:     PropTypes.arrayOf(PropTypes.object).isRequired,
+  changed:     PropTypes.instanceOf(Object).isRequired,
   history:     PropTypes.instanceOf(Object).isRequired,
   setTheme:    PropTypes.func.isRequired,
   update:      PropTypes.func.isRequired,
@@ -198,12 +200,29 @@ const mapActionCreators = {
 const mapStateToProps = (state) => ({
   api:           state.api,
   initialValues: state.user.attributes,
+  changed:       changedFields(state.form.profile),
   settings:      state.user.attributes,
-  isTouched:     state.form.updateSettingsForm && state.form.updateSettingsForm.anyTouched,
-  syncErrors:    state.form.updateSettingsForm ? state.form.updateSettingsForm.syncErrors : {},
+  isTouched:     state.form.settings && state.form.settings.anyTouched,
+  syncErrors:    state.form.settings ? state.form.settings.syncErrors : {},
   isFetching:    state.api.user.update.loading,
   errors:        state.api.user.update.errors || []
 });
 
-const updateSettingsForm = reduxForm({ form: 'updateSettingsForm' })(withStyles(styles)(SettingsView));
-export default withRouter(connect(mapStateToProps, mapActionCreators)(updateSettingsForm));
+const validateFields = {
+  maxProgress:         [
+    ['isNumeric', 'Must Be Numeric']
+  ],
+  maxDifficulty:       [
+    ['isNumeric', 'Must Be Numeric']
+  ],
+  songBrushUpInterval: [
+    ['isNumeric', 'Must Be Numeric']
+  ]
+};
+
+const settingsForm = reduxForm({
+  form: 'settings',
+  validate: validate(validateFields)
+})(withStyles(styles)(SettingsView));
+
+export default withRouter(connect(mapStateToProps, mapActionCreators)(settingsForm));

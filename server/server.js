@@ -50,7 +50,7 @@ if (config.env === 'development') {
     logger      : webpackLogger
   });
 
-  // config.middleware.hot.log: process.stdout.write, // webpackLog
+  // config.middleware.hot.log =  console.log; // webpackLog
   app.use(webpackDevMiddleware(compiler, devConfig));
   app.use(webpackHotMiddleware(compiler, config.middleware.hot));
 

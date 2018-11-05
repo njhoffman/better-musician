@@ -49,7 +49,8 @@ const styles = (theme) => ({
   },
   dialogContent: {
     textAlign: 'center',
-    // alignItems: 'center',
+    // TODO: why does star slider extend dialog width along X-axis?
+    overflowX: 'hidden',
     alignItems: 'flex-start',
     justifyContent: 'center',
     display: 'flex',
@@ -74,8 +75,8 @@ const styles = (theme) => ({
     justifyContent: 'space-around',
   },
   customFieldRow: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit
+    // marginTop: `${theme.spacing.unit * 2}px`,
+    // marginBottom: `${theme.spacing.unit * 2}px`,
     // alignItems: 'center'
   }
 });
@@ -147,13 +148,11 @@ const SongModal = ({
                   <FormRow key={fieldIdx} className={classes.customFieldRow}>
                     {fields.map(field => (
                       <FormField
-                        small={6}
                         fullWidth={false}
                         key={field.id}
                         name={field.name}
                         variant={variant}
                         initialValues={initialValues}
-                        centerOnSmall
                         {...field}
                       />
                     ))}

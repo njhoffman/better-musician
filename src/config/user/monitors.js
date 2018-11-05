@@ -65,14 +65,21 @@ export default {
           background: 'rgba(0, 220, 220, 0.4)'
         }
       },
+      actionListItemSelected: {
+        'background-color': 'rgba(95, 120, 180, 0.2)'
+      },
       actionListItemName: {
         'white-space': 'nowrap'
       },
       actionListIsHidden: {
         display: 'flex',
-        height: '3px',
+        height: '1px',
         padding: '1px',
         overflow: 'hidden'
+      },
+      contentHeader: {
+        'font-size': '1.3em',
+        background: '#16161a'
       },
       diff: {
         padding: '1px 2px',

@@ -14,14 +14,14 @@ const styles = (theme) => ({
     width: '100%',
     display: 'flex',
     alignItems: 'center',
-    padding: '0px 24px'
+    margin: '0px 24px'
   },
   navLink: {
     textDecoration: 'none',
     width: '100%',
+    height: '100%',
     display: 'flex',
     alignItems: 'center',
-    padding: '0px 24px',
   },
   google: {
     borderRadius: '5px',
@@ -52,13 +52,15 @@ const styles = (theme) => ({
   },
   icon: {
     marginRight: '10px'
+  },
+  iconWrapper: {
   }
 });
 
 const MenuLink = ({ classes, label, Icon, loginLink }) => (
   <Fragment>
     {Icon && (
-      <ListItemIcon>
+      <ListItemIcon className={classes.iconWrapper}>
         <Icon className={classes.icon} />
       </ListItemIcon>
     )}
@@ -99,22 +101,20 @@ const DrawerMenuLink = ({
 }) => (
   <MenuItem
     onClick={onClick || hideDrawerMenu}
-    className={`${classes.root} ${classes[loginLink]}`}>
-    {link && (
-      <NavLink to={link} className={classes.navLink}>
-        {MenuLink({ classes, loginLink, ...props })}
-      </NavLink>
-    )}
-    {!link && (
-      <div className={classes.navButton}>
-        {MenuLink({ classes, loginLink, ...props })}
-      </div>
-    )}
+    className={`${classes.root} ${classes[loginLink] || ''}`}>
+    <div className={classes.navButton}>
+      {link && (
+        <NavLink to={link} className={classes.navLink}>
+          {MenuLink({ classes, loginLink, ...props })}
+        </NavLink>
+      )}
+      {!link && (MenuLink({ classes, loginLink, ...props }))}
+    </div>
   </MenuItem>
 );
 
 DrawerMenuLink.defaultProps = {
-  onClick:   (() => {}),
+  onClick:   null,
   link:      '',
   loginLink: ''
 };

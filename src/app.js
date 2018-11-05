@@ -28,8 +28,8 @@ const RedBox = require('redbox-react').default;
 const onError = (err, { componentStack }, props) => {
   error(`Application Error: ${err.name} ${componentStack.split('\n')[0]}`);
   // error.framesToPop
-  componentStack.split('\n').forEach(cs => {
-    error(cs);
+  componentStack.split('\n').forEach((cs, i) => {
+    error(`(${i}) ${cs}`);
   });
   /* eslint-disable no-console */
   console.error(err);

@@ -6,30 +6,39 @@ import { find, isEmpty } from 'lodash';
 export const ormSelector = state => state.orm;
 
 const songsSelector = ormCreateSelector(orm, (Session, SongsView) => {
-  const sortField = SongsView ? SongsView.sortField : 'title';
-  const perPage = SongsView ? SongsView.paginationPerPage : false;
-  const paginationCurrent = SongsView ? SongsView.paginationCurrent : 1;
+  // TODO: make into composable subunits
+  const { sortField, perPage, paginationCurrent, searchText } = SongsView;
+  let songs = Session.Song.all().toModelArray();
 
-  let retObj = Session.Song.all().toModelArray();
+  if (searchText && searchText.trim().length > 0) {
+    const searchRE = new RegExp(searchText, 'i');
+    songs = songs.filter(song => (
+      searchRE.test(song.artist.lastName)
+      || searchRE.test(song.artist.firstName)
+      || searchRE.test(song.artist.fullName)
+      || searchRE.test(song.title)
+    ));
+  }
 
   if (sortField) {
-    retObj = retObj.sort((a, b) => {
+    songs = songs.sort((a, b) => {
       if (sortField === 'artist') {
         return a.artist.fullName > b.artist.fullName;
       }
       return (a[sortField] > b[sortField]);
     });
     if (SongsView.sortInverse) {
-      retObj = retObj.reverse();
+      songs = songs.reverse();
     }
   }
 
   if (perPage) {
     const start = (paginationCurrent) * perPage;
     const end = start + parseInt(perPage, 10);
-    retObj = retObj.slice(start, end);
+    songs = songs.slice(start, end);
   }
-  return retObj;
+
+  return songs;
 });
 
 const currentSongSelector = ormCreateSelector(orm, (Session, SongsView) => {
@@ -49,26 +58,9 @@ const currentSongSelector = ormCreateSelector(orm, (Session, SongsView) => {
   return null;
 });
 
-const paginationTotalSelector = ormCreateSelector(orm, Session => Session.Song.count());
-
-const paginationStartSelector = ormCreateSelector(orm, (Session, SongsView) => (
-  1 + (SongsView.paginationCurrent - 1) * parseInt(SongsView.paginationPerPage, 10)
-));
-
-const paginationEndSelector = ormCreateSelector(orm, (Session, SongsView) => (
-  SongsView.paginationCurrent * SongsView.paginationPerPage > Session.Song.count()
-    ? Session.Song.count()
-    : SongsView.paginationCurrent * SongsView.paginationPerPage
-));
-
-const paginationPagesSelector = ormCreateSelector(orm, (Session, SongsView) => (
-  parseInt(Math.ceil(Session.Song.count() / SongsView.paginationPerPage), 10)
-));
-
 const songStatsSelector = ormCreateSelector(orm, (Session, state) => (
   Session.Song ? Session.Song.getStats() : {}
 ));
-
 
 const savedTabsSelector = ormCreateSelector(orm, (Session, currentSong) => {
   const tabs = {};
@@ -93,10 +85,6 @@ const savedTabsSelector = ormCreateSelector(orm, (Session, currentSong) => {
 // TODO: Fix race condition where selectors cause errors before SongsView is initialized
 export const songs = createSelector(ormSelector, state => state.SongsView, songsSelector);
 export const currentSong = createSelector(ormSelector, state => state.SongsView, currentSongSelector);
-export const paginationTotal = createSelector(ormSelector, state => state.SongsView, paginationTotalSelector);
-export const paginationStart = createSelector(ormSelector, state => state.SongsView, paginationStartSelector);
-export const paginationEnd = createSelector(ormSelector, state => state.SongsView, paginationEndSelector);
-export const paginationPages = createSelector(ormSelector, state => state.SongsView, paginationPagesSelector);
 export const songStats = createSelector(ormSelector, state => state.orm, songStatsSelector);
 
 export const savedTabs = createSelector(

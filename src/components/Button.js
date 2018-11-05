@@ -194,7 +194,7 @@ Button.defaultProps = {
   secondary:   false,
   label:       null,
   override:    {},
-  onClick:     (e) => (e.preventDefault()),
+  onClick:     (e) => ({}),
   icon:        null,
   iconHeight:  1.0
 };

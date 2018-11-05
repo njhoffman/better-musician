@@ -63,10 +63,7 @@ class YouTubeLink extends Component {
   }
 
   render() {
-    const {
-      preview, id, meta, classes,
-      field, input, label,
-    } = this.props;
+    const { preview, id, meta, classes, input, label } = this.props;
 
     if (preview) {
       return (
@@ -74,7 +71,7 @@ class YouTubeLink extends Component {
           style={{ width: '200px', marginTop: '0px' }}
           name={id}
           component={TextField}
-          label={field.label}
+          label={label}
         />
       );
     }
@@ -97,7 +94,7 @@ class YouTubeLink extends Component {
           <Column centerOnSmall>
             <iframe
               id='player'
-              title={field.id}
+              title={id}
               type='text/html'
               width='350'
               height='250'

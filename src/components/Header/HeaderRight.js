@@ -84,8 +84,18 @@ SignedIn.propTypes = {
 
 const SignedOut = ({ classes }) => (
   <div className={`${classes.flex} ${classes.headerRight}`}>
-    <Button label='Login' link='/login' primary className={classes.loginButton} />
-    <Button label='Register' link='/register' secondary className={classes.registerButton} />
+    <Button
+      label='Login'
+      link='/login'
+      primary
+      className={classes.loginButton}
+    />
+    <Button
+      label='Register'
+      link='/register'
+      secondary
+      className={classes.registerButton}
+    />
   </div>
 );
 

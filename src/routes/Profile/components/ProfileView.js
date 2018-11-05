@@ -55,10 +55,7 @@ const styles = (theme) => ({
     width: '100px',
     height: '100px'
   },
-  fields: {
-    margin: '15px',
-    padding: '15px'
-  }
+  fields: { }
 });
 
 const ProfileImage = (classes) => (
@@ -141,12 +138,6 @@ export const ProfileView = ({
   );
 };
 
-const validateFields = {
-  notificationsEmail: [
-    ['isEmail', 'Invalid Email']
-  ]
-};
-
 ProfileView.defaultProps = {
   isTouched: false,
   isFetching: false,
@@ -158,7 +149,7 @@ ProfileView.propTypes = {
   history:       PropTypes.instanceOf(Object).isRequired,
   api:           PropTypes.instanceOf(Object).isRequired,
   updateProfile: PropTypes.func.isRequired,
-  changed:       PropTypes.arrayOf(PropTypes.object).isRequired,
+  changed:       PropTypes.instanceOf(Object).isRequired,
   classes:       PropTypes.instanceOf(Object).isRequired,
   isTouched:     PropTypes.bool,
   isFetching:    PropTypes.bool,
@@ -179,6 +170,12 @@ const mapStateToProps = (state) => ({
   isFetching:    state.api.user.update.loading,
   errors:        state.api.user.update.errors || []
 });
+
+const validateFields = {
+  notificationsEmail: [
+    ['isEmail', 'Invalid Email']
+  ]
+};
 
 const profileForm = reduxForm({
   form: 'profile',

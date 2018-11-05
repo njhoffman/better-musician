@@ -6,3 +6,4 @@ export default Loadable({
   loader: () => import('./components/ProfileView'),
   loading: LoadingIndicator
 });
+/* eslint-enable */

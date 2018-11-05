@@ -9,6 +9,8 @@ const processTheme = (base, variation) => createMuiTheme(
   _.merge(Object.assign({}, base), Object.assign({}, variation))
 );
 
+// theme structure: themeName.variation:props
+// variation is ligth dark or default, each theme has app property that holds custom values
 const processThemes = ({ defaults = {}, ...themes }) => {
   const defaultTheme = {
     base: _.defaultsDeep(defaults.defaults, defaultThemes.defaults),
@@ -35,20 +37,23 @@ const processThemes = ({ defaults = {}, ...themes }) => {
     };
   });
 
-  // assign empty 'theme.app' properties from initialized palette values
-  // pointed to  by 'appMap' property values
-
-  const processed = _.map(toProcess, (theme, key) => {
-    const variations = [];
-    _.each(theme, (variation) => {
-      const appVar =  _.defaultsDeep(variation.app, (
-        _.mapValues(variation.appMap, mVal => _.get(processed.palette, mVal))
-      ));
-      delete appVar.appMap;
-      variations.push(appVar);
+  // assign empty 'app' properties from initialized palette values by appMap reference
+  const processed = {};
+  _.each(toProcess, (theme, key) => {
+    processed[key] = theme;
+    _.each(theme, (variation, vKey) => {
+      const appVar =  _.defaultsDeep(
+        variation.app,
+        _.mapValues(variation.appMap, appVal => (
+          _.get(variation.palette, appVal)
+        ))
+      );
+      processed[key][vKey].app = appVar;
+      delete processed[key][vKey].appMap;
     });
-    return processed;
   });
+
+  return processed;
 };
 
 export default processThemes;

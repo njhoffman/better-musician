@@ -60,7 +60,7 @@ const overrides = environments[config.env];
 if (overrides) {
   logger.info({ overrides: overrides(config) },
     `Found overrides for NODE_ENV "${config.env}", applying to default configuration.`);
-  Object.assign(config, overrides(config));
+  _.merge(config, overrides(config));
 } else {
   logger.info(`No environment overrides found for NODE_ENV "${config.env}", defaults will be used.`);
 }

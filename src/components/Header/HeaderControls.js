@@ -168,7 +168,7 @@ class HeaderControls extends Component {
   }
 
   render() {
-    const { classes, currentSong } = this.props;
+    const { classes, currentSong, searchText } = this.props;
     const { song, search } = this.state;
     return (
       <div className={classes.root}>
@@ -188,6 +188,7 @@ class HeaderControls extends Component {
           <SearchPopover
             anchorOrigin={popoverStyle.anchor}
             transformOrigin={popoverStyle.transform}
+            searchText={searchText}
             {...search}
             {...this.popoverActions}
           />
@@ -205,7 +206,8 @@ const mapActionCreators = {
 
 const mapStateToProps = (state) => ({
   modal        : state.ui.modal,
-  currentSong  : state.SongsView ? state.SongsView.currentSong : null
+  currentSong  : state.SongsView ? state.SongsView.currentSong : null,
+  searchText   : state.SongsView ? state.SongsView.searchText : ''
 });
 
 export default connect(mapStateToProps, mapActionCreators)(withStyles(styles)(HeaderControls));

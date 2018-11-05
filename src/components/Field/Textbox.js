@@ -19,8 +19,7 @@ const TextboxForm = createComponent(
 const createTextbox = (Component) => ({
   initialValues,
   disabled,
-  inputProps,
-  style,
+  InputProps,
   mode,
   fullWidth,
   disableUnderline,
@@ -32,8 +31,7 @@ const createTextbox = (Component) => ({
       disableUnderline: mode === FIELD_VIEW || disableUnderline,
       disabled: mode === FIELD_VIEW || disabled,
       autoComplete: 'off',
-      style,
-      ...inputProps
+      ...InputProps
     }}
     {...{ ...props, meta, fullWidth: fullWidth !== false }}
   />

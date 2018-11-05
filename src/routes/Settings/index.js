@@ -6,3 +6,4 @@ export default Loadable({
   loader: () => import('./components/SettingsView'),
   loading: LoadingIndicator
 });
+/* eslint-enable */

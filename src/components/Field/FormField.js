@@ -62,7 +62,8 @@ const FormField = ({
   <Column
     style={{
       flex: '1 1 auto',
-      width: '100%'
+      width: '100%',
+      margin: '8px 0px'
     }}
     {...{ small, medium, large, centerOnSmall }}>
     <Field

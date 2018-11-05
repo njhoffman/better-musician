@@ -14,16 +14,19 @@ const addOption = (values) => {
 const styles = (theme) => ({
   controls: {
     display: 'flex',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   values: {
     justifyContent: 'center',
     flexWrap: 'wrap'
   },
   addButton: {
-    height: 'fit-content',
-    marginLeft: 'auto',
-    marginRight: 'auto'
+    height: 'auto',
+    minHeight: 0,
+    marginLeft: `${theme.spacing.unit}px`,
+    padding: `${theme.spacing.unit / 2}px ${theme.spacing.unit}px`
   }
 });
 

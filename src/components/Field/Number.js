@@ -17,12 +17,15 @@ const NumberField = ({
     min={0}
     style={{
       textAlign: 'center',
-      width: unit ? '85px' : '120px',
+      width: '120px',
       ...style
     }}
     fullWidth={fullWidth || false}
     error={meta && meta.touched && meta.error}
     InputProps={{
+      style: {
+        textAlign: 'center'
+      },
       endAdornment: unit ? (
         <InputAdornment variant='filled' position='end'>
           {unit}

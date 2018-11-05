@@ -6,3 +6,4 @@ export default Loadable({
   loader: () => import('./components/ResetView'),
   loading: LoadingIndicator
 });
+/* eslint-enable */

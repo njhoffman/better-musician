@@ -5,11 +5,15 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { oAuthSignIn } from 'actions/auth/signin';
 import Button from './Button';
 
+const getEndpoint = ({ endpoint, config }) => (
+  endpoint || config.auth.currentEndpointKey || config.auth.defaultEndpointkey
+);
+
 const handleClick = (e, { next, dispatch, provider, signInParams }) => (
   dispatch(oAuthSignIn({
     provider,
     params: signInParams,
-    endpointKey: this.getEndpoint()
+    endpointKey: getEndpoint()
   }))
     .then(next)
     .catch(() => {})
@@ -17,47 +21,46 @@ const handleClick = (e, { next, dispatch, provider, signInParams }) => (
 
 const OAuthSignInButton = ({
   provider,
+  disabled,
   isFetching,
   signInParams,
   syncErrors,
-  icon,
   isSignedIn,
   endpoint,
   dispatch,
   next,
   className,
-  label,
   ...props
 }) => (
   <Button
     loading={isFetching}
     primary
-    icon={icon}
     className={`${className} oauth-sign-in-submit`}
-    disabled={Boolean(isSignedIn || syncErrors || isFetching)}
+    disabled={disabled || Boolean(isSignedIn)}
     onClick={(e) => handleClick(e, { next, dispatch, provider, signInParams })}
     {...props}
   />
 );
 
-OAuthSignInButton.propTypes = {
-  auth:         PropTypes.instanceOf(Object).isRequired,
-  provider:     PropTypes.string.isRequired,
-  signInParams: PropTypes.instanceOf(Object),
-  icon:         PropTypes.instanceOf(Object),
-  endpoint:     PropTypes.string.isRequired,
-  dispatch:     PropTypes.func.isRequired,
-  next:         PropTypes.func,
-  className:    PropTypes.string,
-  label:        PropTypes.string
-};
-
 OAuthSignInButton.defaultProps = {
   className: '',
   next: (() => {}),
   signInParams: {},
-  label: 'OAuth Sign In',
+  disabled: false,
+  endpoint:  null,
   icon: ExitToAppIcon
+};
+
+OAuthSignInButton.propTypes = {
+  provider:     PropTypes.string.isRequired,
+  signInParams: PropTypes.instanceOf(Object),
+  config:       PropTypes.instanceOf(Object).isRequired,
+  icon:         PropTypes.instanceOf(Object),
+  disabled:     PropTypes.bool,
+  endpoint:     PropTypes.string,
+  dispatch:     PropTypes.func.isRequired,
+  next:         PropTypes.func,
+  className:    PropTypes.string
 };
 
 const mapStateToProps = (state) => ({

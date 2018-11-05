@@ -8,3 +8,4 @@ export default Loadable({
   loader: () => import('./components/SongsView'),
   loading: LoadingIndicator
 });
+/* eslint-enable */

@@ -69,7 +69,7 @@ const ErrorHandlerFallback = (props) => {
   const stackLines = error.stack.replace(stackTitle, '').split('\n')
     .map((line, idx) => ({ line, idx }));
 
-  stackLines.map(({ line, idx }) => {
+  const stackFormatted = stackLines.map(({ line, idx }) => {
     const matches = line.match(stackLineRE);
     if (matches && matches.length === 6 && matches[3].indexOf('node_modules') === -1) {
       return (
@@ -78,9 +78,9 @@ const ErrorHandlerFallback = (props) => {
           <span>{matches[2]}</span>
           <span style={{ color: '#ffffff' }}>{matches[3]}</span>
           <span>:</span>
-          <span style={{ color: '#aaccff', fontWeight: 'bold' }}>{matches[5]}</span>
+          <span style={{ color: '#aaccff', fontWeight: 'bold' }}>{matches[4]}</span>
           <span>:</span>
-          <span style={{ color: '#ccddff' }}>{matches[4]}</span>
+          <span style={{ color: '#ccddff' }}>{matches[5]}</span>
         </span>
       );
     }
@@ -116,8 +116,8 @@ const ErrorHandlerFallback = (props) => {
           </pre>
           <pre style={{ ...preStyle, color: '#888888' }}>
             <code>
-              {stackLines.map((sl, i) => (
-                <div key={sl.idx}>{sl}</div>
+              {stackFormatted.map((formattedLine, i) => (
+                formattedLine
               ))}
             </code>
           </pre>
@@ -125,7 +125,9 @@ const ErrorHandlerFallback = (props) => {
           <p>
             ComponentStack
           </p>
-          <pre style={{ ...preStyle, color: '#f3d429' }}>{errorInfo.componentStack}</pre>
+          <pre style={{ ...preStyle, color: '#f3d429' }}>
+            {errorInfo.componentStack}
+          </pre>
           <hr />
         </div>
       </div>

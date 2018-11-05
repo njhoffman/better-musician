@@ -29,10 +29,7 @@ const styles = (theme) => ({
     height: '200px',
     marginBottom: '5px'
   },
-  progressStars: theme.app.starColor,
   row: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
     flexWrap: 'nowrap',
     [theme.breakpoints.down('xs')]: {
       flexWrap: 'wrap',
@@ -106,7 +103,7 @@ export const SongMainTab = ({
   };
 
   const renderStars = (number) => (
-    <Stars className={classes.progressStars} number={parseInt(number, 10)} />
+    <Stars number={parseInt(number, 10)} />
   );
 
   const renderViewFields = () => (

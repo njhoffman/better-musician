@@ -127,7 +127,7 @@ export const userUpdateError = (response) => (dispatch) => {
 export const updateUser = () => (dispatch, getState) => {
   const fieldValues = getState().form.profile
     ? getState().form.profile.values
-    : getState().form.updateSettingsForm.values;
+    : getState().form.settings.values;
 
   return dispatch({
     [CALL_API]: {
@@ -164,7 +164,7 @@ export const settingsUpdateError = (response) => (dispatch) => {
 export const updateSettings = () => (dispatch, getState) => {
   const fieldValues = getState().form.profile
     ? getState().form.profile.values
-    : getState().form.updateSettingsForm.values;
+    : getState().form.settings.values;
 
   return dispatch({
     [CALL_API]: {

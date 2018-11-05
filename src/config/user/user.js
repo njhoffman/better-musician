@@ -40,10 +40,10 @@ export default {
   },
   settings: {},
   dev: {
-    showInspector: true,
+    showInspector: false,
     showChart: false,
     showToolbar: false,
-    showExtension: false,
+    showExtension: true,
     monitorProps:  userMonitorProps,
     extensionOptions: {
       name: 'instrumental',

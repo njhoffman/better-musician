@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import * as A from 'constants/auth';
 import extend from 'extend';
 import fetch from 'utils/fetch';
@@ -50,7 +51,7 @@ const defaultSettings = {
 
 // save session configuration
 export default ({ dispatch, endpoints = {}, settings = {}, reset = false } = {}) => {
-  let { initialCredentials: { currentEndpointKey } } = settings;
+  let currentEndpointKey = _.get(settings, 'initialCredentials.currentEndpointKey');
 
   if (reset) {
     resetConfig();

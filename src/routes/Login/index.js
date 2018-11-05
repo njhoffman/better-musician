@@ -6,3 +6,4 @@ export default Loadable({
   loader: () => import('./components/LoginView'),
   loading: LoadingIndicator
 });
+/* eslint-enable */

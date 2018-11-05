@@ -15,6 +15,7 @@ module.exports = (config) => {
 
   const wpConfig = {
     ...baseConfig,
+    ...config.webpack,
     module: { rules: initLoader(config) },
     mode: config.env === 'production' ? 'production' : 'development',
     output: { path: config.paths.dist() },

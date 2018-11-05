@@ -3,16 +3,17 @@ import { get, each, some, keys, isFunction } from 'lodash';
 
 const validate = (fields) => (values) => {
   const errors = {};
-  each(keys(fields), (field) => some(fields[field],
+  const val = values.toString();
+  each(keys(fields), (fieldKey) => some(fields[fieldKey],
     ([vCheck, vMessage]) => {
-      if (vCheck === 'required' && !get(values, field)) {
-        errors[field] = vMessage;
+      if (vCheck === 'required' && !get(val, fieldKey)) {
+        errors[fieldKey] = vMessage;
         return true;
       }
       if (isFunction(validators[vCheck])
-        && get(values, field) !== undefined
-        && !validators[vCheck](get(values, field))) {
-        errors[field] = vMessage;
+        && get(val, fieldKey) !== undefined
+        && !validators[vCheck](get(val, fieldKey))) {
+        errors[fieldKey] = vMessage;
         return true;
       }
       return false;
