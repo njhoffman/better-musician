@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select, InputLabel, FormControl, MenuItem } from '@material-ui/core';
+import {
+  Select as MaterialSelect,
+  InputLabel,
+  FormControl,
+  MenuItem
+} from '@material-ui/core';
 import createComponent from './createFormField';
 import mapError from './mapError';
 
@@ -22,7 +27,7 @@ const generateMenu = (dataSource) => {
   return items;
 };
 
-const SelectForm = createComponent(Select, ({
+const SelectForm = createComponent(MaterialSelect, ({
   input: { onChange, value, onBlur, ...inputProps },
   onChange: onChangeFromField,
   defaultValue,
@@ -40,7 +45,7 @@ const SelectForm = createComponent(Select, ({
   onBlur: () => onBlur(value)
 }));
 
-const SelectField = ({
+const createSelect = (Component) => ({
   label,
   options,
   variant,
@@ -51,17 +56,17 @@ const SelectField = ({
     <InputLabel shrink>
       {label}
     </InputLabel>
-    <SelectForm {...props} displayEmpty>
+    <Component {...props} displayEmpty>
       {options && generateMenu(options)}
-    </SelectForm>
+    </Component>
   </FormControl>
 );
 
-SelectField.defaultProps = {
+const defaultProps = {
   label: ''
 };
 
-SelectField.propTypes = {
+const propTypes = {
   options: PropTypes.oneOfType([
     PropTypes.array,
     PropTypes.object
@@ -69,5 +74,14 @@ SelectField.propTypes = {
   label: PropTypes.string
 };
 
-export { SelectForm };
+
+const SelectField = createSelect(SelectForm);
+SelectField.defaultProps = defaultProps;
+SelectField.propTypes = propTypes;
+
+const Select = createSelect(MaterialSelect);
+Select.defaultProps = defaultProps;
+Select.propTypes = propTypes;
+
+export { Select };
 export default SelectField;

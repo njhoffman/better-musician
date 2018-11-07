@@ -1,5 +1,5 @@
 import FormField, {
-  Select,
+  SelectField,
   MultiSelect,
   TextboxField,
   Slider,
@@ -13,7 +13,7 @@ import FormField, {
 } from './FormField';
 
 export {
-  Select,
+  SelectField as Select,
   MultiSelect,
   TextboxField as Text,
   Slider,

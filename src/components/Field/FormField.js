@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Field } from 'redux-form';
+import { Field, FieldArray } from 'redux-form';
 import { Column } from 'react-foundation';
 
 import FormRow from './FormRow';
-import Select from './Select';
+import SelectField from './Select';
 import MultiSelect from './MultiSelect';
 import TextboxField from './Textbox';
 import Slider from './Slider';
@@ -34,7 +34,7 @@ import Chip from './Chip';
 
 const renderField = ({ type, ...props }) => {
   if (type === 'select' || type === 'Select Menu' || type === 2) {
-    return <Select {...props} />;
+    return <SelectField {...props} />;
   }
   if (type === 'text' || type === 'Text Box' || type === 0) {
     return (<TextboxField {...props} />);
@@ -56,8 +56,9 @@ const renderField = ({ type, ...props }) => {
   }
   return (<Checkbox {...props} />);
 };
+
 const FormField = ({
-  small, medium, large, centerOnSmall, variant, classes, ...props
+  small, medium, large, centerOnSmall, type, variant, classes, ...props
 }) => (
   <Column
     style={{
@@ -66,10 +67,9 @@ const FormField = ({
       margin: '8px 0px'
     }}
     {...{ small, medium, large, centerOnSmall }}>
-    <Field
-      component={renderField}
-      {...props}
-    />
+    {/* <Field component={renderField} {...props} /> */}
+    {type !== 3 && <Field component={renderField} type={type} {...props} />}
+    {type === 3 && <FieldArray component={renderField} type={type} {...props} />}
   </Column>
 );
 
@@ -112,7 +112,7 @@ FormField.propTypes = {
 // };
 
 export {
-  Select,
+  SelectField,
   MultiSelect,
   TextboxField,
   Slider,

@@ -32,6 +32,9 @@ const styles = (theme) => ({
   divider: {
     height: theme.spacing.unit * 2,
   },
+  field_view: {
+    color: `${theme.palette.text.primary} !important`
+  }
 });
 
 const getSuggestions = ({ options, inputValue, maxResults }) => options.filter(
@@ -41,6 +44,7 @@ const getSuggestions = ({ options, inputValue, maxResults }) => options.filter(
 const renderInput = ({
   InputProps,
   InputLabelProps,
+  className,
   classes,
   ref,
   ...props
@@ -51,6 +55,7 @@ const renderInput = ({
       classes: {
         root: classes.inputRoot
       },
+      className,
       ...InputProps
     }}
     InputLabelProps={{
@@ -104,6 +109,7 @@ const AutoComplete = ({
   meta,
   mode,
   disabled,
+  className,
   maxResults,
   ...props
 }) => (
@@ -132,6 +138,7 @@ const AutoComplete = ({
             InputProps: getInputProps({
               disableUnderline: mode === FIELD_VIEW,
               disabled: mode === FIELD_VIEW || disabled,
+              className: `${className} ${classes[mode.toLowerCase()]}`,
               ...input,
               ...props
               // placeholder: 'Search',

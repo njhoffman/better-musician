@@ -110,16 +110,6 @@ const EmailSignInForm = ({
   </form>
 );
 
-const validateFields = {
-  'email-sign-in-email': [
-    ['required', 'Required'],
-    ['isEmail', 'Invalid Email']
-  ],
-  'email-sign-in-password': [
-    ['required', 'Required'],
-  ]
-};
-
 EmailSignInForm.propTypes = {
   classes:     PropTypes.instanceOf(Object).isRequired,
   config:      PropTypes.instanceOf(Object).isRequired,
@@ -150,6 +140,16 @@ const mapStateToProps = (state) => ({
   changed:     changedFields(state.form.login),
   emailSignIn
 });
+
+const validateFields = {
+  'email-sign-in-email': [
+    ['required', 'Required'],
+    ['isEmail', 'Invalid Email']
+  ],
+  'email-sign-in-password': [
+    ['required', 'Required'],
+  ]
+};
 
 export default connect(mapStateToProps)(withStyles(styles)(reduxForm({
   form: 'login',

@@ -7,7 +7,7 @@ export const ormSelector = state => state.orm;
 
 const songsSelector = ormCreateSelector(orm, (Session, SongsView) => {
   // TODO: make into composable subunits
-  const { sortField, perPage, paginationCurrent, searchText } = SongsView;
+  const { sortField, paginationPerPage, paginationCurrent, searchText } = SongsView;
   let songs = Session.Song.all().toModelArray();
 
   if (searchText && searchText.trim().length > 0) {
@@ -32,9 +32,9 @@ const songsSelector = ormCreateSelector(orm, (Session, SongsView) => {
     }
   }
 
-  if (perPage) {
-    const start = (paginationCurrent) * perPage;
-    const end = start + parseInt(perPage, 10);
+  if (paginationPerPage) {
+    const start = (paginationCurrent) * paginationPerPage;
+    const end = start + parseInt(paginationPerPage, 10);
     songs = songs.slice(start, end);
   }
 

@@ -278,6 +278,10 @@ const FieldList = (props) => {
   );
 };
 
+FieldList.defaultProps = {
+  editingField: null
+};
+
 const mapActionCreators = {
   edit:   editField,
   delete: deleteField,
@@ -295,7 +299,7 @@ FieldList.propTypes = {
     tabName: PropTypes.string.isRequired,
     id:      PropTypes.string.isRequired,
     label:   PropTypes.string
-  }).isRequired,
+  }),
   classes:      PropTypes.instanceOf(Object).isRequired,
   edit:         PropTypes.func.isRequired,
   delete:       PropTypes.func.isRequired,

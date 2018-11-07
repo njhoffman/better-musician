@@ -10,7 +10,11 @@ import {
 } from '@material-ui/core';
 import { Row, Column } from 'react-foundation';
 
-import { SONG_MODAL, MODAL_VARIANT_EDIT, MODAL_VARIANT_ADD } from 'constants/ui';
+import {
+  FIELD_EDIT, FIELD_ADD, FIELD_VIEW, SONG_MODAL,
+  MODAL_VARIANT_EDIT, MODAL_VARIANT_ADD, MODAL_VARIANT_VIEW
+} from 'constants/ui';
+
 import { uiUpdateModal, uiModalExit } from 'actions/ui';
 import {
   currentSong as currentSongSelector,
@@ -81,6 +85,15 @@ const styles = (theme) => ({
   }
 });
 
+const fieldMode = (modalVariant) => {
+  if (modalVariant === MODAL_VARIANT_VIEW) {
+    return FIELD_VIEW;
+  } else if (modalVariant === MODAL_VARIANT_ADD) {
+    return FIELD_ADD;
+  }
+  return FIELD_EDIT;
+};
+
 const TabContainer = ({ children }) => (
   <Fragment>
     {children}
@@ -90,7 +103,6 @@ const TabContainer = ({ children }) => (
 TabContainer.propTypes = {
   children: PropTypes.node.isRequired
 };
-
 const SongModal = ({
   classes,
   activeField,
@@ -151,7 +163,7 @@ const SongModal = ({
                         fullWidth={false}
                         key={field.id}
                         name={field.name}
-                        variant={variant}
+                        mode={fieldMode(variant)}
                         initialValues={initialValues}
                         {...field}
                       />

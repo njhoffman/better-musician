@@ -1,15 +1,13 @@
-import React, { Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Button, withStyles, Chip } from '@material-ui/core';
+import { Button, withStyles } from '@material-ui/core';
 import { Row, Column } from 'react-foundation';
 import { Field } from 'redux-form';
+import { without } from 'lodash';
 
-// import Chip from 'components/Field/Chip';
-import Select from 'components/Field/Select';
-
-const addOption = (values) => {
-  values.push('testing');
-};
+import { FIELD_VIEW } from 'constants/ui';
+import Chip from 'components/Field/Chip';
+import { Select } from 'components/Field/Select';
 
 const styles = (theme) => ({
   controls: {
@@ -18,7 +16,8 @@ const styles = (theme) => ({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  values: {
+  valueItems: {
+    marginTop: '10px',
     justifyContent: 'center',
     flexWrap: 'wrap'
   },
@@ -30,75 +29,78 @@ const styles = (theme) => ({
   }
 });
 
-const MultiSelect = ({
-  classes,
-  label,
-  disabled,
-  options,
-  input
-}) => (
-  <Fragment>
-    <Row>
-      <Column className={classes.controls}>
-        <Field
-          label={label}
-          onChange={(e) => (e)}
-          component={Select}
-          disabled={disabled}
-          options={options}
-          name='optionText'
-        />
-        {!disabled && (
-          <Button
-            variant='contained'
-            color='secondary'
-            className={classes.addButton}
-            onClick={() => addOption(input.value)}>
-            Add
-          </Button>
-        )}
-      </Column>
-    </Row>
-    <Row>
-      <Column
-        centerOnSmall
-        className={classes.values}
-        small={10}>
-        {input.value && input.value.map((value, idx, values) => (disabled
-          ? (
-            <Chip
-              key={value}
-              label={value}
-              onChange={() => { }}
-              style={{ margin: '5px 2px', fontSize: '0.8em' }}
-            />
-          )
-          : (
-            <Chip
-              key={value}
-              label={value}
-              onDelete={() => values.remove(idx)}
-              style={{ margin: '5px 2px', fontSize: '0.8em' }}
-            />
-          )
-        ))}
-      </Column>
-    </Row>
-  </Fragment>
+const renderChips = (name, idx, fieldsRef) => (
+  <Field
+    key={idx}
+    label={fieldsRef.get(idx)}
+    name={name}
+    component={Chip}
+    onDelete={() => fieldsRef.remove(idx)}
+  />
 );
 
-MultiSelect.defaultProps = {
-  disabled: false,
-  label:    '',
-  options:  [],
-};
+class MultiSelect extends Component {
+  state = {
+    currentlySelected: ''
+  };
 
-MultiSelect.propTypes = {
-  input:      PropTypes.instanceOf(Object).isRequired,
-  disabled:   PropTypes.bool,
-  label:      PropTypes.string,
-  options:    PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  classes:    PropTypes.instanceOf(Object).isRequired
-};
+  static defaultProps = {
+    disabled: false,
+    label:    '',
+    options:  [],
+    mode:     ''
+  };
+
+  static propTypes = {
+    fields:   PropTypes.instanceOf(Object).isRequired,
+    disabled: PropTypes.bool,
+    label:    PropTypes.string,
+    mode:     PropTypes.string,
+    options:  PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+    classes:  PropTypes.instanceOf(Object).isRequired
+  };
+
+  handleSelectChange = e => {
+    this.setState({ currentlySelected: e.target.value });
+  };
+
+  render() {
+    const { classes, label, disabled, options, fields, mode } = this.props;
+    const { currentlySelected } = this.state;
+    return (
+      <Fragment>
+        <Row>
+          <Column className={classes.controls}>
+            <Select
+              label={label}
+              disabled={mode === FIELD_VIEW || disabled}
+              options={without(options, ...fields.getAll())}
+              onChange={this.handleSelectChange}
+              value={currentlySelected}
+            />
+            {!disabled && mode !== FIELD_VIEW && (
+              <Button
+                variant='contained'
+                color='secondary'
+                className={classes.addButton}
+                onClick={() => fields.push(currentlySelected)}>
+                Add
+              </Button>
+            )}
+          </Column>
+        </Row>
+        <Row>
+          <Column
+            centerOnSmall
+            className={classes.valueItems}
+            small={10}>
+            {fields.map(renderChips)}
+          </Column>
+        </Row>
+      </Fragment>
+    );
+  }
+}
+
 
 export default withStyles(styles)(MultiSelect);
