@@ -46,7 +46,7 @@ export default {
     showExtension: true,
     monitorProps:  userMonitorProps,
     extensionOptions: {
-      name: 'instrumental',
+      name: 'better-musician',
       theme: 'twilight',
       styles: {
         container: {

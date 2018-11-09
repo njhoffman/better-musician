@@ -2,7 +2,7 @@ export const muiTheme = {
   palette: {
     textColor: 'black'
   },
-  instrumental: {
+  app: {
     headerLinksColor: 'blue'
   },
   starColor: 'yellow'

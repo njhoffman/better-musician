@@ -20,3 +20,12 @@ export const setEndpointKeys = (endpointKeys, currentEndpointKey, defaultEndpoin
 export const storeCurrentEndpointKey = (currentEndpointKey) => ({
   type: AUTH.CURRENT_ENDPOINT_KEY, payload: currentEndpointKey
 });
+
+export const ssAuthTokenUpdate = ({ user, headers, mustResetPassword, firstTimeLogin, endpointKey }) => ({
+  type: AUTH.SS_AUTH_TOKEN_UPDATE,
+  user,
+  headers,
+  mustResetPassword,
+  firstTimeLogin,
+  endpointKey
+});

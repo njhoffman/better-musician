@@ -21,6 +21,7 @@ import {
   deleteField,
   cancelEdit
 } from 'actions/api';
+import { uiShowPreviewModal } from 'actions/ui';
 import Button from 'components/Button';
 import { savedTabs as savedTabsSelector } from '../modules/selectors';
 
@@ -171,6 +172,7 @@ const FieldList = (props) => {
     editingField,
     edit,
     cancel,
+    preview,
     delete: remove,
     savedTabs,
     classes
@@ -212,6 +214,7 @@ const FieldList = (props) => {
             secondary
             style={{ marginLeft: (editingId === field.id ? '0px' : '0px') }}
             className={`${classes.flexButton}`}
+            onClick={() => preview(field)}
             label='Preview'
           />
         </Column>
@@ -285,7 +288,8 @@ FieldList.defaultProps = {
 const mapActionCreators = {
   edit:   editField,
   delete: deleteField,
-  cancel: cancelEdit
+  cancel: cancelEdit,
+  preview: uiShowPreviewModal
 };
 
 const mapStateToProps = (state) => ({

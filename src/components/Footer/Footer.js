@@ -46,18 +46,30 @@ const styles = (theme) => ({
     display: 'table-cell',
     verticalAlign: 'middle'
   },
-  artistPicture : {
+  artistPictureWrapper: {
     height: '75px',
-    minWidth: '75px',
+    width: '75px',
     display: 'inline-block'
   },
-  instrumentPicture: {
+  artistPicture : {
+    objectFit: 'cover',
+    width: '100%',
+    height: '100%',
+    borderRadius: '10px'
+  },
+  instrumentPictureWrapper: {
     height: '75px',
-    minWidth: '75px',
+    width: '75px',
     display: 'inline-block',
     [theme.breakpoints.down('sm')]: {
       display: 'none'
     }
+  },
+  instrumentPicture: {
+    objectFit: 'cover',
+    width: '100%',
+    height: '100%',
+    borderRadius: '10px',
   },
   artistName: {
     // fontSize: '0.7em',

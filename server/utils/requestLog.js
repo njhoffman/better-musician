@@ -29,8 +29,8 @@ module.exports = (sdc, logger) => (req, res, next) => {
       + (loc.region ? loc.region : '')
       + (loc.country && loc.country !== 'US' ? ` ${loc.country}` : ''));
 
-  if (/^192.168|^172|^10/.test(reqObj.sourceIp)) {
-    locDesc = 'Reserved';
+  if (/^192.168|^172|^10|127.0.0.1/.test(reqObj.sourceIp)) {
+    locDesc = 'RSV';
   }
 
   const agent = useragent.parse(req.headers['user-agent']);

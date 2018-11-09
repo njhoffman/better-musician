@@ -68,7 +68,12 @@ const updateModal = (state, { payload, meta }) => ({
 
 const showModal = (state, { payload, meta }) => ({
   ...state,
-  modal: { ...state.modal, name: payload, isOpen: true, ...meta }
+  modal: {
+    ...state.modal,
+    name: payload,
+    isOpen: true,
+    ...meta
+  }
 });
 
 const hideModal = (state) => ({

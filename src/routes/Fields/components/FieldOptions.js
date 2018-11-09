@@ -78,7 +78,7 @@ class FieldOptions extends Component {
           <Column small={12} className={classes.chips}>
             {subFields.map((option, index, fieldsRef) => (
               <Field
-                key={option.id}
+                key={index}
                 name={`${option}`}
                 component={Chip}
                 onDelete={() => fieldsRef.remove(index)}

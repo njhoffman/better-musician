@@ -39,10 +39,10 @@ const showHeapDiff = (logger) => {
 const heap = (config, sdc, logger) => {
   const { humanMemorySize: hms } = sUtils;
   const memoryMap = {
-    heapTotal: 'Heap Total:',
-    heapUsed: 'Heap Used:',
+    external: 'External:\t',
     rss: 'RSS:\t',
-    external: 'External:\t'
+    heapUsed: 'Heap Used:',
+    heapTotal: 'Heap Total:'
   };
   Object.keys(memoryMap).forEach(memoryKey => {
     const memoryAmount = process.memoryUsage()[memoryKey];

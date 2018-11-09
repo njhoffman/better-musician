@@ -81,7 +81,10 @@ export const ProfileView = ({
   syncErrors,
   ...props
 }) => {
-  const disabled = isFetching || Object.keys(changed).length === 0 || Boolean(syncErrors);
+  const disabled = isFetching
+    || Object.keys(changed).length === 0
+    || Object.keys(syncErrors).length > 0;
+
   return (
     <Column className={classes.root} small={12} medium={10} large={8}>
       <Paper elevation={5} className={classes.contentContainer}>

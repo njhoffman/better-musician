@@ -2,9 +2,12 @@ import fetch from 'isomorphic-fetch';
 import cookie from 'cookie';
 import url from 'url';
 import * as A from 'constants/auth';
+import { init as initLog } from 'shared/logger';
 import getRedirectInfo from './parseUrl';
 import { addAuthorizationHeader } from '../fetch';
 import parseEndpointConfig from './parseEndpointConfig';
+
+const { debug, info, warn, error } = initLog('verify-auth');
 
 const parseHeaders = (headers) => {
   // set header for each key in `tokenFormat` config
@@ -67,6 +70,7 @@ export const fetchToken = ({ rawEndpoints, cookies, currentLocation }) => {
       const { apiUrl, auth: { validateToken } } = currentEndpoints[currentEndpointKey || defaultEndpointKey];
       const validationUrl = `${apiUrl}${validateToken}?unbatch=true`;
 
+      debug(`Verifying auth: ${validationUrl}`);
       return fetch(validationUrl, {
         headers: addAuthorizationHeader(headers['access-token'], headers)
       })
@@ -76,6 +80,7 @@ export const fetchToken = ({ rawEndpoints, cookies, currentLocation }) => {
         })
         .then((json) => {
           if (json.success) {
+            info('Authenticaiton verify successful', json);
             return resolve({
               headers: newHeaders,
               user: json.data,
@@ -86,6 +91,7 @@ export const fetchToken = ({ rawEndpoints, cookies, currentLocation }) => {
               defaultEndpointKey
             });
           }
+          warn('Authenticaiton verify unsuccessful', json);
           return reject({
             reason: json.errors,
             mustResetPassword,
@@ -94,15 +100,16 @@ export const fetchToken = ({ rawEndpoints, cookies, currentLocation }) => {
             defaultEndpointKey
           });
         })
-        .catch(reason => (
+        .catch(reason => {
+          error('Authenticaiton verify error', reason);
           reject({
             reason,
             firstTimeLogin,
             mustResetPassword,
             currentEndpoints,
             defaultEndpointKey
-          })
-        ));
+          });
+        });
     }
     const { currentEndpoints, defaultEndpointKey } = parseEndpointConfig(rawEndpoints);
     return reject({

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { CALL_API } from 'middleware/api';
 import { init as initLog } from 'shared/logger';
 import { reset } from 'redux-form';
@@ -29,7 +28,7 @@ export const songsAddError = (response) => (dispatch) => {
 
   dispatch({
     type: UI.SNACKBAR_SHOW,
-    meta: { variant: 'warnining' },
+    meta: { variant: 'warning' },
     payload: 'Validation Error: Song Not Added'
   });
 
@@ -70,21 +69,20 @@ export const songsFetchComplete = (tables) => (dispatch) => {
   /* eslint-enable no-multi-spaces */
 };
 
-export const fetchSongs = ({ dispatch, getState }) => {
+export const fetchSongs = ({ dispatch }) => (
   // TODO: make this better dumbass
-  const state = getState();
-  if (_.has(state, 'orm.Song.items') && _.get(state, 'orm.Song.items').length > 0) {
-    info('Songs already initialized, skipping');
-    return false;
-  }
-  info('Calling CALL_API');
-  return dispatch({
+  // const state = getState();
+  // if (_.has(state, 'orm.Song.items') && _.get(state, 'orm.Song.items').length > 0) {
+  //   info('Songs already initialized, skipping');
+  //   return false;
+  // }
+  dispatch({
     [CALL_API]: {
       types: [API.SONGS_FETCH_START, songsFetchComplete, API.SONGS_FETCH_ERROR],
       endpoint: `${__API_URL__}/songs`
     }
-  });
-};
+  })
+);
 
 export const artistsFetchComplete = ({ tables }) => (dispatch) => {
   info(`artistsFetchComplete: ${tables.artists.length} artists`);
@@ -194,7 +192,7 @@ export const fieldUpdateComplete = (data) => (dispatch, getState) => {
 };
 
 export const updateField = () => (dispatch, getState) => {
-  const fieldValues = getState().form.updateFieldsForm.values;
+  const fieldValues = getState().form.fields.values;
   return dispatch({
     [CALL_API]: {
       types: [API.FIELDS_UPDATE_START, fieldUpdateComplete, API.FIELDS_UPDATE_ERROR],
@@ -206,7 +204,7 @@ export const updateField = () => (dispatch, getState) => {
 };
 
 export const fieldAddComplete = (data) => (dispatch, getState) => {
-  dispatch(reset('updateFieldsForm'));
+  dispatch(reset('fields'));
   dispatch({ type: API.FIELDS_ADD_COMPLETE, payload: data.fields });
   dispatch({
     type: UI.SNACKBAR_SHOW,
@@ -216,7 +214,7 @@ export const fieldAddComplete = (data) => (dispatch, getState) => {
 };
 
 export const addField = () => (dispatch, getState) => {
-  const fieldValues = getState().form.updateFieldsForm.values;
+  const fieldValues = getState().form.fields.values;
   return dispatch({
     [CALL_API]: {
       types: [API.FIELDS_ADD_START, fieldAddComplete, API.FIELDS_ADD_ERROR],
@@ -228,7 +226,7 @@ export const addField = () => (dispatch, getState) => {
 };
 
 export const fieldsDeleteComplete = (data) => (dispatch, getState) => {
-  dispatch(reset('updateFieldsForm'));
+  dispatch(reset('fields'));
   dispatch({ type: API.FIELDS_ADD_COMPLETE, payload: data.fields });
   dispatch({
     type: UI.SNACKBAR_SHOW,

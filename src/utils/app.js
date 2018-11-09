@@ -50,7 +50,7 @@ const customizer = (baseValue, value) => {
 export const difference = (primaryObject, primaryBase) => {
   const changes = (object, base) => (
     _.transform(object, (result, value, key) => {
-      if (!_.isEqualWith(value, base[key], customizer)) {
+      if (!_.isEqualWith(value, _.get(base, key), customizer)) {
         result[key] = (_.isObject(value) && _.isObject(base[key]))
           ? changes(value, base[key])
           : value;

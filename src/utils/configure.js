@@ -2,13 +2,16 @@ import _ from 'lodash';
 import { push } from 'react-router-redux';
 import { deviceDetect } from 'react-device-detect';
 import {
+  ssAuthTokenUpdate,
+  setEndpointKeys,
   authenticateStart,
   authenticateComplete,
   authenticateError
 } from 'actions/auth';
-import { configureLoad } from 'actions/api';
+import { configureLoad, fetchSongs } from 'actions/api';
 import applyAuthConfig from 'utils/auth/clientSettings';
 import { destroySession } from 'utils/auth/sessionStorage';
+import verifyAuth from 'utils/auth/verifyAuth';
 import getRedirectInfo from 'utils/auth/parseUrl';
 import { init as initLog } from 'shared/logger';
 
@@ -36,10 +39,80 @@ const loadConfiguration = ({ endpoints, settings, dev }) => dispatch => {
     clientInfo,
     devConfig: { ...dev, showInspector: devInspector }
   }));
+
   dispatch(authenticateStart());
 
+  let firstTime = false;
+  let mustReset = false;
+  let promise;
 
-  // let mustResetPassword, firstTimeLogin
+  if (settings.isServer) {
+    promise = verifyAuth(endpoints, settings)
+      .then(({
+        user,
+        headers,
+        firstTimeLogin,
+        mustResetPassword,
+        currentEndpoint,
+        currentEndpointKey,
+        defaultEndpointKey
+      }) => {
+        firstTime = firstTimeLogin;
+        mustReset = mustResetPassword;
+        dispatch(ssAuthTokenUpdate({
+          headers,
+          user,
+          firstTimeLogin,
+          mustResetPassword
+        }));
+        dispatch(setEndpointKeys(Object.keys(currentEndpoint), currentEndpointKey, defaultEndpointKey));
+        return user;
+      })
+      .catch(({
+        reason,
+        firstTimeLogin,
+        mustResetPassword,
+        currentEndpoint,
+        defaultEndpointKey
+      }) => {
+        dispatch(ssAuthTokenUpdate({ firstTimeLogin, mustResetPassword }));
+        dispatch(setEndpointKeys(Object.keys(currentEndpoint || {}), null, defaultEndpointKey));
+        /* eslint-disable prefer-promise-reject-errors */
+        return Promise.reject({ reason });
+        /* eslint-enable prefer-promise-reject-errors */
+      });
+  } else {
+    // if the authentication happened server-side, find the resulting auth
+    // credentials that were injected into the dom.
+    const tokenBridge = document.getElementById('token-bridge');
+    if (tokenBridge) {
+      const rawServerCreds = tokenBridge.innerHTML;
+      if (rawServerCreds) {
+        const serverCreds = JSON.parse(rawServerCreds);
+
+        const { headers, user: serverUser, firstTimeLogin, mustResetPassword } = serverCreds;
+        mustReset = mustResetPassword;
+        firstTime = firstTimeLogin;
+
+        if (serverUser) {
+          dispatch(authenticateComplete(serverUser));
+          fetchSongs({ dispatch });
+
+          // do NOT send initial validation request.
+          // instead use the credentials that were sent back by the server.
+          _.merge(settings, { initialCredentials : serverCreds });
+        }
+
+        // sync client dom to prevent React 'out of sync' error
+        dispatch(ssAuthTokenUpdate({
+          serverUser,
+          headers,
+          mustResetPassword,
+          firstTimeLogin
+        }));
+      }
+    }
+  }
   const { authRedirectPath, authRedirectHeaders } = getRedirectInfo(window.location);
 
   if (authRedirectPath) {
@@ -57,14 +130,22 @@ const loadConfiguration = ({ endpoints, settings, dev }) => dispatch => {
     destroySession();
   }
 
-  const promise = Promise.resolve(applyAuthConfig({ dispatch, endpoints, settings }));
+  promise = Promise.resolve(applyAuthConfig({ dispatch, endpoints, settings }));
 
   return promise
     .then(user => {
       dispatch(authenticateComplete(user, endpoints));
+      fetchSongs({ dispatch });
 
-      // if (firstTimeLogin) dispatch(showFirstTimeLoginSuccessModal());
-      // if (mustResetPassword) dispatch(showPasswordResetSuccessModal());
+      if (firstTime) {
+        debug(`First time login for user: ${user.email}`);
+        // dispatch(showFirstTimeLoginSuccessModal());
+      }
+
+      if (mustReset) {
+        debug(`mustResetPassword set in configuration for usser: ${user.email}`);
+        // dispatch(showPasswordResetSuccessModal());
+      }
 
       return user;
     })
@@ -75,7 +156,7 @@ const loadConfiguration = ({ endpoints, settings, dev }) => dispatch => {
       }
       dispatch(authenticateError([reason], endpoints));
 
-      // if (firstTimeLogin) dispatch(showFirstTimeLoginErrorModal());
+      // if (firstTime) dispatch(showFirstTimeLoginErrorModal());
       // if (mustResetPassword) dispatch(showPasswordResetErrorModal());
 
       return Promise.resolve({ reason });

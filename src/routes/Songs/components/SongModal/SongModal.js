@@ -35,6 +35,8 @@ const styles = (theme) => ({
     maxHeight: '100vh',
     top: '10%',
     [theme.breakpoints.down('xs')]: {
+      top: '0%',
+      height: '100%',
       width: '100%'
     },
     [theme.breakpoints.up('sm')]: {
@@ -52,13 +54,17 @@ const styles = (theme) => ({
     },
   },
   dialogContent: {
+    position: 'relative',
     textAlign: 'center',
     // TODO: why does star slider extend dialog width along X-axis?
     overflowX: 'hidden',
     alignItems: 'flex-start',
     justifyContent: 'center',
-    display: 'flex',
-    padding: '0 !important', // :first-child padding-top: 24px
+    // display: 'flex',
+    padding: '0 !important', // :first-child padding-top: 24px,
+    [theme.breakpoints.down('xs')]: {
+      display: 'flex'
+    }
   },
   editField: {
     color: 'red'
@@ -66,8 +72,11 @@ const styles = (theme) => ({
   form: {
     alignSelf: 'center',
     maxHeight: '100%',
-
-    width: '100%'
+    width: '100%',
+    [theme.breakpoints.down('xs')]: {
+      position: 'absolute',
+      top: '0'
+    }
   },
   fieldGroup: {
     width: '100%',
@@ -103,6 +112,7 @@ const TabContainer = ({ children }) => (
 TabContainer.propTypes = {
   children: PropTypes.node.isRequired
 };
+
 const SongModal = ({
   classes,
   activeField,
@@ -155,6 +165,7 @@ const SongModal = ({
                     </Column>
                   </Row>
                 ))}
+
                 {chunk(tab.fields, 2).map((fields, fieldIdx) => (
                   /* eslint-disable react/no-array-index-key */
                   <FormRow key={fieldIdx} className={classes.customFieldRow}>
@@ -171,6 +182,7 @@ const SongModal = ({
                   </FormRow>
                   /* eslint-enable react/no-array-index-key */
                 ))}
+
               </TabContainer>
             )))}
         </form>
@@ -183,7 +195,7 @@ const SongModal = ({
 };
 
 SongModal.defaultProps = {
-  currentTab:  null,
+  currentTab:  0,
   activeField: null
 };
 

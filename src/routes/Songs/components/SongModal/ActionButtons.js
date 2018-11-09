@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Button, Divider, withStyles } from '@material-ui/core';
 import { MdDelete as DeleteIcon } from 'react-icons/md';
 
-import { uiShowSongModal, uiHideModal } from 'actions/ui';
+import { uiChangeSongModalView, uiHideModal } from 'actions/ui';
 import { MODAL_VARIANT_EDIT, MODAL_VARIANT_VIEW, MODAL_VARIANT_ADD } from 'constants/ui';
 import { addSong } from 'actions/api';
 import { Row, Column } from 'react-foundation';
@@ -81,7 +81,7 @@ ActionButtons.propTypes = {
 
 const mapDispatchToProps = {
   add: addSong,
-  edit : () => uiShowSongModal(MODAL_VARIANT_EDIT),
+  edit : () => uiChangeSongModalView(MODAL_VARIANT_EDIT),
   hideModal: uiHideModal
 };
 

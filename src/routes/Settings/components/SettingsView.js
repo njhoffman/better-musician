@@ -47,17 +47,19 @@ const styles = (theme) => ({
 
 const SettingsView = ({
   history,
+  changed,
   classes,
   update,
   reset,
-  isTouched,
   isFetching,
   errors,
   syncErrors,
   setTheme,
   ...props
 }) => {
-  const disabled = isFetching || !isTouched || Boolean(syncErrors);
+  const disabled = isFetching
+    || Object.keys(changed).length === 0
+    || Object.keys(syncErrors).length > 0;
   return (
     <Column className={classes.root} small={12} medium={10} centerOnSmall large={8}>
       <Paper elevation={5}>

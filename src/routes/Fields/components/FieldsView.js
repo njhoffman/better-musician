@@ -16,8 +16,9 @@ import {
 
 import Button from 'components/Button';
 import FormField, { FormRow } from 'components/Field';
-import { updateField, addField } from 'actions/api';
+import { updateField, addField, cancelEdit } from 'actions/api';
 
+import PreviewModal from './PreviewModal';
 import FieldList from './FieldList';
 import FieldOptions from './FieldOptions';
 
@@ -52,6 +53,7 @@ const styles = (theme) => ({
 export const FieldsView = ({
   update,
   add,
+  cancel,
   editingField,
   formValues,
   history,
@@ -91,9 +93,9 @@ export const FieldsView = ({
         label='Update'
         labelStyle={{ paddingRight: '5px' }}
         style={{ width: '100px', marginRight: '15px' }}
-        onClick={() => update}
+        onClick={() => update()}
         primary
-        icon={<SaveIcon style={{ marginTop: '-10px' }} />}
+        icon={<SaveIcon />}
         size='small'
         className='update-fields-submit'
         disabled={disabled}
@@ -103,6 +105,7 @@ export const FieldsView = ({
         style={{ width: '100px', marginRight: '15px' }}
         className='update-fields-submit'
         variant='text'
+        onClick={() => cancel()}
         color='secondary'>
         Cancel
       </MaterialButton>
@@ -115,7 +118,7 @@ export const FieldsView = ({
       label='Add Field'
       labelStyle={{ paddingRight: '5px' }}
       style={{ width: '160px', marginRight: '15px' }}
-      onClick={() => add}
+      onClick={() => add()}
       primary
       size='small'
       icon={<AddIcon style={{ marginTop: '-10px' }} />}
@@ -126,6 +129,7 @@ export const FieldsView = ({
 
   return (
     <Column className={classes.root} centerOnSmall small={12} medium={10} large={8}>
+      <PreviewModal />
       <Paper elevation={5} className={classes.contentContainer}>
         <AppBar position='static'>
           <Tabs value='fields' centered fullWidth onChange={(e, value) => history.push(value)}>
@@ -193,18 +197,20 @@ FieldsView.propTypes = {
 
 const mapActionCreators = {
   update: updateField,
-  add:    addField
+  add:    addField,
+  cancel: cancelEdit
 };
 
 const mapStateToProps = (state) => ({
   editingField:  state.FieldsView ? state.FieldsView.editingField : null,
-  formValues:    state.form.updateFieldsForm ? state.form.updateFieldsForm.values : null
+  initialValues: state.FieldsView ? state.FieldsView.editingField : null,
+  formValues:    state.form.fields ? state.form.fields.values : null
 });
 
-const updateFieldsForm = reduxForm({
-  form: 'updateFieldsForm',
+const fieldsForm = reduxForm({
+  form: 'fields',
   enableReinitialize: true
 })(withStyles(styles)(FieldsView));
 
 
-export default withRouter(connect(mapStateToProps, mapActionCreators)(updateFieldsForm));
+export default withRouter(connect(mapStateToProps, mapActionCreators)(fieldsForm));

@@ -19,7 +19,7 @@ export const userIsAuth = connectedAuthWrapper(userIsAuthDefaults);
 export const userIsAuthRedir = connectedRouterRedirect({
   ...userIsAuthDefaults,
   AuthenticatingComponent: AuthLoading,
-  redirectPath: '/songs'
+  redirectPath: '/login'
 });
 
 export const userIsAdminRedir = connectedRouterRedirect({

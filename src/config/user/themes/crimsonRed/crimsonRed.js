@@ -54,7 +54,7 @@ export default {
 //   raisedButton:         {
 //     secondaryColor:     grey['800']
 //   },
-//   instrumental:         {
+//   app:         {
 //     headerLinksColor:   lighten(red['100'], 0.5)
 //   }
 // };

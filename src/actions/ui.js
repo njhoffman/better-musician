@@ -1,6 +1,6 @@
+import _ from 'lodash';
 import * as UI from 'constants/ui';
 import { injectReducer } from 'store/reducers';
-import { fetchSongs } from 'actions/api';
 
 export const uiHideDrawerMenu = () => ({ type: UI.DRAWER_MENU_HIDE });
 export const uiShowDrawerMenu = () => ({ type: UI.DRAWER_MENU_SHOW });
@@ -34,6 +34,22 @@ export const uiShowSongModal = (type) => (dispatch) => {
   dispatch(uiShowModal(UI.SONG_MODAL, type, { currentTab: 0 }));
 };
 
+export const uiChangeSongModalView = (type) => (dispatch) => {
+  dispatch(uiShowModal(UI.SONG_MODAL, type));
+};
+
+
+export const uiShowPreviewModal = (field) => (dispatch) => {
+  dispatch(uiShowModal(
+    UI.PREVIEW_MODAL,
+    UI.MODAL_VARIANT_EDIT, {
+      fieldType: field.type,
+      fieldLabel: field.label,
+      fieldOptions: field.options
+    }
+  ));
+};
+
 export const initView = (store, history, route) => {
   store.dispatch({ type: UI.INIT_VIEW_START, payload: route });
   injectReducer({
@@ -44,11 +60,6 @@ export const initView = (store, history, route) => {
     store,
     history
   });
-  // TODO: have this as upstream route property
-  if (['songs', 'fields', 'settings', 'stats'].indexOf(route.toLowerCase()) !== -1) {
-    fetchSongs(store);
-    // fetchArtists(store);
-  }
   store.dispatch({
     type: UI.INIT_VIEW_COMPLETE,
     payload: route,

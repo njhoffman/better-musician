@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 const pjson = require('prettyjson-256');
 const _ = require('lodash');
 
@@ -7,9 +5,11 @@ const beautifiers = require('./browser.beautifiers');
 
 //  console.log('%cBlue! %cRed!', 'color: blue;', 'color: red;');
 pjson.init({ browser: true, showEmpty: false });
-const consoleLog = console.log;
 const subsystems = ['hot-module'];
 const lineLimit = 150;
+/* eslint-disable no-console */
+const consoleLog = console.log;
+/* eslint-enable no-console */
 
 // const deleteNull = (test, recurse) => {
 //   const filtered = { ...test };
@@ -113,7 +113,7 @@ const parse = (subsystem, style, messages) => {
     (line) => consoleLog(line, ...colors.splice(0, line.split('%c').length - 1))
   ));
 };
-
+/* eslint-disable no-console */
 console.log = function consoleLogEnhanced(...args) {
   if (args[0] && args[0].indexOf && args[0].indexOf('[HMR]') !== -1) {
     if (args[0].indexOf('bundle rebuilding') !== -1) {
@@ -123,6 +123,7 @@ console.log = function consoleLogEnhanced(...args) {
   }
   return consoleLog.apply(console, args);
 };
+/* eslint-enable no-console */
 
 export const trace = (subsystem, ...inputs) => parse(subsystem, 'color: #ccffff', inputs);
 export const debug = (subsystem, ...inputs) => parse(subsystem, 'color: #88ffee', inputs);
@@ -141,8 +142,6 @@ export const init = (subsystem) => ({
   error : error.bind(this, subsystem),
   fatal : fatal.bind(this, subsystem)
 });
-
-/* eslint-enable no-console */
 
 // TODO: Improvements...
 // Allow in place colors to be used without arrays

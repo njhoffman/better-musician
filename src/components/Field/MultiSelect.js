@@ -67,6 +67,7 @@ class MultiSelect extends Component {
   render() {
     const { classes, label, disabled, options, fields, mode } = this.props;
     const { currentlySelected } = this.state;
+    const existingValues = [].concat(fields.getAll());
     return (
       <Fragment>
         <Row>
@@ -74,7 +75,7 @@ class MultiSelect extends Component {
             <Select
               label={label}
               disabled={mode === FIELD_VIEW || disabled}
-              options={without(options, ...fields.getAll())}
+              options={without(options, ...existingValues)}
               onChange={this.handleSelectChange}
               value={currentlySelected}
             />

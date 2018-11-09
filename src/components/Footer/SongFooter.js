@@ -8,16 +8,20 @@ import { Stars, Difficulty } from 'components/Field';
 const SongFooter = ({ classes, maxDifficulty, song }) => (
   <Row className={classes.footerSong}>
     <Column small={3} className={classes.leftColumn}>
-      <img
-        alt='Instrument'
-        className={classes.instrumentPicture}
-        src={song.instrument.primaryImage}
-      />
-      <img
-        alt='Artist'
-        className={classes.artistPicture}
-        src={song.artist.primaryImage}
-      />
+      <div className={classes.instrumentPictureWrapper}>
+        <img
+          alt='Instrument'
+          className={classes.instrumentPicture}
+          src={song.instrument.primaryImage}
+        />
+      </div>
+      <div className={classes.artistPictureWrapper}>
+        <img
+          alt='Artist'
+          className={classes.artistPicture}
+          src={song.artist.primaryImage}
+        />
+      </div>
     </Column>
     <Column small={9} className={classes.rightColumn}>
       <Row className={classes.rightTop}>

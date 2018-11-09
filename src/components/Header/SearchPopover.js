@@ -84,7 +84,7 @@ const SearchPopover = ({
           setSearch('');
           close('search');
         } else {
-          open('search', e);
+          open('search', e.currentTarget);
         }
       }}>
       <ListItemIcon classes={{ root: classes.icon }}>

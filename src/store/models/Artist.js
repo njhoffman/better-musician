@@ -12,7 +12,7 @@ class Artist extends BaseModel {
   }
 
   static get imageLabel() {
-    return 'Unknown Artist';
+    return 'No Artist Picture';
   }
 
   static findByFullName(name) {
@@ -52,7 +52,9 @@ class Artist extends BaseModel {
   }
 
   get imageLabel() {
-    return this.lastName ? `${this.lastName}, ${this.firstName}` : Artist.imageLabel;
+    return this.images && this.images.length > 0 && this.lastName
+      ? `${this.lastName}, ${this.firstName}`
+      : Artist.imageLabel;
   }
 
   get primaryImage() {

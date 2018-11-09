@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { withStyles, Typography } from '@material-ui/core';
+import { withStyles, Typography, Card, CardMedia, CardContent, CardActions } from '@material-ui/core';
 import FormField, { FormRow, Stars } from 'components/Field';
 import { Row, Column } from 'react-foundation';
 import PropTypes from 'prop-types';
@@ -28,6 +28,14 @@ const styles = (theme) => ({
   image: {
     height: '200px',
     marginBottom: '5px'
+  },
+  imageLabel: {
+    margin: '-3.0em 0 0 0',
+    padding: '.25em 0 !important',
+    background: 'rgba(10, 10, 10, 0.85)'
+  },
+  imageFrame: {
+    marginBottom: theme.spacing.unit
   },
   row: {
     flexWrap: 'nowrap',
@@ -68,10 +76,11 @@ export const SongMainTab = ({
   variant,
   ...props
 }) => {
+  const mode = fieldMode(variant);
   const fieldProps = {
     ...props,
     className: classes.field,
-    mode: fieldMode(variant)
+    mode
   };
 
   const matchedImages = () => {
@@ -85,8 +94,13 @@ export const SongMainTab = ({
     field = field.replace(/\..*/, '');
     const matchers = { artist: matchedArtist, genre: matchedGenre, instrument: matchedInstrument };
     const matched = matchers[field];
-    const buttonLabel =  matched.images && matched.images.length > 0 ? 'Change Picture' : 'Add Picture';
-    return { buttonLabel, imageLabel: matched.imageLabel, image: matched.primaryImage };
+    const buttonLabel = 'Add Picture';
+
+    return {
+      buttonLabel,
+      imageLabel: matched.primaryImage ? matched.imageLabel : 'No Artist Picture',
+      image: matched.primaryImage
+    };
   };
 
   const renderImage = () => {
@@ -95,9 +109,19 @@ export const SongMainTab = ({
 
     return (
       <Column>
-        <img alt={`${imageLabel}`} className={classes.image} src={`${image}`} />
-        <Typography>{imageLabel}</Typography>
-        { variant !== MODAL_VARIANT_EDIT && <Button variant='contained' secondary label={buttonLabel} /> }
+        <Card>
+          <CardMedia image={image} className={classes.image} />
+          <CardContent className={classes.imageLabel}>
+            {variant !== MODAL_VARIANT_VIEW && (
+              <Button variant='contained' secondary label={buttonLabel} />
+            )}
+            {variant === MODAL_VARIANT_VIEW && (
+              <Typography variant='h6' color='textSecondary'>
+                {imageLabel}
+              </Typography>
+            )}
+          </CardContent>
+        </Card>
       </Column>
     );
   };

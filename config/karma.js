@@ -47,7 +47,7 @@ const karmaConfig = {
     PhantomJS_custom: {
       base: 'PhantomJS',
       options: {
-        windowName: 'instrumental',
+        windowName: 'better-musician',
         settings: {
           webSecurityEnabled: false
         }

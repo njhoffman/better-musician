@@ -12,6 +12,7 @@ import { getAllParams, normalizeTokenKeys } from 'utils/auth/parseUrl';
 import _openPopup from 'utils/popup';
 import * as AUTH from 'constants/auth';
 import { uiShowSnackbar } from 'actions/ui';
+import { fetchSongs } from 'actions/api';
 import { authenticateComplete, storeCurrentEndpointKey } from 'actions/auth';
 
 export const emailSignInFormUpdate = (endpoint, key, value) => ({
@@ -34,6 +35,7 @@ export const emailSignInComplete = (endpoint, user) => (dispatch, getState) => {
     type: AUTH.EMAIL_SIGN_IN_COMPLETE,
     payload: { user, endpoint }
   });
+  fetchSongs({ dispatch });
 };
 
 export const emailSignInError = (endpoint, errors) => ({

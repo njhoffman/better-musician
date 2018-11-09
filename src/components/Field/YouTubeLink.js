@@ -8,20 +8,31 @@ import TextboxField from './Textbox';
 
 const styles = (theme) => ({
   inputRow: {
-    marginBottom: '20px'
+    marginBottom: '5px'
+  },
+  inputWrapper: {
+    textAlign: 'left'
+  },
+  input: {
+    width: '8em'
   },
   fieldLabel: {
     textAlign: 'center',
     width: '100%',
+    display: 'block',
+    marginBottom: '10px',
+    marginTop: '-5px',
     display: 'block'
   },
   prefixWrapper: {
     padding: '0px',
-    lineHeight: '2.0em'
+    lineHeight: '2.0em',
+    textAlign: 'right'
   },
   prefix: {
     fontSize: '0.7em',
-    color: theme.palette.secondary.main
+    color: theme.palette.secondary.main,
+    display: 'block'
   }
 });
 
@@ -84,9 +95,10 @@ class YouTubeLink extends Component {
               http://www.youtube.com/embed/
             </InputLabel>
           </Column>
-          <Column small={5}>
+          <Column small={5} className={classes.inputWrapper}>
             <TextboxField
               name={input.name}
+              className={classes.input}
               onChange={(e, val) => this.parseUrl(val)}
               label={textboxLabel}
               {...{ input, meta }}
@@ -100,7 +112,6 @@ class YouTubeLink extends Component {
               title={id}
               type='text/html'
               width='350'
-              height='250'
               src={`http://www.youtube.com/embed/${videoId}`}
             />
           </Column>

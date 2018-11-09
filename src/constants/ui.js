@@ -13,8 +13,10 @@ export const MODAL_UPDATE       = 'MODAL_UPDATE';
 export const MODAL_VARIANT_VIEW = 'MODAL_VIEW';
 export const MODAL_VARIANT_ADD  = 'MODAL_ADD';
 export const MODAL_VARIANT_EDIT = 'MODAL_EDIT';
+
 export const SONG_MODAL         = 'SONG_MODAL';
 export const FILTERS_MODAL      = 'FILTERS_MODAL';
+export const PREVIEW_MODAL      = 'PREVIEW_MODAL';
 
 export const FIELD_VIEW = 'FIELD_VIEW';
 export const FIELD_ADD  = 'FIELD_ADD';

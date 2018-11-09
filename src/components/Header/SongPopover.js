@@ -28,6 +28,10 @@ const styles = (theme) => ({
     minWidth: '0px',
     padding: '0',
   },
+  active: {
+    stroke: theme.palette.text.primary,
+    color: `${theme.palette.text.primary} !important`
+  },
   linkItem: {
     color: theme.app.headerLinksColor,
     width: '100%',
@@ -42,6 +46,7 @@ const styles = (theme) => ({
     '&:hover' : {
       stroke: 'white'
     },
+    height: '100%',
     color: 'inherit',
     fontSize: '1.5em',
     marginLeft: '5px'
@@ -145,20 +150,26 @@ const SongButtonView = ({
   <Fragment>
     <MenuItem
       className={classes.linkItem}
-      onClick={(e) => showEditSongDialog(e, { ...props, closeAll })}
-      selected={Boolean(isOpen)}
-      onMouseEnter={(e) => open('song', e)}>
-      <ListItemIcon classes={{ root: classes.icon }}>
+      selected={Boolean(isOpen)}>
+      <ListItemIcon
+        onClick={(e) => showEditSongDialog(e, { ...props, closeAll })}
+        onMouseEnter={(e) => open('song', e.currentTarget.parentElement)}
+        classes={{ root: classes.icon }}>
         <EditIcon className={classes.editIcon} />
       </ListItemIcon>
       <ListItemText
+        onClick={(e) => showEditSongDialog(e, { ...props, closeAll })}
+        onMouseEnter={(e) => open('song', e.currentTarget.parentElement)}
         className={classes.iconTextWrapper}
         primaryTypographyProps={{ className: classes.iconText }}>
         Edit Song
       </ListItemText>
       <ArrowDropDownIcon
-        className={classes.downArrow}
-        onClick={(e) => toggle('song', e)}
+        className={`${classes.downArrow} ${isOpen ? classes.active : ''}`}
+        onClick={(e) => {
+          e.preventDefault();
+          toggle('song', e.currentTarget.parentElement);
+        }}
       />
     </MenuItem>
     <Menu

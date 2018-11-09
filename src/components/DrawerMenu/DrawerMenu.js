@@ -65,7 +65,6 @@ const SignedIn = ({ isOpen, endpoint, authSignOut, hideDrawerMenu, ...props }) =
     <DrawerMenuLink link='/' label='Home' {...props} />
     <DrawerMenuLink link='/songs' label='Songs' {...props} />
     <DrawerMenuLink link='/profile' label='Profile' {...props} />
-    <DrawerMenuLink link='/stats' label='Stats' {...props} />
     <DrawerMenuLink link='/settings' label='Settings' {...props} />
     <DrawerMenuLink link='/fields' label='Fields' {...props} />
     <Divider />

@@ -7,7 +7,7 @@ let loggerInstance; let
   logParent;
 
 const isTestEnv = process.env.NODE_ENV === 'test';
-const logName = process.env._APP_NAME_ ? process.env._APP_NAME_ : 'instrumental';
+const logName = process.env._APP_NAME_ ? process.env._APP_NAME_ : 'bmusic-client';
 const logConfig = {
   name: logName,
   streams: [{

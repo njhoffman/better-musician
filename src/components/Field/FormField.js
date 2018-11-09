@@ -67,7 +67,6 @@ const FormField = ({
       margin: '8px 0px'
     }}
     {...{ small, medium, large, centerOnSmall }}>
-    {/* <Field component={renderField} {...props} /> */}
     {type !== 3 && <Field component={renderField} type={type} {...props} />}
     {type === 3 && <FieldArray component={renderField} type={type} {...props} />}
   </Column>

@@ -115,13 +115,13 @@ class HeaderControls extends Component {
     };
   }
 
-  openPopover = (name, e) => {
+  openPopover = (name, target) => {
     this.setState({
       [`${name}`]: {
         isOpen: true,
-        anchor: e.currentTarget,
-        width:  e.currentTarget.clientWidth,
-        height: e.currentTarget.clientHeight
+        anchor: target,
+        width:  target.clientWidth,
+        height: target.clientHeight
       }
     });
   }
