@@ -29,7 +29,7 @@ module.exports = (config) => {
 
   // exit on errors during testing so that they do not get skipped and misreported
   if (__TEST__ && !argv.watch) {
-    config.webpack.plugins.push(function handleTestingErrors() {
+    wpConfig.plugins.push(function handleTestingErrors() {
       this.plugin('done', (stats) => {
         if (stats.compilation.errors.length) {
           // pretend no assets were generated, prevents tests from running to make warnings noticeable

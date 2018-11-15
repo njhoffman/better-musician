@@ -125,15 +125,15 @@ console.log = function consoleLogEnhanced(...args) {
 };
 /* eslint-enable no-console */
 
-export const trace = (subsystem, ...inputs) => parse(subsystem, 'color: #ccffff', inputs);
-export const debug = (subsystem, ...inputs) => parse(subsystem, 'color: #88ffee', inputs);
-export const info  = (subsystem, ...inputs) => parse(subsystem, 'color: #44aabb', inputs);
-export const log   = (subsystem, ...inputs) => parse(subsystem, 'color: #00aa66', inputs);
-export const warn  = (subsystem, ...inputs) => parse(subsystem, 'color: #aa6622', inputs);
-export const error = (subsystem, ...inputs) => parse(subsystem, 'color: #ff0000', inputs);
-export const fatal = (subsystem, ...inputs) => parse(subsystem, 'color: #ff0000', inputs);
+const trace = (subsystem, ...inputs) => parse(subsystem, 'color: #ccffff', inputs);
+const debug = (subsystem, ...inputs) => parse(subsystem, 'color: #88ffee', inputs);
+const info  = (subsystem, ...inputs) => parse(subsystem, 'color: #44aabb', inputs);
+const log   = (subsystem, ...inputs) => parse(subsystem, 'color: #00aa66', inputs);
+const warn  = (subsystem, ...inputs) => parse(subsystem, 'color: #aa6622', inputs);
+const error = (subsystem, ...inputs) => parse(subsystem, 'color: #ff0000', inputs);
+const fatal = (subsystem, ...inputs) => parse(subsystem, 'color: #ff0000', inputs);
 
-export const init = (subsystem) => ({
+const init = (subsystem) => ({
   trace : trace.bind(this, subsystem),
   debug : debug.bind(this, subsystem),
   info  : info.bind(this, subsystem),
@@ -143,6 +143,16 @@ export const init = (subsystem) => ({
   fatal : fatal.bind(this, subsystem)
 });
 
+module.exports = {
+  init,
+  trace,
+  debug,
+  info,
+  log,
+  warn,
+  error,
+  fatal
+};
 // TODO: Improvements...
 // Allow in place colors to be used without arrays
 // Handle objects without message printing better

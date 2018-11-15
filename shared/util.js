@@ -1,4 +1,4 @@
-export const humanMemorySize = (b, si) => {
+const humanMemorySize = (b, si) => {
   let bytes = Number(b);
   const thresh = si ? 1000 : 1024;
   if (Math.abs(bytes) < thresh) {
@@ -15,25 +15,25 @@ export const humanMemorySize = (b, si) => {
   return `${bytes.toFixed(1)} ${units[u]}`;
 };
 
-export const padLeft = (input, len) => {
+const padLeft = (input, len) => {
   const str = input && input.toString() ? input.toString() : '';
   return len > str.length
     ? (new Array(len - str.length + 1)).join(' ') + str
     : str;
 };
 
-export const padRight = (input, len) => {
+const padRight = (input, len) => {
   const str = input && input.toString() ? input.toString() : '';
   return len > str.length
     ? str + (new Array(len - str.length + 1)).join(' ')
     : str;
 };
 
-export const padZeros = (num, numZeros) => (Array(numZeros).join('0') + num).slice(-numZeros);
+const padZeros = (num, numZeros) => (Array(numZeros).join('0') + num).slice(-numZeros);
 
-export const numCommas = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+const numCommas = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-export const isJson = (str) => {
+const isJson = (str) => {
   try {
     JSON.parse(str);
   } catch (e) {
@@ -42,6 +42,16 @@ export const isJson = (str) => {
   return true;
 };
 
-export const isClass = (func) => (
+const isClass = (func) => (
   typeof func === 'function' && /^class\s/.test(Function.prototype.toString.call(func))
 );
+
+module.exports = {
+  humanMemorySize,
+  padLeft,
+  padRight,
+  padZeros,
+  numCommas,
+  isJson,
+  isClass
+};
