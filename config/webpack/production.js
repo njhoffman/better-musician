@@ -1,4 +1,5 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = (config) => ({
   optimization: {
@@ -40,5 +41,16 @@ module.exports = (config) => ({
       }
     }
   },
-  plugins: []
+  plugins: [
+    new HtmlWebpackPlugin({
+      template : config.paths.client('index.html'),
+      favicon  : config.paths.public('favicon.ico'),
+      filename : 'index.html',
+      hash     : false,
+      inject   : true,
+      minify   : {
+        collapseWhitespace : true
+      }
+    })
+  ]
 });

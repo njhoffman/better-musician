@@ -10,9 +10,6 @@ module.exports = (config) => ({
     // new StatsPlugin('./webpack.stats.json',{
     //   chunkModules: true, exclude: [/node_modules [\\\/]react/]
     // }),
-    // new HappyPack({
-    //   loaders: [ 'babel?presets[]=' + project.compiler_babel.presets.join(',presets[]=') ]
-    // }),
     // new HardSourceWebpackPlugin(),
     //
     // TODO: implement configuration for cosmos to prevent loading bundle analyzer twice
