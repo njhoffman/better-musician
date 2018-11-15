@@ -56,8 +56,9 @@ const getProdBoundary = () => {
   class ErrorBoundaryProd extends React.Component {
     static propTypes = {
       onError:  PropTypes.func.isRequired,
-      children: PropTypes.anyOfType([
-        PropTypes.node, PropTypes.object
+      children: PropTypes.oneOfType([
+        PropTypes.node,
+        PropTypes.object
       ]).isRequired
     }
 
