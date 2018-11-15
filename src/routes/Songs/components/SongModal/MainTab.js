@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { withStyles, Typography, Card, CardMedia, CardContent, CardActions } from '@material-ui/core';
+import { withStyles, Typography, Card, CardMedia, CardContent } from '@material-ui/core';
 import FormField, { FormRow, Stars } from 'components/Field';
 import { Row, Column } from 'react-foundation';
 import PropTypes from 'prop-types';
@@ -17,13 +17,14 @@ import {
 import { maxDifficulty } from 'selectors/users';
 import {
   FIELD_EDIT, FIELD_ADD, FIELD_VIEW,
-  MODAL_VARIANT_EDIT, MODAL_VARIANT_ADD, MODAL_VARIANT_VIEW
+  MODAL_VARIANT_ADD, MODAL_VARIANT_VIEW
 } from 'constants/ui';
 // import css from './AddSong.scss';
 
 const styles = (theme) => ({
   imageFrame: {
-    textAlign: 'center'
+    textAlign: 'center',
+    marginBottom: theme.spacing.unit
   },
   image: {
     height: '200px',
@@ -33,9 +34,6 @@ const styles = (theme) => ({
     margin: '-3.0em 0 0 0',
     padding: '.25em 0 !important',
     background: 'rgba(10, 10, 10, 0.85)'
-  },
-  imageFrame: {
-    marginBottom: theme.spacing.unit
   },
   row: {
     flexWrap: 'nowrap',

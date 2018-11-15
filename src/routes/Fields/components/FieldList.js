@@ -306,6 +306,7 @@ FieldList.propTypes = {
   }),
   classes:      PropTypes.instanceOf(Object).isRequired,
   edit:         PropTypes.func.isRequired,
+  preview:      PropTypes.func.isRequired,
   delete:       PropTypes.func.isRequired,
   cancel:       PropTypes.func.isRequired
 };

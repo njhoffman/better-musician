@@ -19,7 +19,6 @@ const styles = (theme) => ({
   fieldLabel: {
     textAlign: 'center',
     width: '100%',
-    display: 'block',
     marginBottom: '10px',
     marginTop: '-5px',
     display: 'block'

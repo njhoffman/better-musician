@@ -1,12 +1,12 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import {
   Dialog, DialogContent, Divider, Button,
-  DialogActions, DialogTitle, Typography, withStyles
+  DialogActions, DialogTitle, withStyles
 } from '@material-ui/core';
-import { Row, Column } from 'react-foundation';
+import { Column } from 'react-foundation';
 
 import { PREVIEW_MODAL } from 'constants/ui';
 import { uiHideModal, uiModalExit } from 'actions/ui';

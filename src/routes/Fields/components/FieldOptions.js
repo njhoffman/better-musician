@@ -77,12 +77,14 @@ class FieldOptions extends Component {
         <FormRow>
           <Column small={12} className={classes.chips}>
             {subFields.map((option, index, fieldsRef) => (
+              /* eslint-disable react/no-array-index-key */
               <Field
                 key={index}
                 name={`${option}`}
                 component={Chip}
                 onDelete={() => fieldsRef.remove(index)}
               />
+              /* eslint-enable react/no-array-index-key */
             ))}
           </Column>
         </FormRow>

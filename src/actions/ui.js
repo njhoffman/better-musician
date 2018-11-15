@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import * as UI from 'constants/ui';
 import { injectReducer } from 'store/reducers';
 
