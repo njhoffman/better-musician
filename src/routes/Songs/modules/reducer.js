@@ -1,3 +1,4 @@
+import * as API from 'constants/api';
 import * as UI from 'constants/ui';
 // import { songs as songsSelector } from 'routes/Songs/modules/selectors';
 
@@ -48,6 +49,11 @@ export const actions = {
 // ------------------------------------
 
 const ACTION_HANDLERS = {
+  [API.SONGS_DELETE_COMPLETE]: (state, { payload }) => ({
+    ...state,
+    currentSong: payload === state.currentSong ? null : state.currentSong
+  }),
+
   [UI.INIT_VIEW_COMPLETE]: (state, action) =>
     ({ ...state, initialized: true }),
 
@@ -72,6 +78,8 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 
 const initialState = {
+  deletingSong:       null,
+  currentSong:        null,
   currentGenres:      [],
   currentInstruments: [],
   initialized:        false,

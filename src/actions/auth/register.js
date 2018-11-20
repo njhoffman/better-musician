@@ -26,6 +26,7 @@ export const emailSignUpComplete = (endpoint, user) => (dispatch, getState) => {
     type: AUTH.EMAIL_SIGN_IN_COMPLETE,
     payload: { user, endpoint }
   });
+  return Promise.resolve({ user, endpoint });
 };
 
 export const emailSignUpError = (endpoint, errors) => ({
@@ -33,6 +34,7 @@ export const emailSignUpError = (endpoint, errors) => ({
   payload: { errors },
   meta: { endpoint }
 });
+
 
 export const emailSignUp = (body, endpointKey) => (dispatch) => {
   // save previous endpoint key in case of failure
@@ -44,11 +46,13 @@ export const emailSignUp = (body, endpointKey) => (dispatch) => {
 
   dispatch(storeCurrentEndpointKey(currentEndpointKey));
 
-  const signUpError = (errors) => {
+  const signUpError = (errors) => () => {
     setCurrentEndpointKey(prevEndpointKey);
     dispatch(storeCurrentEndpointKey(prevEndpointKey));
     dispatch(emailSignUpError(currentEndpointKey, errors));
+    return Promise.reject(new Error(errors.message));
   };
+
 
   return dispatch({
     [CALL_API]: {

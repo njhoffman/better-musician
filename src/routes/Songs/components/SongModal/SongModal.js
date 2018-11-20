@@ -1,7 +1,7 @@
+import _ from 'lodash';
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { chunk } from 'lodash';
 import { reduxForm } from 'redux-form';
 import {
   AppBar, Dialog, DialogContent,
@@ -12,7 +12,7 @@ import { Row, Column } from 'react-foundation';
 
 import {
   FIELD_EDIT, FIELD_ADD, FIELD_VIEW, SONG_MODAL,
-  MODAL_VARIANT_EDIT, MODAL_VARIANT_ADD, MODAL_VARIANT_VIEW
+  MODAL_VARIANT_ADD, MODAL_VARIANT_VIEW
 } from 'constants/ui';
 
 import { uiUpdateModal, uiModalExit } from 'actions/ui';
@@ -166,7 +166,7 @@ const SongModal = ({
                   </Row>
                 ))}
 
-                {chunk(tab.fields, 2).map((fields, fieldIdx) => (
+                {_.chunk(tab.fields, 2).map((fields, fieldIdx) => (
                   /* eslint-disable react/no-array-index-key */
                   <FormRow key={fieldIdx} className={classes.customFieldRow}>
                     {fields.map(field => (
@@ -249,14 +249,14 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => ({
-  initialValues: initialValues(currentSongSelector(state), state.ui.modal.variant === MODAL_VARIANT_ADD),
-  activeField:   state.form.songForm && state.form.songForm.active ? state.form.songForm.active : '',
+  initialValues: initialValues(currentSongSelector(state)),
   savedTabs:     savedTabsSelector(state),
-  variant:       state.ui.modal.variant || MODAL_VARIANT_EDIT,
-  errors:        state.ui.modal.errors,
-  isOpen:        state.ui.modal.name === SONG_MODAL && state.ui.modal.isOpen,
-  isMobile:      state.config.client.device.isMobile,
-  currentTab:    state.ui.modal.currentTab
+  activeField:   _.get(state, 'form.songForm.active'),
+  variant:       _.get(state, 'ui.modal.variant'),
+  errors:        _.get(state, 'ui.modal.errors'),
+  isOpen:        _.get(state, 'ui.modal.name') === SONG_MODAL && _.get(state, 'ui.modal.isOpen'),
+  isMobile:      _.get(state, 'config.client.device.isMobile'),
+  currentTab:    _.get(state, 'ui.modal.currentTab')
 });
 
 const songForm = withStyles(styles)(reduxForm({

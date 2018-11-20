@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -16,7 +17,7 @@ import {
 } from '@material-ui/core';
 
 import { FIELD_VIEW } from 'constants/ui';
-import { updateUser } from 'actions/api';
+import { updateProfile } from 'actions/api';
 import { changedFields } from 'selectors/form';
 import validate from 'utils/validate';
 import Button from 'components/Button';
@@ -73,9 +74,9 @@ const ProfileImage = (classes) => (
 export const ProfileView = ({
   history,
   classes,
-  updateProfile,
-  isTouched,
+  update,
   errors,
+  userId,
   changed,
   isFetching,
   syncErrors,
@@ -126,7 +127,7 @@ export const ProfileView = ({
                 type='submit'
                 label='Save'
                 loading={isFetching}
-                onClick={updateProfile}
+                onClick={() => update(changed, userId)}
                 icon={<SaveIcon />}
                 className='update-profile-submit'
                 primary
@@ -142,7 +143,6 @@ export const ProfileView = ({
 };
 
 ProfileView.defaultProps = {
-  isTouched: false,
   isFetching: false,
   syncErrors: {},
   errors: []
@@ -150,28 +150,26 @@ ProfileView.defaultProps = {
 
 ProfileView.propTypes = {
   history:       PropTypes.instanceOf(Object).isRequired,
-  api:           PropTypes.instanceOf(Object).isRequired,
-  updateProfile: PropTypes.func.isRequired,
+  update:        PropTypes.func.isRequired,
   changed:       PropTypes.instanceOf(Object).isRequired,
   classes:       PropTypes.instanceOf(Object).isRequired,
-  isTouched:     PropTypes.bool,
+  userId:        PropTypes.string.isRequired,
   isFetching:    PropTypes.bool,
   syncErrors:    PropTypes.instanceOf(Object),
   errors:        PropTypes.arrayOf(PropTypes.object)
 };
 
 const mapActionCreators = {
-  updateProfile : updateUser
+  update: updateProfile
 };
 
 const mapStateToProps = (state) => ({
-  api:           state.api,
-  initialValues: state.user.attributes,
-  settings:      state.user.attributes,
-  syncErrors:    state.form.profile ? state.form.profile.syncErrors : {},
   changed:       changedFields(state.form.profile),
-  isFetching:    state.api.user.update.loading,
-  errors:        state.api.user.update.errors || []
+  initialValues: _.get(state, 'user.attributes'),
+  userId:        _.get(state, 'user.attributes.id'),
+  syncErrors:    _.get(state, 'form.profile.syncErrors'),
+  isFetching:    _.get(state, 'api.users.update.loading'),
+  errors:        _.get(state, 'api.users.update.errors')
 });
 
 const validateFields = {

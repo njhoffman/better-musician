@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -52,7 +53,9 @@ const handleSubmit = (event, props) => {
   // TODO: dev/production check
   props.dispatch(props.emailSignUp(formData, getEndpoint(props)))
     .then(() => props.next(props.dispatch))
-    .catch((e) => { error(e); });
+    .catch((e) => {
+      error(e);
+    });
 };
 
 
@@ -60,22 +63,21 @@ const EmailSignUpForm = ({
   classes,
   isFetching,
   errors,
-  registerForm,
   isSignedIn,
+  syncErrors,
   ...props
 }) => (
   <form>
     <FormRow small={10} medium={8}>
       <Column>
-        {errors && [].concat(errors).map((err, i) => (
-          <div key={err.name}>
+        {errors && [].concat(errors).map(({ name, title, message, reason }, i) => (
+          <div key={name || title.replace(/[^\w]/g, '')}>
             <Typography variant='body1' className={classes.errorTitle}>
-              {err && err.name ? err.name : ''}
-              {err && err.err ? err.err : ''}
+              {title || name}
             </Typography>
             <Typography variant='caption' className={classes.errorMessage}>
-              {err && err.message ? err.message : ''}
-              {err && err.reason ? err.reason : ''}
+              {message}
+              {reason}
             </Typography>
           </div>
         ))}
@@ -123,7 +125,7 @@ const EmailSignUpForm = ({
           icon={<ContentSend />}
           className={classes.signupButton}
           loading={isFetching}
-          disabled={Boolean(isSignedIn || registerForm.syncErrors || isFetching)}
+          disabled={Boolean(isSignedIn || Object.keys(syncErrors).length > 0 || isFetching)}
           onClick={(e) => handleSubmit(e, props)}
         />
       </Column>
@@ -147,9 +149,9 @@ const validateFields = {
 EmailSignUpForm.propTypes = {
   classes:      PropTypes.instanceOf(Object).isRequired,
   config:       PropTypes.instanceOf(Object).isRequired,
-  registerForm: PropTypes.instanceOf(Object),
+  syncErrors:   PropTypes.instanceOf(Object),
+  errors:       PropTypes.instanceOf(Object),
   isFetching:   PropTypes.bool.isRequired,
-  errors:       PropTypes.arrayOf(PropTypes.object),
   dispatch:     PropTypes.func.isRequired,
   endpoint:     PropTypes.string,
   next:         PropTypes.func,
@@ -159,22 +161,20 @@ EmailSignUpForm.propTypes = {
 
 EmailSignUpForm.defaultProps = {
   next:         () => {},
-  errors:       [],
-  endpoint:     null,
-  registerForm: {}
+  errors:       {},
+  syncErrors:   {},
+  endpoint:     null
 };
 
 
 const mapStateToProps = (state) => ({
   emailSignUp,
-  registerForm: state.form.register,
-  api:          state.api,
-  isSignedIn:   state.user.isSignedIn,
   config:       state.config,
-  errors:       state.api.auth.register.errors || [],
-  syncErrors:   state.form.register ? state.form.register.syncErrors : {},
-  isFetching:   state.api.auth.register.loading,
-  changed:      changedFields(state.form.register),
+  changed:      changedFields(_.get(state, 'form.register')),
+  isSignedIn:   _.get(state, 'user.isSignedIn'),
+  errors:       _.get(state, 'api.auth.register.errors'),
+  syncErrors:   _.get(state, 'form.register.syncErrors'),
+  isFetching:   _.get(state, 'api.auth.register.loading')
 });
 
 export default withStyles(styles)(

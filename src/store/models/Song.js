@@ -2,10 +2,10 @@ import { uniq } from 'lodash';
 import { fk } from 'redux-orm';
 import {
   ADD_SONG,
-  DELETE_SONG,
   UPDATE_SONG,
   SONGS_FETCH_START,
-  LOAD_SONGS
+  LOAD_SONGS,
+  SONGS_DELETE_COMPLETE
 } from 'constants/api';
 import BaseModel from './BaseModel';
 
@@ -49,7 +49,7 @@ class Song extends BaseModel {
     const { payload, type } = action;
     switch (type) {
       case ADD_SONG:
-        model.create(Object.assign({}, payload, { newSong: payload.song }));
+        model.create(Object.assign({}, payload));
         break;
       case SONGS_FETCH_START:
         // remove all songs when fetching
@@ -58,12 +58,20 @@ class Song extends BaseModel {
         }
         break;
       case LOAD_SONGS:
-        model.loadData(action.payload, model);
+        model.loadData(payload, model);
         break;
-      case DELETE_SONG:
+      case SONGS_DELETE_COMPLETE:
         model.withId(payload).delete();
         break;
       case UPDATE_SONG:
+        if (!payload.id) {
+          /* eslint-disable no-console */
+          console.error('Song update reducer needs the ID field');
+          /* eslint-enable no-console */
+        } else {
+          model.withId(payload.id).update(payload);
+        }
+        break;
       default:
         break;
     }

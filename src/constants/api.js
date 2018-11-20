@@ -8,6 +8,18 @@ export const DELETE_SONG              = 'DELETE_SONG';
 export const UPDATE_SONG              = 'UPDATE_SONG';
 export const SHOW_SONGS               = 'SHOW_SONGS';
 
+export const SONGS_ADD_START          = 'SONGS_ADD_START';
+export const SONGS_ADD_COMPLETE       = 'SONGS_ADD_COMPLETE';
+export const SONGS_ADD_ERROR          = 'SONGS_ADD_ERROR';
+
+export const SONGS_UPDATE_START       = 'SONGS_UPDATE_START';
+export const SONGS_UPDATE_COMPLETE    = 'SONGS_UPDATE_COMPLETE';
+export const SONGS_UPDATE_ERROR       = 'SONGS_UPDATE_ERROR';
+
+export const SONGS_DELETE_START       = 'SONGS_DELETE_START';
+export const SONGS_DELETE_COMPLETE    = 'SONGS_DELETE_COMPLETE';
+export const SONGS_DELETE_ERROR       = 'SONGS_DELETE_ERROR';
+
 export const SONGS_FETCH_START        = 'SONGS_FETCH_START';
 export const SONGS_FETCH_COMPLETE     = 'SONGS_FETCH_COMPLETE';
 export const SONGS_FETCH_ERROR        = 'SONGS_FETCH_ERROR';
@@ -24,17 +36,13 @@ export const AUTHENTICATE_START       = 'AUTHENTICATE_START';
 export const AUTHENTICATE_COMPLETE    = 'AUTHENTICATE_COMPLETE';
 export const AUTHENTICATE_ERROR       = 'AUTHENTICATE_ERROR';
 
-export const USER_UPDATE_START        = 'USER_UPDATE_START';
-export const USER_UPDATE_COMPLETE     = 'USER_UPDATE_COMPLETE';
-export const USER_UPDATE_ERROR        = 'USER_UPDATE_ERROR';
+export const PROFILE_UPDATE_START     = 'PROFILE_UPDATE_START';
+export const PROFILE_UPDATE_COMPLETE  = 'PROFILE_UPDATE_COMPLETE';
+export const PROFILE_UPDATE_ERROR     = 'PROFILE_UPDATE_ERROR';
 
 export const SETTINGS_UPDATE_START    = 'SETTINGS_UPDATE_START';
 export const SETTINGS_UPDATE_COMPLETE = 'SETTINGS_UPDATE_COMPLETE';
 export const SETTINGS_UPDATE_ERROR    = 'SETTINGS_UPDATE_ERROR';
-
-export const SONGS_ADD_START          = 'SONGS_ADD_START';
-export const SONGS_ADD_COMPLETE       = 'SONGS_ADD_COMPLETE';
-export const SONGS_ADD_ERROR          = 'SONGS_ADD_ERROR';
 
 export const FIELDS_EDIT              = 'FIELDS_EDIT';
 export const FIELDS_ADD_START         = 'FIELDS_ADD_START';

@@ -73,7 +73,7 @@ const ErrorHandlerFallback = (props) => {
     const matches = line.match(stackLineRE);
     if (matches && matches.length === 6 && matches[3].indexOf('node_modules') === -1) {
       return (
-        <span key={idx}>
+        <span style={{ display: 'block' }} key={idx}>
           <span style={{ color: '#ffffff' }}>{matches[1]}</span>
           <span>{matches[2]}</span>
           <span style={{ color: '#ffffff' }}>{matches[3]}</span>
@@ -84,7 +84,7 @@ const ErrorHandlerFallback = (props) => {
         </span>
       );
     }
-    return (<span key={idx}>{line}</span>);
+    return (<span style={{ display: 'block' }} key={idx}>{line}</span>);
   });
 
   return (

@@ -7,25 +7,30 @@ module.exports = {
     if (ignoredActions.indexOf(action.type) !== -1) {
       return '';
     } else if (action.callApi) {
-      return [
-        `%cCALL_API %c${padRight(action.endpoint, 21)} %c `
-        + `${!_.isUndefined(action.payload) ? JSON.stringify(action.payload) : ''} `
-        + ` ${!_.isUndefined(action.meta) ? JSON.stringify(action.meta) : ''}`,
-        'color: #aa66ff; font-weight: bold',
-        'color: #22ccff', 'color: #886688;'
+      const method = action.method || 'GET';
+      const retMsg = [
+        `%cCALL_API %c ${padRight(method, 4)} %c ${action.endpoint} `,
+        'color: #00ccff; font-weight: bold;',
+        'color: #22ccff;',
+        'color: #88aaff;'
       ];
+      return retMsg;
     } else if (!_.isUndefined(action.payload)) {
-      return [
-        `%c${padRight(action.type, 30)} %c `
-        + `${JSON.stringify(action.payload)} `
-        + ` ${!_.isUndefined(action.meta) ? JSON.stringify(action.meta) : ''}`,
-        'color: #88aaff;',
-        'color: #886688;'
+      const retMsg = [
+        `%c${padRight(action.type, 30)} `
+        + `%c ${!_.isUndefined(action.meta) ? JSON.stringify(action.meta) : ''}`
+        + `%c ${JSON.stringify(action.payload)} `,
+        // 'color: #4499bb; bold;',
+        'color: #6699cc; font-weight: bold;',
+        'color: #446688;',
+        'color: #666677;'
       ];
+      return retMsg;
     }
     return [
       `%c${padRight(action.type)}`,
-      'color: #88aaff;'
+      'color: #6699cc; font-weight: bold;'
+      // 'color: #88aaff;'
     ];
   },
   _sessionGet: ({ key, parsedVal, storage }) => {

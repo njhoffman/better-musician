@@ -29,9 +29,21 @@ export default {
       }
     },
     user: {
-      update:          '/users/update',
-      delete:          '/users/delete',
-      updatePassword:  '/users/password_update',
+      users: {
+        update:          '/users/update',
+        delete:          '/users/delete',
+        updatePassword:  '/users/password_update',
+      },
+      songs: {
+        update:          '/songs/update',
+        delete:          '/songs/delete',
+        add:             '/songs/add',
+      },
+      fields: {
+        update:          '/fields/update',
+        delete:          '/fields/delete',
+        add:             '/fields/add',
+      }
     },
     admin: {
       listModels:      '/admin/list/models',

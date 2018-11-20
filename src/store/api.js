@@ -6,31 +6,28 @@ const loadApiEndpoints = (endpoints, roles = []) => {
   // TODO: make api endpoint extension and nesting recursive
   const apiEndpoints = { ...endpoints.default };
   roles.forEach(role => {
-    _.merge(apiEndpoints, { [role]: endpoints[role] });
+    _.merge(apiEndpoints, _.omitBy(endpoints[role], _.isString));
+    _.merge(apiEndpoints, { [role]: _.pickBy(endpoints[role], _.isString) });
   });
 
-  const results = _.mapValues(apiEndpoints, ep1 => {
-    // apiURL
-    if (_.isString(ep1)) {
-      return ep1;
-    }
-    return _.mapValues(ep1, ep2 => {
-      // first order route
-      if (_.isString(ep2)) {
-        return {
-          loading: false,
-          errors: false,
-          success: false
-        };
-      }
-      return _.mapValues(ep2, () => ({
+  const mapEndpoints = (ep) => {
+    if (_.isString(ep)) {
+      return {
         loading: false,
         errors: false,
         success: false
-      }));
-    });
+      };
+    }
+    return _.mapValues(ep, mapEndpoints);
+  };
+
+  const results = _.mapValues(apiEndpoints, baseEp => {
+    if (_.isString(baseEp)) {
+      return baseEp;
+    }
+    return _.mapValues(baseEp, mapEndpoints);
   });
-  return results;
+  return _.omitBy(results, _.isEmpty);
 };
 
 const ACTION_HANDLERS = {
@@ -50,6 +47,14 @@ const ACTION_HANDLERS = {
     auth: {
       ...state.auth,
       login: { loading: true, success: false, errors: [] }
+    }
+  }),
+
+  [API.SONGS_FETCH_COMPLETE] : (state) => ({
+    ...state,
+    api: {
+      ...state.user,
+      login: { loading: false, success: true, errors: [] }
     }
   }),
 

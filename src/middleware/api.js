@@ -146,7 +146,8 @@ const apiHandler = (store, action, next) => {
     if (err.name === 'ValidationError') {
       warn(`Validation Failure: ${err.message}`);
     } else {
-      warn(`${err && err.name ? err.name : 'Fetch Error'} - ${err.message}`);
+      const msg = err.message || err.error;
+      warn(`${err && err.name ? err.name : 'Fetch Error'} - ${msg}`);
     }
 
     if (typeof failureType === 'function') {
@@ -162,8 +163,12 @@ const apiHandler = (store, action, next) => {
     );
   };
 
-  const responseSuccess = ({ data }) => {
-    info(`Fetch success: ${JSON.stringify(data).length} characters returned`);
+  const responseSuccess = (data) => {
+    if (data.records) {
+      info(`Fetch success: ${data.records.length} records returned`);
+    } else {
+      info(`Fetch success: ${JSON.stringify(data).length} characters returned`);
+    }
     if (data.errors && data.errors.length > 0) {
       // successful fetch but validation errors returned
       return responseFailure({
@@ -200,6 +205,7 @@ export const actionLogger = (store) => (next) => (action) => {
   // meta.form, meta.field
   const { warn: warnAction, trace: traceAction } = initLog('api-action');
   if (_.isUndefined(action)) {
+    // debugger;
     warnAction('undefined action');
   } else {
     traceAction(`Action: ${padRight(action.type)}`, { _action: { ...action } });

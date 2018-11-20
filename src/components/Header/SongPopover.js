@@ -16,6 +16,7 @@ import {
 
 import { MODAL_VARIANT_EDIT, MODAL_VARIANT_ADD } from 'constants/ui';
 import { uiShowSongModal } from 'actions/ui';
+import { deleteSong } from 'actions/api';
 
 const styles = (theme) => ({
   link: {
@@ -143,8 +144,8 @@ SongButtonAdd.propTypes = {
 };
 
 const SongButtonView = ({
-  classes, isOpen, anchor, width, height,
-  open, close, toggle, closeAll,
+  classes, isOpen, anchor, width, height, deleteSelectedSong,
+  open, close, toggle, closeAll, currentSong,
   ...props
 }) => (
   <Fragment>
@@ -198,6 +199,7 @@ const SongButtonView = ({
         </ListItemText>
       </MenuItem>
       <MenuItem
+        onClick={(e) => deleteSelectedSong(currentSong)}
         style={{ width, height }}
         className={classes.sublink}>
         <ListItemIcon className={classes.sublinkIcon}>
@@ -214,23 +216,28 @@ const SongButtonView = ({
 SongButtonView.defaultProps = {
   anchor: null,
   width:  null,
-  height: null
+  height: null,
+  currentSong: null
 };
+
 SongButtonView.propTypes = {
-  classes:     PropTypes.instanceOf(Object).isRequired,
-  isOpen:      PropTypes.bool.isRequired,
-  anchor:      PropTypes.instanceOf(HTMLElement),
-  width:       PropTypes.number,
-  height:      PropTypes.number,
-  open:        PropTypes.func.isRequired,
-  close:       PropTypes.func.isRequired,
-  toggle:      PropTypes.func.isRequired,
-  closeAll:    PropTypes.func.isRequired
+  classes:            PropTypes.instanceOf(Object).isRequired,
+  isOpen:             PropTypes.bool.isRequired,
+  anchor:             PropTypes.instanceOf(HTMLElement),
+  width:              PropTypes.number,
+  height:             PropTypes.number,
+  open:               PropTypes.func.isRequired,
+  close:              PropTypes.func.isRequired,
+  toggle:             PropTypes.func.isRequired,
+  closeAll:           PropTypes.func.isRequired,
+  currentSong:        PropTypes.string,
+  deleteSelectedSong: PropTypes.func.isRequired
+
 };
 
 const SongPopover = ({ currentView, currentSong, ...props }) => {
   if (currentView === 'Songs') {
-    return currentSong ? SongButtonView(props) : SongButtonAdd(props);
+    return currentSong ? SongButtonView({ ...props, currentSong }) : SongButtonAdd(props);
   }
   return SongButtonOther(props);
 };
@@ -241,7 +248,8 @@ SongPopover.propTypes = {
 };
 
 const mapActionCreators = {
-  showSongModal: uiShowSongModal
+  showSongModal:      uiShowSongModal,
+  deleteSelectedSong: deleteSong
 };
 
 const mapStateToProps = (state) => ({

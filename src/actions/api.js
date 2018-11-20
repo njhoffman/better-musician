@@ -1,8 +1,10 @@
+import _ from 'lodash';
 import { CALL_API } from 'middleware/api';
 import { init as initLog } from 'shared/logger';
-import { reset } from 'redux-form';
+import { reset, initialize } from 'redux-form';
 import * as API from 'constants/api';
 import * as UI from 'constants/ui';
+import { setCurrentSong } from 'routes/Songs/modules/reducer';
 
 const { info, warn } = initLog('api-actions');
 
@@ -18,7 +20,38 @@ export const configureComplete = (config) => ({
 
 /* songs */
 
+export const songsDeleteComplete = ({ changed }) => (dispatch) => {
+  const deletedSong = changed && changed[0] ? changed[0].old : {};
+  dispatch({ type: API.SONGS_DELETE_COMPLETE, payload: deletedSong.id });
+  dispatch({
+    type: UI.SNACKBAR_SHOW,
+    payload: `Song "${deletedSong.title}" deleted`,
+    meta: { variant: 'success' }
+  });
+};
+
+export const songsDeleteError = ({ status, errors }) => (dispatch) => {
+  dispatch({ type: API.SONGS_ADD_ERROR, errors });
+  dispatch({
+    type: UI.SNACKBAR_SHOW,
+    meta: { variant: 'warning' },
+    payload: `Song Deletion Error: ${JSON.stringify(errors)}`
+  });
+};
+
+export const deleteSong = (songId) => (dispatch, getState) =>
+  dispatch({
+    [CALL_API]: {
+      types:    [API.SONGS_DELETE_START, songsDeleteComplete, songsDeleteError],
+      method:   'POST',
+      endpoint: `${__API_URL__}/songs/delete`,
+      payload:  { id: songId }
+    }
+  });
+
+
 export const songsAddComplete = (response) => (dispatch) => {
+  dispatch({ type: UI.MODAL_HIDE, meta: { type: UI.SONG_MODAL } });
   dispatch({ type: API.SONGS_ADD_COMPLETE, user: response });
   dispatch({ type: UI.SNACKBAR_SHOW, payload: 'Song Added', meta: { variant: 'success' } });
 };
@@ -54,9 +87,52 @@ export const addSong = () => (dispatch, getState) => {
   });
 };
 
+export const songsUpdateComplete = ({ records, changed }) => (dispatch) => {
+  const changedLength = _.reject(changed[0].delta, ['path[0]', 'updatedAt']).length;
+  dispatch({ type: UI.MODAL_HIDE, meta: { type: UI.SONG_MODAL } });
+  dispatch({ type: API.SONGS_UPDATE_COMPLETE, payload: records[0] });
+  dispatch({ type: API.UPDATE_SONG, payload: records[0] });
+  dispatch({
+    type: UI.SNACKBAR_SHOW,
+    payload: `Song successfully updated with ${changedLength} fields modified`,
+    meta: { variant: 'success' }
+  });
+  dispatch(reset('songForm'));
+  setCurrentSong();
+};
 
-export const songsFetchComplete = (tables) => (dispatch) => {
-  // info('songsFetchComplete', response);
+export const songsUpdateError = (response) => (dispatch) => {
+  dispatch({ type: API.SONGS_UPDATE_ERROR, user: response });
+
+  dispatch({
+    type: UI.SNACKBAR_SHOW,
+    meta: { variant: 'warning' },
+    payload: 'Validation Error: Song Not Updated'
+  });
+
+  dispatch({
+    type: UI.MODAL_UPDATE,
+    meta: {
+      type: UI.SONG_MODAL,
+      props: { errors: response.errors }
+    }
+  });
+};
+
+export const updateSong = (changedFields, songId) => (dispatch, getState) => (
+  dispatch({
+    [CALL_API]: {
+      types:    [API.SONGS_UPDATE_START, songsUpdateComplete, songsUpdateError],
+      method:   'POST',
+      endpoint: `${__API_URL__}/songs/update`,
+      payload:  { ...changedFields, id: songId }
+    }
+  })
+);
+
+export const songsFetchComplete = (data) => (dispatch) => {
+  // TODO: figure out a better way to handle loading shallow ORM data like this
+  const tables = data.records[0];
   info(`songsFetchComplete: ${tables.songs.length} songs and ${tables.artists.length} artists`);
 
   /* eslint-disable no-multi-spaces */
@@ -102,19 +178,20 @@ export const fetchArtists = ({ dispatch, getState }) => {
 
 /* profile */
 
-export const userUpdateComplete = (response) => (dispatch) => {
-  dispatch({ type: API.USER_UPDATE_COMPLETE, payload: response });
+export const profileUpdateComplete = ({ records, changed }) => (dispatch) => {
+  const changedLength = _.reject(changed[0].delta, ['path[0]', 'updatedAt']).length;
+  dispatch({ type: API.PROFILE_UPDATE_COMPLETE, payload: records[0] });
   dispatch({
     type: UI.SNACKBAR_SHOW,
-    payload: 'Profile Successfully Updated',
+    payload: `Profile successfully updated with ${changedLength} fields modified`,
     meta: { variant: 'success' }
   });
+  dispatch(initialize('profile', records[0]));
 };
 
-export const userUpdateError = (response) => (dispatch) => {
-  warn('updateUserError', response);
-
-  dispatch({ type: API.USER_UPDATE_ERROR, user: response });
+export const profileUpdateError = (response) => (dispatch) => {
+  warn('updateProfile Error', response);
+  dispatch({ type: API.PROFILE_UPDATE_ERROR, user: response });
   dispatch({
     type: UI.SNACKBAR_SHOW,
     payload: response.message || response.error || 'Unknown Error',
@@ -122,35 +199,31 @@ export const userUpdateError = (response) => (dispatch) => {
   });
 };
 
-export const updateUser = () => (dispatch, getState) => {
-  const fieldValues = getState().form.profile
-    ? getState().form.profile.values
-    : getState().form.settings.values;
-
-  return dispatch({
+export const updateProfile = (changedFields, userId) => (dispatch, getState) =>
+  dispatch({
     [CALL_API]: {
-      types:    [API.USER_UPDATE_START, userUpdateComplete, userUpdateError],
+      types:    [API.PROFILE_UPDATE_START, profileUpdateComplete, profileUpdateError],
       method:   'POST',
       endpoint: `${__API_URL__}/users/update`,
-      payload:  { ...fieldValues }
+      payload: { ...changedFields, id: userId }
     }
   });
-};
 
 /* settings */
 
-export const settingsUpdateComplete = (response) => (dispatch) => {
-  dispatch({ type: API.SETTINGS_UPDATE_COMPLETE, payload: response });
+export const settingsUpdateComplete = ({ records, changed }) => (dispatch) => {
+  const changedLength = _.reject(changed[0].delta, ['path[0]', 'updatedAt']).length;
+  dispatch({ type: API.SETTINGS_UPDATE_COMPLETE, payload: records[0] });
   dispatch({
     type: UI.SNACKBAR_SHOW,
-    payload: 'Profile Successfully Updated',
+    payload: `Settingss uccessfully updated with ${changedLength} fields modified`,
     meta: { variant: 'success' }
   });
+  dispatch(initialize('settings', records[0]));
 };
 
 export const settingsUpdateError = (response) => (dispatch) => {
   warn('updateSettingsError', response);
-
   dispatch({ type: API.SETTINGS_UPDATE_ERROR, user: response });
   dispatch({
     type: UI.SNACKBAR_SHOW,
@@ -160,10 +233,7 @@ export const settingsUpdateError = (response) => (dispatch) => {
 };
 
 export const updateSettings = () => (dispatch, getState) => {
-  const fieldValues = getState().form.profile
-    ? getState().form.profile.values
-    : getState().form.settings.values;
-
+  const fieldValues = getState().form.settings.values;
   return dispatch({
     [CALL_API]: {
       types:    [API.SETTINGS_UPDATE_START, settingsUpdateComplete, settingsUpdateError],
@@ -181,9 +251,9 @@ export const cancelEdit = () => (dispatch) =>
     payload: null
   });
 
-export const fieldUpdateComplete = (data) => (dispatch, getState) => {
+export const fieldUpdateComplete = ({ records, changed }) => (dispatch, getState) => {
   dispatch(cancelEdit());
-  dispatch({ type: API.FIELDS_UPDATE_COMPLETE, payload: data });
+  dispatch({ type: API.FIELDS_UPDATE_COMPLETE, payload: records[0] });
   dispatch({
     type: UI.SNACKBAR_SHOW,
     payload: 'Field Successfully Updated',
@@ -225,9 +295,10 @@ export const addField = () => (dispatch, getState) => {
   });
 };
 
-export const fieldsDeleteComplete = (data) => (dispatch, getState) => {
+export const fieldsDeleteComplete = ({ changed }) => (dispatch, getState) => {
   dispatch(reset('fields'));
-  dispatch({ type: API.FIELDS_ADD_COMPLETE, payload: data.fields });
+  const deletedField = changed && changed[0] ? changed[0].old : {};
+  dispatch({ type: API.FIELDS_ADD_COMPLETE, payload: deletedField });
   dispatch({
     type: UI.SNACKBAR_SHOW,
     payload: 'Field Successfully Deleted',

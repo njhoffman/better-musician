@@ -1,23 +1,19 @@
 import BaseModel from './BaseModel';
 
 class CustomField extends BaseModel {
-  static reducer(action, Field/* , session */) {
-    const { type } = action;
+  static reducer(action, model /* , session */) {
+    const { payload, type } = action;
     switch (type) {
       case 'FIELDS_UPDATE_COMPLETE':
       case 'LOAD_FIELDS':
-        this.loadData([].concat(action.payload), Field);
+        this.loadData([].concat(payload), model);
         break;
       case 'ADD_FIELD':
-        if (action.payload) {
-          this.create(action.payload);
-        }
+        model.create(Object.assign({}, payload));
         break;
+      case 'FIELDS_DELETE_COMPLETE':
       case 'DELETE_FIELD':
-        if (action.payload) {
-          const field = Field.withId(action.payload);
-          field.delete();
-        }
+        model.withId(payload).delete();
         break;
       default:
         break;

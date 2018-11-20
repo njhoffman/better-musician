@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -171,7 +172,6 @@ SettingsView.defaultProps = {
 };
 
 SettingsView.propTypes = {
-  api:         PropTypes.instanceOf(Object).isRequired,
   changed:     PropTypes.instanceOf(Object).isRequired,
   history:     PropTypes.instanceOf(Object).isRequired,
   setTheme:    PropTypes.func.isRequired,
@@ -200,14 +200,13 @@ const mapActionCreators = {
 };
 
 const mapStateToProps = (state) => ({
-  api:           state.api,
-  initialValues: state.user.attributes,
   changed:       changedFields(state.form.profile),
-  settings:      state.user.attributes,
-  isTouched:     state.form.settings && state.form.settings.anyTouched,
-  syncErrors:    state.form.settings ? state.form.settings.syncErrors : {},
-  isFetching:    state.api.user.update.loading,
-  errors:        state.api.user.update.errors || []
+  initialValues: _.get(state, 'user.attributes'),
+  settings:      _.get(state, 'user.attributes'),
+  isTouched:     _.get(state, 'form.settings.anyTouched'),
+  syncErrors:    _.get(state, 'form.settings.syncErrors'),
+  isFetching:    _.get(state, 'api.user.update.loading'),
+  errors:        _.get(state, 'api.user.update.errors')
 });
 
 const validateFields = {

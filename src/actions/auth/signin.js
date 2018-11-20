@@ -27,13 +27,13 @@ export const emailSignInStart = (endpoint) => ({
   payload: { endpoint }
 });
 
-export const emailSignInComplete = (endpoint, user) => (dispatch, getState) => {
+export const emailSignInComplete = (endpoint, { records, changes }) => (dispatch, getState) => {
   const { config: { endpoints } } = getState();
   dispatch(uiShowSnackbar('You are now signed in.', 'success', 'Success'));
-  dispatch(authenticateComplete(user, endpoints));
+  dispatch(authenticateComplete(records, endpoints));
   dispatch({
     type: AUTH.EMAIL_SIGN_IN_COMPLETE,
-    payload: { user, endpoint }
+    payload: { user: records, endpoint }
   });
   fetchSongs({ dispatch });
 };
@@ -78,8 +78,8 @@ export const emailSignIn = (body, endpointKey) => (dispatch) => {
 export const oAuthSignInStart = (provider, endpoint) =>
   ({ type: AUTH.OAUTH_SIGN_IN_START, provider, endpoint });
 
-export const oAuthSignInComplete = (user, endpoint) =>
-  ({ type: AUTH.OAUTH_SIGN_IN_COMPLETE, user, endpoint });
+export const oAuthSignInComplete = ({ records, changes }, endpoint) =>
+  ({ type: AUTH.OAUTH_SIGN_IN_COMPLETE, records, endpoint });
 
 export const oAuthSignInError = (errors, endpoint) =>
   ({ type: AUTH.OAUTH_SIGN_IN_ERROR, errors, endpoint });

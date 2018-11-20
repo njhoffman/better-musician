@@ -35,11 +35,8 @@ module.exports = ({ config, app, logger, sdc }) => {
   });
 
   proxy.on('error', (err, req, res) => {
-    const json = { error: 'proxy_error', reason: err.message };
-    if (err.code !== 'ECONNRESET') {
-      proxyLog.error((err.code === 'ECONNREFUSED' ? {} : err),
-        `${err.code}: ${err.message} trying to process: ${req.method} ${req.url}`);
-    }
+    const json = { title: 'API Proxy Error', name: 'proxy_error', message: err.message };
+    proxyLog.error({ err }, `${err.code}: ${err.message} trying to process: ${req.method} ${req.url}`);
     if (!res.headersSent) {
       res.writeHead(500, { 'content-type': 'application/json' });
     }

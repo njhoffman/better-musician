@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
@@ -51,7 +52,7 @@ const handleSubmit = (event, props) => {
     .catch((e) => { error(e); });
 };
 
-const EmailSignInForm = ({
+const EmailSignIn = ({
   classes,
   isFetching,
   errors,
@@ -62,15 +63,14 @@ const EmailSignInForm = ({
   <form>
     <FormRow>
       <Column>
-        {errors && [].concat(errors).map((err, i) => (
-          <div key={err.name}>
+        {errors && [].concat(errors).map(({ name, title, message, reason }, i) => (
+          <div key={name || title.replace(/[^\w]/g, '')}>
             <Typography variant='body1' className={classes.errorTitle}>
-              {err && err.name ? err.name : ''}
-              {err && err.err ? err.err : ''}
+              {title || name}
             </Typography>
             <Typography variant='caption' className={classes.errorMessage}>
-              {err && err.message ? err.message : ''}
-              {err && err.reason ? err.reason : ''}
+              {message}
+              {reason}
             </Typography>
           </div>
         ))}
@@ -110,12 +110,13 @@ const EmailSignInForm = ({
   </form>
 );
 
-EmailSignInForm.propTypes = {
+EmailSignIn.propTypes = {
   classes:     PropTypes.instanceOf(Object).isRequired,
   config:      PropTypes.instanceOf(Object).isRequired,
   loginForm:   PropTypes.instanceOf(Object),
+  syncErrors:  PropTypes.instanceOf(Object),
   isFetching:  PropTypes.bool.isRequired,
-  errors:      PropTypes.arrayOf(PropTypes.object),
+  errors:      PropTypes.instanceOf(Object),
   dispatch:    PropTypes.func.isRequired,
   endpoint:    PropTypes.string,
   next:        PropTypes.func,
@@ -123,22 +124,23 @@ EmailSignInForm.propTypes = {
   isSignedIn:  PropTypes.bool.isRequired
 };
 
-EmailSignInForm.defaultProps = {
-  next:      () => {},
-  errors:    [],
-  endpoint:  null,
-  loginForm: {}
+EmailSignIn.defaultProps = {
+  next:       () => {},
+  errors:     {},
+  syncErrors: {},
+  endpoint:   null,
+  loginForm:  {}
 };
 
 const mapStateToProps = (state) => ({
+  emailSignIn,
   config:      state.config,
-  isSignedIn:  state.user.isSignedIn,
-  loginForm:   state.form.login,
-  errors:      state.api.auth.login.errors || [],
-  syncErrors:  state.form.login && state.form.login.syncErrors,
-  isFetching:  state.api.auth.login.loading,
-  changed:     changedFields(state.form.login),
-  emailSignIn
+  isSignedIn:  _.get(state, 'user.isSignedIn'),
+  loginForm:   _.get(state, 'form.login'),
+  syncErrors:  _.get(state, 'form.login.syncErrors'),
+  errors:      _.get(state, 'api.auth.login.errors'),
+  isFetching:  _.get(state, 'api.auth.login.loading'),
+  changed:     changedFields(state.form.login)
 });
 
 const validateFields = {
@@ -151,7 +153,9 @@ const validateFields = {
   ]
 };
 
-export default connect(mapStateToProps)(withStyles(styles)(reduxForm({
+const emailSignInForm = reduxForm({
   form: 'login',
   validate: validate(validateFields)
-})(EmailSignInForm)));
+})(EmailSignIn);
+
+export default connect(mapStateToProps)(withStyles(styles)(emailSignInForm));

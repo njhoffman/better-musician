@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Divider, withStyles } from '@material-ui/core';
 import { MdDelete as DeleteIcon } from 'react-icons/md';
+import { Row, Column } from 'react-foundation';
 
 import { uiChangeSongModalView, uiHideModal } from 'actions/ui';
 import { MODAL_VARIANT_EDIT, MODAL_VARIANT_VIEW, MODAL_VARIANT_ADD } from 'constants/ui';
-import { addSong } from 'actions/api';
-import { Row, Column } from 'react-foundation';
+import { currentSong as currentSongSelector, } from 'routes/Songs/modules/selectors';
+import { addSong, updateSong, deleteSong } from 'actions/api';
+import { changedFields } from 'selectors/form';
 
 const styles = (theme) => ({
   root: {
@@ -30,7 +32,11 @@ const ActionButtons = ({
   add,
   edit,
   variant,
-  hideModal
+  update,
+  hideModal,
+  changed,
+  currentSong,
+  deleteCurrentSong
 }) => {
   let buttonLabel = 'Add';
   if (variant === MODAL_VARIANT_VIEW) {
@@ -47,7 +53,7 @@ const ActionButtons = ({
           <Button
             variant='text'
             className={classes.deleteButton}
-            onClick={addSong}>
+            onClick={deleteCurrentSong}>
             <DeleteIcon />
             Delete
           </Button>
@@ -60,32 +66,60 @@ const ActionButtons = ({
           onClick={() => hideModal()}>
           Cancel
         </Button>
-        <Button
-          variant='contained'
-          color='primary'
-          onClick={variant === MODAL_VARIANT_VIEW ? edit : add}>
-          {buttonLabel}
-        </Button>
+        { variant === MODAL_VARIANT_VIEW && (
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={edit}>
+            {buttonLabel}
+          </Button>
+        )}
+        { variant === MODAL_VARIANT_EDIT && (
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={() => update(changed, currentSong.id)}>
+            {buttonLabel}
+          </Button>
+        )}
+        { variant === MODAL_VARIANT_ADD && (
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={add}>
+            {buttonLabel}
+          </Button>
+        )}
+
       </Column>
     </Row>
   );
 };
 
 ActionButtons.propTypes = {
-  classes   : PropTypes.instanceOf(Object).isRequired,
-  add       : PropTypes.func.isRequired,
-  edit      : PropTypes.func.isRequired,
-  variant   : PropTypes.string.isRequired,
-  hideModal : PropTypes.func.isRequired
+  classes:           PropTypes.instanceOf(Object).isRequired,
+  currentSong:       PropTypes.instanceOf(Object).isRequired,
+  update:            PropTypes.func.isRequired,
+  deleteCurrentSong: PropTypes.func.isRequired,
+  add:               PropTypes.func.isRequired,
+  edit:              PropTypes.func.isRequired,
+  variant:           PropTypes.string.isRequired,
+  hideModal:         PropTypes.func.isRequired,
+  changed:           PropTypes.instanceOf(Object).isRequired
 };
 
 const mapDispatchToProps = {
-  add: addSong,
-  edit : () => uiChangeSongModalView(MODAL_VARIANT_EDIT),
-  hideModal: uiHideModal
+  add:               addSong,
+  update:            updateSong,
+  edit:              () => uiChangeSongModalView(MODAL_VARIANT_EDIT),
+  deleteCurrentSong: deleteSong,
+  hideModal:         uiHideModal
 };
 
-const mapStateToProps = (state) => ({ });
+const mapStateToProps = (state) => ({
+  currentSong: currentSongSelector(state),
+  changed:     changedFields(state.form.songForm),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   withStyles(styles)(ActionButtons)

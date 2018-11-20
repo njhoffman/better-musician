@@ -102,7 +102,7 @@ export const RegisterView = ({
         <div className={classes.divider}>
           <Typography className={classes.dividerText}>or, sign up with email</Typography>
         </div>
-        <EmailSignUpForm next={() => history.push('/profile')} />
+        <EmailSignUpForm next={() => { history.push('/songs'); }} />
       </div>
     </Paper>
   </Column>

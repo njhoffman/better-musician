@@ -14,9 +14,9 @@ import {
   AUTHENTICATE_START,
   AUTHENTICATE_COMPLETE,
 
-  USER_UPDATE,
-  USER_UPDATE_SUCCESS,
-  // USER_FAILURE,
+  PROFILE_UPDATE,
+  PROFILE_UPDATE_SUCCESS,
+  PROFILE_UPDATE_FAILURE,
   initialState,
   default as apiReducer
 } from 'store/api';

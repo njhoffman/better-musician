@@ -9,7 +9,7 @@ const initialState = {
 };
 
 const ACTION_HANDLERS = {
-  [API.USER_UPDATE_COMPLETE]: (state, { payload }) => ({
+  [API.PROFILE_UPDATE_COMPLETE]: (state, { payload }) => ({
     ...state,
     isSignedIn: true,
     attributes: payload
