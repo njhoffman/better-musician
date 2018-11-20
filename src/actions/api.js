@@ -4,7 +4,7 @@ import { init as initLog } from 'shared/logger';
 import { reset, initialize } from 'redux-form';
 import * as API from 'constants/api';
 import * as UI from 'constants/ui';
-import { setCurrentSong } from 'routes/Songs/modules/reducer';
+// import { setCurrentSong } from 'routes/Songs/modules/reducer';
 
 const { info, warn } = initLog('api-actions');
 
@@ -97,8 +97,6 @@ export const songsUpdateComplete = ({ records, changed }) => (dispatch) => {
     payload: `Song successfully updated with ${changedLength} fields modified`,
     meta: { variant: 'success' }
   });
-  dispatch(reset('songForm'));
-  setCurrentSong();
 };
 
 export const songsUpdateError = (response) => (dispatch) => {
