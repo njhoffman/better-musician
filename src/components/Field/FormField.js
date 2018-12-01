@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, FieldArray } from 'redux-form';
 import { Column } from 'react-foundation';
+import { withStyles } from '@material-ui/core';
 
 import FormRow from './FormRow';
 import SelectField from './Select';
@@ -28,6 +29,7 @@ import Chip from './Chip';
 // 6: { name: 'Date'            #<{(| component: RenderDate |)}># },
 // 7: { name: 'YouTube Link',      component: <YouTubeLink /> },
 // 8: { name: 'PDF Link'        #<{(| component: RenderPdfLink |)}># }
+// 9: { name: 'Slider'        #<{(| component: RenderPdfLink |)}># }
 // };
 /* eslint-enable no-multi-spaces */
 
@@ -42,7 +44,7 @@ const renderField = ({ type, ...props }) => {
   if (type === 'number') {
     return (<NumberField {...props} />);
   }
-  if (type === 'slider') {
+  if (type === 'slider' || type === 9) {
     return (<Slider {...props} />);
   }
   if (type === 'multiselect' || type === 'Multi-Select Menu' || type === 3) {
@@ -57,15 +59,24 @@ const renderField = ({ type, ...props }) => {
   return (<Checkbox {...props} />);
 };
 
+const styles = (theme) => ({
+  column: {
+    [theme.breakpoints.down('sm')]: {
+      margin: '0px'
+    },
+    flex: '1 1 auto',
+    width: '100%',
+    margin: '8px 0px'
+  }
+});
+
 const FormField = ({
-  small, medium, large, centerOnSmall, type, variant, classes, ...props
+  small, medium, large, centerOnSmall,
+  type, variant, classes,
+  ...props
 }) => (
   <Column
-    style={{
-      flex: '1 1 auto',
-      width: '100%',
-      margin: '8px 0px'
-    }}
+    className={classes.column}
     {...{ small, medium, large, centerOnSmall }}>
     {type !== 3 && <Field component={renderField} type={type} {...props} />}
     {type === 3 && <FieldArray component={renderField} type={type} {...props} />}
@@ -124,7 +135,7 @@ export {
   FormRow
 };
 
-export default FormField;
+export default withStyles(styles)(FormField);
 
 // const styles = (theme) => ({
 //   dirtyField: {

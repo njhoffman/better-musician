@@ -9,6 +9,7 @@ import {
   authenticateError
 } from 'actions/auth';
 import { configureLoad, fetchSongs } from 'actions/api';
+import { uiWindowResize } from 'actions/ui';
 import applyAuthConfig from 'utils/auth/clientSettings';
 import { destroySession } from 'utils/auth/sessionStorage';
 import verifyAuth from 'utils/auth/verifyAuth';
@@ -16,6 +17,27 @@ import getRedirectInfo from 'utils/auth/parseUrl';
 import { init as initLog } from 'shared/logger';
 
 const { debug } = initLog('config');
+
+const getClientWindowProps = () => {
+  const {
+    innerHeight, outerHeight, innerWidth, outerWidth
+  } = window;
+
+  const {
+    availHeight, availLeft, availTop, availWidth, colorDepth, height, width
+  } = window.screen;
+
+  const {
+    angle: orientationAngle,
+    type: orientation
+  } = window.screen.orientation;
+
+  return {
+    window: { innerHeight, outerHeight, innerWidth, outerWidth },
+    screen: { availHeight, availLeft, availTop, availWidth, colorDepth, height, width, orientationAngle, orientation },
+    device: deviceDetect(),
+  };
+};
 
 const loadConfiguration = ({ endpoints, settings, dev }) => dispatch => {
   const { inspectorOptions, showInspector } = dev;
@@ -25,20 +47,23 @@ const loadConfiguration = ({ endpoints, settings, dev }) => dispatch => {
   }
   //
   // figure out initial window dimensions
-  const { innerHeight, outerHeight, innerWidth, outerWidth } = window;
+  const clientInfo = getClientWindowProps();
 
-  const clientInfo = {
-    window: { ...window.screen, innerHeight, outerHeight, innerWidth, outerWidth },
-    device: deviceDetect()
-  };
+  const devInspector = showInspector && (clientInfo.window.innerWidth > 600 || !inspectorOptions.hideMobile);
 
-  const devInspector = showInspector && (innerWidth > 600 || !inspectorOptions.hideMobile);
   // dont show osd if mobile viewport
   dispatch(configureLoad({
     endpoints,
     clientInfo,
     devConfig: { ...dev, showInspector: devInspector }
   }));
+
+  // instead of componentDidMount on AppContainer, any drawkback?
+  window.addEventListener('resize', _.debounce(
+    () => dispatch(uiWindowResize(getClientWindowProps())),
+    100,
+    { leading: true, trailing: true }
+  ));
 
   dispatch(authenticateStart());
 

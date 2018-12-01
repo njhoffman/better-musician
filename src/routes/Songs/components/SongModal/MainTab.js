@@ -4,6 +4,8 @@ import { withStyles, Typography, Card, CardMedia, CardContent } from '@material-
 import FormField, { FormRow, Stars } from 'components/Field';
 import { Row, Column } from 'react-foundation';
 import PropTypes from 'prop-types';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 import Button from 'components/Button';
 import {
@@ -22,18 +24,32 @@ import {
 // import css from './AddSong.scss';
 
 const styles = (theme) => ({
-  imageFrame: {
+  imageRow: {
     textAlign: 'center',
     marginBottom: theme.spacing.unit
   },
+  imageFrame: {
+    position: 'relative'
+  },
   image: {
-    height: '200px',
-    marginBottom: '5px'
+    // TODO: hardcoded based: main tab fields height - action buttons height - header height
+    height: 'calc(100vh - 360px - 50px - 40px)',
+    maxHeight: '200px'
   },
   imageLabel: {
-    margin: '-3.0em 0 0 0',
-    padding: '.25em 0 !important',
-    background: 'rgba(10, 10, 10, 0.85)'
+    padding: '3px 0 !important',
+    position: 'absolute',
+    bottom: '0px',
+    width: '100%',
+    background: 'rgba(10, 10, 10, 0.75)'
+  },
+  imageCaption: {
+    display: 'inline'
+  },
+  imageButton: {
+    [theme.breakpoints.down('sm')]: {
+      padding: '6px'
+    }
   },
   row: {
     flexWrap: 'nowrap',
@@ -107,17 +123,37 @@ export const SongMainTab = ({
 
     return (
       <Column>
-        <Card>
+        <Card className={classes.imageFrame}>
           <CardMedia image={image} className={classes.image} />
           <CardContent className={classes.imageLabel}>
+            <Button
+              variant='outlined'
+              className={classes.imageButton}
+              secondary
+              icon={ArrowBackIcon}
+            />
             {variant !== MODAL_VARIANT_VIEW && (
-              <Button variant='contained' secondary label={buttonLabel} />
+              <Button
+                className={classes.imageButton}
+                variant='outlined'
+                secondary
+                label={buttonLabel}
+              />
             )}
             {variant === MODAL_VARIANT_VIEW && (
-              <Typography variant='h6' color='textSecondary'>
+              <Typography
+                className={classes.imageCaption}
+                variant='subtitle2'
+                color='textSecondary'>
                 {imageLabel}
               </Typography>
             )}
+            <Button
+              variant='outlined'
+              secondary
+              className={classes.imageButton}
+              icon={ArrowForwardIcon}
+            />
           </CardContent>
         </Card>
       </Column>
@@ -181,7 +217,7 @@ export const SongMainTab = ({
     <Fragment>
       <FormRow className={classes.row}>
         <Column>
-          <Row className={classes.imageFrame}>
+          <Row className={classes.imageRow}>
             { renderImage() }
           </Row>
         </Column>
@@ -190,7 +226,7 @@ export const SongMainTab = ({
       {variant !== MODAL_VARIANT_VIEW && renderEditFields()}
       <FormRow className={classes.row}>
         <FormField
-          name='genre.displayName'
+          name='genre.name'
           type='autocomplete'
           label='Song Genre'
           options={genreOptions}
@@ -198,7 +234,7 @@ export const SongMainTab = ({
           {...fieldProps}
         />
         <FormField
-          name='instrument.displayName'
+          name='instrument.name'
           type='autocomplete'
           label='Instrument'
           options={instrumentOptions}

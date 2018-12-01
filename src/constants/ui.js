@@ -25,6 +25,7 @@ export const FIELD_EDIT = 'FIELD_EDIT';
 export const INIT_VIEW_START    = 'INIT_VIEW_START';
 export const INIT_VIEW_COMPLETE = 'INIT_VIEW_COMPLETE';
 export const REFRESH_VIEW       = 'REFRESH_VIEW';
+export const WINDOW_RESIZE      = 'WINDOW_RESIZE';
 
 // auth ui
 export const HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL          = 'HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL';

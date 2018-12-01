@@ -64,7 +64,7 @@ const EmailSignIn = ({
     <FormRow>
       <Column>
         {errors && [].concat(errors).map(({ name, title, message, reason }, i) => (
-          <div key={name || title.replace(/[^\w]/g, '')}>
+          <div key={(name || title || '').replace(/[^\w]/g, '')}>
             <Typography variant='body1' className={classes.errorTitle}>
               {title || name}
             </Typography>

@@ -14,13 +14,13 @@ class Instrument extends BaseModel {
     return 'Unknown Instrument';
   }
 
-  static findByDisplayName(name) {
+  static findByName(name) {
     return this.all().toModelArray()
-      .filter(instrument => instrument.displayName === name)[0];
+      .filter(instrument => instrument.name === name)[0];
   }
 
-  static imagesByDisplayName(name) {
-    const instrument = Instrument.findByDisplaylName(name);
+  static imagesByName(name) {
+    const instrument = Instrument.findByName(name);
     const images = instrument && instrument.images ? instrument.images : [Instrument.defaultImage];
     return images.map(img => `${Instrument.path}/${img}`);
   }

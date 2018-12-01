@@ -49,6 +49,13 @@ export const uiShowPreviewModal = (field) => (dispatch) => {
   ));
 };
 
+export const uiWindowResize = (clientInfo) => (dispatch) => {
+  dispatch({
+    type: UI.WINDOW_RESIZE,
+    payload: { clientInfo }
+  });
+};
+
 export const initView = (store, history, route) => {
   store.dispatch({ type: UI.INIT_VIEW_START, payload: route });
   injectReducer({

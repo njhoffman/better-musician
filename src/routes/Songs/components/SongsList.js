@@ -21,6 +21,11 @@ const styles = (theme) => ({
     // tableLayout: 'auto'
     tableLayout: 'fixed'
   },
+  header: {
+    [theme.breakpoints.down('sm')]: {
+      height : '2em'
+    }
+  },
   columnTitle: {
     textAlign: 'center',
     [theme.breakpoints.down('sm')]: {
@@ -66,7 +71,7 @@ const SongsList = ({
 }) => (
   <Table padding='dense' className={classes.root}>
     <TableHead>
-      <TableRow>
+      <TableRow className={classes.header}>
         <SongsListHeader
           name='title'
           displayName='Title'

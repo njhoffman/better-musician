@@ -165,7 +165,7 @@ Button.propTypes = {
   color:       PropTypes.string,
   disabled:    PropTypes.bool,
   link:        PropTypes.string,
-  icon:        PropTypes.node,
+  icon:        PropTypes.oneOfType([PropTypes.node, PropTypes.instanceOf(Object)]),
   iconAlign:   PropTypes.string,
   iconHeight:  PropTypes.number,
   label:       PropTypes.string,

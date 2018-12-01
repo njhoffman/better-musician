@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -64,11 +65,11 @@ OAuthSignInButton.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  config:      state.config,
-  isSignedIn:  state.user.isSignedIn,
-  errors:      state.api.auth.login.errors || [],
-  syncErrors:  state.form.login && state.form.login.syncErrors,
-  isFetching:  state.api.auth.login.loading
+  config:      _.get(state, 'config'),
+  isSignedIn:  _.get(state, 'user.isSignedIn'),
+  errors:      _.get(state, 'api.auth.login.errors'),
+  syncErrors:  _.get(state, 'form.login.syncErrors'),
+  isFetching:  _.get(state, 'api.auth.login.loading')
 });
 
 export default connect(mapStateToProps)(OAuthSignInButton);

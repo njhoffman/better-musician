@@ -59,7 +59,8 @@ const styles = (theme) => ({
     }
   },
   icon: {
-    color: 'inherit'
+    color: 'inherit',
+    marginLeft: '8px'
   },
   iconTextWrapper: {
     flex: 'none',
@@ -82,8 +83,6 @@ const styles = (theme) => ({
   },
   sublinkIcon: { },
   sublinkText: {
-    marginRight: 'calc(5px + 1.5em)',
-    flex: 'none',
     padding: 0
   },
 });

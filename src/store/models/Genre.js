@@ -14,14 +14,14 @@ class Genre extends BaseModel {
     return 'Unknown Genre';
   }
 
-  static findByDisplayName(name) {
+  static findByName(name) {
     return this.all()
       .toModelArray()
-      .filter(genre => genre.displayName === name)[0];
+      .filter(genre => genre.name === name)[0];
   }
 
-  static imagesByDisplayName(name) {
-    const genre = Genre.findByDisplaylName(name);
+  static imagesByName(name) {
+    const genre = Genre.findByName(name);
     const images = genre && genre.images ? genre.images : [Genre.defaultImage];
     return images.map(img => `${Genre.path}/${img}`);
   }

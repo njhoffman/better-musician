@@ -22,15 +22,19 @@ const styles = (theme) => ({
     color: `${theme.app.starColor}`
   },
   footer: {
-    width: '100%',
-    height: '75px'
+    height: '75px',
+    borderTop: 'groove 1px #333',
+    width: '100%'
   },
   footerSong: {
+    height: '75px',
+    borderTop: 'groove 1px #333',
     width: '100%'
   },
   footerStats: {
-    width: '100%',
-    fontSize: '0.8em'
+    height: '75px',
+    borderTop: 'groove 1px #333',
+    width: '100%'
   },
   fieldWrapper : {
     marginLeft: 'auto',
@@ -114,6 +118,20 @@ const styles = (theme) => ({
       paddingLeft: '0px'
     }
   },
+  statsColumn: {
+    flexDirection: 'column'
+  },
+  statsRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+    width: '50%',
+    [theme.breakpoints.down('sm')]: {
+      width: '80%'
+    }
+  },
+  statsLabel: { },
+  statsValue: { }
 
 });
 

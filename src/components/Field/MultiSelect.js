@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Button, withStyles } from '@material-ui/core';
+import { Button, FormLabel, withStyles } from '@material-ui/core';
 import { Row, Column } from 'react-foundation';
 import { Field } from 'redux-form';
 import { without } from 'lodash';
@@ -39,6 +39,15 @@ const renderChips = (name, idx, fieldsRef) => (
   />
 );
 
+const renderViewChips = (name, idx, fieldsRef) => (
+  <Field
+    key={idx}
+    label={fieldsRef.get(idx)}
+    name={name}
+    component={Chip}
+  />
+);
+
 class MultiSelect extends Component {
   state = {
     currentlySelected: ''
@@ -72,21 +81,28 @@ class MultiSelect extends Component {
       <Fragment>
         <Row>
           <Column className={classes.controls}>
-            <Select
-              label={label}
-              disabled={mode === FIELD_VIEW || disabled}
-              options={without(options, ...existingValues)}
-              onChange={this.handleSelectChange}
-              value={currentlySelected}
-            />
-            {!disabled && mode !== FIELD_VIEW && (
-              <Button
-                variant='contained'
-                color='secondary'
-                className={classes.addButton}
-                onClick={() => fields.push(currentlySelected)}>
-                Add
-              </Button>
+            {mode === FIELD_VIEW && (
+              <FormLabel>
+                {label}
+              </FormLabel>
+            )}
+            {mode !== FIELD_VIEW && (
+              <Fragment>
+                <Select
+                  label={label}
+                  disabled={disabled}
+                  options={without(options, ...existingValues)}
+                  onChange={this.handleSelectChange}
+                  value={currentlySelected}
+                />
+                <Button
+                  variant='contained'
+                  color='secondary'
+                  className={classes.addButton}
+                  onClick={() => fields.push(currentlySelected)}>
+                  Add
+                </Button>
+              </Fragment>
             )}
           </Column>
         </Row>
@@ -94,8 +110,8 @@ class MultiSelect extends Component {
           <Column
             centerOnSmall
             className={classes.valueItems}
-            small={10}>
-            {fields.map(renderChips)}
+            small={12}>
+            {fields.map(mode === FIELD_VIEW ? renderViewChips : renderChips)}
           </Column>
         </Row>
       </Fragment>

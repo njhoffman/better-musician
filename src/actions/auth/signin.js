@@ -22,11 +22,6 @@ export const emailSignInFormUpdate = (endpoint, key, value) => ({
   value
 });
 
-export const emailSignInStart = (endpoint) => ({
-  type: AUTH.EMAIL_SIGN_IN_START,
-  payload: { endpoint }
-});
-
 export const emailSignInComplete = (endpoint, { records, changes }) => (dispatch, getState) => {
   const { config: { endpoints } } = getState();
   dispatch(uiShowSnackbar('You are now signed in.', 'success', 'Success'));

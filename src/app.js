@@ -23,6 +23,10 @@ const MOUNT_NODE = document.getElementById('root');
 
 const themes = processThemes(appConfig.themes);
 const theme = themes.steelBlue.dark;
+
+// for easy debugging reference
+window.__MUI_CURRENT_THEME__ = theme;
+
 const RedBox = require('redbox-react').default;
 
 const onError = (err, { componentStack }, props) => {

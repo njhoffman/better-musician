@@ -19,7 +19,7 @@ export const initialState = {
   },
   modal: {
     name: null,
-    type: null,
+    variant: null,
     isOpen: false
   }
 };

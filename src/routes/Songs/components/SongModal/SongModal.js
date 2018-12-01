@@ -15,6 +15,7 @@ import {
   MODAL_VARIANT_ADD, MODAL_VARIANT_VIEW
 } from 'constants/ui';
 
+import validate from 'utils/validate';
 import { uiUpdateModal, uiModalExit } from 'actions/ui';
 import {
   currentSong as currentSongSelector,
@@ -196,12 +197,13 @@ const SongModal = ({
 
 SongModal.defaultProps = {
   currentTab:  0,
-  activeField: null
+  activeField: null,
+  variant: null
 };
 
 SongModal.propTypes = {
   isOpen:        PropTypes.bool.isRequired,
-  variant:       PropTypes.string.isRequired,
+  variant:       PropTypes.string,
   savedTabs:     PropTypes.arrayOf(
     PropTypes.shape({
       fields: PropTypes.array,
@@ -214,24 +216,21 @@ SongModal.propTypes = {
   classes:       PropTypes.instanceOf(Object).isRequired,
   initialValues: PropTypes.instanceOf(Object).isRequired
 };
-// const validate = (values) => {
-//   const errors = {};
-//   // TODO: figure out why autocomplete meta doesnt get errors or touched assigned
-//   #<{(| eslint-disable max-len  |)}>#
-//   // addressed: https://github.com/erikras/redux-form-material-ui/pull/159/commits/55b9225a2d9a22664458eb13f5a7d67f9e659db1
-//   // this breaks material-ui Dialog ref to dialogContent
-//   #<{(| eslint-enable max-len  |)}>#
-//   const requiredFields = [ 'title', 'artist.lastName', 'instrument.name' ];
-//   requiredFields.forEach(field => {
-//     if (!get(values, field)) {
-//       errors[ field ] = 'Required';
-//     }
-//   });
-//   return errors;
-// };
 
-const initialValues = (song, addModalVariant) => {
-  if (song && !addModalVariant) {
+const validateFields = {
+  title: [
+    ['required', 'Required']
+  ],
+  'genre.name': [
+    ['required', 'Required']
+  ],
+  'artist.lastName': [
+    ['required', 'Required']
+  ]
+};
+
+const initialValues = (song, modalVariant) => {
+  if (song && modalVariant !== MODAL_VARIANT_ADD) {
     // return object for nested models, redux form tries to reset and breaks if not a plain object
     // TODO: find a better way
     const ivSong = Object.assign({}, song);
@@ -249,7 +248,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => ({
-  initialValues: initialValues(currentSongSelector(state)),
+  initialValues: initialValues(currentSongSelector(state), _.get(state, 'ui.modal.variant')),
   savedTabs:     savedTabsSelector(state),
   activeField:   _.get(state, 'form.songForm.active'),
   variant:       _.get(state, 'ui.modal.variant'),
@@ -263,7 +262,7 @@ const songForm = withStyles(styles)(reduxForm({
   form: 'songForm',
   // destroyOnUnmount: false,
   enableReinitialize: true,
-  // validate
+  validate: validate(validateFields)
 })(SongModal));
 
 export default connect(mapStateToProps, mapDispatchToProps)(withMobileDialog()(songForm));

@@ -19,8 +19,9 @@ const styles = (theme) => ({
     flex: 1
   },
   right: {
+    display: 'flex',
+    justifyContent: 'flex-end',
     flex: 1,
-    textAlign: 'right'
   },
   deleteButton: {
     color: theme.palette.error.main
@@ -37,75 +38,66 @@ const ActionButtons = ({
   changed,
   currentSong,
   deleteCurrentSong
-}) => {
-  let buttonLabel = 'Add';
-  if (variant === MODAL_VARIANT_VIEW) {
-    buttonLabel = 'Edit';
-  } else if (MODAL_VARIANT_VIEW) {
-    buttonLabel = 'Save';
-  }
-
-  return (
-    <Row className={classes.root}>
-      <Divider />
-      <Column className={classes.left}>
-        {variant !== MODAL_VARIANT_ADD && (
-          <Button
-            variant='text'
-            className={classes.deleteButton}
-            onClick={deleteCurrentSong}>
-            <DeleteIcon />
-            Delete
-          </Button>
-        )}
-      </Column>
-      <Column className={classes.right}>
+}) => (
+  <Row className={classes.root}>
+    <Divider />
+    <Column className={classes.left}>
+      {variant !== MODAL_VARIANT_ADD && (
         <Button
           variant='text'
-          color='primary'
-          onClick={() => hideModal()}>
-          Cancel
+          className={classes.deleteButton}
+          onClick={deleteCurrentSong}>
+          <DeleteIcon />
+          Delete
         </Button>
-        { variant === MODAL_VARIANT_VIEW && (
-          <Button
-            variant='contained'
-            color='primary'
-            onClick={edit}>
-            {buttonLabel}
-          </Button>
-        )}
-        { variant === MODAL_VARIANT_EDIT && (
-          <Button
-            variant='contained'
-            color='primary'
-            onClick={() => update(changed, currentSong.id)}>
-            {buttonLabel}
-          </Button>
-        )}
-        { variant === MODAL_VARIANT_ADD && (
-          <Button
-            variant='contained'
-            color='primary'
-            onClick={add}>
-            {buttonLabel}
-          </Button>
-        )}
+      )}
+    </Column>
+    <Column className={classes.right}>
+      <Button
+        variant='text'
+        color='primary'
+        onClick={() => hideModal()}>
+        Cancel
+      </Button>
+      { variant === MODAL_VARIANT_VIEW && (
+        <Button
+          variant='contained'
+          color='primary'
+          onClick={() => edit()}>
+          Edit
+        </Button>
+      )}
+      { variant === MODAL_VARIANT_EDIT && (
+        <Button
+          variant='contained'
+          color='primary'
+          onClick={() => update(changed, currentSong.id)}>
+          Update
+        </Button>
+      )}
+      { variant === MODAL_VARIANT_ADD && (
+        <Button
+          variant='contained'
+          color='primary'
+          onClick={() => add(changed)}>
+          Add
+        </Button>
+      )}
 
-      </Column>
-    </Row>
-  );
-};
+    </Column>
+  </Row>
+);
 
 ActionButtons.propTypes = {
   classes:           PropTypes.instanceOf(Object).isRequired,
   currentSong:       PropTypes.instanceOf(Object).isRequired,
+  changed:           PropTypes.instanceOf(Object).isRequired,
   update:            PropTypes.func.isRequired,
   deleteCurrentSong: PropTypes.func.isRequired,
   add:               PropTypes.func.isRequired,
   edit:              PropTypes.func.isRequired,
   variant:           PropTypes.string.isRequired,
-  hideModal:         PropTypes.func.isRequired,
-  changed:           PropTypes.instanceOf(Object).isRequired
+  hideModal:         PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = {

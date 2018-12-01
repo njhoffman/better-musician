@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -70,8 +71,8 @@ const mapDispatchToProps = {
   snackbarExit: uiSnackbarExit
 };
 const mapStateToProps = (state) => ({
-  isOpen: state.ui.snackbar.isOpen,
-  queue: state.ui.snackbar.queue
+  isOpen: _.get(state, 'ui.snackbar.isOpen'),
+  queue:  _.get(state, 'ui.snackbar.queue')
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Snackbar));

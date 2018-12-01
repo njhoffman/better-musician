@@ -49,11 +49,15 @@ export const deleteSong = (songId) => (dispatch, getState) =>
     }
   });
 
-
-export const songsAddComplete = (response) => (dispatch) => {
+export const songsAddComplete = ({ records, changed }) => (dispatch) => {
   dispatch({ type: UI.MODAL_HIDE, meta: { type: UI.SONG_MODAL } });
-  dispatch({ type: API.SONGS_ADD_COMPLETE, user: response });
-  dispatch({ type: UI.SNACKBAR_SHOW, payload: 'Song Added', meta: { variant: 'success' } });
+  dispatch({ type: API.SONGS_ADD_COMPLETE, payload: records[0] });
+  dispatch({ type: API.ADD_SONG, payload: records[0] });
+  dispatch({
+    type: UI.SNACKBAR_SHOW,
+    payload: `Song "${records[0].title}" successfully added`,
+    meta: { variant: 'success' }
+  });
 };
 
 export const songsAddError = (response) => (dispatch) => {
@@ -74,15 +78,13 @@ export const songsAddError = (response) => (dispatch) => {
   });
 };
 
-export const addSong = () => (dispatch, getState) => {
-  const fieldValues = getState().form.songForm.values;
-
-  return dispatch({
+export const addSong = (changedFields) => (dispatch, getState) => {
+  dispatch({
     [CALL_API]: {
       types:    [API.SONGS_ADD_START, songsAddComplete, songsAddError],
       method:   'POST',
       endpoint: `${__API_URL__}/songs/add`,
-      payload:  { ...fieldValues }
+      payload:  { ...changedFields }
     }
   });
 };

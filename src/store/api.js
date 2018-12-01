@@ -13,9 +13,9 @@ const loadApiEndpoints = (endpoints, roles = []) => {
   const mapEndpoints = (ep) => {
     if (_.isString(ep)) {
       return {
-        loading: false,
-        errors: false,
-        success: false
+        loading : false,
+        errors  : [],
+        success : false
       };
     }
     return _.mapValues(ep, mapEndpoints);

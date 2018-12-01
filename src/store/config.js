@@ -1,5 +1,6 @@
 import * as AUTH from 'constants/auth';
 import * as API from 'constants/api';
+import * as UI from 'constants/ui';
 
 const initialState = {
   loading: false,
@@ -27,6 +28,14 @@ const initialState = {
   }
 };
 
+const configureLoad = (state, { payload: { devConfig, endpoints, clientInfo } }) => ({
+  ...state,
+  client:    { ...state.client, ...clientInfo },
+  endpoints: { ...state.endpoints, ...endpoints },
+  dev:       { ...state.dev, ...devConfig }
+});
+
+
 const ACTION_HANDLERS = {
   [API.CONFIGURE_START]: (state, action) => ({
     ...state,
@@ -34,13 +43,7 @@ const ACTION_HANDLERS = {
     auth: { ...state.auth, loading: true },
   }),
 
-  [API.CONFIGURE_LOAD]: (state, { payload: { devConfig, endpoints, clientInfo } }) => ({
-    ...state,
-    client:    { ...state.client, ...clientInfo },
-    endpoints: { ...state.endpoints, ...endpoints },
-    dev:       { ...state.dev, ...devConfig }
-  }),
-
+  [API.CONFIGURE_LOAD]: configureLoad,
   [API.CONFIGURE_COMPLETE]: (state, { payload }) => ({
     ...state,
     loading: false,
@@ -52,6 +55,8 @@ const ACTION_HANDLERS = {
     auth: { ...state.auth, loading: false, errors },
     dev: { ...state.dev, loading: false, errors }
   }),
+
+  [UI.WINDOW_RESIZE]: configureLoad,
 
   [AUTH.CURRENT_ENDPOINT_KEY]: (state, { payload }) => ({
     ...state,

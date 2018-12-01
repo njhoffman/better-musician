@@ -71,7 +71,8 @@ const variantIcon = {
 
 const SnackbarContent = (props) => {
   const { classes, className, onClose, queue, ...other } = props;
-  const { title, variant, message } = queue[0];
+  const curr = queue && queue[0] ? queue[0] : {};
+  const { title = '', variant = '', message = '' } = curr;
   const Icon = variantIcon[variant];
   return (
     <MaterialSnackbarContent

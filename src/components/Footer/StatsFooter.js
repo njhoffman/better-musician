@@ -5,35 +5,56 @@ import { Typography } from '@material-ui/core';
 
 const StatsFooter = ({ classes, stats }) => (
   <Row className={classes.footerStats}>
-    <Column small={3} centerOnSmall className={classes.leftColumn}>
-      <div className={classes.fieldWrapper}>
-        <div className={classes.field}>
-          <Typography>No Filters</Typography>
-        </div>
+    <Column small={6} className={`${classes.leftColumn} ${classes.statsColumn}`}>
+      <div className={classes.statsRow}>
+        <Typography variant='caption' className={classes.statsLabel}>
+          Song Count
+        </Typography>
+        <Typography variant='caption' color='secondary' className={classes.statsValue}>
+          {stats.songCount}
+        </Typography>
+      </div>
+      <div className={classes.statsRow}>
+        <Typography variant='caption' className={classes.statsLabel}>
+          Artists
+        </Typography>
+        <Typography variant='caption' color='secondary' className={classes.statsValue}>
+          {stats.artistCount}
+        </Typography>
+      </div>
+      <div className={classes.statsRow}>
+        <Typography variant='caption' className={classes.statsLabel}>
+          Genres
+        </Typography>
+        <Typography variant='caption' color='secondary' className={classes.statsValue}>
+          {stats.genresCount}
+        </Typography>
       </div>
     </Column>
-    <Column small={6} centerOnSmall className={classes.middleColumn}>
-      <div className={classes.fieldWrapper}>
-        <div className={classes.field}>
-          <Typography>
-            {`Total ${stats.songCount} songs`}
-          </Typography>
-          <Typography>
-            {`from ${stats.artistCount} artists`}
-          </Typography>
-          <Typography>
-            {`in ${stats.genreCount} genres`}
-          </Typography>
-        </div>
+    <Column small={6} className={`${classes.rightColumn} ${classes.statsColumn}`}>
+      <div className={classes.statsRow}>
+        <Typography variant='caption' className={classes.statsLabel}>
+         Average Difficulty
+        </Typography>
+        <Typography variant='caption' color='secondary' className={classes.statsValue}>
+          --
+        </Typography>
       </div>
-    </Column>
-    <Column small={3} centerOnSmall className={classes.rightColumn}>
-      <div className={classes.fieldWrapper}>
-        <div className={classes.field}>
-          <Typography>Average Difficulty</Typography>
-          <Typography>Average Progress</Typography>
-          <Typography>Progress Rate</Typography>
-        </div>
+      <div className={classes.statsRow}>
+        <Typography variant='caption' className={classes.statsLabel}>
+          Average Progress
+        </Typography>
+        <Typography variant='caption' color='secondary' className={classes.statsValue}>
+          --
+        </Typography>
+      </div>
+      <div className={classes.statsRow}>
+        <Typography variant='caption' className={classes.statsLabel}>
+          Progress Rate
+        </Typography>
+        <Typography variant='caption' color='secondary' className={classes.statsValue}>
+          --
+        </Typography>
       </div>
     </Column>
   </Row>

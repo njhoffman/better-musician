@@ -18,14 +18,14 @@ export const artistLastNames = createSelector(ormSelector, state => state, lastN
 
 const genreSelector = ormCreateSelector(orm, session => {
   const genres = session.Genre ? session.Genre.all().toModelArray() : [];
-  return genres.map(genre => ({ label: genre.displayName, value: genre.id }));
+  return genres.map(genre => ({ label: genre.name, value: genre.id }));
 });
 
 export const genres = createSelector(ormSelector, state => state, genreSelector);
 
 const instrumentSelector = ormCreateSelector(orm, session => {
   const instruments = session.Instrument ? session.Instrument.all().toModelArray() : [];
-  return instruments.map(instrument => ({ label: instrument.displayName, value: instrument.id }));
+  return instruments.map(instrument => ({ label: instrument.name, value: instrument.id }));
 });
 
 export const instruments = createSelector(ormSelector, state => state, instrumentSelector);
@@ -48,7 +48,7 @@ export const artistMatch = createSelector(
 const genreMatchSelector = ormCreateSelector(orm, (session, genre) => {
   let Genre = session.Genre();
   if (genre) {
-    Genre = session.Genre.findByDisplayName(genre.displayName) || Genre;
+    Genre = session.Genre.findByName(genre.name) || Genre;
   }
   return Genre;
 });
@@ -62,7 +62,7 @@ export const genreMatch = createSelector(
 const instrumentMatchSelector = ormCreateSelector(orm, (session, instrument) => {
   let Instrument = session.Instrument();
   if (instrument) {
-    Instrument = session.Instrument.findByDisplayName(instrument.displayName) || Instrument;
+    Instrument = session.Instrument.findByName(instrument.name) || Instrument;
   }
   return Instrument;
 });

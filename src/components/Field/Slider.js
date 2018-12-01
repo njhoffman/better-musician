@@ -28,7 +28,10 @@ const SliderForm = createComponent(
 
 const styles = (theme) => ({
   root: {
-    padding: '8px 0px'
+    padding: '8px 0px',
+    [theme.breakpoints.down('sm')]: {
+      padding: '0px'
+    }
   },
   fullWidth: {
     width: '100%'
