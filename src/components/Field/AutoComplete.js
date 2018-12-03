@@ -1,10 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Downshift from 'downshift';
-import { withStyles } from '@material-ui/core/styles';
-import { TextField, FormControl, Paper, MenuItem } from '@material-ui/core';
+import {
+  TextField,
+  FormControl,
+  Paper,
+  MenuItem,
+  FormHelperText,
+  Typography,
+  withStyles
+} from '@material-ui/core';
 
-import { FIELD_VIEW } from 'constants/ui';
+import { FIELD_VIEW, FIELD_VIEW_ALT } from 'constants/ui';
 
 const styles = (theme) => ({
   root: {
@@ -34,6 +41,15 @@ const styles = (theme) => ({
   },
   field_view: {
     color: `${theme.palette.text.primary} !important`
+  },
+  viewLabel: {
+    textAlign: 'center'
+  },
+  viewValue: {
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflowX: 'hidden',
+    marginBottom: theme.spacing.unit
   }
 });
 
@@ -112,56 +128,84 @@ const AutoComplete = ({
   className,
   maxResults,
   ...props
-}) => (
-  <FormControl className={classes.root}>
-    <Downshift
-      {...input}
-      onStateChange={({ inputValue }) => input.onChange(inputValue)}
-      onFocus={() => input.onFocus()}
-      selectedItem={input.value}>
-      {({
-        getInputProps,
-        getItemProps,
-        isOpen,
-        inputValue,
-        selectedItem,
-        highlightedIndex
-      }) => (
-        <div className={classes.container}>
-          {renderInput({
-            fullWidth: fullWidth !== false,
-            classes,
-            meta,
-            label,
-            name: input.name,
-            InputLabelProps: { },
-            InputProps: getInputProps({
-              disableUnderline: mode === FIELD_VIEW,
-              disabled: mode === FIELD_VIEW || disabled,
-              className: `${className} ${classes[mode.toLowerCase()]}`,
-              ...input,
-              ...props
-              // placeholder: 'Search',
-            })
-          })}
-          {isOpen ? (
-            <Paper className={classes.paper} square>
-              {getSuggestions({ options, inputValue, maxResults }).map(
-                (suggestion, index) => renderSuggestion({
-                  suggestion,
-                  index,
-                  itemProps: getItemProps({ item: suggestion.label }),
-                  highlightedIndex,
-                  selectedItem,
-                })
-              )}
-            </Paper>
-          ) : null}
-        </div>
-      )}
-    </Downshift>
-  </FormControl>
-);
+}) => {
+  if (mode === FIELD_VIEW_ALT) {
+    return (
+      <TextField
+        variant='outlined'
+        label={label}
+        value={input.value}
+        InputProps={{
+          readOnly: true
+        }}
+        fullWidth
+      />
+    );
+  } else if (mode === FIELD_VIEW) {
+    return (
+      <FormControl>
+        <FormHelperText className={classes.viewLabel}>
+          {label}
+        </FormHelperText>
+        <Typography className={classes.viewValue}>
+          {input.value}
+        </Typography>
+      </FormControl>
+    );
+  }
+
+  return (
+    <FormControl className={classes.root}>
+      <Downshift
+        {...input}
+        onStateChange={({ inputValue }) => input.onChange(inputValue)}
+        onFocus={() => input.onFocus()}
+        selectedItem={input.value}>
+        {({
+          getInputProps,
+          getItemProps,
+          isOpen,
+          inputValue,
+          selectedItem,
+          highlightedIndex
+        }) => (
+          <div className={classes.container}>
+            {renderInput({
+              fullWidth: fullWidth !== false,
+              classes,
+              meta,
+              label,
+              name: input.name,
+              InputLabelProps: { },
+              InputProps: getInputProps({
+                disableUnderline: mode === FIELD_VIEW,
+                readOnly: mode === FIELD_VIEW || mode === FIELD_VIEW_ALT,
+                className: `${className} ${classes[mode.toLowerCase()]}`,
+                disabled,
+                ...input,
+                ...props
+                // placeholder: 'Search',
+              })
+            })}
+            {isOpen ? (
+              <Paper className={classes.paper} square>
+                {getSuggestions({ options, inputValue, maxResults }).map(
+                  (suggestion, index) => renderSuggestion({
+                    suggestion,
+                    index,
+                    itemProps: getItemProps({ item: suggestion.label }),
+                    highlightedIndex,
+                    selectedItem,
+                  })
+                )}
+              </Paper>
+            ) : null}
+          </div>
+        )}
+      </Downshift>
+    </FormControl>
+  );
+};
 
 AutoComplete.defaultProps = {
   label: '',

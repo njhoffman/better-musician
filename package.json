@@ -182,6 +182,7 @@
     "react-router-redux": "^5.0.0-alpha.6",
     "react-spinners": "^0.4.7",
     "react-tappable": "^1.0.4",
+    "react-transition-group": "^2.5.0",
     "redbox-react": "^1.6.0",
     "redux": "^4.0.1",
     "redux-auth-wrapper": "^2.0.3",

@@ -18,9 +18,10 @@ export const SONG_MODAL         = 'SONG_MODAL';
 export const FILTERS_MODAL      = 'FILTERS_MODAL';
 export const PREVIEW_MODAL      = 'PREVIEW_MODAL';
 
-export const FIELD_VIEW = 'FIELD_VIEW';
-export const FIELD_ADD  = 'FIELD_ADD';
-export const FIELD_EDIT = 'FIELD_EDIT';
+export const FIELD_VIEW     = 'FIELD_VIEW';
+export const FIELD_VIEW_ALT = 'FIELD_VIEW_ALT';
+export const FIELD_ADD      = 'FIELD_ADD';
+export const FIELD_EDIT     = 'FIELD_EDIT';
 
 export const INIT_VIEW_START    = 'INIT_VIEW_START';
 export const INIT_VIEW_COMPLETE = 'INIT_VIEW_COMPLETE';

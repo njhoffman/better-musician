@@ -10,7 +10,7 @@ export const initialState = {
   initializedViews: [],
   snackbar: {
     isOpen: false,
-    isTransitioning: false,
+    transitioning: false,
     queue: []
   },
   drawer: {
@@ -37,10 +37,10 @@ const snackbarQueue = (state, { payload, meta }) => ({
   ...state,
   snackbar: {
     isOpen: !state.snackbar.isOpen,
+    transitioning: state.snackbar.transitioning,
     queue: [...state.snackbar.queue, {
       message: payload,
-      variant: meta.variant,
-      title:   meta.title
+      ...meta
     }]
   }
 });
@@ -49,6 +49,7 @@ const snackbarHide = (state) => ({
   ...state,
   snackbar: {
     isOpen: false,
+    transitioning: true,
     queue: [...state.snackbar.queue]
   }
 });
@@ -57,7 +58,8 @@ const snackbarExit = (state) => ({
   ...state,
   snackbar: {
     isOpen: state.snackbar.queue.length > 1,
-    queue: state.snackbar.queue.slice(1)
+    queue: state.snackbar.queue.slice(1),
+    transitioning: false
   }
 });
 

@@ -61,9 +61,9 @@ const renderField = ({ type, ...props }) => {
 
 const styles = (theme) => ({
   column: {
-    [theme.breakpoints.down('sm')]: {
-      margin: '0px'
-    },
+    // [theme.breakpoints.down('sm')]: {
+    //   margin: '0px'
+    // },
     flex: '1 1 auto',
     width: '100%',
     margin: '8px 0px'

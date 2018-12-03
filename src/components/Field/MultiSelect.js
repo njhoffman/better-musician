@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Button, FormLabel, withStyles } from '@material-ui/core';
+import { Button, FormHelperText, withStyles } from '@material-ui/core';
 import { Row, Column } from 'react-foundation';
 import { Field } from 'redux-form';
 import { without } from 'lodash';
 
-import { FIELD_VIEW } from 'constants/ui';
+import { FIELD_VIEW, FIELD_VIEW_ALT } from 'constants/ui';
 import Chip from 'components/Field/Chip';
 import { Select } from 'components/Field/Select';
 
@@ -82,11 +82,16 @@ class MultiSelect extends Component {
         <Row>
           <Column className={classes.controls}>
             {mode === FIELD_VIEW && (
-              <FormLabel>
+              <FormHelperText>
                 {label}
-              </FormLabel>
+              </FormHelperText>
             )}
-            {mode !== FIELD_VIEW && (
+            {mode === FIELD_VIEW_ALT && (
+              <FormHelperText>
+                {label}
+              </FormHelperText>
+            )}
+            {mode !== FIELD_VIEW && mode !== FIELD_VIEW_ALT && (
               <Fragment>
                 <Select
                   label={label}
@@ -103,6 +108,7 @@ class MultiSelect extends Component {
                   Add
                 </Button>
               </Fragment>
+
             )}
           </Column>
         </Row>

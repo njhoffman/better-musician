@@ -4,11 +4,21 @@ import { init as initLog } from 'shared/logger';
 
 const { debug } = initLog('validator');
 
-const validate = (fields) => (values) => {
+/**
+ * @param {Object} fields - Form field names to validate
+ * @param {string} fields[0] - Validators validation function name or 'required'
+ * @param {string} fields[1] - Error label to display
+ */
+const validate = (fields) => (values, { anyTouched }) => {
   const errors = {};
   const val = values;
-  each(keys(fields), (fieldKey) => some(fields[fieldKey],
-    ([vCheck, vMessage]) => {
+
+  if (!anyTouched) {
+    return errors;
+  }
+  each(keys(fields), (fieldKey) => (
+
+    some(fields[fieldKey], ([vCheck, vMessage]) => {
       if (vCheck === 'required' && !get(val, fieldKey)) {
         errors[fieldKey] = vMessage;
         return true;
@@ -21,12 +31,12 @@ const validate = (fields) => (values) => {
         return true;
       }
       return false;
-    }));
+    })
+  ));
 
   keys(errors).forEach(key => (
     debug(`Validation error: ${key} (${errors[key]})`)
   ));
-
   return errors;
 };
 

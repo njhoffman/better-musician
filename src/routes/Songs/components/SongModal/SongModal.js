@@ -5,14 +5,14 @@ import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import {
   AppBar, Dialog, DialogContent,
-  DialogActions, Tabs, Tab,
-  Typography, withMobileDialog, withStyles
+  DialogActions, Tabs, Tab, Typography,
+  withMobileDialog, withStyles, withTheme
 } from '@material-ui/core';
 import { Row, Column } from 'react-foundation';
 
 import {
-  FIELD_EDIT, FIELD_ADD, FIELD_VIEW, SONG_MODAL,
-  MODAL_VARIANT_ADD, MODAL_VARIANT_VIEW
+  FIELD_EDIT, FIELD_ADD, FIELD_VIEW, FIELD_VIEW_ALT,
+  SONG_MODAL, MODAL_VARIANT_ADD, MODAL_VARIANT_VIEW
 } from 'constants/ui';
 
 import validate from 'utils/validate';
@@ -95,9 +95,9 @@ const styles = (theme) => ({
   }
 });
 
-const fieldMode = (modalVariant) => {
+const fieldMode = (modalVariant, fieldView) => {
   if (modalVariant === MODAL_VARIANT_VIEW) {
-    return FIELD_VIEW;
+    return fieldView;
   } else if (modalVariant === MODAL_VARIANT_ADD) {
     return FIELD_ADD;
   }
@@ -125,10 +125,15 @@ const SongModal = ({
   modalExit,
   tabChange,
   currentTab,
-  initialValues
+  initialValues,
+  theme: { app: { formField } },
 }) => {
-  lastActiveField = activeField || lastActiveField;
   const tabProps = { lastActiveField, activeField, variant };
+  const fieldView = /label/i.test(formField.variant)
+    ? FIELD_VIEW
+    : FIELD_VIEW_ALT;
+  lastActiveField = activeField || lastActiveField;
+
   return (
     <Dialog
       onExited={modalExit}
@@ -175,7 +180,7 @@ const SongModal = ({
                         fullWidth={false}
                         key={field.id}
                         name={field.name}
-                        mode={fieldMode(variant)}
+                        mode={fieldMode(variant, fieldView)}
                         initialValues={initialValues}
                         {...field}
                       />
@@ -258,11 +263,11 @@ const mapStateToProps = (state) => ({
   currentTab:    _.get(state, 'ui.modal.currentTab')
 });
 
-const songForm = withStyles(styles)(reduxForm({
+const songForm = withTheme(withStyles(styles)(reduxForm({
   form: 'songForm',
   // destroyOnUnmount: false,
   enableReinitialize: true,
   validate: validate(validateFields)
-})(SongModal));
+})(SongModal)));
 
 export default connect(mapStateToProps, mapDispatchToProps)(withMobileDialog()(songForm));

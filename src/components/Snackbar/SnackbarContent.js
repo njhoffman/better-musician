@@ -14,33 +14,28 @@ import InfoIcon from '@material-ui/icons/Info';
 import CloseIcon from '@material-ui/icons/Close';
 import WarningIcon from '@material-ui/icons/Warning';
 
-const styles = (theme) => ({
+const styles = ({ app, spacing, palette }) => ({
   snackbarContent: {
     minWidth: '60%',
     padding: '2px 16px',
     borderRadius: '0px 0px 5px 5px',
     opacity: 0.95
   },
-  success: {
-    backgroundColor: '#216843'
-  },
-  error: {
-    backgroundColor: '#7e1313'
-  },
+  success: app.snackbar.success,
+  error: app.snackbar.error,
+  warning: app.snackbar.warning,
   info: {
-    backgroundColor: theme.palette.primary.dark,
-  },
-  warning: {
-    backgroundColor: '#ba5c00'
+    // TODO: put in defaults
+    backgroundColor: palette.primary.dark,
   },
   icon: {
     fontSize: 20,
-    color: theme.palette.text.primary,
+    color: palette.text.primary,
     verticalAlign: 'middle'
   },
   iconVariant: {
     opacity: 0.9,
-    marginRight: theme.spacing.unit,
+    marginRight: spacing.unit,
   },
   messageContainer: {
     display: 'flex',
@@ -71,8 +66,7 @@ const variantIcon = {
 
 const SnackbarContent = (props) => {
   const { classes, className, onClose, queue, ...other } = props;
-  const curr = queue && queue[0] ? queue[0] : {};
-  const { title = '', variant = '', message = '' } = curr;
+  const { title, variant, message, styleVariant = 'over' } = queue[0];
   const Icon = variantIcon[variant];
   return (
     <MaterialSnackbarContent
@@ -85,12 +79,24 @@ const SnackbarContent = (props) => {
       message={(
         <Fragment>
           <Icon className={classNames(classes.icon, classes.iconVariant)} />
-          <Typography variant='overline' className={classes.title}>
-            {title}
-          </Typography>
-          <Typography variant='body2' id='client-snackbar' className={classes.message}>
-            {message}
-          </Typography>
+          {styleVariant === 'left' && (
+            <Fragment>
+              <Typography variant='overline' color='textSecondary' className={classes.title}>
+                {title}
+              </Typography>
+              <Typography variant='body2' id='client-snackbar' className={classes.message}>
+                {message}
+              </Typography>
+            </Fragment>
+          )}
+          {styleVariant === 'over' && (
+            <Typography variant='body2' id='client-snackbar' className={classes.message}>
+              <Typography variant='button' color='textSecondary' className={classes.title}>
+                {title}
+              </Typography>
+              {message}
+            </Typography>
+          )}
         </Fragment>
       )}
       action={[

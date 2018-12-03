@@ -75,6 +75,78 @@ export const HomeView = ({ classes, showSnackbar }) => (
           </Button>
         </Column>
       </Row>
+      <Row>
+        <Column>
+          <Typography variant='subtitle1'>
+            Variant &lquo;left&rquo; with Title
+          </Typography>
+          <Button
+            color='secondary'
+            variant='outlined'
+            onClick={() => showSnackbar('This is a test success message', 'success', 'Test Success Title', 'left')}>
+            Success
+          </Button>
+          <Button
+            color='secondary'
+            variant='outlined'
+            onClick={() => showSnackbar('This is a test information message', 'info', 'Test Info Title', 'left')}>
+            Info
+          </Button>
+          <Button
+            color='secondary'
+            variant='outlined'
+            onClick={() => showSnackbar(
+              'This is a test warning message, it is supposed to be very long to simulate multiline text.',
+              'warning',
+              'Test Warning Title',
+              'left'
+            )}>
+            Warning
+          </Button>
+          <Button
+            color='secondary'
+            variant='outlined'
+            onClick={() => showSnackbar('This is a test error message', 'error', 'Test Error Title', 'left')}>
+            Error
+          </Button>
+        </Column>
+      </Row>
+      <Row>
+        <Column>
+          <Typography variant='subtitle1'>
+            Variant &lquo;over&rquo; with Title
+          </Typography>
+          <Button
+            color='secondary'
+            variant='contained'
+            onClick={() => showSnackbar('This is a test success message', 'success', 'Test Success Title', 'over')}>
+            Success
+          </Button>
+          <Button
+            color='secondary'
+            variant='contained'
+            onClick={() => showSnackbar('This is a test information message', 'info', 'Test Info Title', 'over')}>
+            Info
+          </Button>
+          <Button
+            color='secondary'
+            variant='contained'
+            onClick={() => showSnackbar(
+              'This is a test warning message, it is supposed to be very long to simulate multiline text.',
+              'warning',
+              'Test Warning Title',
+              'over'
+            )}>
+            Warning
+          </Button>
+          <Button
+            color='secondary'
+            variant='contained'
+            onClick={() => showSnackbar('This is a test error message', 'error', 'Test Error Title', 'over')}>
+            Error
+          </Button>
+        </Column>
+      </Row>
       <Divider className={classes.divider} />
       <Row>
         <Column style={{ height: '300px', overflowY: 'scroll' }}>

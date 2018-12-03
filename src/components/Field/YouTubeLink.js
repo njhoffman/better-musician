@@ -4,6 +4,7 @@ import { Field } from 'redux-form';
 import { Row, Column } from 'react-foundation';
 import { InputLabel, FormLabel, withStyles } from '@material-ui/core';
 import { get } from 'lodash';
+import { FIELD_VIEW, FIELD_VIEW_ALT } from 'constants/ui';
 import TextboxField from './Textbox';
 
 const styles = (theme) => ({
@@ -68,7 +69,7 @@ class YouTubeLink extends Component {
   }
 
   render() {
-    const { preview, id, meta, classes, input, label } = this.props;
+    const { preview, mode, id, meta, classes, input, label } = this.props;
     const textboxLabel = 'Video ID';
 
     if (preview) {
@@ -99,6 +100,9 @@ class YouTubeLink extends Component {
               name={input.name}
               className={classes.input}
               onChange={(e, val) => this.parseUrl(val)}
+              InputProps={{
+                readOnly: mode === FIELD_VIEW || mode === FIELD_VIEW_ALT
+              }}
               label={textboxLabel}
               {...{ input, meta }}
             />

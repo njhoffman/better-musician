@@ -115,7 +115,7 @@ const parse = (subsystem, style, messages) => {
         logMessages.push(logLine);
       });
 
-    if (action && action.payload && !_.isString(action.payload)) {
+    if (action && action.payload && _.isObject(action.payload)) {
       // console.log(`${grouped}: ${lastDelay}`);
       const [msg, ...colors] = logMessages[0];
       const groupLine = [msg, colors];

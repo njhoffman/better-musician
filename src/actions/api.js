@@ -25,8 +25,8 @@ export const songsDeleteComplete = ({ changed }) => (dispatch) => {
   dispatch({ type: API.SONGS_DELETE_COMPLETE, payload: deletedSong.id });
   dispatch({
     type: UI.SNACKBAR_SHOW,
-    payload: `Song "${deletedSong.title}" deleted`,
-    meta: { variant: 'success' }
+    payload: `${deletedSong.title} deleted.`,
+    meta: { variant: 'success', title: 'Song Deleted' }
   });
 };
 
@@ -34,8 +34,8 @@ export const songsDeleteError = ({ status, errors }) => (dispatch) => {
   dispatch({ type: API.SONGS_ADD_ERROR, errors });
   dispatch({
     type: UI.SNACKBAR_SHOW,
-    meta: { variant: 'warning' },
-    payload: `Song Deletion Error: ${JSON.stringify(errors)}`
+    meta: { variant: 'error', title: 'Song Deletion Error' },
+    payload: `${JSON.stringify(errors)}`
   });
 };
 
@@ -55,8 +55,8 @@ export const songsAddComplete = ({ records, changed }) => (dispatch) => {
   dispatch({ type: API.ADD_SONG, payload: records[0] });
   dispatch({
     type: UI.SNACKBAR_SHOW,
-    payload: `Song "${records[0].title}" successfully added`,
-    meta: { variant: 'success' }
+    payload: `"${records[0].title}" added.`,
+    meta: { variant: 'success', title: 'Song Added' }
   });
 };
 
@@ -65,8 +65,8 @@ export const songsAddError = (response) => (dispatch) => {
 
   dispatch({
     type: UI.SNACKBAR_SHOW,
-    meta: { variant: 'warning' },
-    payload: 'Validation Error: Song Not Added'
+    meta: { variant: 'error', title: 'Song Add Error' },
+    payload: `${JSON.stringify(response.errors)}`
   });
 
   dispatch({
@@ -96,8 +96,8 @@ export const songsUpdateComplete = ({ records, changed }) => (dispatch) => {
   dispatch({ type: API.UPDATE_SONG, payload: records[0] });
   dispatch({
     type: UI.SNACKBAR_SHOW,
-    payload: `Song successfully updated with ${changedLength} fields modified`,
-    meta: { variant: 'success' }
+    payload: `Song updated with ${changedLength} fields.`,
+    meta: { variant: 'success', title: 'Song Updated' }
   });
 };
 
@@ -106,8 +106,8 @@ export const songsUpdateError = (response) => (dispatch) => {
 
   dispatch({
     type: UI.SNACKBAR_SHOW,
-    meta: { variant: 'warning' },
-    payload: 'Validation Error: Song Not Updated'
+    meta: { variant: 'error', title: 'Song Update Error' },
+    payload: `${JSON.stringify(response.errors)}`
   });
 
   dispatch({
@@ -183,8 +183,8 @@ export const profileUpdateComplete = ({ records, changed }) => (dispatch) => {
   dispatch({ type: API.PROFILE_UPDATE_COMPLETE, payload: records[0] });
   dispatch({
     type: UI.SNACKBAR_SHOW,
-    payload: `Profile successfully updated with ${changedLength} fields modified`,
-    meta: { variant: 'success' }
+    payload: `User profile updated with ${changedLength} fields.`,
+    meta: { variant: 'success', title: 'Profile Updated' }
   });
   dispatch(initialize('profile', records[0]));
 };
@@ -194,7 +194,7 @@ export const profileUpdateError = (response) => (dispatch) => {
   dispatch({ type: API.PROFILE_UPDATE_ERROR, user: response });
   dispatch({
     type: UI.SNACKBAR_SHOW,
-    payload: response.message || response.error || 'Unknown Error',
+    payload: `${JSON.stringify(response.errors)}`,
     meta: { variant: 'error', title: 'Profile Update Error' }
   });
 };
@@ -216,8 +216,8 @@ export const settingsUpdateComplete = ({ records, changed }) => (dispatch) => {
   dispatch({ type: API.SETTINGS_UPDATE_COMPLETE, payload: records[0] });
   dispatch({
     type: UI.SNACKBAR_SHOW,
-    payload: `Settingss uccessfully updated with ${changedLength} fields modified`,
-    meta: { variant: 'success' }
+    payload: `User settings updated with ${changedLength} fields.`,
+    meta: { variant: 'success', title: 'Settings Updated' }
   });
   dispatch(initialize('settings', records[0]));
 };
@@ -227,7 +227,7 @@ export const settingsUpdateError = (response) => (dispatch) => {
   dispatch({ type: API.SETTINGS_UPDATE_ERROR, user: response });
   dispatch({
     type: UI.SNACKBAR_SHOW,
-    payload: response.message || response.error || 'Unknown Error',
+    payload: `${JSON.stringify(response.errors)}`,
     meta: { variant: 'error', title: 'Profile Update Error' }
   });
 };

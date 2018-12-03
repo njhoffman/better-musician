@@ -1,13 +1,12 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  TextField, FormHelperText, Typography, withStyles
+  FormControl, TextField, FormHelperText, Typography, withStyles
 } from '@material-ui/core';
 
-import { FIELD_VIEW } from 'constants/ui';
+import { FIELD_VIEW, FIELD_VIEW_ALT } from 'constants/ui';
 import createComponent from './createFormField';
 import mapError from './mapError';
-
 
 const styles = (theme) => ({
   // field_view: {
@@ -20,9 +19,9 @@ const styles = (theme) => ({
   viewValue: {
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    overflowX: 'hidden'
-  },
-
+    overflowX: 'hidden',
+    marginBottom: theme.spacing.unit
+  }
 });
 
 const TextboxForm = createComponent(
@@ -55,16 +54,28 @@ const createTextbox = (Component) => ({
   input,
   ...props
 }) => {
-  if (mode === FIELD_VIEW) {
+  if (mode === FIELD_VIEW_ALT) {
     return (
-      <Fragment>
+      <TextField
+        variant='outlined'
+        InputProps={{
+          readOnly: true
+        }}
+        label={label}
+        value={input.value}
+        fullWidth
+      />
+    );
+  } else if (mode === FIELD_VIEW) {
+    return (
+      <FormControl>
         <FormHelperText className={classes.viewLabel}>
           {label}
         </FormHelperText>
         <Typography className={classes.viewValue}>
           {input.value}
         </Typography>
-      </Fragment>
+      </FormControl>
     );
   }
   return (

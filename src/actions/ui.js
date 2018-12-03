@@ -7,11 +7,13 @@ export const uiToggleDrawerMenu = () => ({ type: UI.DRAWER_MENU_TOGGLE });
 
 export const uiSnackbarExit = (moreMessage) => ({ type: UI.SNACKBAR_EXIT });
 export const uiHideSnackbar = () => ({ type: UI.SNACKBAR_HIDE });
-export const uiShowSnackbar = (message, variant, title) => ({
-  type: UI.SNACKBAR_SHOW,
-  payload: message,
-  meta: { variant, title }
-});
+export const uiShowSnackbar = (message, variant, title, styleVariant) => (dispatch) => {
+  dispatch({
+    type: UI.SNACKBAR_SHOW,
+    payload: message,
+    meta: { variant, title, styleVariant }
+  });
+};
 
 export const uiHideModal = () => ({ type: UI.MODAL_HIDE });
 export const uiModalExit = () => ({ type: UI.MODAL_EXIT });

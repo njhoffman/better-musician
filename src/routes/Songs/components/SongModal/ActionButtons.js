@@ -88,10 +88,14 @@ const ActionButtons = ({
   </Row>
 );
 
+ActionButtons.defaultProps = {
+  currentSong: null
+};
+
 ActionButtons.propTypes = {
   classes:           PropTypes.instanceOf(Object).isRequired,
-  currentSong:       PropTypes.instanceOf(Object).isRequired,
   changed:           PropTypes.instanceOf(Object).isRequired,
+  currentSong:       PropTypes.instanceOf(Object),
   update:            PropTypes.func.isRequired,
   deleteCurrentSong: PropTypes.func.isRequired,
   add:               PropTypes.func.isRequired,

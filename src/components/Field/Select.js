@@ -4,10 +4,27 @@ import {
   Select as MaterialSelect,
   InputLabel,
   FormControl,
-  MenuItem
+  FormHelperText,
+  MenuItem,
+  Typography,
+  TextField,
+  withStyles
 } from '@material-ui/core';
+import { FIELD_VIEW, FIELD_VIEW_ALT } from 'constants/ui';
 import createComponent from './createFormField';
 import mapError from './mapError';
+
+const styles = (theme) => ({
+  viewLabel: {
+    textAlign: 'center'
+  },
+  viewValue: {
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflowX: 'hidden',
+    marginBottom: theme.spacing.unit
+  }
+});
 
 const generateMenu = (dataSource) => {
   const items = [
@@ -48,19 +65,47 @@ const SelectForm = createComponent(MaterialSelect, ({
 const createSelect = (Component) => ({
   label,
   options,
-  variant,
+  mode,
+  input,
   initialValues,
+  classes,
   ...props
-}) => (
-  <FormControl style={{ minWidth: '120px' }}>
-    <InputLabel shrink>
-      {label}
-    </InputLabel>
-    <Component {...props} displayEmpty>
-      {options && generateMenu(options)}
-    </Component>
-  </FormControl>
-);
+}) => {
+  if (mode === FIELD_VIEW_ALT) {
+    return (
+      <TextField
+        variant='outlined'
+        label={label}
+        value={input.value}
+        InputProps={{
+          readOnly: true
+        }}
+        fullWidth
+      />
+    );
+  } else if (mode === FIELD_VIEW) {
+    return (
+      <FormControl>
+        <FormHelperText className={classes.viewLabel}>
+          {label}
+        </FormHelperText>
+        <Typography className={classes.viewValue}>
+          {input.value}
+        </Typography>
+      </FormControl>
+    );
+  }
+  return (
+    <FormControl style={{ minWidth: '120px' }}>
+      <InputLabel shrink>
+        {label}
+      </InputLabel>
+      <Component {...{ ...props, input, label }} displayEmpty>
+        {options && generateMenu(options)}
+      </Component>
+    </FormControl>
+  );
+};
 
 const defaultProps = {
   label: ''
@@ -84,4 +129,4 @@ Select.defaultProps = defaultProps;
 Select.propTypes = propTypes;
 
 export { Select };
-export default SelectField;
+export default withStyles(styles)(SelectField);

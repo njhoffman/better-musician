@@ -153,16 +153,16 @@ export const FieldsView = ({
               large={4}
               medium={6}
               small={6}
-              label='Field Label'
-              name='label'
+              label='Tab Name'
+              name='tabName'
               type='text'
             />
             <FormField
               large={4}
               medium={6}
               small={6}
-              label='Tab Name'
-              name='tabName'
+              label='Field Label'
+              name='label'
               type='text'
             />
           </FormRow>

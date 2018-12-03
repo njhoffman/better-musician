@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Tappable from 'react-tappable';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import { setCurrentSong, setSortColumn } from 'routes/Songs/modules/reducer';
 import { songs as songsSelector } from 'routes/Songs/modules/selectors';
@@ -50,6 +51,21 @@ const styles = (theme) => ({
     [theme.breakpoints.down('sm')]: {
       display: 'none'
     }
+  },
+  fadeEnter: {
+    opacity: 0.01
+  },
+  fadeEnterActive: {
+    opacity: 1,
+    transition: 'opacity 500ms ease-in'
+  },
+  fadeExit: {
+    opacity: 1
+  },
+  fadeExitActive: {
+    opacity: 0.01,
+    transition: 'opacity 500ms ease-in',
+    background: 'rgba(100, 0, 0, 0.3)'
   }
 });
 
@@ -107,15 +123,27 @@ const SongsList = ({
       </TableRow>
     </TableHead>
     <TableBody>
-      {songsCollection && songsCollection.map(song => (
-        <Tappable
-          component={Song}
-          songValues={song}
-          onTap={(e) => setSong(song)}
-          key={song.id}
-          {...{ setSong }}
-        />
-      ))}
+      <TransitionGroup className='songTransition'>
+        {songsCollection && songsCollection.map(song => (
+          <CSSTransition
+            key={song.id}
+            timeout={750}
+            classNames={{
+              enter: classes.fadeEnter,
+              enterActive: classes.fadeEnterActive,
+              exit: classes.fadeExit,
+              exitActive: classes.fadeExitActive
+            }}>
+            <Tappable
+              component={Song}
+              songValues={song}
+              onTap={(e) => setSong(song)}
+              key={song.id}
+              {...{ setSong }}
+            />
+          </CSSTransition>
+        ))}
+      </TransitionGroup>
     </TableBody>
   </Table>
 );

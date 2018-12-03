@@ -3,9 +3,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Slide,
-  Snackbar as MaterialSnackbar,
-  withStyles
+  Slide, Fade, withStyles, withTheme, // Zoom, Grow, Collapse
+  Snackbar as MaterialSnackbar
 } from '@material-ui/core';
 import { uiHideSnackbar, uiSnackbarExit } from 'actions/ui';
 import SnackbarContent from './SnackbarContent';
@@ -22,29 +21,28 @@ const styles = (theme) => ({
   },
 });
 
-// const slideLeft = (props) => (<Slide {...props} direction="left" />);
-// const slideRight = (props) => (<Slide {...props} direction="right" />);
-// const slideDown = (props) => (<Slide {...props} direction="down" />);
-const slideUp = (props) => (<Slide {...props} direction='up' />);
-const Transition = slideUp;
 const vertical = 'top';
 const horizontal = 'center';
+
+// TODO: implement separate duration for hiding/showing when >1 message in queue
 
 const Snackbar = ({
   isOpen,
   hideSnackbar,
   snackbarExit,
   classes,
-  queue
+  queue,
+  theme: { app: { snackbar: { duration, transition } } }
 }) => (
   <MaterialSnackbar
     anchorOrigin={{ vertical, horizontal }}
     className={isOpen ? classes.open : classes.closed}
     classes={{ anchorOriginTopCenter: classes.topCenter }}
-    TransitionComponent={Transition}
-    disableWindowBlurListener
+    autoHideDuration={duration}
     open={isOpen}
-    autoHideDuration={8000}
+    disableWindowBlurListener
+    TransitionProps={transition.props}
+    TransitionComponent={/fade/i.test(transition.name) ? Fade : Slide}
     onClose={(e, reason) => reason !== 'clickaway' && hideSnackbar()}
     onExited={snackbarExit}>
     <SnackbarContent
@@ -63,7 +61,8 @@ Snackbar.propTypes = {
   queue:        PropTypes.arrayOf(PropTypes.object).isRequired,
   hideSnackbar: PropTypes.func.isRequired,
   snackbarExit: PropTypes.func.isRequired,
-  isOpen:       PropTypes.bool.isRequired
+  isOpen:       PropTypes.bool.isRequired,
+  theme:        PropTypes.instanceOf(Object).isRequired
 };
 
 const mapDispatchToProps = {
@@ -75,4 +74,6 @@ const mapStateToProps = (state) => ({
   queue:  _.get(state, 'ui.snackbar.queue')
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Snackbar));
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withTheme()(withStyles(styles)(Snackbar))
+);

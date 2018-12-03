@@ -1,11 +1,19 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { withStyles, Typography, Card, CardMedia, CardContent } from '@material-ui/core';
 import FormField, { FormRow, Stars } from 'components/Field';
 import { Row, Column } from 'react-foundation';
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+
+import {
+  withTheme,
+  withStyles,
+  Typography,
+  Card,
+  CardMedia,
+  CardContent
+} from '@material-ui/core';
 
 import Button from 'components/Button';
 import {
@@ -18,7 +26,7 @@ import {
 } from 'selectors/songs';
 import { maxDifficulty } from 'selectors/users';
 import {
-  FIELD_EDIT, FIELD_ADD, FIELD_VIEW,
+  FIELD_EDIT, FIELD_ADD, FIELD_VIEW, FIELD_VIEW_ALT,
   MODAL_VARIANT_ADD, MODAL_VARIANT_VIEW
 } from 'constants/ui';
 // import css from './AddSong.scss';
@@ -55,8 +63,8 @@ const styles = (theme) => ({
     flexWrap: 'nowrap',
     [theme.breakpoints.down('xs')]: {
       flexWrap: 'wrap',
-      marginTop: '0px',
-      marginBottom: '0px'
+      // marginTop: '0px',
+      // marginBottom: '0px'
     },
   },
   field: {
@@ -67,9 +75,9 @@ const styles = (theme) => ({
   }
 });
 
-const fieldMode = (modalVariant) => {
+const fieldMode = (modalVariant, fieldView) => {
   if (modalVariant === MODAL_VARIANT_VIEW) {
-    return FIELD_VIEW;
+    return fieldView;
   } else if (modalVariant === MODAL_VARIANT_ADD) {
     return FIELD_ADD;
   }
@@ -88,9 +96,13 @@ export const SongMainTab = ({
   maxDiff,
   classes,
   variant,
+  theme: { app: { formField } },
   ...props
 }) => {
-  const mode = fieldMode(variant);
+  const fieldView = /label/i.test(formField.variant)
+    ? FIELD_VIEW
+    : FIELD_VIEW_ALT;
+  const mode = fieldMode(variant, fieldView);
   const fieldProps = {
     ...props,
     className: classes.field,
@@ -268,6 +280,7 @@ export const SongMainTab = ({
 };
 
 SongMainTab.defaultProps = {
+  activeField:       null,
   matchedArtist:     null,
   lastNameOptions:   [],
   genreOptions:      [],
@@ -277,7 +290,7 @@ SongMainTab.defaultProps = {
 
 SongMainTab.propTypes = {
   lastActiveField:   PropTypes.string.isRequired,
-  activeField:       PropTypes.string.isRequired,
+  activeField:       PropTypes.string,
   matchedArtist:     PropTypes.instanceOf(Object),
   lastNameOptions:   PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   genreOptions:      PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
@@ -297,4 +310,4 @@ const mapStateToProps = (state) => ({
   instrumentOptions: instruments(state)
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(SongMainTab));
+export default connect(mapStateToProps)(withTheme(withStyles(styles)(SongMainTab)));
