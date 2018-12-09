@@ -78,7 +78,7 @@ export const HomeView = ({ classes, showSnackbar }) => (
       <Row>
         <Column>
           <Typography variant='subtitle1'>
-            Variant &lquo;left&rquo; with Title
+            Variant &ldquo;left&rdquo; with Title
           </Typography>
           <Button
             color='secondary'
@@ -111,10 +111,11 @@ export const HomeView = ({ classes, showSnackbar }) => (
           </Button>
         </Column>
       </Row>
+      <br />
       <Row>
         <Column>
           <Typography variant='subtitle1'>
-            Variant &lquo;over&rquo; with Title
+            Variant &ldquo;over&rdquo; with Title
           </Typography>
           <Button
             color='secondary'
@@ -147,74 +148,65 @@ export const HomeView = ({ classes, showSnackbar }) => (
           </Button>
         </Column>
       </Row>
+      <br />
       <Divider className={classes.divider} />
       <Row>
         <Column style={{ height: '300px', overflowY: 'scroll' }}>
+          <Typography variant='h6'>
+            Snackbars
+          </Typography>
           <Typography variant='body2'>
             <span>body2:</span>
             <span>The quick brown fox jumped across...</span>
           </Typography>
-          <br />
           <Typography variant='body1'>
             <span>body1:</span>
             <span> The quick brown fox jumped across...</span>
           </Typography>
-          <br />
           <Typography variant='subtitle2'>
             <span>subtitle2:</span>
             <span>The quick brown fox jumped across...</span>
           </Typography>
-          <br />
           <Typography variant='subtitle1'>
             <span>subtitle1:</span>
             <span>The quick brown fox jumped across...</span>
           </Typography>
-          <br />
           <Typography variant='overline'>
             <span>overline:</span>
             <span>The quick brown fox jumped across...</span>
           </Typography>
-          <br />
           <Typography variant='button'>
             <span>button:</span>
             <span>The quick brown fox jumped across...</span>
           </Typography>
-          <br />
           <Typography variant='caption'>
             <span>caption:</span>
             <span>The quick brown fox jumped across...</span>
           </Typography>
-          <br />
           <Typography variant='h6'>
             <span>h6:</span>
             <span>The quick brown fox jumped across...</span>
           </Typography>
-          <br />
           <Typography variant='h5'>
             <span>h5:</span>
             <span>The quick brown fox jumped across...</span>
           </Typography>
-          <br />
           <Typography variant='h4'>
             <span>h4:</span>
             <span>The quick brown fox jumped across...</span>
           </Typography>
-          <br />
           <Typography variant='h3'>
             <span>h3:</span>
             <span>The quick brown fox jumped across...</span>
           </Typography>
-          <br />
           <Typography variant='h2'>
             <span>h2:</span>
             <span>The quick brown fox jumped across...</span>
           </Typography>
-          <br />
           <Typography variant='h1'>
             <span>h1:</span>
             <span>The quick brown fox jumped across...</span>
           </Typography>
-          <br />
         </Column>
       </Row>
     </Paper>

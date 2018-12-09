@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -10,11 +11,14 @@ import {
   TextField,
   withStyles
 } from '@material-ui/core';
-import { FIELD_VIEW, FIELD_VIEW_ALT } from 'constants/ui';
+import { FIELD_EDIT, FIELD_VIEW, FIELD_VIEW_ALT } from 'constants/ui';
 import createComponent from './createFormField';
 import mapError from './mapError';
 
 const styles = (theme) => ({
+  label: {
+    whiteSpace: 'nowrap',
+  },
   viewLabel: {
     textAlign: 'center'
   },
@@ -26,21 +30,30 @@ const styles = (theme) => ({
   }
 });
 
-const generateMenu = (dataSource) => {
+const generateMenu = (selectItems) => {
   const items = [
     <MenuItem key={-1} value='' disabled>Select...</MenuItem>
   ];
-  const isArray = Array.isArray(dataSource);
-  // assign value to key if dataSource is an object, otherwise assign scalar value
-  Object.keys(dataSource).forEach(key => {
-    items.push(
-      <MenuItem
-        value={isArray ? dataSource[key] : key}
-        key={isArray ? dataSource[key] : key}>
-        {dataSource[key]}
-      </MenuItem>
-    );
-  });
+
+  if (_.isArray(selectItems)) {
+    selectItems.forEach(item => {
+      const key = _.isObject(item) ? _.keys(item)[0] : item;
+      const value = _.isObject(item) ? item[key] : item;
+      items.push(
+        <MenuItem value={key} key={key}>
+          {value}
+        </MenuItem>
+      );
+    });
+  } else {
+    _.keys(selectItems).forEach(key => {
+      items.push(
+        <MenuItem value={key} key={key}>
+          {selectItems[key]}
+        </MenuItem>
+      );
+    });
+  }
   return items;
 };
 
@@ -62,7 +75,7 @@ const SelectForm = createComponent(MaterialSelect, ({
   onBlur: () => onBlur(value)
 }));
 
-const createSelect = (Component) => ({
+const createSelect = (SelectComponent) => ({
   label,
   options,
   mode,
@@ -71,21 +84,9 @@ const createSelect = (Component) => ({
   classes,
   ...props
 }) => {
-  if (mode === FIELD_VIEW_ALT) {
+  if (mode !== FIELD_EDIT) {
     return (
-      <TextField
-        variant='outlined'
-        label={label}
-        value={input.value}
-        InputProps={{
-          readOnly: true
-        }}
-        fullWidth
-      />
-    );
-  } else if (mode === FIELD_VIEW) {
-    return (
-      <FormControl>
+      <FormControl className={`${mode === FIELD_VIEW_ALT ? classes.outlined : ''}`}>
         <FormHelperText className={classes.viewLabel}>
           {label}
         </FormHelperText>
@@ -97,18 +98,19 @@ const createSelect = (Component) => ({
   }
   return (
     <FormControl style={{ minWidth: '120px' }}>
-      <InputLabel shrink>
+      <InputLabel shrink className={classes.label}>
         {label}
       </InputLabel>
-      <Component {...{ ...props, input, label }} displayEmpty>
-        {options && generateMenu(options)}
-      </Component>
+      <SelectComponent {...{ ...props, input, label }} displayEmpty>
+        {generateMenu(options)}
+      </SelectComponent>
     </FormControl>
   );
 };
 
 const defaultProps = {
-  label: ''
+  label: '',
+  mode: FIELD_EDIT
 };
 
 const propTypes = {
@@ -119,14 +121,12 @@ const propTypes = {
   label: PropTypes.string
 };
 
+const ConnectedSelect = withStyles(styles)(createSelect(SelectForm));
+ConnectedSelect.defaultProps = defaultProps;
+ConnectedSelect.propTypes = propTypes;
 
-const SelectField = createSelect(SelectForm);
-SelectField.defaultProps = defaultProps;
-SelectField.propTypes = propTypes;
-
-const Select = createSelect(MaterialSelect);
+const Select = withStyles(styles)(createSelect(MaterialSelect));
 Select.defaultProps = defaultProps;
 Select.propTypes = propTypes;
 
-export { Select };
-export default withStyles(styles)(SelectField);
+export { Select as default, ConnectedSelect };

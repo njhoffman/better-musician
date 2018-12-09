@@ -20,7 +20,8 @@ export const initialState = {
   modal: {
     name: null,
     variant: null,
-    isOpen: false
+    isOpen: false,
+    meta: {}
   }
 };
 
@@ -63,18 +64,30 @@ const snackbarExit = (state) => ({
   }
 });
 
-const updateModal = (state, { payload, meta }) => ({
-  ...state,
-  modal: { ...state.modal, name: payload, ...meta }
-});
-
-const showModal = (state, { payload, meta }) => ({
+const updateModal = (state, { payload, meta: { variant, ...meta } }) => ({
   ...state,
   modal: {
     ...state.modal,
     name: payload,
+    variant: state.modal.variant || variant,
+    meta: {
+      ...state.modal.meta,
+      ...meta
+    }
+  }
+});
+
+const showModal = (state, { payload, meta: { variant, ...meta} }) => ({
+  ...state,
+  modal: {
+    ...state.modal,
+    name: payload,
+    variant,
     isOpen: true,
-    ...meta
+    meta: {
+      ...state.modal.meta,
+      ...meta
+    }
   }
 });
 

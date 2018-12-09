@@ -1,10 +1,11 @@
 import { orm } from 'store/orm';
+import { sortBy } from 'lodash';
 import { createSelector as ormCreateSelector } from 'redux-orm';
 import { createSelector } from 'reselect';
 
 export const ormSelector = state => state.orm;
 
-const savedFieldsSelector = ormCreateSelector(orm, (session, user) => session.CustomField.all().toModelArray());
+const savedFieldsSelector = ormCreateSelector(orm, (session, user) => session.Field.all().toModelArray());
 
 export const savedFields = createSelector(
   ormSelector,
@@ -12,26 +13,67 @@ export const savedFields = createSelector(
   savedFieldsSelector
 );
 
-const savedTabsSelector = ormCreateSelector(orm, (session, user) => {
-  const tabs = {};
-  session.CustomField.all()
+const userTabsSelector = ormCreateSelector(orm, (session, currentSong) => {
+  // TODO: implement sorting capability, for now just sort by creation order
+  const tabs = session.FieldTab.all()
     .toModelArray()
-    .forEach(field => {
-      if (tabs[field.tabName]) {
-        tabs[field.tabName].push(field);
-      } else {
-        tabs[field.tabName] = [field];
-      }
-    });
-  const ret = [];
-  Object.keys(tabs).forEach((tabKey, idx) => {
-    ret.push({ name: tabKey, fields: tabs[tabKey], idx });
-  });
-  return ret;
-});
+    .map(({
+      fields,
+      sortedFields,
+      sortedRows,
+      name,
+      id,
+      ...props
+    }) => ({
+        name,
+        id,
+        fields: fields.toModelArray(),
+        sortedFields,
+        sortedRows,
+        ...props
+      })
+    );
 
-export const savedTabs = createSelector(
+  // add primary tab
+  tabs.unshift({
+    locked: true,
+    id: -1,
+    name: 'Main Fields'
+  });
+  return sortBy(tabs, 'id')
+    .map((tab, tabIdx) => ({
+      ...tab, tabIdx
+    }));
+
+});
+//
+
+export const userTabs = createSelector(
   ormSelector,
   state => state.user,
-  savedTabsSelector
+  userTabsSelector
+);
+
+const previewFieldSelector = ormCreateSelector(orm, (session, id) => {
+  return session.Field.idExists(id)
+    ? session.Field.get({ id })
+    : {};
+});
+
+export const previewField = createSelector(
+  ormSelector,
+  state => state.ui.modal.meta.id,
+  previewFieldSelector
+);
+
+const editFieldSelector = ormCreateSelector(orm, (session, id) => {
+  return session.Field.idExists(id)
+    ? session.Field.get({ id })
+    : {};
+});
+
+export const editField = createSelector(
+  ormSelector,
+  state => state.ui.modal.meta.id,
+  editFieldSelector
 );

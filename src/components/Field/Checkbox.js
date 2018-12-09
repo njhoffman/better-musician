@@ -1,42 +1,77 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormControlLabel, Checkbox as MaterialCheckbox } from '@material-ui/core';
+import {
+  FormControlLabel,
+  Checkbox as MaterialCheckbox,
+  withStyles
+} from '@material-ui/core';
+import { FIELD_VIEW_ALT, FIELD_EDIT } from 'constants/ui';
 import createComponent from './createFormField';
 
-export const CheckboxForm = createComponent(MaterialCheckbox, ({
-  input: { onChange, value, ...inputProps },
-  meta,
-  onChange: ignoredOnChange,
-  defaultChecked,
-  ...props
-}) => ({
-  ...inputProps,
-  ...props,
-  checked: !!value,
-  onChange: (event, isInputChecked) => {
-    onChange(isInputChecked);
-  }
-}));
+export const CheckboxFormField = createComponent(
+  MaterialCheckbox, ({
+    input: { onChange, value, ...inputProps },
+    meta,
+    onChange: ignoredOnChange,
+    defaultChecked,
+    ...props
+  }) => ({
+    ...inputProps,
+    ...props,
+    checked: !!value,
+    onChange: (event, isInputChecked) => {
+      onChange(isInputChecked);
+    }
+  })
+);
 
-const Checkbox = ({
-  style,
+const styles = (theme) => ({
+  root: {
+    width: 'auto'
+  },
+  outlined: {
+    border: 'solid 1px rgba(255, 255, 255, 0.23)',
+    borderRadius: '5px',
+    padding: '10px'
+  },
+  checkbox: {
+    margin: '0px'
+  }
+});
+
+const createCheckbox = (Component) => ({
+  mode,
+  label,
+  classes,
   ...props
 }) => (
   <FormControlLabel
-    control={
-      <CheckboxForm {...props} style={{ ...style, width: 'auto' }} />
-    }
-    style={{ margin: '0px' }}
-    {...props}
+    className={`${classes.root} ${mode === FIELD_VIEW_ALT ? classes.outlined : ''}`}
+    label={label}
+    control={(
+      <Component
+        disabled={mode !== FIELD_EDIT}
+        className={classes.checkbox}
+        {...props}
+      />
+    )}
   />
 );
 
-Checkbox.defaultProps = {
+const defaultProps = {
   style: {}
 };
 
-Checkbox.propTypes = {
+const propTypes = {
   style: PropTypes.instanceOf(Object)
 };
 
-export default Checkbox;
+const Checkbox = withStyles(styles)(createCheckbox(MaterialCheckbox));
+Checkbox.defaultProps = defaultProps;
+Checkbox.propTypes = propTypes;
+
+const ConnectedCheckbox = withStyles(styles)(createCheckbox(CheckboxFormField));
+ConnectedCheckbox.defaultProps = defaultProps;
+ConnectedCheckbox.propTypes = propTypes;
+
+export { Checkbox as default, ConnectedCheckbox };

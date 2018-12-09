@@ -1,16 +1,23 @@
+import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import {
   Dialog, DialogContent, Divider, Button,
-  DialogActions, DialogTitle, withStyles
+  DialogActions, DialogTitle, Typography,
+  Card, CardContent, withStyles
 } from '@material-ui/core';
 import { Column } from 'react-foundation';
 
-import { PREVIEW_MODAL } from 'constants/ui';
+import RadioButtonGroup from 'components/Field/RadioButtonGroup';
+import { changeViewMode } from 'routes/Fields/modules/actions';
+
+import { getDefaultValues } from 'components/Field/FieldTypes';
+import { PREVIEW_FIELD_MODAL, FIELD_VIEW, FIELD_EDIT, FIELD_VIEW_ALT } from 'constants/ui';
+import PreviewFieldForm from 'components/Forms/PreviewField';
+import { previewField as previewFieldSelector } from 'routes/Fields/modules/selectors'
 import { uiHideModal, uiModalExit } from 'actions/ui';
-import FormField, { FormRow } from 'components/Field';
 // import ActionButtons from './ActionButtons';
 
 // import css from './AddSong.scss';
@@ -47,6 +54,10 @@ const styles = (theme) => ({
     marginRight: 'auto',
     marginBottom: '10px'
   },
+  card: {
+    width: '100%',
+    margin: '0 20px'
+  },
   dialogContent: {
     textAlign: 'center',
     // TODO: why does star slider extend dialog width along X-axis?
@@ -56,12 +67,6 @@ const styles = (theme) => ({
     display: 'flex',
     padding: '0 !important', // :first-child padding-top: 24px
   },
-  form: {
-    alignSelf: 'center',
-    maxHeight: '100%',
-
-    width: '100%'
-  },
   center: {
     marginLeft: 'auto',
     marginRight: 'auto',
@@ -69,66 +74,54 @@ const styles = (theme) => ({
   }
 });
 
-const PreviewModal = ({
+const PreviewFieldModal = ({
   classes,
   isOpen,
   hideModal,
+  previewField,
+  changeView,
   modalExit,
-  fieldType,
-  fieldLabel,
-  fieldOptions,
-  ...props
+  viewMode
 }) => {
-  let typeName = 'Field';
-  if (fieldType === 0) {
-    typeName = 'Textbox';
-  } else if (fieldType === 1) {
-    typeName = 'AutoComplete Textbox';
-  } else if (fieldType === 2) {
-    typeName = 'Select';
-  } else if (fieldType === 3) {
-    typeName = 'Multiple Select';
-  } else if (fieldType === 4) {
-    typeName = 'Checkbox';
-  } else if (fieldType === 5) {
-    typeName = 'Radio Buttons';
-  } else if (fieldType === 6) {
-    typeName = 'Date Select';
-  } else if (fieldType === 7) {
-    typeName = 'YouTube Video';
-  } else if (fieldType === 8) {
-    typeName = 'PDF Link';
-  }
+  console.info('PREVIEW FIELD', previewField);
   return (
     <Dialog
       onExited={modalExit}
       open={isOpen}
       classes={{ paper: `${classes.dialogPaper}` }}>
       <DialogTitle className={classes.dialogTitle}>
-        {typeName}
-        {' '}
-Field Preview
+        <Typography variant='h6'>
+          {`${previewField.typeLabel} Preview`}
+        </Typography>
       </DialogTitle>
-      <Divider className={classes.divider} />
       <DialogContent className={classes.dialogContent}>
-        <form className={classes.form}>
-          <FormRow className={classes.customFieldRow}>
-            <FormField
-              name='previewField'
-              fullWidth={false}
-              type={fieldType}
-              centerOnSmall
-              options={fieldOptions}
-              label={fieldLabel}
-              {...props}
+        <RadioButtonGroup
+          row
+          value={viewMode}
+          onChange={(e) => changeView(e.target.value)}
+          options={{
+            FIELD_EDIT:     'Edit Mode',
+            FIELD_VIEW:     'View Mode',
+            FIELD_VIEW_ALT: 'View Mode #2'
+          }}
+        />
+      </DialogContent>
+      <DialogContent className={classes.dialogContent}>
+        <Card className={classes.card}>
+          <CardContent>
+            <PreviewFieldForm
+              viewMode={viewMode}
+              initialValues={{ previewField: previewField.defaultValue }}
+              {...previewField}
             />
-          </FormRow>
-        </form>
+          </CardContent>
+        </Card>
       </DialogContent>
       <DialogActions>
         <Column className={classes.center}>
+          <Divider className={classes.divider} />
           <Button
-            variant='text'
+            variant='contained'
             color='primary'
             onClick={() => hideModal()}>
             Close
@@ -139,26 +132,35 @@ Field Preview
   );
 };
 
-PreviewModal.propTypes = {
-  isOpen:        PropTypes.bool.isRequired,
-  classes:       PropTypes.instanceOf(Object).isRequired
+PreviewFieldModal.defaultProps = {
+  viewMode: FIELD_EDIT
 };
 
-const mapDispatchToProps = {
-  hideModal: uiHideModal,
-  modalExit: uiModalExit
+PreviewFieldModal.propTypes = {
+  classes        : PropTypes.instanceOf(Object).isRequired,
+  isOpen         : PropTypes.bool.isRequired,
+  hideModal      : PropTypes.func.isRequired,
+  modalExit      : PropTypes.func.isRequired,
+  viewMode       : PropTypes.oneOf([FIELD_VIEW, FIELD_EDIT, FIELD_VIEW_ALT]),
+  typeLabel      : PropTypes.string
 };
 
-const mapStateToProps = (state) => ({
-  isOpen: state.ui.modal.name === PREVIEW_MODAL && state.ui.modal.isOpen,
-  fieldType: state.ui.modal && state.ui.modal.fieldType,
-  fieldLabel: state.ui.modal && state.ui.modal.fieldLabel,
-  fieldOptions: state.ui.modal && state.ui.modal.fieldOptions
+const actionCreators = {
+  hideModal  : uiHideModal,
+  modalExit  : uiModalExit,
+  changeView : changeViewMode
+};
+
+const stateProps = (state) => ({
+  isOpen    : _.get(state, 'ui.modal.name') === PREVIEW_FIELD_MODAL && _.get(state, 'ui.modal.isOpen'),
+  viewMode  : _.get(state, 'ui.modal.meta.viewMode'),
+  previewField: previewFieldSelector(state)
 });
 
-const previewForm = withStyles(styles)(reduxForm({
-  form: 'preview',
+const previewFieldForm = withStyles(styles)(reduxForm({
+  form: 'previewField',
   enableReinitialize: true,
   // validate
-})(PreviewModal));
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(previewForm));
+})(PreviewFieldModal));
+
+export default connect(stateProps, actionCreators)(withStyles(styles)(previewFieldForm));

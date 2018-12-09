@@ -155,7 +155,7 @@ const parse = (subsystem, style, messages) => {
 console.log = function consoleLogEnhanced(...args) {
   if (args[0] && args[0].indexOf && args[0].indexOf('[HMR]') !== -1) {
     if (args[0].indexOf('bundle rebuilding') !== -1) {
-      console.clear();
+      // console.clear();
     }
     return parse('hot-module', 'color: #ff8800', `${args[0]}`);
   }

@@ -14,9 +14,10 @@ export const MODAL_VARIANT_VIEW = 'MODAL_VIEW';
 export const MODAL_VARIANT_ADD  = 'MODAL_ADD';
 export const MODAL_VARIANT_EDIT = 'MODAL_EDIT';
 
-export const SONG_MODAL         = 'SONG_MODAL';
-export const FILTERS_MODAL      = 'FILTERS_MODAL';
-export const PREVIEW_MODAL      = 'PREVIEW_MODAL';
+export const SONG_MODAL          = 'SONG_MODAL';
+export const FILTERS_MODAL       = 'FILTERS_MODAL';
+export const PREVIEW_FIELD_MODAL = 'PREVIEW_FIELD_MODAL';
+export const EDIT_FIELD_MODAL    = 'EDIT_FIELD_MODAL';
 
 export const FIELD_VIEW     = 'FIELD_VIEW';
 export const FIELD_VIEW_ALT = 'FIELD_VIEW_ALT';

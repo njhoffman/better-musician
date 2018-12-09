@@ -32,23 +32,11 @@ export const uiUpdateModal = (name, meta) => ({
 
 
 export const uiShowSongModal = (type) => (dispatch) => {
-  dispatch(uiShowModal(UI.SONG_MODAL, type, { currentTab: 0 }));
+  dispatch(uiShowModal(UI.SONG_MODAL, type, { currentTab: 'main-fields' }));
 };
 
 export const uiChangeSongModalView = (type) => (dispatch) => {
   dispatch(uiShowModal(UI.SONG_MODAL, type));
-};
-
-
-export const uiShowPreviewModal = (field) => (dispatch) => {
-  dispatch(uiShowModal(
-    UI.PREVIEW_MODAL,
-    UI.MODAL_VARIANT_EDIT, {
-      fieldType: field.type,
-      fieldLabel: field.label,
-      fieldOptions: field.options
-    }
-  ));
 };
 
 export const uiWindowResize = (clientInfo) => (dispatch) => {

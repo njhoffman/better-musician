@@ -4,7 +4,7 @@ const path = require('path');
 const { argv } = require('yargs');
 const ip = require('ip');
 
-const { name } = require('../package.json');
+const { name, version } = require('../package.json');
 const environments = require('./environments.js');
 const configWebpack = require('./webpack');
 const logger = require('../shared/logger')('app:config');
@@ -77,7 +77,9 @@ config.globals = {
   __COVERAGE__ : !argv.watch && config.env === 'test',
   __VERBOSE__  : config.envFlag === 'verbose',
   __API_URL__  : `"http://${config.server.host}:${config.server.port}/api"`,
-  __BASENAME__ : JSON.stringify(process.env.BASENAME || name || '')
+  __BASENAME__ : JSON.stringify(process.env.BASENAME || name || ''),
+  __APP_VERSION__ : `"${version}"`
+
 };
 
 const webpackConfig = configWebpack(config);

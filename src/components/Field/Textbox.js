@@ -1,18 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  FormControl, TextField, FormHelperText, Typography, withStyles
+  FormControl, TextField as MaterialTextField, FormHelperText, Typography, withStyles
 } from '@material-ui/core';
 
-import { FIELD_VIEW, FIELD_VIEW_ALT } from 'constants/ui';
+import { FIELD_EDIT, FIELD_VIEW, FIELD_VIEW_ALT } from 'constants/ui';
 import createComponent from './createFormField';
 import mapError from './mapError';
 
+const TextFieldForm = createComponent(
+  MaterialTextField, ({
+    input: { onChange, ...inputProps },
+    onChange: onFieldChange,
+    meta,
+    defaultValue,
+    helperTextShim,
+    ...props
+  }) => ({
+    ...mapError({ ...props, meta }),
+    ...inputProps,
+    meta,
+    helperText: meta.error || meta.warning || (helperTextShim ? ' ' : null),
+    onChange: (event) => {
+      onChange(event.target.value);
+      if (onFieldChange) {
+        onFieldChange(event.target.value);
+      }
+    },
+  })
+);
+
 const styles = (theme) => ({
-  // field_view: {
-  //   color: `${theme.palette.text.primary} !important`
-  // },
-  field_edit: { },
   viewLabel: {
     textAlign: 'center'
   },
@@ -24,46 +42,28 @@ const styles = (theme) => ({
   }
 });
 
-const TextboxForm = createComponent(
-  TextField, ({
-    input: { onChange, ...inputProps },
-    onChange: onFieldChange,
-    defaultValue,
-    ...props
-  }) => ({
-    ...mapError(props),
-    ...inputProps,
-    onChange: (event) => {
-      onChange(event.target.value);
-      if (onFieldChange) {
-        onFieldChange(event.target.value);
-      }
-    },
-  })
-);
-
-const createTextbox = (Component) => ({
+const createTextbox = (TextComponent) => ({
+  classes,
   disabled,
   InputProps,
+  preview,
   mode,
   fullWidth,
   disableUnderline,
   meta,
-  classes,
   label,
   input,
   ...props
 }) => {
   if (mode === FIELD_VIEW_ALT) {
     return (
-      <TextField
+      <TextComponent
         variant='outlined'
         InputProps={{
-          readOnly: true
+          readOnly: true,
+          ...InputProps
         }}
-        label={label}
-        value={input.value}
-        fullWidth
+        {...{ ...props, input, meta, label, fullWidth }}
       />
     );
   } else if (mode === FIELD_VIEW) {
@@ -79,29 +79,37 @@ const createTextbox = (Component) => ({
     );
   }
   return (
-    <Component
+    <TextComponent
       InputProps={{
-        disableUnderline: mode === FIELD_VIEW || disableUnderline,
-        disabled: mode === FIELD_VIEW || disabled,
-        className: `${mode ? classes[mode.toLowerCase()] : ''}`,
+        disableUnderline,
+        disabled,
         autoComplete: 'off',
         ...InputProps
       }}
-      {...{ ...props, input, meta, label, fullWidth: fullWidth !== false }}
+      {...{ ...props, input, meta, label, fullWidth }}
     />
   );
 };
 
-const propTypes = {
-  label      : PropTypes.string,
-  style      : PropTypes.instanceOf(Object),
-  width      : PropTypes.number
+const defaultProps = {
+  helperTextShim: true,
+  mode: FIELD_EDIT
 };
 
-const TextboxField = createTextbox(TextboxForm);
-export const Textbox = createTextbox(TextField);
+const propTypes = {
+  label          : PropTypes.string,
+  style          : PropTypes.instanceOf(Object),
+  input          : PropTypes.instanceOf(Object).isRequired,
+  width          : PropTypes.number,
+  helperTextShim : PropTypes.bool
+};
 
-TextboxField.propTypes = propTypes;
+const ConnectedTextbox = withStyles(styles)(createTextbox(TextFieldForm));
+const Textbox = withStyles(styles)(createTextbox(MaterialTextField));
+
+ConnectedTextbox.defaultProps = defaultProps;
+ConnectedTextbox.propTypes = propTypes;
 Textbox.propTypes = propTypes;
+Textbox.defaultProps = defaultProps;
 
-export default withStyles(styles)(TextboxField);
+export { Textbox as default, ConnectedTextbox };

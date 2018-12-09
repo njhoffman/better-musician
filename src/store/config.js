@@ -17,6 +17,10 @@ const initialState = {
     device: {},
     screen: {}
   },
+  app: {
+    appVersion: `${__APP_VERSION__}`,
+    apiVersion: '1.3.0'
+  },
   dev: {
     showInspector:    false,
     showChart:        false,
@@ -28,8 +32,9 @@ const initialState = {
   }
 };
 
-const configureLoad = (state, { payload: { devConfig, endpoints, clientInfo } }) => ({
+const configureLoad = (state, { payload: { devConfig, endpoints, clientInfo, appInfo } }) => ({
   ...state,
+  app:       { ...state.app, ...appInfo },
   client:    { ...state.client, ...clientInfo },
   endpoints: { ...state.endpoints, ...endpoints },
   dev:       { ...state.dev, ...devConfig }

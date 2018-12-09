@@ -1,22 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { compose } from 'recompose';
 import { Field, FieldArray } from 'redux-form';
 import { Column } from 'react-foundation';
 import { withStyles } from '@material-ui/core';
 
+import { withFieldTypes } from './FieldTypes';
 import FormRow from './FormRow';
-import SelectField from './Select';
-import MultiSelect from './MultiSelect';
-import TextboxField from './Textbox';
-import Slider from './Slider';
-import NumberField from './Number';
-import Checkbox from './Checkbox';
 import Stars from './Stars';
 import Difficulty from './Difficulty';
-import AutoComplete from './AutoComplete';
-import YouTubeLink from './YouTubeLink';
 import Chip from './Chip';
-
 
 /* eslint-disable no-multi-spaces */
 // const fieldOptions = {
@@ -34,76 +27,56 @@ import Chip from './Chip';
 /* eslint-enable no-multi-spaces */
 
 
-const renderField = ({ type, ...props }) => {
-  if (type === 'select' || type === 'Select Menu' || type === 2) {
-    return <SelectField {...props} />;
-  }
-  if (type === 'text' || type === 'Text Box' || type === 0) {
-    return (<TextboxField {...props} />);
-  }
-  if (type === 'number') {
-    return (<NumberField {...props} />);
-  }
-  if (type === 'slider' || type === 9) {
-    return (<Slider {...props} />);
-  }
-  if (type === 'multiselect' || type === 'Multi-Select Menu' || type === 3) {
-    return (<MultiSelect {...props} />);
-  }
-  if (type === 'autocomplete' || type === 'AutoComplete Box' || type === 1) {
-    return (<AutoComplete {...props} />);
-  }
-  if (type === 'youtube' || type === 'YouTube Link' || type === 7) {
-    return (<YouTubeLink {...props} />);
-  }
-  return (<Checkbox {...props} />);
-};
-
 const styles = (theme) => ({
   column: {
-    // [theme.breakpoints.down('sm')]: {
-    //   margin: '0px'
-    // },
+    [theme.breakpoints.down('sm')]: {
+      margin: '0px'
+    },
     flex: '1 1 auto',
     width: '100%',
+    maxWidth: '100%',
     margin: '8px 0px'
   }
 });
 
 const FormField = ({
   small, medium, large, centerOnSmall,
-  type, variant, classes,
+  variant, classes, className, Component,
+  fieldType: { multi },
   ...props
-}) => (
-  <Column
-    className={classes.column}
-    {...{ small, medium, large, centerOnSmall }}>
-    {type !== 3 && <Field component={renderField} type={type} {...props} />}
-    {type === 3 && <FieldArray component={renderField} type={type} {...props} />}
-  </Column>
-);
+}) => {
+  return (
+    <Column
+      className={`${className} ${classes.column}`}
+      {...{ small, medium, large, centerOnSmall }}>
+      {!multi && (
+        <Field component={Component} {...props} />
+      )}
+      {multi && (
+        <FieldArray component={Component} {...props} />
+      )}
+    </Column>
+  );
+};
 
 FormField.defaultProps = {
-  centerOnSmall: false,
-  style:         {},
-  large:         8,
-  medium:        10,
-  small:         12,
-  type:          4 // checkbox
+  centerOnSmall : false,
+  preview       : false,
+  style         : {},
+  large         : 8,
+  medium        : 10,
+  small         : 12
 };
 
 FormField.propTypes = {
-  centerOnSmall: PropTypes.bool,
-  type:          PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string,
-    PropTypes.node,
-    PropTypes.func
-  ]), // TODO: combine type and field.typeName attributes
-  style:         PropTypes.instanceOf(Object),
-  small:         PropTypes.number,
-  medium:        PropTypes.number,
-  large:         PropTypes.number
+  centerOnSmall : PropTypes.bool,
+  preview       : PropTypes.bool,
+  type          : PropTypes.string,
+  typeId        : PropTypes.number,
+  style         : PropTypes.instanceOf(Object),
+  small         : PropTypes.number,
+  medium        : PropTypes.number,
+  large         : PropTypes.number
 };
 
 // { ...{ ...this.props, variant, classes }}
@@ -121,21 +94,11 @@ FormField.propTypes = {
 // FormField.propTypes = {
 // };
 
-export {
-  SelectField,
-  MultiSelect,
-  TextboxField,
-  Slider,
-  Stars,
-  NumberField as Number,
-  Checkbox,
-  Difficulty,
-  AutoComplete,
-  Chip,
-  FormRow
-};
-
-export default withStyles(styles)(FormField);
+export { FormRow, Stars, Difficulty, Chip };
+export default compose(
+  withStyles(styles),
+  withFieldTypes
+)(FormField);
 
 // const styles = (theme) => ({
 //   dirtyField: {

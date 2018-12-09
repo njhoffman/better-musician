@@ -1,12 +1,27 @@
-import { FIELDS_EDIT } from 'constants/api';
+import * as V from 'constants/views';
 
 const ACTION_HANDLERS = {
-  [FIELDS_EDIT] : (state, action) =>
-    ({ ...state, editingField: action.payload })
+  [V.FIELDS_EDIT_FIELD] : (state, action) =>
+    ({ ...state, editingFieldId: action.payload }),
+
+  [V.FIELDS_PREVIEW_FIELD] : (state, action) =>
+    ({ ...state, previewField: action.payload }),
+
+  [V.FIELDS_EDIT_TAB] : (state, action) =>
+    ({ ...state, editingTab: action.payload }),
+
+  [V.FIELDS_SELECT_TAB] : (state, action) =>
+    ({ ...state, selectedTab: action.payload }),
+
+  [V.FIELDS_DESELECT_TAB] : (state, action) =>
+    ({ ...state, selectedTab: action.payload })
 };
 
 const initialState =  {
-  editingField: null
+  previewFieldId : null,
+  editingFieldId : null,
+  editingTab     : null,
+  selectedTab    : null
 };
 
 export default function fieldsReducer(state = initialState, action) {

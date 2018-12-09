@@ -300,7 +300,7 @@ SongMainTab.propTypes = {
   variant:           PropTypes.string.isRequired
 };
 
-const mapStateToProps = (state) => ({
+const stateProps = (state) => ({
   matchedGenre:      genreMatch(state),
   matchedInstrument: instrumentMatch(state),
   matchedArtist:     artistMatch(state),
@@ -310,4 +310,4 @@ const mapStateToProps = (state) => ({
   instrumentOptions: instruments(state)
 });
 
-export default connect(mapStateToProps)(withTheme(withStyles(styles)(SongMainTab)));
+export default connect(stateProps)(withTheme()(withStyles(styles)(SongMainTab)));

@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import { InputAdornment } from '@material-ui/core';
 
 import { FIELD_EDIT } from 'constants/ui';
-import TextboxField from './Textbox';
+import Textbox, { ConnectedTextbox } from './Textbox';
 
-const NumberField = ({
+const createNumberBox = (Component) => ({
   meta,
   fullWidth,
   style,
   unit,
   ...props
 }) => (
-  <TextboxField
+  <Component
     type='number'
     min={0}
     style={{
@@ -32,19 +32,26 @@ const NumberField = ({
         </InputAdornment>
       ) : null
     }}
-    {...props}
+    {...{ ...props, meta } }
   />
 );
 
-NumberField.defaultProps = {
+const defaultProps = {
   label: '',
   viewType: FIELD_EDIT
 };
 
-NumberField.propTypes = {
+const propTypes = {
   label: PropTypes.string,
   meta: PropTypes.instanceOf(Object).isRequired,
   viewType: PropTypes.string
 };
 
-export default NumberField;
+const NumberBox = createNumberBox(Textbox);
+const ConnectedNumberBox = createNumberBox(ConnectedTextbox);
+NumberBox.defaultProps = defaultProps;
+NumberBox.propTypes = propTypes;
+ConnectedNumberBox.defaultProps = defaultProps;
+ConnectedNumberBox.propTypes = propTypes;
+
+export { NumberBox as default, ConnectedNumberBox };

@@ -123,7 +123,7 @@ const SongsList = ({
       </TableRow>
     </TableHead>
     <TableBody>
-      <TransitionGroup className='songTransition'>
+      <TransitionGroup component={null} className='songTransition'>
         {songsCollection && songsCollection.map(song => (
           <CSSTransition
             key={song.id}

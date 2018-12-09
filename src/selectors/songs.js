@@ -41,7 +41,7 @@ const artistMatchSelector = ormCreateSelector(orm, (session, artist) => {
 
 export const artistMatch = createSelector(
   ormSelector,
-  state => get(state, 'form.songForm.values.artist', null),
+  state => get(state, 'form.songEdit.values.artist', null),
   artistMatchSelector
 );
 
@@ -55,7 +55,7 @@ const genreMatchSelector = ormCreateSelector(orm, (session, genre) => {
 
 export const genreMatch = createSelector(
   ormSelector,
-  state => get(state, 'form.songForm.values.genre', null),
+  state => get(state, 'form.songEdit.values.genre', null),
   genreMatchSelector
 );
 
@@ -69,6 +69,6 @@ const instrumentMatchSelector = ormCreateSelector(orm, (session, instrument) => 
 
 export const instrumentMatch = createSelector(
   ormSelector,
-  state => get(state, 'form.songForm.values.instrument', null),
+  state => get(state, 'form.songEdit.values.instrument', null),
   instrumentMatchSelector
 );

@@ -1,9 +1,19 @@
 import spacing from '@material-ui/core/styles/spacing';
 
+// global site default custom values
 export default {
   app: {
     formField: {
       variant: 'group' // label, group
+    },
+    buttons: {
+      add: {
+        color: 'white',
+        backgroundColor: '#37674f'
+      },
+      delete: {
+        backgroundColor: '#5e1313'
+      }
     },
     snackbar: {
       transition: {
@@ -24,6 +34,13 @@ export default {
       },
       warning: {
         backgroundColor: '#ba5c00'
+      }
+    }
+  },
+  overrides: {
+    MuiTooltip: {
+      tooltip: {
+        backgroundColor: '#000 !important'
       }
     }
   },

@@ -1,11 +1,15 @@
-import React, { Fragment } from 'react';
+import _ from 'lodash';
+import React from 'react';
+import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
+  Divider,
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
   Typography,
+  Tooltip,
   withStyles
 } from '@material-ui/core';
 import { Row, Column } from 'react-foundation';
@@ -14,32 +18,44 @@ import {
   MdClose as CancelIcon,
   MdDelete as DeleteIcon
 } from 'react-icons/md';
+import AddIcon from '@material-ui/icons/AddCircle';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import {
-  editField,
-  deleteField,
-  cancelEdit
-} from 'actions/api';
-import { uiShowPreviewModal } from 'actions/ui';
 import Button from 'components/Button';
-import { savedTabs as savedTabsSelector } from '../modules/selectors';
+import { deleteField } from 'actions/api';
+import {
+  showPreviewFieldModal,
+  showEditFieldModal,
+  selectTab,
+  editTab,
+  cancelFieldEdit,
+  cancelTabEdit
+} from 'routes/Fields/modules/actions';
+import { userTabs as userTabsSelector } from 'routes/Fields/modules/selectors';
 
 const styles = (theme) => ({
   root: {
-    width: '100%',
+    paddingBottom: theme.spacing.unit,
+    marginBottom: theme.spacing.unit
   },
-  expansionPanel: {
+  panel: {
     margin: '10px 15px',
     [theme.breakpoints.down('sm')]: {
       margin: '1px 3px'
     }
   },
-  expansionSummary: {
-    background: theme.palette.primary.dark,
-    margin: '6px 0px'
+  panelLocked: {
+    opacity: 0.5
   },
-  expansionDetails: {
+  panelEditing: {
+  },
+  panelExpanded: {
+  },
+  summary: {
+    background: theme.palette.primary.dark,
+    // margin: '6px 0px'
+  },
+  details: {
     flexDirection: 'column',
     padding: '8px 24px 24px',
     margin: '0px 10px',
@@ -50,37 +66,94 @@ const styles = (theme) => ({
       padding: '6px 8px 8px'
     }
   },
+  detailsEditing: {
+    opacity: 0.2
+  },
+  buttonDivider: {
+    marginTop: '3px',
+    marginBottom: '0px'
+  },
   summaryRoot: {
     minHeight: '12px',
-    [theme.breakpoints.down('sm')]: {
-      padding: '0px 8px 0px 8px'
-    },
+    background: theme.palette.primary.dark,
+    padding: '0px !important',
     '&:hover': {
-      background: theme.palette.primary.light
+      background: theme.palette.primary.main
     },
     '& > div': {
       background: 'transparent',
       alignItems: 'center',
     }
   },
-  summaryContent: {
-    margin: '6px 0px',
-  },
   summaryExpanded: {
-    background: theme.palette.primary.main,
-    minHeight: '1.5em !important',
-    margin: '12px 0px 6px 0px !important'
+    margin: '0px !important',
+    background: theme.palette.primary.light,
+    '&:hover': {
+      background: theme.palette.primary.light
+    },
+    boxShadow: [
+      // off-x, off-y, blur-R, spread-R, color
+      '0px 1px 2px -1px rgba(0, 0, 0, 0.5)',
+      '0px 1px 5px 0px rgba(0, 0, 0, 0.34)',
+      '0px 1px 10px 0px rgba(0, 0, 0, 0.22)'
+    ].join(','),
+    minHeight: '1.5em !important'
+  },
+  summaryEditing: {
+    background: theme.palette.primary.light,
+  },
+  summaryLocked: {
+    '&:hover': {
+      background: theme.palette.primary.main
+    }
+  },
+  summaryContent: {
+    margin: '0px',
+    padding: '6px 24px'
+  },
+  summaryContentExpanded: {
+    margin: '0px',
+    padding: '10px 24px'
   },
   expandIcon: {
-    margin: '0px !important'
+    margin: '0px !important',
+    boxShadow: 'none',
+  },
+  tabColumn: {
+    padding: 0
+  },
+  tabEditButton: {
+    color: '#ccccee',
+    padding: '3px !important',
+    display: 'inline-block',
+    verticalAlign: 'middle',
+    marginLeft: '2px',
+    opacity: 0.5,
+    borderRadius: '10px',
+    '&:hover': {
+      opacity: 1,
+      boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.1)'
+    }
+  },
+  tabEditPlaceholder: {
+    width: '30px',
+    display: 'inline-block'
+  },
+  tabCancelEditButton: {
+    color: '#fff',
+    background: 'rgba(0, 0, 0, 0.25)'
   },
   tabName : {
+    verticalAlign: 'middle',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    overflowX: 'hidden'
-    // width: '30%',
-
-    // display: 'inline-block',
+    display: 'inline-block',
+    overflowX: 'hidden',
+    width: 'calc(100% - 40px)',
+    color: theme.palette.text.primary
+  },
+  tabNameEditing : {
+    fontStyle: 'italic'
   },
   tabNumber: {
     textAlign: 'left',
@@ -93,7 +166,6 @@ const styles = (theme) => ({
     textAlign: 'right',
     fontVariant: 'small-caps',
     opacity: 0.8,
-    marginRight: '10px',
     fontSize: '0.8em'
   },
   fieldPreviewLabel: {
@@ -145,9 +217,6 @@ const styles = (theme) => ({
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
   },
-  details: {
-    alignItems: 'center',
-  },
   helper: {
     borderLeft: `2px solid ${theme.palette.divider}`,
     padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
@@ -159,155 +228,316 @@ const styles = (theme) => ({
       textDecoration: 'underline',
     },
   },
+  deleteFieldButton: {
+    minHeight: '28px',
+    opacity: 0.8,
+    marginLeft: '10px',
+    ...theme.app.buttons.delete
+  },
+  editTabButton: {
+    opacity: 0.8,
+    minHeight: '28px',
+    // minWidth: '48px',
+    // minHeight: '24px',
+    // padding: '4px 5px'
+  },
+  addFieldButton: {
+    opacity: 0.8,
+    minHeight: '28px',
+    // minWidth: '48px',
+    // minHeight: '24px',
+    // padding: '4px 5px'
+  },
   tabbedField: {
     borderRadius: '10px',
     border: 'solid 1px #456',
     padding: '7px 5px',
     margin: '3px 5px'
+  },
+  left: {
+    display: 'flex',
+    flexBasis: 'auto',
+    flexGrow: '0'
+  },
+  right: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'flex-end'
   }
 });
 
 const FieldList = (props) => {
   const {
     editingField,
-    edit,
-    cancel,
-    preview,
-    delete: remove,
-    savedTabs,
+    editingTab,
+    selectedTab,
+    tabSelect,
+    tabEdit,
+    fieldEdit,
+    fieldDelete,
+    cancelTab,
+    cancelField,
+    showPreview,
+    showEdit,
+    userTabs,
     classes
   } = props;
 
-  const renderFieldItem = (field, key) => {
-    const editingId = editingField ? editingField.id : null;
-    return (
-      <Row className={`${classes.tabbedField} ${editingId === field.id ? classes.activeField : ''}`} key={key}>
-        <Column small={6} className={classes.fieldDetails}>
-          <Row>
-            <Column small={4} className={classes.fieldLabel}>
-              <Typography variant='body1'>
-                Label:
-              </Typography>
-            </Column>
-            <Column small={8} className={classes.fieldValue}>
-              <Typography variant='caption'>
-                {field.label}
-              </Typography>
-            </Column>
-          </Row>
-          <Row>
-            <Column small={4} className={classes.fieldLabel}>
-              <Typography variant='body1'>
-                Type:
-              </Typography>
-            </Column>
-            <Column small={8} className={classes.fieldValue}>
-              <Typography variant='caption'>
-                {field.typeName}
-              </Typography>
-            </Column>
-          </Row>
-        </Column>
-        <Column small={3} className={`${classes.fieldButtons}`}>
-          <Button
-            variant='outlined'
-            secondary
-            style={{ marginLeft: (editingId === field.id ? '0px' : '0px') }}
-            className={`${classes.flexButton}`}
-            onClick={() => preview(field)}
-            label='Preview'
-          />
-        </Column>
-        <Column small={3} className={`${classes.fieldButtons}`}>
-          <Button
-            variant='text'
-            onClick={() => (field.id === editingId ? cancel() : edit(field))}
-            className={classes.flexButton}
-            style={{ color: '#bbbbff' }}
-            icon={field.id === editingId ? <CancelIcon onClick={cancel} /> : <EditIcon />}
-          />
-          {!(field.id === editingId) && (
-            <Button
-              variant='text'
-              onClick={() => remove(field.id)}
-              className={classes.flexButton}
-              style={{ color: '#ffbbbb' }}
-              icon={<DeleteIcon />}
-            />
-          )}
-        </Column>
-      </Row>
-    );
+  console.info('selected', selectedTab);
+  const editingId = _.get(editingTab, 'id');
+  const selectedId = _.get(selectedTab, 'id');
+  const editFieldId = _.get(editingField, 'id');
+
+  const handleEditFieldClick = (fields) => (e) => {
+    e.stopPropagation();
+    return (fields.id === editFieldId ? cancelField() : fieldEdit(fields));
   };
 
+  const handleEditTabClick = (tab) => (e) => {
+    e.stopPropagation();
+    tabSelect(tab);
+    return (tab.id === editingId ? cancelTab() : tabEdit(tab));
+  };
+
+  const isExpanded = (tabId, i) => Boolean(tabId === selectedId);
+  const isEditing = (tabId) => Boolean(tabId === selectedId && editingTab);
+  const isLocked = (tabId) => Boolean(tabId !== selectedId && editingTab);
+
+  const panelClass = (tabId) => ([
+    `${classes.panel}`,
+    `${isExpanded(tabId) ? classes.panelExpanded : ''}`,
+    `${isEditing(tabId) ? classes.panelEditing : ''}`,
+    `${isLocked(tabId) ? classes.panelLocked : ''}`
+  ].join(' '));
+
+  const rootClass = (tabId) => ([
+    `${classes.summaryRoot}`,
+    `${isEditing(tabId) ? classes.summaryEditing : ''}`,
+    `${isLocked(tabId) ? classes.summaryLocked : ''}`
+  ].join(' '));
+
+  const panelChange = (tab) => {
+    if (!editingTab) {
+      tabSelect(isExpanded(tab.id) ? null : tab);
+    }
+  };
+
+  const renderFieldItem = (field, key) => (
+    <Row className={`${classes.tabbedField} ${editFieldId === field.id ? classes.activeField : ''}`} key={key}>
+      <Column small={6} className={classes.fieldDetails}>
+        <Row>
+          <Column small={4} className={classes.fieldLabel}>
+            <Typography variant='body1' color='textSecondary'>
+              Label:
+            </Typography>
+          </Column>
+          <Column small={8} className={classes.fieldValue}>
+            <Typography variant='caption'>
+              {field.label}
+            </Typography>
+          </Column>
+        </Row>
+        <Row>
+          <Column small={4} className={classes.fieldLabel}>
+            <Typography variant='body1' color='textSecondary'>
+              Type:
+            </Typography>
+          </Column>
+          <Column small={8} className={classes.fieldValue}>
+            <Typography variant='caption'>
+              {field.typeLabel}
+            </Typography>
+          </Column>
+        </Row>
+      </Column>
+      <Column small={3} className={`${classes.fieldButtons}`}>
+        <Button
+          variant='outlined'
+          secondary
+          disabled={Boolean(editingTab)}
+          style={{ marginLeft: (editFieldId === field.id ? '0px' : '0px') }}
+          className={`${classes.flexButton}`}
+          onClick={() => showPreview(field)}
+          label='Preview'
+        />
+      </Column>
+      <Column small={3} className={`${classes.fieldButtons}`}>
+        {!(field.id === editFieldId) && (
+        <Button
+          variant='text'
+          disabled={Boolean(editingTab)}
+          onClick={() => showEdit(field)}
+          className={classes.flexButton}
+          style={{ color: '#bbbbff' }}
+          icon={<EditIcon />}
+        />
+        )}
+        {!(field.id === editFieldId) && (
+          <Button
+            variant='text'
+            disabled={Boolean(editingTab)}
+            onClick={() => fieldDelete(field.id)}
+            className={classes.flexButton}
+            style={{ color: '#ffbbbb' }}
+            icon={<DeleteIcon />}
+          />
+        )}
+      </Column>
+    </Row>
+  );
+
   return (
-    <Fragment>
-      {savedTabs.map((tab, i) => (
-        <ExpansionPanel
-          key={tab.idx}
-          className={classes.expansionPanel}
-          defaultExpanded={i === 0}>
+    <div className={classes.root}>
+      <Tooltip title='Primary tab fields cannot be modified or removed.'>
+        <ExpansionPanel disabled className={panelClass(-1)}>
           <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon />}
-            className={classes.expansionSummary}
+            className={classes.summary}
             classes={{
-              root: classes.summaryRoot,
-              expanded: classes.summaryExpanded,
-              content: classes.summaryContent,
+              root:       classes.summaryRoot,
+              expanded:   classes.summaryExpanded,
+              content:    classes.summaryContent,
               expandIcon: classes.expandIcon
             }}>
-            <Column>
+            <Column small={3} className={classes.tabColumn}>
               <Typography variant='subtitle2' className={classes.tabNumber}>
-                {`Tab ${i + 1}`}
+                Primary Tab
               </Typography>
             </Column>
-            <Column>
+            <Column small={6} className={classes.tabColumn}>
               <Typography variant='subtitle2' className={classes.tabName}>
+                Main Fields
+              </Typography>
+              <span className={classes.tabEditPlaceholder} />
+            </Column>
+            <Column small={3} className={classes.tabColumn}>
+              <Typography variant='subtitle2' className={classes.tabCount}>
+                7 Fields
+              </Typography>
+            </Column>
+          </ExpansionPanelSummary>
+        </ExpansionPanel>
+      </Tooltip>
+      {userTabs.map((tab, i) => (
+        <ExpansionPanel
+          key={tab.id}
+          disabled={isLocked(tab.id)}
+          expanded={isExpanded(tab.id, i)}
+          onChange={() => panelChange(tab)}
+          className={panelClass(tab.id)}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            className={classes.summary}
+            classes={{
+              root:       rootClass(tab.id),
+              expanded:   classes.summaryExpanded,
+              content:    (isExpanded(tab.id) ? classes.summaryContentExpanded : classes.summaryContent),
+              expandIcon: classes.expandIcon
+            }}>
+            <Column small={3} className={classes.tabColumn}>
+              <Typography variant='subtitle2' className={classes.tabNumber}>
+                {`User Tab ${i + 1}`}
+              </Typography>
+            </Column>
+            <Column small={6} className={classes.tabColumn}>
+              <Typography
+                variant='subtitle2'
+                className={`${classes.tabName} ${isEditing(tab.id) ? classes.tabNameEditing : ''}`}>
                 {tab.name}
               </Typography>
+              <Button
+                variant='text'
+                onClick={handleEditTabClick(tab)}
+                className={`${classes.tabEditButton} ${isEditing(tab.id) ? classes.tabCancelEditButton : ''}`}
+                iconHeight={0.6}
+                tooltip={isEditing(tab.id) ? 'Cancel editing tab name.' : 'Edit tab name.'}
+                icon={tab.id === editingId ? <CancelIcon /> : <EditIcon />}
+              />
             </Column>
-            <Column>
+            <Column small={3} className={classes.tabColumn}>
               <Typography variant='subtitle2' className={classes.tabCount}>
                 {`${tab.fields.length} Fields`}
               </Typography>
             </Column>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails className={classes.expansionDetails}>
+          <ExpansionPanelDetails className={`${classes.details} ${isEditing(tab.id) ? classes.detailsEditing : ''}`}>
+            <Row>
+              <Column className={classes.left}>
+                <Button
+                  className={classes.addFieldButton}
+                  icon={<AddIcon />}
+                  tooltip='Add new field to tab.'
+                  color='add'
+                  label='Add Field'
+                />
+              </Column>
+              <Column className={classes.right}>
+                <Button
+                  variant='text'
+                  color='remove'
+                  className={classes.deleteFieldButton}
+                  tooltip='Add new field to tab.'
+                  label='Delete Tab'
+                />
+              </Column>
+            </Row>
+            <Divider className={classes.buttonDivider} />
             {tab.fields.map(renderFieldItem)}
           </ExpansionPanelDetails>
         </ExpansionPanel>
       ))}
-    </Fragment>
+    </div>
   );
 };
 
 FieldList.defaultProps = {
-  editingField: null
+  editingField : null,
+  editingTab   : null,
+  selectedTab  : null
 };
 
-const mapActionCreators = {
-  edit:   editField,
-  delete: deleteField,
-  cancel: cancelEdit,
-  preview: uiShowPreviewModal
+const actionCreators = {
+  tabEdit     : editTab,
+  cancelTab   : cancelTabEdit,
+  cancelField : cancelFieldEdit,
+  tabSelect   : selectTab,
+  fieldDelete : deleteField,
+  showPreview : showPreviewFieldModal,
+  showEdit    : showEditFieldModal
 };
 
-const mapStateToProps = (state) => ({
-  savedTabs:     savedTabsSelector(state)
+const stateProps = (state) => ({
+  userTabs      : userTabsSelector(state),
+  editingField  : _.get(state, 'FieldsView.editingField'),
+  editingTab    : _.get(state, 'FieldsView.editingTab'),
+  selectedTab   : _.get(state, 'FieldsView.selectedTab'),
 });
 
 FieldList.propTypes = {
-  savedTabs:    PropTypes.arrayOf(PropTypes.object).isRequired,
-  editingField: PropTypes.shape({
-    type:    PropTypes.string.isRequired,
-    tabName: PropTypes.string.isRequired,
-    id:      PropTypes.string.isRequired,
-    label:   PropTypes.string
+  userTabs : PropTypes.arrayOf(PropTypes.object).isRequired,
+  editingField : PropTypes.shape({
+    typeId   : PropTypes.number.isRequired,
+    tabName  : PropTypes.string.isRequired,
+    id       : PropTypes.string.isRequired,
+    label    : PropTypes.string
   }),
-  classes:      PropTypes.instanceOf(Object).isRequired,
-  edit:         PropTypes.func.isRequired,
-  preview:      PropTypes.func.isRequired,
-  delete:       PropTypes.func.isRequired,
-  cancel:       PropTypes.func.isRequired
+  editingTab : PropTypes.shape({
+    id  : PropTypes.string.isRequired,
+    name : PropTypes.string.isRequired
+  }),
+  selectedTab: PropTypes.shape({
+    id  : PropTypes.string.isRequired,
+    name : PropTypes.string
+  }),
+  classes     : PropTypes.instanceOf(Object).isRequired,
+  tabEdit     : PropTypes.func.isRequired,
+  tabSelect   : PropTypes.func.isRequired,
+  showEdit    : PropTypes.func.isRequired,
+  fieldDelete : PropTypes.func.isRequired,
+  showPreview : PropTypes.func.isRequired,
+  cancelTab   : PropTypes.func.isRequired,
+  cancelField : PropTypes.func.isRequired
 };
-export default connect(mapStateToProps, mapActionCreators)(withStyles(styles)(FieldList));
+export default compose(
+  connect(stateProps, actionCreators),
+  withStyles(styles)
+)(FieldList);

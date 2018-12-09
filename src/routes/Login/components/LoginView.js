@@ -8,7 +8,7 @@ import { withRouter } from 'react-router';
 import OAuthSignInButton from 'components/OAuthSignInButton';
 import SocialIcon from 'components/SocialIcon';
 import SignOutButton from 'components/SignOutButton';
-import EmailSignInForm from './EmailSignInForm';
+import EmailSignInForm from 'components/Forms/EmailSignIn';
 
 const styles = (theme) => ({
   root: {

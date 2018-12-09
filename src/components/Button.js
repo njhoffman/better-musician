@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import {
   Button as MaterialButton,
   IconButton as MaterialIconButton,
+  Tooltip,
   withStyles,
   withTheme
 } from '@material-ui/core';
@@ -61,7 +62,7 @@ const renderIcon = ({
   loading,
   override,
   iconHeight,
-  theme
+  loaderColor
 }) => {
   const isLoading = loading || override.loading;
   const iconProps = {
@@ -74,7 +75,7 @@ const renderIcon = ({
     const LoaderIcon = Spinners[loaderName] ? Spinners[loaderName] : Spinners.RingLoader;
     return (
       <LoaderIcon
-        color={theme.palette.secondary.light}
+        color={loaderColor}
         loading={isLoading}
         size={iconHeight}
         sizeUnit='em'
@@ -97,6 +98,7 @@ const renderIcon = ({
 const renderButton = ({
   label,
   classes,
+  baseClasses,
   iconAlign,
   icon,
   primary,
@@ -110,93 +112,143 @@ const renderButton = ({
   size,
   mini,
   disabled,
+  tooltip,
+  theme,
   ...props
 }) => {
   const buttonProps = {
     disabled:  disabled || loading,
+    classes: baseClasses,
     className,
     variant,
-    color,
     style,
     size,
     mini
   };
-  if (primary || secondary) {
-    buttonProps.color = primary ? 'primary' : 'secondary';
+
+
+  if (['add', 'remove'].indexOf(color) !== -1) {
+    buttonProps.style = color === 'add'
+      ? { ...style, ...theme.app.buttons.add }
+      : { ...style, ...theme.app.buttons.remove };
+  } else if (primary) {
+    buttonProps.color = 'primary';
+  } else if (secondary) {
+    buttonProps.color = 'secondary';
+  } else {
+    buttonProps.color = color;
   }
   const labelClass = icon && label ? classes[`${iconAlign}Label`] : classes.centerLabel;
   const BaseButton = icon && !label ? MaterialIconButton : MaterialButton;
+  const loaderColor = theme.palette.secondary.light;
 
-  return (
-    <BaseButton onClick={(e) => onClick(e)} {...buttonProps}>
-      {iconAlign === 'right' && label && (
-        <div className={labelClass}>{label}</div>
-      )}
+  const renderButtonChildren = () => (
+    <Fragment>
+      {iconAlign === 'right' && label && <div className={labelClass}>{label}</div>}
       {icon && (
         <div className={classes.iconWrapper}>
-          {renderIcon({ ...props, classes, icon, loading })}
+          {renderIcon({ ...props, classes, icon, loading, loaderColor })}
         </div>
       )}
-      {iconAlign !== 'right' && label && (
-        <div className={labelClass}>{label}</div>
-      )}
+      {iconAlign !== 'right' && label && <div className={labelClass}>{label}</div>}
+    </Fragment>
+  );
+
+  // need to include span for tooltip event firing
+  const renderDisabledButtonTooltip = () => (
+    <Tooltip title={tooltip}>
+      <span>
+        <BaseButton onClick={(e) => onClick(e)} {...buttonProps}>
+          {renderButtonChildren()}
+        </BaseButton>
+      </span>
+    </Tooltip>
+  );
+
+  const renderButtonTooltip = () => (
+    <Tooltip title={tooltip}>
+      <BaseButton onClick={(e) => onClick(e)} {...buttonProps}>
+        {renderButtonChildren()}
+      </BaseButton>
+    </Tooltip>
+  );
+
+  if (tooltip && disabled) {
+    return renderDisabledButtonTooltip();
+  } else if (tooltip) {
+    return renderButtonTooltip();
+  }
+  return (
+    <BaseButton onClick={(e) => onClick(e)} {...buttonProps}>
+      {renderButtonChildren()}
     </BaseButton>
   );
 };
 
-const Button = ({
+const renderLinkButton = ({
   link,
   classes,
   ...props
 }) => (
+  <NavLink to={link} className={classes.linkText}>
+    {renderButton({ ...props, classes })}
+  </NavLink>
+);
+
+const Button = ({
+  link,
+  ...props
+}) => (
   <Fragment>
-    {link && (
-      <NavLink to={link} className={classes.linkText}>
-        {renderButton({ ...props, classes })}
-      </NavLink>
-    )}
-    {!link && renderButton({ ...props, classes })}
+    {link && renderLinkButton({ ...props, link })}
+    {!link && renderButton({ ...props })}
   </Fragment>
 );
 
 Button.propTypes = {
-  classes:     PropTypes.instanceOf(Object).isRequired,
-  className:   PropTypes.string,
-  color:       PropTypes.string,
-  disabled:    PropTypes.bool,
-  link:        PropTypes.string,
-  icon:        PropTypes.oneOfType([PropTypes.node, PropTypes.instanceOf(Object)]),
-  iconAlign:   PropTypes.string,
-  iconHeight:  PropTypes.number,
-  label:       PropTypes.string,
-  loading:     PropTypes.bool,
-  onClick:     PropTypes.func,
-  override:    PropTypes.shape({ loading: PropTypes.bool }),
-  primary:     PropTypes.bool,
-  secondary:   PropTypes.bool,
-  spinnerType: PropTypes.string,
-  theme:       PropTypes.instanceOf(Object).isRequired,
-  variant:     PropTypes.string
+  baseClasses : PropTypes.instanceOf(Object),
+  classes     : PropTypes.instanceOf(Object).isRequired,
+  className   : PropTypes.string,
+  color       : PropTypes.string,
+  disabled    : PropTypes.bool,
+  link        : PropTypes.string,
+  icon        : PropTypes.oneOfType([PropTypes.node, PropTypes.instanceOf(Object)]),
+  iconAlign   : PropTypes.string,
+  iconHeight  : PropTypes.number,
+  label       : PropTypes.string,
+  loading     : PropTypes.bool,
+  onClick     : PropTypes.func,
+  override    : PropTypes.shape({ loading: PropTypes.bool }),
+  primary     : PropTypes.bool,
+  primary2    : PropTypes.bool,
+  secondary   : PropTypes.bool,
+  spinnerType : PropTypes.string,
+  theme       : PropTypes.instanceOf(Object).isRequired,
+  tooltip     : PropTypes.string,
+  variant     : PropTypes.string
 };
 
 Button.defaultProps = {
   // icon: ActionFavorite,
-  loading:     false,
-  disabled:    false,
-  className:   '',
-  variant:     'contained',
-  spinnerType: 'ring',
-  iconAlign:   'right',
-  size:        'small',
-  color:       'default',
-  link:        null,
-  primary:     false,
-  secondary:   false,
-  label:       null,
-  override:    {},
-  onClick:     (e) => ({}),
-  icon:        null,
-  iconHeight:  1.0
+  loading     : false,
+  disabled    : false,
+  className   : '',
+  variant     : 'contained',
+  spinnerType : 'ring',
+  iconAlign   : 'right',
+  size        : 'small',
+  color       : 'default',
+  link        : null,
+  tooltip     : null,
+  primary     : false,
+  primary2    : false,
+  delete      : false,
+  secondary   : false,
+  label       : null,
+  override    : {},
+  onClick     : (e) => ({}),
+  icon        : null,
+  iconHeight  : 1.0
 };
 
 

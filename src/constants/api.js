@@ -31,6 +31,7 @@ export const LOAD_INSTRUMENTS         = 'LOAD_INSTRUMENTS';
 export const LOAD_GENRES              = 'LOAD_GENRES';
 export const LOAD_SONGS               = 'LOAD_SONGS';
 export const LOAD_FIELDS              = 'LOAD_FIELDS';
+export const LOAD_FIELD_TABS          = 'LOAD_FIELD_TABS';
 
 export const AUTHENTICATE_START       = 'AUTHENTICATE_START';
 export const AUTHENTICATE_COMPLETE    = 'AUTHENTICATE_COMPLETE';
@@ -44,7 +45,6 @@ export const SETTINGS_UPDATE_START    = 'SETTINGS_UPDATE_START';
 export const SETTINGS_UPDATE_COMPLETE = 'SETTINGS_UPDATE_COMPLETE';
 export const SETTINGS_UPDATE_ERROR    = 'SETTINGS_UPDATE_ERROR';
 
-export const FIELDS_EDIT              = 'FIELDS_EDIT';
 export const FIELDS_ADD_START         = 'FIELDS_ADD_START';
 export const FIELDS_ADD_COMPLETE      = 'FIELDS_ADD_COMPLETE';
 export const FIELDS_ADD_ERROR         = 'FIELDS_ADD_ERROR';

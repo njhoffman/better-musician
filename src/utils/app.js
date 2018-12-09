@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { humanMemorySize } from 'shared/util';
 import { init as initLog } from 'shared/logger';
 
-const { debug } = initLog('app');
+const { debug, error } = initLog('app');
 
 let lastHeapSize = 0;
 export const startMemoryStats = (interval = 10000) => {
@@ -60,3 +60,15 @@ export const difference = (primaryObject, primaryBase) => {
   return changes(primaryObject, primaryBase);
 };
 /* eslint-enable no-param-reassign */
+
+export const onError = (err, { componentStack }, props) => {
+  error(`Application Error: ${err.name} ${componentStack.split('\n')[0]}`);
+  // error.framesToPop
+  // componentStack.split('\n').forEach((cs, i) => {
+  //   error(`(${i}) ${cs}`);
+  // });
+  /* eslint-disable no-console */
+  console.error(err, `Propkeys: ${Object.keys(props).join(', ')}`);
+  /* eslint-enable no-console */
+};
+

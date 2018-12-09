@@ -1,7 +1,7 @@
 import { orm } from 'store/orm';
 import { createSelector as ormCreateSelector } from 'redux-orm';
 import { createSelector } from 'reselect';
-import { find, isEmpty } from 'lodash';
+import { sortBy, find, isEmpty } from 'lodash';
 
 export const ormSelector = state => state.orm;
 
@@ -47,12 +47,16 @@ const currentSongSelector = ormCreateSelector(orm, (Session, SongsView) => {
     // TODO: find a better solution
     song.progress = parseInt(song.progress, 10);
     song.difficulty = parseInt(song.difficulty, 10);
-    song.customFields = Session.CustomField.all()
+    const userFields = {};
+    Session.Field.all()
       .toModelArray()
-      .map((cf/* , idx */) => {
-        const found = find(song.customFields, { id: cf.id });
-        return found ? found.value : '';
+      .forEach(userField => {
+        const found = find(song.userFields, { id: userField.id });
+        if (found) {
+          userFields[userField.id] = found.value;
+        }
       });
+    song.userFields = userFields;
     return song;
   }
   return null;
@@ -62,33 +66,29 @@ const songStatsSelector = ormCreateSelector(orm, (Session, state) => (
   Session.Song ? Session.Song.getStats() : {}
 ));
 
-const savedTabsSelector = ormCreateSelector(orm, (Session, currentSong) => {
-  const tabs = {};
-  Session.CustomField.all()
+const userTabsSelector = ormCreateSelector(orm, (session, currentSong) => {
+  const tabs = session.FieldTab.all()
     .toModelArray()
-    .forEach((field, idx) => {
-      // TODO: find a better way through the model
-      const cField = field;
-      cField.idx = idx;
-
-      if (!tabs[cField.tabName]) {
-        tabs[cField.tabName] = [];
-      }
-      tabs[cField.tabName].push({ ...cField.fieldProps });
-    });
-
-  return Object.keys(tabs).map((tabKey, idx) => (
-    { name: tabKey, fields: tabs[tabKey], idx }
-  ));
+    .map(({ fields, sortedFields, sortedRows, name, id, ...props }) => ({
+      name,
+      id,
+      fields: fields.toModelArray(),
+      sortedFields,
+      sortedRows,
+      ...props
+    }));
+  // console.info('Sorted Rows', tabs[0].sortedRows);
+  // TODO: implement sorting capability, for now just sort by creation order
+  return sortBy(tabs, 'tabId');
 });
-
+//
 // TODO: Fix race condition where selectors cause errors before SongsView is initialized
 export const songs = createSelector(ormSelector, state => state.SongsView, songsSelector);
 export const currentSong = createSelector(ormSelector, state => state.SongsView, currentSongSelector);
 export const songStats = createSelector(ormSelector, state => state.orm, songStatsSelector);
 
-export const savedTabs = createSelector(
+export const userTabs = createSelector(
   ormSelector,
   state => (state.SongsView ? state.SongsView.currentSong : null),
-  savedTabsSelector
+  userTabsSelector
 );

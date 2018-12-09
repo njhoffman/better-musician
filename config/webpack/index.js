@@ -42,7 +42,7 @@ module.exports = (config) => {
   }
 
   _.merge(wpConfig.externals.webpackVariables, { apiUrl: `${__API_URL__}` });
-  const webpackEnv = config.webpack.mode === 'production' ? prodConfig(config) : devConfig(config);
+  const webpackEnv = wpConfig.mode === 'production' ? prodConfig(config) : devConfig(config);
 
   // const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
   // const smp = new SpeedMeasurePlugin({ outputFormat: 'human' });

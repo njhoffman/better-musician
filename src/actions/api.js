@@ -141,6 +141,7 @@ export const songsFetchComplete = (data) => (dispatch) => {
   dispatch({ type: API.LOAD_INSTRUMENTS,     payload: tables.instruments });
   dispatch({ type: API.LOAD_GENRES,          payload: tables.genres });
   dispatch({ type: API.LOAD_FIELDS,          payload: tables.fields });
+  dispatch({ type: API.LOAD_FIELD_TABS,      payload: tables.fieldTabs });
   dispatch({ type: API.LOAD_SONGS,           payload: tables.songs });
   /* eslint-enable no-multi-spaces */
 };
@@ -245,12 +246,6 @@ export const updateSettings = () => (dispatch, getState) => {
 };
 
 /* fields */
-export const cancelEdit = () => (dispatch) =>
-  dispatch({
-    type: API.FIELDS_EDIT,
-    payload: null
-  });
-
 export const fieldUpdateComplete = ({ records, changed }) => (dispatch, getState) => {
   dispatch(cancelEdit());
   dispatch({ type: API.FIELDS_UPDATE_COMPLETE, payload: records[0] });
@@ -316,8 +311,3 @@ export const deleteField = (fieldId) => (dispatch, getState) =>
     }
   });
 
-export const editField = ({ type, label, tabName, options, id }) => (dispatch) =>
-  dispatch({
-    type: API.FIELDS_EDIT,
-    payload: { type: type.toString(), label, tabName, options, id }
-  });

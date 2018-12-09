@@ -221,4 +221,5 @@ AutoComplete.propTypes = {
   classes: PropTypes.instanceOf(Object).isRequired
 };
 
-export default withStyles(styles)(AutoComplete);
+const AutoCompleteField = withStyles(styles)(AutoComplete);
+export { AutoCompleteField as default, AutoCompleteField as ConnectedAutoComplete };

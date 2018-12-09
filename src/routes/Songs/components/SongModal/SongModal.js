@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React, { Fragment } from 'react';
+import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
@@ -16,10 +17,10 @@ import {
 } from 'constants/ui';
 
 import validate from 'utils/validate';
-import { uiUpdateModal, uiModalExit } from 'actions/ui';
+import { uiUpdateModal, uiHideModal, uiModalExit } from 'actions/ui';
 import {
   currentSong as currentSongSelector,
-  savedTabs as savedTabsSelector
+  userTabs as userTabsSelector
 } from 'routes/Songs/modules/selectors';
 import FormField, { FormRow } from 'components/Field';
 import MainTab from './MainTab';
@@ -67,6 +68,9 @@ const styles = (theme) => ({
       display: 'flex'
     }
   },
+  tabButton: {
+    minWidth: 0
+  },
   editField: {
     color: 'red'
   },
@@ -88,7 +92,7 @@ const styles = (theme) => ({
     alignItems: 'stretch',
     justifyContent: 'space-around',
   },
-  customFieldRow: {
+  userFieldRow: {
     // marginTop: `${theme.spacing.unit * 2}px`,
     // marginBottom: `${theme.spacing.unit * 2}px`,
     // alignItems: 'center'
@@ -114,10 +118,10 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-const SongModal = ({
+const SongEditModal = ({
   classes,
   activeField,
-  savedTabs,
+  userTabs,
   variant,
   isMobile,
   isOpen,
@@ -134,6 +138,37 @@ const SongModal = ({
     : FIELD_VIEW_ALT;
   lastActiveField = activeField || lastActiveField;
 
+  const renderUserTab = (tab) => (
+    <TabContainer key={tab.id}>
+      {errors && [].concat(errors).map((error, i) => (
+        <Row key={error.name}>
+          <Column>
+            <Typography variant='body1' className={classes.errorTitle}>
+              {error.name}
+            </Typography>
+            <Typography variant='caption' className={classes.errorMessage}>
+              {error.message}
+            </Typography>
+          </Column>
+        </Row>
+      ))}
+
+      {tab.sortedRows.map(([...fields], rowIdx) => (
+        <FormRow key={rowIdx} className={classes.userFieldRow}>
+          {fields.map(({ id, fieldProps}) => (
+            <FormField
+              key={id}
+              mode={fieldMode(variant, fieldView)}
+              initialValues={initialValues}
+              {...fieldProps}
+            />
+          ))}
+        </FormRow>
+        /* eslint-enable react/no-array-index-key */
+      ))}
+    </TabContainer>
+  );
+
   return (
     <Dialog
       onExited={modalExit}
@@ -145,52 +180,20 @@ const SongModal = ({
           fullWidth
           value={currentTab}
           onChange={(e, val) => tabChange(val)}>
-          <Tab label='Main Fields' />
-          {savedTabs.map((tab) => <Tab key={tab.idx} label={tab.name} />)}
+          <Tab label='Main Fields' className={classes.tabButton} value='main-fields' />
+          {userTabs.map(tab => (
+            <Tab key={tab.id} className={classes.tabButton} value={tab.id} label={tab.name} />
+          ))}
         </Tabs>
       </AppBar>
       <DialogContent className={classes.dialogContent}>
         <form className={classes.form}>
-          {currentTab === 0 && (
+          {currentTab === 'main-fields' && (
             <TabContainer>
               <MainTab {...tabProps} />
             </TabContainer>
           )}
-          {savedTabs.map((tab, tabIdx) => (
-            currentTab === (tabIdx + 1) && (
-              <TabContainer key={tab.idx}>
-                {errors && [].concat(errors).map((error, i) => (
-                  <Row key={error.name}>
-                    <Column>
-                      <Typography variant='body1' className={classes.errorTitle}>
-                        {error.name}
-                      </Typography>
-                      <Typography variant='caption' className={classes.errorMessage}>
-                        {error.message}
-                      </Typography>
-                    </Column>
-                  </Row>
-                ))}
-
-                {_.chunk(tab.fields, 2).map((fields, fieldIdx) => (
-                  /* eslint-disable react/no-array-index-key */
-                  <FormRow key={fieldIdx} className={classes.customFieldRow}>
-                    {fields.map(field => (
-                      <FormField
-                        fullWidth={false}
-                        key={field.id}
-                        name={field.name}
-                        mode={fieldMode(variant, fieldView)}
-                        initialValues={initialValues}
-                        {...field}
-                      />
-                    ))}
-                  </FormRow>
-                  /* eslint-enable react/no-array-index-key */
-                ))}
-
-              </TabContainer>
-            )))}
+          {userTabs.map(tab => tab.id === currentTab && renderUserTab(tab))}
         </form>
       </DialogContent>
       <DialogActions>
@@ -200,23 +203,23 @@ const SongModal = ({
   );
 };
 
-SongModal.defaultProps = {
-  currentTab:  0,
+SongEditModal.defaultProps = {
+  currentTab:  'main-fields',
   activeField: null,
   variant: null
 };
 
-SongModal.propTypes = {
+SongEditModal.propTypes = {
   isOpen:        PropTypes.bool.isRequired,
   variant:       PropTypes.string,
-  savedTabs:     PropTypes.arrayOf(
+  userTabs:     PropTypes.arrayOf(
     PropTypes.shape({
       fields: PropTypes.array,
-      idx: PropTypes.number,
-      name: PropTypes.string
+      id:     PropTypes.string,
+      name:   PropTypes.string
     })
   ).isRequired,
-  currentTab:    PropTypes.number,
+  currentTab:    PropTypes.string,
   activeField:   PropTypes.string,
   classes:       PropTypes.instanceOf(Object).isRequired,
   initialValues: PropTypes.instanceOf(Object).isRequired
@@ -247,27 +250,34 @@ const initialValues = (song, modalVariant) => {
   return {};
 };
 
-const mapDispatchToProps = {
+const actionCreators = {
+  hideModal: uiHideModal,
   modalExit: uiModalExit,
   tabChange: (val) => uiUpdateModal(SONG_MODAL, { currentTab: val })
 };
 
-const mapStateToProps = (state) => ({
+const stateProps = (state) => ({
   initialValues: initialValues(currentSongSelector(state), _.get(state, 'ui.modal.variant')),
-  savedTabs:     savedTabsSelector(state),
-  activeField:   _.get(state, 'form.songForm.active'),
+  userTabs:      userTabsSelector(state),
+  activeField:   _.get(state, 'form.songEdit.active'),
   variant:       _.get(state, 'ui.modal.variant'),
   errors:        _.get(state, 'ui.modal.errors'),
   isOpen:        _.get(state, 'ui.modal.name') === SONG_MODAL && _.get(state, 'ui.modal.isOpen'),
   isMobile:      _.get(state, 'config.client.device.isMobile'),
-  currentTab:    _.get(state, 'ui.modal.currentTab')
+  currentTab:    _.get(state, 'ui.modal.meta.currentTab')
 });
 
-const songForm = withTheme(withStyles(styles)(reduxForm({
-  form: 'songForm',
-  // destroyOnUnmount: false,
-  enableReinitialize: true,
-  validate: validate(validateFields)
-})(SongModal)));
+const SongEditForm = compose(
+  connect(stateProps, actionCreators),
+  withStyles(styles),
+  reduxForm({
+    form: 'songEdit',
+    // destroyOnUnmount: false,
+    enableReinitialize: true,
+    validate: validate(validateFields)
+  }),
+  withMobileDialog(),
+  withTheme()
+)(SongEditModal);
 
-export default connect(mapStateToProps, mapDispatchToProps)(withMobileDialog()(songForm));
+export default SongEditForm;

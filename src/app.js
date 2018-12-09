@@ -9,7 +9,7 @@ import appConfig from 'config';
 import { configureStart, configureComplete } from 'actions/api';
 import loadConfiguration from 'utils/configure';
 import createStore from 'store/createStore';
-import { startMemoryStats, domStats } from 'utils/app';
+import { startMemoryStats, domStats, onError } from 'utils/app';
 import { init as initLog } from 'shared/logger';
 import ErrorBoundary from 'components/ErrorBoundaries/Main';
 import devTools from 'components/DevTools/DevTools';
@@ -28,18 +28,6 @@ const theme = themes.steelBlue.dark;
 window.__MUI_CURRENT_THEME__ = theme;
 
 const RedBox = require('redbox-react').default;
-
-const onError = (err, { componentStack }, props) => {
-  error(`Application Error: ${err.name} ${componentStack.split('\n')[0]}`);
-  // error.framesToPop
-  componentStack.split('\n').forEach((cs, i) => {
-    error(`(${i}) ${cs}`);
-  });
-  /* eslint-disable no-console */
-  console.error(err);
-  console.info('Available Props during error capture', props);
-  /* eslint-enable no-console */
-};
 
 const render = (Component) => {
   // TODO: make this a config option and handle it better
@@ -81,7 +69,7 @@ const renderDev = () => {
 if (__DEV__) {
   if (module.hot) {
     // reload components
-    module.hot.accept('components/AppContainer', (() => {
+    module.hot.accept(['components/AppContainer'], (() => {
       // console.clear();
       info('HMR reloading ...');
       ReactDOM.unmountComponentAtNode(MOUNT_NODE);

@@ -114,7 +114,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => ({
   currentSong: currentSongSelector(state),
-  changed:     changedFields(state.form.songForm),
+  changed:     changedFields(state.form.songEdit),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

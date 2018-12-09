@@ -16,6 +16,16 @@ export default {
         background: 'rgba(0, 0, 0, 0.95)'
       }
     },
+    MuiCardContent: {
+      root: {
+        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 100%)'
+      }
+    },
+    MuiExpansionPanelDetails: {
+      root: {
+        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 100%)'
+      }
+    },
     MuiBackdrop: {
       root: {
         backgroundColor: 'rgba(0, 0, 0, 0.6)'

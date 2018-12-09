@@ -8,6 +8,7 @@ import { Row } from 'react-foundation';
 import 'coreStyles';
 import Routes from 'routes';
 import Header from 'components/Header/Header';
+import DevToolbar from 'components/DevTools/Toolbar';
 import Footer from 'components/Footer/Footer';
 import DrawerMenu from 'components/DrawerMenu/DrawerMenu';
 import Snackbar from 'components/Snackbar/Snackbar';
@@ -45,16 +46,22 @@ const styles = (theme) => ({
     },
   },
   contentContainer: {
-    margin: '0px',
-    // maxHeight: `calc(100vh - ${theme.app.headerHeight})`,
-    // maxHeight: `calc(100vh - ${theme.app.headerHeight} - ${theme.app.footerHeight})`,
-    [theme.breakpoints.up('md')]: {
-      margin: '30px 5px'
-    },
-    [theme.breakpoints.up('sm')]: {
-      margin: '10px 5px'
-    }
+    maxWidth: '1000px',
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'center'
   },
+  // contentContainer: {
+  //   margin: '0px',
+  //   // maxHeight: `calc(100vh - ${theme.app.headerHeight})`,
+  //   // maxHeight: `calc(100vh - ${theme.app.headerHeight} - ${theme.app.footerHeight})`,
+  //   [theme.breakpoints.up('md')]: {
+  //     margin: '30px 5px'
+  //   },
+  //   [theme.breakpoints.up('sm')]: {
+  //     margin: '10px 5px'
+  //   }
+  // },
   footerFiller: {
     flexGrow: 1,
     background: theme.app.footerFiller
@@ -73,12 +80,15 @@ const AppContainer = ({
     <DrawerMenu />
     <Header />
     <Row horizontalAlignment='center' className={`${contentWrapper} ${currentView}`}>
-      <Routes
-        store={store}
-        history={history}
-        classes={contentContainer}
-      />
+      <div className={contentContainer}>
+        <Routes
+          store={store}
+          history={history}
+          contentClass={contentContainer}
+        />
+        </div>
     </Row>
+    <DevToolbar />
     <Footer />
     <div className={footerFiller} />
   </div>
