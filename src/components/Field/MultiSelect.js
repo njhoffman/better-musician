@@ -7,7 +7,7 @@ import { without } from 'lodash';
 
 import { FIELD_VIEW, FIELD_VIEW_ALT, FIELD_EDIT } from 'constants/ui';
 import Chip from 'components/Field/Chip';
-import Select, { ConnectedSelect } from 'components/Field/Select';
+import Select from 'components/Field/Select';
 
 const styles = (theme) => ({
   outlined: {
@@ -34,8 +34,7 @@ const styles = (theme) => ({
   }
 });
 
-const renderChips = (name, idx, fieldsRef) => {
-  return (
+const renderChips = (name, idx, fieldsRef) => (
   <Field
     key={idx}
     label={fieldsRef.get(idx)}
@@ -44,7 +43,6 @@ const renderChips = (name, idx, fieldsRef) => {
     onDelete={() => fieldsRef.remove(idx)}
   />
 );
-}
 
 const renderViewChips = (name, idx, fieldsRef) => (
   <Field
@@ -113,7 +111,7 @@ const createMultiSelect = (SelectComponent) => (
                     color='secondary'
                     className={classes.addButton}
                     onClick={() => fields.push(currentlySelected)}>
-                    Add
+                    Add!
                   </Button>
                 </Fragment>
               )}

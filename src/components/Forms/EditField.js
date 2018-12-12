@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm, FieldArray } from 'redux-form';
@@ -41,12 +40,14 @@ const EditField = ({
 );
 
 EditField.defaultProps = {
-  options: null,
-  typeId: null
+  options  : null,
+  typeId   : null,
+  multiple : false
 };
 
 EditField.propTypes = {
   typeId: PropTypes.number,
+  multiple: PropTypes.bool,
   options: PropTypes.oneOfType([
     PropTypes.instanceOf(Object),
     PropTypes.instanceOf(Array)

@@ -16,13 +16,13 @@ const userIsAuthDefaults = {
 
 export const userIsAuth = connectedAuthWrapper(userIsAuthDefaults);
 
-export const userIsAuthRedir = connectedRouterRedirect({
+export const userIsAuthOrRedir = connectedRouterRedirect({
   ...userIsAuthDefaults,
   AuthenticatingComponent: AuthLoading,
   redirectPath: '/login'
 });
 
-export const userIsAdminRedir = connectedRouterRedirect({
+export const userIsAdminOrRedir = connectedRouterRedirect({
   redirectPath: '/',
   allowRedirectBack: false,
   authenticatedSelector: state => state.user.data !== null && state.user.data.isAdmin,
@@ -41,15 +41,15 @@ const userNotAuthDefaults = {
 
 export const userNotAuth = connectedAuthWrapper(userNotAuthDefaults);
 
-export const userNotAuthRedir = connectedRouterRedirect({
+export const userNotAuthOrRedir = connectedRouterRedirect({
   ...userNotAuthDefaults,
   redirectPath: (state, ownProps) => locationHelper.getRedirectQueryParam(ownProps) || '/login',
   allowRedirectBack: false
 });
 
-export const userNoAuthenticationDefaults = {
+export const noAuthDefaults = {
   authenticatedSelector: state => true,
   wrapperDisplayName: 'UserNoAuthentication'
 };
 
-export const userNoAuthentication = connectedAuthWrapper(userNoAuthenticationDefaults);
+export const noAuth = connectedAuthWrapper(noAuthDefaults);

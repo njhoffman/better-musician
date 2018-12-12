@@ -105,10 +105,10 @@ const propTypes = {
 };
 
 const ConnectedTextbox = withStyles(styles)(createTextbox(TextFieldForm));
-const Textbox = withStyles(styles)(createTextbox(MaterialTextField));
-
 ConnectedTextbox.defaultProps = defaultProps;
 ConnectedTextbox.propTypes = propTypes;
+
+const Textbox = withStyles(styles)(createTextbox(MaterialTextField));
 Textbox.propTypes = propTypes;
 Textbox.defaultProps = defaultProps;
 

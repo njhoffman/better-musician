@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { compose } from 'recompose';
 import { Typography, withStyles, Paper } from '@material-ui/core';
 import { Row, Column } from 'react-foundation';
 import { withRouter } from 'react-router';
@@ -127,14 +128,13 @@ LoginView.propTypes = {
   isSignedIn: PropTypes.bool.isRequired
 };
 
-const mapActionCreators = { };
-const mapStateToProps = (state) => ({
+const actionCreators = { };
+const stateProps = (state) => ({
   settings: state.login,
   isSignedIn: state.user.isSignedIn
 });
-
-// TODO: Use recompose to handle all the HOC's, decorators only work on classes
-const withConnect = connect(mapStateToProps, mapActionCreators);
-const decorators = (View) => withRouter(withConnect(withStyles(styles)(View)));
-
-export default decorators(LoginView);
+export default compose(
+  withRouter,
+  connect(stateProps, actionCreators),
+  withStyles(styles)
+)(LoginView);

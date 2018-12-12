@@ -45,19 +45,21 @@ const currentSongSelector = ormCreateSelector(orm, (Session, SongsView) => {
   if (!isEmpty(SongsView) && !isEmpty(SongsView.currentSong)) {
     const song = Session.Song.withId(SongsView.currentSong);
     // TODO: find a better solution
-    song.progress = parseInt(song.progress, 10);
-    song.difficulty = parseInt(song.difficulty, 10);
-    const userFields = {};
-    Session.Field.all()
-      .toModelArray()
-      .forEach(userField => {
-        const found = find(song.userFields, { id: userField.id });
-        if (found) {
-          userFields[userField.id] = found.value;
-        }
-      });
-    song.userFields = userFields;
-    return song;
+    if (song) {
+      song.progress = parseInt(song.progress, 10);
+      song.difficulty = parseInt(song.difficulty, 10);
+      const userFields = {};
+      Session.Field.all()
+        .toModelArray()
+        .forEach(userField => {
+          const found = find(song.userFields, { id: userField.id });
+          if (found) {
+            userFields[userField.id] = found.value;
+          }
+        });
+      song.userFields = userFields;
+      return song;
+    }
   }
   return null;
 });

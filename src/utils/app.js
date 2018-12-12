@@ -71,4 +71,3 @@ export const onError = (err, { componentStack }, props) => {
   console.error(err, `Propkeys: ${Object.keys(props).join(', ')}`);
   /* eslint-enable no-console */
 };
-

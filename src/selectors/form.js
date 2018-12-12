@@ -7,7 +7,6 @@ const currentValuesSelector = (form = {}) => cloneDeep(form.values);
 
 const changedFieldsSelector = (initial, current) => (
   difference(current, initial)
-  // return difference(cloneDeep(current), cloneDeep(initial))
 );
 
 export const changedFields = createSelector(

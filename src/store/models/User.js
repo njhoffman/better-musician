@@ -1,12 +1,10 @@
 import { uniq } from 'lodash';
 import { fk } from 'redux-orm';
 import {
-  ADD_SONG,
-  UPDATE_SONG,
   SONGS_FETCH_START,
-  LOAD_SONGS,
   SONGS_DELETE_COMPLETE
 } from 'constants/api';
+import { ADD_SONG, UPDATE_SONG, LOAD_SONGS } from 'constants/orm';
 import BaseModel from './BaseModel';
 
 

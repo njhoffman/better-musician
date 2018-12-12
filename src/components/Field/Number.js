@@ -32,7 +32,7 @@ const createNumberBox = (Component) => ({
         </InputAdornment>
       ) : null
     }}
-    {...{ ...props, meta } }
+    {...{ ...props, meta }}
   />
 );
 

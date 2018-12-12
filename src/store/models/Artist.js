@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import { SONGS_FETCH_START, LOAD_ARTISTS, ARTISTS_FETCH_START } from 'constants/api';
+import { SONGS_FETCH_START, ARTISTS_FETCH_START } from 'constants/api';
+import { LOAD_ARTISTS } from 'constants/orm';
 import BaseModel from './BaseModel';
 
 class Artist extends BaseModel {

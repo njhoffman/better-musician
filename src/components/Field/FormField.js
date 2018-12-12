@@ -44,24 +44,24 @@ const FormField = ({
   variant, classes, className, Component,
   fieldType: { multi },
   ...props
-}) => {
-  return (
-    <Column
-      className={`${className} ${classes.column}`}
-      {...{ small, medium, large, centerOnSmall }}>
-      {!multi && (
-        <Field component={Component} {...props} />
-      )}
-      {multi && (
-        <FieldArray component={Component} {...props} />
-      )}
-    </Column>
-  );
-};
+}) => (
+  <Column
+    className={`${className} ${classes.column}`}
+    {...{ small, medium, large, centerOnSmall }}>
+    {!multi && (
+      <Field component={Component} {...props} />
+    )}
+    {multi && (
+      <FieldArray component={Component} {...props} />
+    )}
+  </Column>
+);
 
 FormField.defaultProps = {
   centerOnSmall : false,
   preview       : false,
+  type          : null,
+  typeId        : null,
   style         : {},
   large         : 8,
   medium        : 10,

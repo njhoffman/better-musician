@@ -52,7 +52,7 @@ const FieldTypes = [{
   rowDivisor: 3,
   heightScale: 3,
   multi: true,
-  stubValue: (options) => options.filter(opt => _.random(1,2) % 2 === 0)
+  stubValue: (options) => options.filter(opt => _.random(1, 2) % 2 === 0)
 }, {
   id: 4,
   name: 'checkbox',
@@ -145,17 +145,22 @@ export const getDefaultValues = (typeId, options) => {
       ? fieldType.stubValue(options)
       : fieldType.stubValue;
   }
+  return null;
 };
 
-export const withFieldTypes = (WrappedComponent) => ({ type, typeId, preview, ...props }) => {
-  const { FormComponent, ...fieldTypeProps } = getFieldByType({ type, typeId });
-  return (
-    <WrappedComponent
-      Component={FormComponent}
-      fieldType={{ ...fieldTypeProps, type, typeId }}
-      {...{ ...props, preview }}
-    />
-  );
+export const withFieldTypes = (ParentComponent) => {
+  const WrappedComponent = ({ type, typeId, preview, ...props }) => {
+    const { FormComponent, ...fieldTypeProps } = getFieldByType({ type, typeId });
+    return (
+      <ParentComponent
+        Component={FormComponent}
+        fieldType={{ ...fieldTypeProps, type, typeId }}
+        {...{ ...props, preview }}
+      />
+    );
+  };
+  WrappedComponent.displayName = `withFieldType(${ParentComponent.displayName || ParentComponent.name})`;
+  return WrappedComponent;
 };
 
 export default FieldTypes;

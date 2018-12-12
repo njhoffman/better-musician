@@ -197,6 +197,7 @@ FiltersModal.defaultProps = {
 };
 
 FiltersModal.propTypes = {
+  classes:     PropTypes.instanceOf(Object).isRequired,
   modalExit:   PropTypes.func.isRequired,
   hideModal:   PropTypes.func.isRequired,
   isOpen:      PropTypes.bool

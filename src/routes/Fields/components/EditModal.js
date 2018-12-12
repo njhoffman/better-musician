@@ -19,11 +19,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AddIcon from '@material-ui/icons/AddBox';
 
 import { EDIT_FIELD_MODAL, FIELD_VIEW_ALT } from 'constants/ui';
-import { getDefaultValues } from 'components/Field/FieldTypes';
 import { uiHideModal, uiModalExit } from 'actions/ui';
 import { updateField, addField } from 'actions/api';
 import { cancelFieldEdit } from 'routes/Fields/modules/actions';
-import { editField as editFieldSelector } from 'routes/Fields/modules/selectors'
+import { editField as editFieldSelector } from 'routes/Fields/modules/selectors';
 
 import EditFieldForm from 'components/Forms/EditField';
 import PreviewFieldForm from 'components/Forms/PreviewField';
@@ -209,7 +208,7 @@ const EditModal = ({
                 previewField: editingField.defaultValue
               }}
               {...editingField}
-              typeId={parseInt(editFormTypeId || editingField.typeId)}
+              typeId={parseInt(editFormTypeId || editingField.typeId, 10)}
               viewMode={FIELD_VIEW_ALT}
               label={editFormLabel || editingField.label}
             />
@@ -257,6 +256,7 @@ EditModal.defaultProps = {
 EditModal.propTypes = {
   isOpen       : PropTypes.bool.isRequired,
   classes      : PropTypes.instanceOf(Object).isRequired,
+  editingField : PropTypes.instanceOf(Object),
   update       : PropTypes.func.isRequired,
   add          : PropTypes.func.isRequired,
   cancel       : PropTypes.func.isRequired,

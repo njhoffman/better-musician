@@ -2,7 +2,7 @@ import { get, each, some, keys, isFunction } from 'lodash';
 import * as validators from 'validator';
 import { init as initLog } from 'shared/logger';
 
-const { debug, trace } = initLog('validator');
+const { debug } = initLog('validator');
 
 /**
  * @param {Object} fields - Form field names to validate

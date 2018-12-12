@@ -27,13 +27,15 @@
     "mocha"   : true
   },
   "globals": {
-    "__BASENAME__" : false,
-    "__DEV__"      : false,
-    "__TEST__"     : false,
-    "__PROD__"     : false,
-    "__COVERAGE__" : false,
-    "__API_URL__"  : false,
-    "__API_PATH__" : false
+    "__BASENAME__"    : false,
+    "__DEV__"         : false,
+    "__TEST__"        : false,
+    "__PROD__"        : false,
+    "__COVERAGE__"    : false,
+    "__APP_VERSION__" : false,
+    "__API_VERSION__" : false,
+    "__API_URL__"     : false,
+    "__API_PATH__"    : false
   },
   "rules": {
     "react/jsx-no-bind":                  ["warn", { "allowArrowFunctions": true, "allowBind": false, "allowFunctions": false, "ignoreRefs": false }],

@@ -1,10 +1,13 @@
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { connectRouter, routerMiddleware } from 'connected-react-router';
+import { routerMiddleware } from 'connected-react-router';
+import { createBrowserHistory } from 'history';
 import reduxFreeze from 'redux-freeze';
-// import { createLogger } from 'redux-logger';
+import { persistState } from 'redux-devtools';
+import { parse as parseQueryString } from 'query-string';
 // import generateReduxReport from 'redux-usage-report';
 
+import { persistSelector } from 'selectors/dev';
 import { DevTools } from 'components/DevTools/DevTools';
 import apiMiddleware, { actionLogger }  from 'middleware/api';
 import { init as initLog } from 'shared/logger';
@@ -13,10 +16,19 @@ import makeRootReducer from './reducers';
 const { info, debug, error } = initLog('createStore');
 
 let store;
+const history = createBrowserHistory();
+history.listen(() => {
+  history.location = {
+    ...history.location,
+    query: parseQueryString(history.location.search)
+  };
+});
 
-// make webpack config
-// https://github.com/reduxjs/redux-devtools/issues/167
-// https://medium.com/@zalmoxis/improve-your-development-workflow-with-redux-devtools-extension-f0379227ff83
+export const getDebugSessionKey = () => {
+  // By default we try to read the key from ?debug_session=<key> in the address bar
+  const matches = window.location.href.match(/[?&]debug_session=([^&#]+)\b/);
+  return (matches && matches.length > 0) ? matches[1] : null;
+};
 
 export const getStore = () => {
   if (!store) {
@@ -26,10 +38,10 @@ export const getStore = () => {
   return store;
 };
 
-export default (initialState = {}, history, devConfig) => {
+export default (initialState = {}, devConfig) => {
   if (store) {
     debug('returning store');
-    return store;
+    return { store, history };
   }
 
   if (Object.keys(initialState).length > 0) {
@@ -37,7 +49,7 @@ export default (initialState = {}, history, devConfig) => {
   }
 
   // TODO: why does thunk need to be after apimiddleware?
-  const middleware = [apiMiddleware, thunkMiddleware, actionLogger, routerMiddleware(history)];
+  const middleware = [apiMiddleware, thunkMiddleware, routerMiddleware(history), actionLogger];
 
   let composeEnhancers = compose;
   const enhancers = [];
@@ -45,6 +57,8 @@ export default (initialState = {}, history, devConfig) => {
   if (__DEV__) {
     const devExt = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
     middleware.push(reduxFreeze);
+    enhancers.push(persistState(getDebugSessionKey()));
+    enhancers.push(persistSelector);
     if (devExt && devConfig.showExtension) {
       debug('Enabling DevTools Chrome Extension');
       composeEnhancers = devExt(devConfig.extensionOptions);
@@ -55,7 +69,7 @@ export default (initialState = {}, history, devConfig) => {
   }
 
   store = createStore(
-    connectRouter(history)(makeRootReducer()),
+    makeRootReducer(history),
     composeEnhancers(
       applyMiddleware(...middleware),
       ...enhancers
@@ -74,5 +88,5 @@ export default (initialState = {}, history, devConfig) => {
   }
 
   info('created store');
-  return store;
+  return { store, history };
 };

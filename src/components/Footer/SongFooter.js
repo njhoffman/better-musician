@@ -12,14 +12,14 @@ const SongFooter = ({ classes, maxDifficulty, song }) => (
         <img
           alt='Instrument'
           className={classes.instrumentPicture}
-          src={song.instrument.primaryImage}
+          src={song.instrument && song.instrument.primaryImage}
         />
       </div>
       <div className={classes.artistPictureWrapper}>
         <img
           alt='Artist'
           className={classes.artistPicture}
-          src={song.artist.primaryImage}
+          src={song.artist && song.artist.primaryImage}
         />
       </div>
     </Column>
@@ -34,10 +34,10 @@ const SongFooter = ({ classes, maxDifficulty, song }) => (
       <Row className={classes.rightBottom}>
         <Column>
           <Typography variant='caption' className={classes.artistName}>
-            {song.artist.fullName}
+            {song.artist && song.artist.fullName}
           </Typography>
           <Typography variant='overline' className={classes.genreName} color='secondary'>
-            {song.genre.name}
+            {song.genre && song.genre.name}
           </Typography>
         </Column>
         <Column style={{ textAlign: 'center', display: 'flex-inline', maxWidth: '100px' }}>

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -84,7 +85,7 @@ const mapActionCreators = {
 const mapStateToProps = (state) => ({
   currentPage: state.SongsView.paginationCurrent,
   perPage:     state.SongsView.paginationPerPage,
-  songCount:   state.orm.Song.items.length
+  songCount:   [].concat(_.get(state, 'orm.Song.items')).length
 });
 
 const withConnect = connect(mapStateToProps, mapActionCreators);

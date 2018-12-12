@@ -18,12 +18,22 @@ export default {
     },
     MuiCardContent: {
       root: {
-        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 100%)'
+        background: [
+          'linear-gradient(135deg,',
+          'rgba(255, 255, 255, 0) 0%,',
+          'rgba(255, 255, 255, 0.05),',
+          'rgba(255, 255, 255, 0) 100%)'
+        ].join(' ')
       }
     },
     MuiExpansionPanelDetails: {
       root: {
-        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 100%)'
+        background: [
+          'linear-gradient(135deg,',
+          'rgba(255, 255, 255, 0) 0%,',
+          'rgba(255, 255, 255, 0.05),',
+          'rgba(255, 255, 255, 0) 100%)'
+        ].join(' ')
       }
     },
     MuiBackdrop: {

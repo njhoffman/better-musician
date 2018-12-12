@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import * as CONF from 'constants/config';
 import * as API from 'constants/api';
 import * as AUTH from 'constants/auth';
 
@@ -31,8 +32,7 @@ const loadApiEndpoints = (endpoints, roles = []) => {
 };
 
 const ACTION_HANDLERS = {
-
-  [API.CONFIGURE_LOAD] : (state, { payload: { endpoints } }) => ({
+  [CONF.CONFIGURE_LOAD] : (state, { payload: { endpoints } }) => ({
     ...state,
     ...loadApiEndpoints(endpoints)
   }),

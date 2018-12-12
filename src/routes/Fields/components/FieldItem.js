@@ -328,7 +328,8 @@ const FieldItem = (props) => {
 };
 
 FieldItem.defaultProps = {
-  editingTab     : null
+  editingTab     : null,
+  editingFieldId : null
 };
 
 const actionCreators = {
@@ -347,12 +348,12 @@ FieldItem.propTypes = {
     id  : PropTypes.string.isRequired,
     name : PropTypes.string.isRequired
   }),
-  field       : PropTypes.instanceOf(Object).isRequired,
-  classes     : PropTypes.instanceOf(Object).isRequired,
-  editingFieldId: PropTypes.string,
-  showEdit    : PropTypes.func.isRequired,
-  fieldDelete : PropTypes.func.isRequired,
-  showPreview : PropTypes.func.isRequired
+  field          : PropTypes.instanceOf(Object).isRequired,
+  classes        : PropTypes.instanceOf(Object).isRequired,
+  editingFieldId : PropTypes.string,
+  showEdit       : PropTypes.func.isRequired,
+  fieldDelete    : PropTypes.func.isRequired,
+  showPreview    : PropTypes.func.isRequired
 };
 export default compose(
   connect(stateProps, actionCreators),

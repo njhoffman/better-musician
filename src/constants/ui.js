@@ -1,33 +1,33 @@
-export const SNACKBAR_SHOW      = 'SNACKBAR_SHOW';
-export const SNACKBAR_HIDE      = 'SNACKBAR_HIDE';
-export const SNACKBAR_EXIT      = 'SNACKBAR_EXIT';
+export const SNACKBAR_SHOW       = 'UI_SNACKBAR_SHOW';
+export const SNACKBAR_HIDE       = 'UI_SNACKBAR_HIDE';
+export const SNACKBAR_EXIT       = 'UI_SNACKBAR_EXIT';
 
-export const DRAWER_MENU_HIDE   = 'DRAWER_MENU_HIDE';
-export const DRAWER_MENU_SHOW   = 'DRAWER_MENU_SHOW';
-export const DRAWER_MENU_TOGGLE = 'DRAWER_MENU_TOGGLE';
+export const DRAWER_MENU_HIDE    = 'UI_DRAWER_MENU_HIDE';
+export const DRAWER_MENU_SHOW    = 'UI_DRAWER_MENU_SHOW';
+export const DRAWER_MENU_TOGGLE  = 'UI_DRAWER_MENU_TOGGLE';
 
-export const MODAL_SHOW         = 'MODAL_SHOW';
-export const MODAL_HIDE         = 'MODAL_HIDE';
-export const MODAL_EXIT         = 'MODAL_EXIT';
-export const MODAL_UPDATE       = 'MODAL_UPDATE';
-export const MODAL_VARIANT_VIEW = 'MODAL_VIEW';
-export const MODAL_VARIANT_ADD  = 'MODAL_ADD';
-export const MODAL_VARIANT_EDIT = 'MODAL_EDIT';
+export const MODAL_SHOW          = 'UI_MODAL_SHOW';
+export const MODAL_HIDE          = 'UI_MODAL_HIDE';
+export const MODAL_EXIT          = 'UI_MODAL_EXIT';
+export const MODAL_UPDATE        = 'UI_MODAL_UPDATE';
+export const MODAL_VARIANT_VIEW  = 'UI_MODAL_VIEW';
+export const MODAL_VARIANT_ADD   = 'UI_MODAL_ADD';
+export const MODAL_VARIANT_EDIT  = 'UI_MODAL_EDIT';
 
-export const SONG_MODAL          = 'SONG_MODAL';
-export const FILTERS_MODAL       = 'FILTERS_MODAL';
-export const PREVIEW_FIELD_MODAL = 'PREVIEW_FIELD_MODAL';
-export const EDIT_FIELD_MODAL    = 'EDIT_FIELD_MODAL';
+export const SONG_MODAL          = 'UI_SONG_MODAL';
+export const FILTERS_MODAL       = 'UI_FILTERS_MODAL';
+export const PREVIEW_FIELD_MODAL = 'UI_PREVIEW_FIELD_MODAL';
+export const EDIT_FIELD_MODAL    = 'UI_EDIT_FIELD_MODAL';
 
-export const FIELD_VIEW     = 'FIELD_VIEW';
-export const FIELD_VIEW_ALT = 'FIELD_VIEW_ALT';
-export const FIELD_ADD      = 'FIELD_ADD';
-export const FIELD_EDIT     = 'FIELD_EDIT';
+export const FIELD_VIEW          = 'UI_FIELD_VIEW';
+export const FIELD_VIEW_ALT      = 'UI_FIELD_VIEW_ALT';
+export const FIELD_ADD           = 'UI_FIELD_ADD';
+export const FIELD_EDIT          = 'UI_FIELD_EDIT';
 
-export const INIT_VIEW_START    = 'INIT_VIEW_START';
-export const INIT_VIEW_COMPLETE = 'INIT_VIEW_COMPLETE';
-export const REFRESH_VIEW       = 'REFRESH_VIEW';
-export const WINDOW_RESIZE      = 'WINDOW_RESIZE';
+export const INIT_VIEW_START     = 'UI_INIT_VIEW_START';
+export const INIT_VIEW_COMPLETE  = 'UI_INIT_VIEW_COMPLETE';
+export const REFRESH_VIEW        = 'UI_REFRESH_VIEW';
+export const WINDOW_RESIZE       = 'UI_WINDOW_RESIZE';
 
 // auth ui
 export const HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL          = 'HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL';

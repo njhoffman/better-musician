@@ -1,4 +1,6 @@
 import _ from 'lodash';
+import { SONGS_FETCH_START } from 'constants/api';
+import { LOAD_INSTRUMENTS } from 'constants/orm';
 import BaseModel from './BaseModel';
 
 class Instrument extends BaseModel {
@@ -32,11 +34,11 @@ class Instrument extends BaseModel {
   static reducer(action, model/* , session */) {
     const { type } = action;
     switch (type) {
-      case 'SONGS_REQUEST':
+      case SONGS_FETCH_START:
         // remove all songs when fetching
         model.all().delete();
         break;
-      case 'LOAD_INSTRUMENTS':
+      case LOAD_INSTRUMENTS:
         model.loadData(action.payload, this);
         break;
       default:

@@ -26,6 +26,7 @@ export default class Button extends Component {
   render() {
     const button = (
       <ButtonWrapper
+        className={`${this.props.className} ${this.props.buttonClass}`}
         theme={this.props.theme}
         aria-label={this.props.title}
         primary={this.props.primary}

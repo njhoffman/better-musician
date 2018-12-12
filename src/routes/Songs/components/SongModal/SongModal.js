@@ -153,9 +153,9 @@ const SongEditModal = ({
         </Row>
       ))}
 
-      {tab.sortedRows.map(([...fields], rowIdx) => (
-        <FormRow key={rowIdx} className={classes.userFieldRow}>
-          {fields.map(({ id, fieldProps}) => (
+      {tab.sortedRows.map(({ idx, fields }) => (
+        <FormRow key={idx} className={classes.userFieldRow}>
+          {fields.map(({ id, fieldProps }) => (
             <FormField
               key={id}
               mode={fieldMode(variant, fieldView)}

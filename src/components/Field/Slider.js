@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FormControl, Typography, withStyles } from '@material-ui/core';
+import { FormControl, FormLabel, withStyles } from '@material-ui/core';
 import MaterialSlider from '@material-ui/lab/Slider';
 
 import { FIELD_VIEW, FIELD_VIEW_ALT, FIELD_EDIT } from 'constants/ui';
@@ -30,7 +30,7 @@ const styles = (theme) => ({
   outlined: {
     border: 'solid 1px rgba(255, 255, 255, 0.23)',
     borderRadius: '5px',
-    padding: '10px'
+    padding: '10px !important'
   },
   root: {
     padding: '8px 0px',
@@ -40,6 +40,8 @@ const styles = (theme) => ({
   },
   fullWidth: {
     width: '100%'
+  },
+  labelWrapper: {
   },
   label: {
     display: 'inline-block',
@@ -101,14 +103,14 @@ const createSlider = (SliderComponent) => (
           component='fieldset'
           fullWidth={fullWidth}
           className={`${classes.root} ${mode === FIELD_VIEW_ALT ? classes.outlined : ''}`}>
-          <Typography>
-            <div className={`${classes.label} ${classes.left}`}>
+          <div className={classes.labelWrapper}>
+            <FormLabel className={`${classes.label} ${classes.left}`}>
               {label}
-            </div>
-            <div className={`${classes.label} ${classes.right}`}>
+            </FormLabel>
+            <FormLabel className={`${classes.label} ${classes.right}`}>
               { valueDisplay(currValue) }
-            </div>
-          </Typography>
+            </FormLabel>
+          </div>
           <SliderComponent
             classes={{ container: classes.slider }}
             disabled={mode !== FIELD_EDIT}

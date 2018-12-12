@@ -185,8 +185,7 @@ const renderButton = ({
   );
 };
 
-const renderLinkButton = ({
-  link,
+const renderLinkButton = (link, {
   classes,
   ...props
 }) => (
@@ -200,7 +199,7 @@ const Button = ({
   ...props
 }) => (
   <Fragment>
-    {link && renderLinkButton({ ...props, link })}
+    {link && renderLinkButton(link, { ...props })}
     {!link && renderButton({ ...props })}
   </Fragment>
 );
@@ -232,6 +231,7 @@ Button.defaultProps = {
   // icon: ActionFavorite,
   loading     : false,
   disabled    : false,
+  baseClasses : {},
   className   : '',
   variant     : 'contained',
   spinnerType : 'ring',

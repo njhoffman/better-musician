@@ -1,10 +1,17 @@
+import _ from 'lodash';
 import * as UI from 'constants/ui';
 import { injectReducer } from 'store/reducers';
+
+import {
+  authenticatedSets,
+  notAuthenticatedSets,
+  commonSets,
+  viewSets
+} from 'store/actionSets';
 
 export const uiHideDrawerMenu = () => ({ type: UI.DRAWER_MENU_HIDE });
 export const uiShowDrawerMenu = () => ({ type: UI.DRAWER_MENU_SHOW });
 export const uiToggleDrawerMenu = () => ({ type: UI.DRAWER_MENU_TOGGLE });
-
 export const uiSnackbarExit = (moreMessage) => ({ type: UI.SNACKBAR_EXIT });
 export const uiHideSnackbar = () => ({ type: UI.SNACKBAR_HIDE });
 export const uiShowSnackbar = (message, variant, title, styleVariant) => (dispatch) => {
@@ -46,20 +53,28 @@ export const uiWindowResize = (clientInfo) => (dispatch) => {
   });
 };
 
-export const initView = (store, history, route) => {
-  store.dispatch({ type: UI.INIT_VIEW_START, payload: route });
+export const initViewStart = ({ routeName, store, history }) => {
+  store.dispatch({ type: UI.INIT_VIEW_START, payload: routeName });
+
+  /* eslint-disable global-require, import/no-dynamic-require */
   injectReducer({
-    key: `${route}View`,
-    /* eslint-disable global-require, import/no-dynamic-require */
-    reducer: require(`routes/${route}/modules/reducer`).default,
-    /* eslint-enable global-require, import/no-dynamic-require */
+    key: `${routeName}View`,
+    reducer: require(`routes/${routeName}/modules/reducer`).default,
     store,
     history
   });
-  store.dispatch({
+  /* eslint-enable global-require, import/no-dynamic-require */
+};
+
+export const initViewComplete = ({ routeName, pathname, isAuthenticated, dispatch }) => {
+  const actionSets = {
+    common: _.merge(commonSets, (isAuthenticated ? authenticatedSets : notAuthenticatedSets)),
+    view:  viewSets[`${routeName}ViewSets`]
+  };
+  dispatch({
     type: UI.INIT_VIEW_COMPLETE,
-    payload: route,
-    meta: { pathname: history.location.pathname }
+    payload: routeName,
+    meta: { pathname, actionSets }
   });
 };
 

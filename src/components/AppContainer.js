@@ -1,17 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import { withStyles } from '@material-ui/core';
 import { withRouter } from 'react-router';
 import { Row } from 'react-foundation';
 
 import 'coreStyles';
-import Routes from 'routes';
+import Routes from 'routes/Routes';
 import Header from 'components/Header/Header';
 import DevToolbar from 'components/DevTools/Toolbar';
 import Footer from 'components/Footer/Footer';
 import DrawerMenu from 'components/DrawerMenu/DrawerMenu';
 import Snackbar from 'components/Snackbar/Snackbar';
+import ErrorBoundary from 'components/ErrorBoundaries/Main';
+import { onError } from 'utils/app';
 
 // import { init as initLog } from 'shared/logger';
 // const { info } = initLog('AppContainer');
@@ -51,17 +54,6 @@ const styles = (theme) => ({
     width: '100%',
     justifyContent: 'center'
   },
-  // contentContainer: {
-  //   margin: '0px',
-  //   // maxHeight: `calc(100vh - ${theme.app.headerHeight})`,
-  //   // maxHeight: `calc(100vh - ${theme.app.headerHeight} - ${theme.app.footerHeight})`,
-  //   [theme.breakpoints.up('md')]: {
-  //     margin: '30px 5px'
-  //   },
-  //   [theme.breakpoints.up('sm')]: {
-  //     margin: '10px 5px'
-  //   }
-  // },
   footerFiller: {
     flexGrow: 1,
     background: theme.app.footerFiller
@@ -75,23 +67,25 @@ const AppContainer = ({
   store,
   ...props
 }) => (
-  <div className={appWrapper}>
-    <Snackbar disableWindowBlurListener={false} />
-    <DrawerMenu />
-    <Header />
-    <Row horizontalAlignment='center' className={`${contentWrapper} ${currentView}`}>
-      <div className={contentContainer}>
-        <Routes
-          store={store}
-          history={history}
-          contentClass={contentContainer}
-        />
+  <ErrorBoundary onError={onError}>
+    <div className={appWrapper}>
+      <Snackbar disableWindowBlurListener={false} />
+      <DrawerMenu />
+      <Header />
+      <Row horizontalAlignment='center' className={`${contentWrapper} ${currentView}`}>
+        <DevToolbar />
+        <div className={contentContainer}>
+          <Routes
+            store={store}
+            history={history}
+            contentClass={contentContainer}
+          />
         </div>
-    </Row>
-    <DevToolbar />
-    <Footer />
-    <div className={footerFiller} />
-  </div>
+      </Row>
+      <Footer />
+      <div className={footerFiller} />
+    </div>
+  </ErrorBoundary>
 );
 
 AppContainer.defaultProps = {
@@ -109,11 +103,8 @@ const mapStateToProps = (state) => ({
   currentView: state.ui.currentView
 });
 
-export default
-withRouter(
-  connect(mapStateToProps)(
-    withStyles(styles)(
-      AppContainer
-    )
-  )
-);
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+  withStyles(styles),
+)(AppContainer);

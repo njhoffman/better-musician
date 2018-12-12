@@ -13,10 +13,9 @@ import { Column } from 'react-foundation';
 import RadioButtonGroup from 'components/Field/RadioButtonGroup';
 import { changeViewMode } from 'routes/Fields/modules/actions';
 
-import { getDefaultValues } from 'components/Field/FieldTypes';
 import { PREVIEW_FIELD_MODAL, FIELD_VIEW, FIELD_EDIT, FIELD_VIEW_ALT } from 'constants/ui';
 import PreviewFieldForm from 'components/Forms/PreviewField';
-import { previewField as previewFieldSelector } from 'routes/Fields/modules/selectors'
+import { previewField as previewFieldSelector } from 'routes/Fields/modules/selectors';
 import { uiHideModal, uiModalExit } from 'actions/ui';
 // import ActionButtons from './ActionButtons';
 
@@ -82,58 +81,56 @@ const PreviewFieldModal = ({
   changeView,
   modalExit,
   viewMode
-}) => {
-  console.info('PREVIEW FIELD', previewField);
-  return (
-    <Dialog
-      onExited={modalExit}
-      open={isOpen}
-      classes={{ paper: `${classes.dialogPaper}` }}>
-      <DialogTitle className={classes.dialogTitle}>
-        <Typography variant='h6'>
-          {`${previewField.typeLabel} Preview`}
-        </Typography>
-      </DialogTitle>
-      <DialogContent className={classes.dialogContent}>
-        <RadioButtonGroup
-          row
-          value={viewMode}
-          onChange={(e) => changeView(e.target.value)}
-          options={{
-            FIELD_EDIT:     'Edit Mode',
-            FIELD_VIEW:     'View Mode',
-            FIELD_VIEW_ALT: 'View Mode #2'
-          }}
-        />
-      </DialogContent>
-      <DialogContent className={classes.dialogContent}>
-        <Card className={classes.card}>
-          <CardContent>
-            <PreviewFieldForm
-              viewMode={viewMode}
-              initialValues={{ previewField: previewField.defaultValue }}
-              {...previewField}
-            />
-          </CardContent>
-        </Card>
-      </DialogContent>
-      <DialogActions>
-        <Column className={classes.center}>
-          <Divider className={classes.divider} />
-          <Button
-            variant='contained'
-            color='primary'
-            onClick={() => hideModal()}>
-            Close
-          </Button>
-        </Column>
-      </DialogActions>
-    </Dialog>
-  );
-};
+}) => (
+  <Dialog
+    onExited={modalExit}
+    open={isOpen}
+    classes={{ paper: `${classes.dialogPaper}` }}>
+    <DialogTitle className={classes.dialogTitle}>
+      <Typography variant='h6'>
+        {`${previewField.typeLabel} Preview`}
+      </Typography>
+    </DialogTitle>
+    <DialogContent className={classes.dialogContent}>
+      <RadioButtonGroup
+        row
+        value={viewMode}
+        onChange={(e) => changeView(e.target.value)}
+        options={{
+          FIELD_EDIT:     'Edit Mode',
+          FIELD_VIEW:     'View Mode',
+          FIELD_VIEW_ALT: 'View Mode #2'
+        }}
+      />
+    </DialogContent>
+    <DialogContent className={classes.dialogContent}>
+      <Card className={classes.card}>
+        <CardContent>
+          <PreviewFieldForm
+            viewMode={viewMode}
+            initialValues={{ previewField: previewField.defaultValue }}
+            {...previewField}
+          />
+        </CardContent>
+      </Card>
+    </DialogContent>
+    <DialogActions>
+      <Column className={classes.center}>
+        <Divider className={classes.divider} />
+        <Button
+          variant='contained'
+          color='primary'
+          onClick={() => hideModal()}>
+          Close
+        </Button>
+      </Column>
+    </DialogActions>
+  </Dialog>
+);
 
 PreviewFieldModal.defaultProps = {
-  viewMode: FIELD_EDIT
+  viewMode: FIELD_EDIT,
+  typeLabel: ''
 };
 
 PreviewFieldModal.propTypes = {

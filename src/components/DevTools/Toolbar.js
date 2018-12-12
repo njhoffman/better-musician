@@ -3,29 +3,31 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import shouldPureComponentUpdate from 'react-pure-render/function';
-import * as themes from 'redux-devtools-themes';
-import Button from './Button';
 import { Divider, withStyles } from '@material-ui/core';
+import * as themes from 'redux-devtools-themes';
 
-
+import { commonActionSetsSelector, viewActionSetsSelector } from 'selectors/dev';
 import { init as initLog } from 'shared/logger';
+import Button from './Button';
 
 const { info, warn } = initLog('custom-launcher');
 
 const styles = (theme) => ({
   container: {
+    left: 0,
     fontFamily: 'monaco, Consolas, Lucida Console, monospace',
     fontSize: '0.8em',
-    position: 'relative',
     overflowY: 'hidden',
     direction: 'ltr',
     color: 'white',
     padding: '5px',
     backgroundColor: '#000',
-    opacity: 0.7,
+    opacity: 0.9,
     top: '100px',
     position: 'absolute',
-    width: '100px',
+    minWidth: '150px',
+    maxWidth: '200px',
+    zIndex: 9999
   },
   elements: {
     display: 'flex',
@@ -43,8 +45,14 @@ const styles = (theme) => ({
   },
   buttonWrapper: {
     display: 'block',
-    width: '100%',
-    margin: '5px'
+    margin: '5px',
+    width: '100%'
+  },
+  wrapperEnabled: {},
+  button: { },
+  buttonEnabled: {
+    color: 'white',
+    background: '#229966'
   }
 });
 
@@ -52,12 +60,17 @@ class Toolbar extends Component {
   static defaultProps = {
     devConfig: {
       showChart: false
-    }
+    },
+    commonSets: null,
+    viewSets: null
   };
 
   static propTypes = {
     classes: PropTypes.instanceOf(Object).isRequired,
+    appConfig: PropTypes.instanceOf(Object).isRequired,
     devConfig: PropTypes.instanceOf(Object),
+    commonSets: PropTypes.instanceOf(Object),
+    viewSets: PropTypes.instanceOf(Object),
     theme: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.string
@@ -114,29 +127,45 @@ class Toolbar extends Component {
 
   render() {
     const theme = this.getTheme();
-    const { appConfig, classes: { container, buttonWrapper, elements } } = this.props;
+    const {
+      viewSets,
+      commonSets,
+      appConfig: { appVersion },
+      classes: { container, buttonWrapper, wrapperEnabled, button, buttonEnabled, elements }
+    } = this.props;
 
-    const winOptions =  {
-      menubar:    'no',
-      location:   'no',
-      resizable:  'yes',
-      scrollbars: 'no',
-      statusbar:  'no',
-      toolbar:    'no',
-      width:      1000,
-      height:     1200,
-      left:       3500,
-      top:        50,
-      margin:     0
-    };
+    const { showChart } = this.state;
 
+    if (showChart) {
+      // const winOptions =  {
+      //   menubar: 'no', location: 'no', resizable:  'yes', scrollbars: 'no', statusbar: 'no', toolbar: 'no',
+      //   width: 1000, height: 1200, left: 3500, top: 50, margin: 0
+      // };
+      //
+      warn('Trying to show chart but it is disabled');
+    }
+
+    const getClass = (hasSets) => ({
+      wrapper: `${hasSets ? wrapperEnabled : ''} ${buttonWrapper}`,
+      button: `${hasSets ? buttonEnabled : ''} ${button}`
+    });
     return (
       <div className={container}>
         <div className={elements} ref={this.getRef}>
-          <div>v{appConfig.appVersion}</div>
+          <div>{`v${appVersion}`}</div>
           <Divider />
-          <Button wrapperClass={buttonWrapper} theme={theme}>
-            Actions
+          <Button
+            buttonClass={getClass(commonSets).button}
+            wrapperClass={getClass(commonSets).wrapper}
+            theme={theme}>
+           Global Action Sets
+          </Button>
+          <Divider />
+          <Button
+            buttonClass={getClass(viewSets).button}
+            wrapperClass={getClass(viewSets).wrapper}
+            theme={theme}>
+           LoginView Action Sets
           </Button>
           <Divider />
           <Button wrapperClass={buttonWrapper} theme={theme}>
@@ -149,6 +178,9 @@ class Toolbar extends Component {
 }
 
 const stateProps = (state) => ({
-  appConfig: _.get(state, 'config.app')
+  appConfig  : _.get(state, 'config.app'),
+  commonSets : commonActionSetsSelector(state),
+  viewSets   : viewActionSetsSelector(state),
+
 });
 export default connect(stateProps)(withStyles(styles)(Toolbar));

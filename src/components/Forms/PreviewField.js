@@ -1,8 +1,7 @@
-import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'recompose';
-import { reduxForm, formValues } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import FormField, { FormRow } from 'components/Field';
 
@@ -15,8 +14,8 @@ const PreviewFieldForm = ({
     <FormRow>
       <FormField
         name='previewField'
-        preview={true}
         mode={viewMode}
+        preview
         centerOnSmall
         {...props}
       />
@@ -25,6 +24,7 @@ const PreviewFieldForm = ({
 );
 
 PreviewFieldForm.defaultProps = {
+  options: null
 };
 
 PreviewFieldForm.propTypes = {

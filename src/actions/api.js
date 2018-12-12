@@ -2,6 +2,8 @@ import _ from 'lodash';
 import { CALL_API } from 'middleware/api';
 import { init as initLog } from 'shared/logger';
 import { reset, initialize } from 'redux-form';
+import * as ORM from 'constants/orm';
+import * as CONF from 'constants/config';
 import * as API from 'constants/api';
 import * as UI from 'constants/ui';
 // import { setCurrentSong } from 'routes/Songs/modules/reducer';
@@ -9,12 +11,12 @@ import * as UI from 'constants/ui';
 const { info, warn } = initLog('api-actions');
 
 export const configureLoad = (payload) => ({
-  type: API.CONFIGURE_LOAD, payload
+  type: CONF.CONFIGURE_LOAD, payload
 });
 
-export const configureStart = () => ({ type: API.CONFIGURE_START });
+export const configureStart = () => ({ type: CONF.CONFIGURE_START });
 export const configureComplete = (config) => ({
-  type: API.CONFIGURE_COMPLETE,
+  type: CONF.CONFIGURE_COMPLETE,
   payload: config
 });
 
@@ -52,7 +54,7 @@ export const deleteSong = (songId) => (dispatch, getState) =>
 export const songsAddComplete = ({ records, changed }) => (dispatch) => {
   dispatch({ type: UI.MODAL_HIDE, meta: { type: UI.SONG_MODAL } });
   dispatch({ type: API.SONGS_ADD_COMPLETE, payload: records[0] });
-  dispatch({ type: API.ADD_SONG, payload: records[0] });
+  dispatch({ type: ORM.ADD_SONG, payload: records[0] });
   dispatch({
     type: UI.SNACKBAR_SHOW,
     payload: `"${records[0].title}" added.`,
@@ -93,7 +95,7 @@ export const songsUpdateComplete = ({ records, changed }) => (dispatch) => {
   const changedLength = _.reject(changed[0].delta, ['path[0]', 'updatedAt']).length;
   dispatch({ type: UI.MODAL_HIDE, meta: { type: UI.SONG_MODAL } });
   dispatch({ type: API.SONGS_UPDATE_COMPLETE, payload: records[0] });
-  dispatch({ type: API.UPDATE_SONG, payload: records[0] });
+  dispatch({ type: ORM.UPDATE_SONG, payload: records[0] });
   dispatch({
     type: UI.SNACKBAR_SHOW,
     payload: `Song updated with ${changedLength} fields.`,
@@ -137,12 +139,12 @@ export const songsFetchComplete = (data) => (dispatch) => {
 
   /* eslint-disable no-multi-spaces */
   dispatch({ type: API.SONGS_FETCH_COMPLETE, payload: tables });
-  dispatch({ type: API.LOAD_ARTISTS,         payload: tables.artists });
-  dispatch({ type: API.LOAD_INSTRUMENTS,     payload: tables.instruments });
-  dispatch({ type: API.LOAD_GENRES,          payload: tables.genres });
-  dispatch({ type: API.LOAD_FIELDS,          payload: tables.fields });
-  dispatch({ type: API.LOAD_FIELD_TABS,      payload: tables.fieldTabs });
-  dispatch({ type: API.LOAD_SONGS,           payload: tables.songs });
+  dispatch({ type: ORM.LOAD_ARTISTS,         payload: tables.artists });
+  dispatch({ type: ORM.LOAD_INSTRUMENTS,     payload: tables.instruments });
+  dispatch({ type: ORM.LOAD_GENRES,          payload: tables.genres });
+  dispatch({ type: ORM.LOAD_FIELDS,          payload: tables.fields });
+  dispatch({ type: ORM.LOAD_FIELD_TABS,      payload: tables.fieldTabs });
+  dispatch({ type: ORM.LOAD_SONGS,           payload: tables.songs });
   /* eslint-enable no-multi-spaces */
 };
 
@@ -163,7 +165,7 @@ export const fetchSongs = ({ dispatch }) => (
 
 export const artistsFetchComplete = ({ tables }) => (dispatch) => {
   info(`artistsFetchComplete: ${tables.artists.length} artists`);
-  dispatch({ type: API.LOAD_ARTISTS, payload: tables.artists });
+  dispatch({ type: ORM.LOAD_ARTISTS, payload: tables.artists });
 };
 
 export const fetchArtists = ({ dispatch, getState }) => {
@@ -247,7 +249,6 @@ export const updateSettings = () => (dispatch, getState) => {
 
 /* fields */
 export const fieldUpdateComplete = ({ records, changed }) => (dispatch, getState) => {
-  dispatch(cancelEdit());
   dispatch({ type: API.FIELDS_UPDATE_COMPLETE, payload: records[0] });
   dispatch({
     type: UI.SNACKBAR_SHOW,
@@ -310,4 +311,3 @@ export const deleteField = (fieldId) => (dispatch, getState) =>
       payload: { id: fieldId }
     }
   });
-

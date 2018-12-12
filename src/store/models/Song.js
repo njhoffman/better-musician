@@ -1,12 +1,7 @@
 import { uniq } from 'lodash';
 import { fk } from 'redux-orm';
-import {
-  ADD_SONG,
-  UPDATE_SONG,
-  SONGS_FETCH_START,
-  LOAD_SONGS,
-  SONGS_DELETE_COMPLETE
-} from 'constants/api';
+import { SONGS_FETCH_START, SONGS_DELETE_COMPLETE } from 'constants/api';
+import { LOAD_SONGS, ADD_SONG, UPDATE_SONG, } from 'constants/orm';
 import BaseModel from './BaseModel';
 
 
@@ -34,9 +29,10 @@ class Song extends BaseModel {
   static getStats() {
     const songs = this.all().toModelArray();
     const artists = uniq(songs.map(song => song.artist.fullName));
-    const genres = uniq(songs.map(song =>
+    const genres = uniq(songs.map(song => (
       // TODO: investigate whhy navigating through time quickly this can throw bc song is undefined
-      song.genre.name));
+      song.genre && song.genre.name
+    )));
 
     return {
       songCount: this.count(),

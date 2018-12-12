@@ -25,14 +25,13 @@ const userTabsSelector = ormCreateSelector(orm, (session, currentSong) => {
       id,
       ...props
     }) => ({
-        name,
-        id,
-        fields: fields.toModelArray(),
-        sortedFields,
-        sortedRows,
-        ...props
-      })
-    );
+      name,
+      id,
+      fields: fields.toModelArray(),
+      sortedFields,
+      sortedRows,
+      ...props
+    }));
 
   // add primary tab
   tabs.unshift({
@@ -44,7 +43,6 @@ const userTabsSelector = ormCreateSelector(orm, (session, currentSong) => {
     .map((tab, tabIdx) => ({
       ...tab, tabIdx
     }));
-
 });
 //
 
@@ -54,11 +52,11 @@ export const userTabs = createSelector(
   userTabsSelector
 );
 
-const previewFieldSelector = ormCreateSelector(orm, (session, id) => {
-  return session.Field.idExists(id)
+const previewFieldSelector = ormCreateSelector(orm, (session, id) => (
+  session.Field.idExists(id)
     ? session.Field.get({ id })
-    : {};
-});
+    : {}
+));
 
 export const previewField = createSelector(
   ormSelector,
@@ -66,11 +64,11 @@ export const previewField = createSelector(
   previewFieldSelector
 );
 
-const editFieldSelector = ormCreateSelector(orm, (session, id) => {
-  return session.Field.idExists(id)
+const editFieldSelector = ormCreateSelector(orm, (session, id) => (
+  session.Field.idExists(id)
     ? session.Field.get({ id })
-    : {};
-});
+    : {}
+));
 
 export const editField = createSelector(
   ormSelector,

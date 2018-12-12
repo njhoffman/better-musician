@@ -1,6 +1,6 @@
-import { sortBy, sumBy } from 'lodash';
-import BaseModel from './BaseModel';
+import { sortBy, sumBy, filter } from 'lodash';
 import { many } from 'redux-orm';
+import BaseModel from './BaseModel';
 
 class FieldTab extends BaseModel {
   static reducer(action, model /* , session */) {
@@ -34,33 +34,37 @@ class FieldTab extends BaseModel {
 
   get sortedRows() {
     // TODO: come up with something cooler than this you poor tired bastard
-    const sorted = [];
+    const sortedRows = [];
     const currRow = [];
     this.sortedFields.forEach(field => {
       const { fieldTypeProps: { rowDivisor } } = field;
       if (rowDivisor === 3) {
-        sorted.push([...currRow], [field])
+        sortedRows.push([...currRow], [field]);
         currRow.splice(0);
       } else if (rowDivisor === 2) {
-        if (currRow.length === 0){
+        if (currRow.length === 0) {
           currRow.push(field);
         } else if (currRow.length === 1) {
           currRow.push(field);
-          sorted.push([...currRow]);
+          sortedRows.push([...currRow]);
           currRow.splice(0);
         } else {
-          sorted.push([...currRow], [field])
+          sortedRows.push([...currRow], [field]);
           currRow.splice(0);
         }
       } else {
         currRow.push(field);
         if (sumBy(currRow, 'width') === 3) {
-          sorted.push([...currRow]);
+          sortedRows.push([...currRow]);
           currRow.splice(0);
         }
       }
-    })
-    return _.filter(sorted, (f) => f.length > 0)
+    });
+    return filter(sortedRows, sortedRow => sortedRow.length > 0)
+      .map((sortedRow, idx) => ({
+        idx,
+        fields: [...sortedRow],
+      }));
   }
 
   get sortedFields() {

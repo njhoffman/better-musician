@@ -15,13 +15,6 @@ import { uiShowSnackbar } from 'actions/ui';
 import { fetchSongs } from 'actions/api';
 import { authenticateComplete, storeCurrentEndpointKey } from 'actions/auth';
 
-export const emailSignInFormUpdate = (endpoint, key, value) => ({
-  type: AUTH.EMAIL_SIGN_IN_FORM_UPDATE,
-  endpoint,
-  key,
-  value
-});
-
 export const emailSignInComplete = (endpoint, { records, changes }) => (dispatch, getState) => {
   const { config: { endpoints } } = getState();
   dispatch(uiShowSnackbar('You are now signed in.', 'success', 'Success'));

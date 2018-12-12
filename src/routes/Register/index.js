@@ -1,9 +1,1 @@
-/* eslint-disable */
-import Loadable from 'react-loadable';
-import LoadingIndicator from '../../components/LoadingIndicator';
-
-export default Loadable({
-  loader: () => import('./components/RegisterView'),
-  loading: LoadingIndicator
-});
-/* eslint-enable */
+export { default } from './components/RegisterView';

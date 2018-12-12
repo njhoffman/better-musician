@@ -77,7 +77,7 @@ const updateModal = (state, { payload, meta: { variant, ...meta } }) => ({
   }
 });
 
-const showModal = (state, { payload, meta: { variant, ...meta} }) => ({
+const showModal = (state, { payload, meta: { variant, ...meta } }) => ({
   ...state,
   modal: {
     ...state.modal,
@@ -101,31 +101,28 @@ const modalExit = (state) => ({
   modal: { ...initialState.modal }
 });
 
-const initViewStart = (state, { payload: route }) =>
-  ({ ...state, initializing: route });
+const initViewStart = (state, { payload: routeName }) => ({ ...state, initializing: routeName });
 
 const initViewComplete = (state, {
-  payload: route,
-  meta: { pathname }
+  payload: routeName,
+  meta: { actionSets, pathname }
 }) => ({
   ...state,
-  initializing: null,
-  currentView: route,
-  initializedViews: _.uniqBy([
-    ...state.initializedViews,
-    { route, pathname }
-  ], 'pathname')
+  initializing     : null,
+  currentView      : routeName,
+  viewActionSets   : actionSets.view,
+  commonActionSets : actionSets.common,
+  initializedViews : _.uniqBy([...state.initializedViews, { pathname, routeName }]),
 });
 
 
-const locationChangeView = (state, { payload: { pathname } }) => {
-  const { info } = initLog('ui-reducer');
-
-  const pathBase = pathname.split('?')[0];
+const locationChangeView = (state, { payload: { location } }) => {
+  const { info, debug } = initLog('ui-reducer');
+  const pathBase = location.pathname.split('?')[0];
   const view = _.find(state.initializedViews, { pathname: pathBase });
   if (view) {
-    info(`Refreshing View "${view.route}", Route: ${view.pathname}`);
-    return { ...state, currentView: view.route };
+    debug(`Refreshing View "${view.routeName}", Route: ${view.pathname}`);
+    return { ...state, currentView: view.routeName };
   }
   info(`Initializing Route: ${pathBase}`);
   return { ...state, currentView: null };

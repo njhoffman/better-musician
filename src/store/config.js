@@ -1,5 +1,5 @@
+import * as CONF from 'constants/config';
 import * as AUTH from 'constants/auth';
-import * as API from 'constants/api';
 import * as UI from 'constants/ui';
 
 const initialState = {
@@ -42,20 +42,20 @@ const configureLoad = (state, { payload: { devConfig, endpoints, clientInfo, app
 
 
 const ACTION_HANDLERS = {
-  [API.CONFIGURE_START]: (state, action) => ({
+  [CONF.CONFIGURE_START]: (state, action) => ({
     ...state,
     loading: true,
     auth: { ...state.auth, loading: true },
   }),
 
-  [API.CONFIGURE_LOAD]: configureLoad,
-  [API.CONFIGURE_COMPLETE]: (state, { payload }) => ({
+  [CONF.CONFIGURE_LOAD]: configureLoad,
+  [CONF.CONFIGURE_COMPLETE]: (state, { payload }) => ({
     ...state,
     loading: false,
     auth: { ...state.auth, loading: false, errors: null }
   }),
 
-  [API.CONFIGURE_ERROR]: (state, { errors }) => ({
+  [CONF.CONFIGURE_ERROR]: (state, { errors }) => ({
     ...state,
     auth: { ...state.auth, loading: false, errors },
     dev: { ...state.dev, loading: false, errors }

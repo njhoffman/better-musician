@@ -60,6 +60,7 @@ export default {
     extensionOptions: {
       name: 'better-musician',
       theme: 'twilight',
+      maxAge: 100,
       styles: {
         container: {
           backgroundColor: 'rgb(0, 11, 21)',

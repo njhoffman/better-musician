@@ -1,23 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ConnectedRouter } from 'react-router-redux';
+import { ConnectedRouter } from 'connected-react-router';
 import { Provider } from 'react-redux';
-import { createBrowserHistory } from 'history';
 import { MuiThemeProvider } from '@material-ui/core';
+
 import processThemes from 'styles/themes';
-import appConfig from 'config';
 import { configureStart, configureComplete } from 'actions/api';
+import appConfig from 'config';
 import loadConfiguration from 'utils/configure';
 import createStore from 'store/createStore';
-import { startMemoryStats, domStats, onError } from 'utils/app';
+import { startMemoryStats, domStats } from 'utils/app';
 import { init as initLog } from 'shared/logger';
-import ErrorBoundary from 'components/ErrorBoundaries/Main';
 import devTools from 'components/DevTools/DevTools';
 
-const { info, debug, error } = initLog('app');
+const { info, debug } = initLog('app');
 const initialState = window.__INITIAL_STATE__;
-const history = createBrowserHistory();
-const store = createStore(initialState, history, appConfig.dev);
+const { store, history } = createStore(initialState, appConfig.dev);
 
 const MOUNT_NODE = document.getElementById('root');
 
@@ -34,16 +32,12 @@ const render = (Component) => {
   const devConfig = store.getState().config.dev;
   ReactDOM.render(
     <Provider store={store}>
-      <ErrorBoundary onError={onError}>
-        <ErrorBoundary onError={onError}>
-          <MuiThemeProvider theme={theme}>
-            <ConnectedRouter history={history}>
-              <Component history={history} store={store} />
-            </ConnectedRouter>
-          </MuiThemeProvider>
-        </ErrorBoundary>
+      <MuiThemeProvider theme={theme}>
+        <ConnectedRouter history={history}>
+          <Component history={history} store={store} />
+        </ConnectedRouter>
         {devConfig.showInspector && devTools(devConfig)}
-      </ErrorBoundary>
+      </MuiThemeProvider>
     </Provider>,
     MOUNT_NODE
   );
@@ -70,7 +64,9 @@ if (__DEV__) {
   if (module.hot) {
     // reload components
     module.hot.accept(['components/AppContainer'], (() => {
-      // console.clear();
+      /* eslint-disable no-console */
+      console.clear();
+      /* eslint-enable no-console */
       info('HMR reloading ...');
       ReactDOM.unmountComponentAtNode(MOUNT_NODE);
       renderDev();

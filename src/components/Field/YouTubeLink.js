@@ -10,7 +10,7 @@ import {
   withStyles
 } from '@material-ui/core';
 
-import { FIELD_VIEW, FIELD_VIEW_ALT, FIELD_EDIT } from 'constants/ui';
+import { FIELD_VIEW, FIELD_VIEW_ALT } from 'constants/ui';
 import { ConnectedTextbox } from './Textbox';
 
 const styles = (theme) => ({
@@ -93,9 +93,9 @@ const createYouTubeLink = (TextComponent) => (
           <FormLabel component='legend'>{label}</FormLabel>
           <Row className={classes.inputRow}>
             <Column small={12} className={classes.prefixWrapper}>
-                <InputLabel className={classes.prefix}>
-                  http://www.youtube.com/embed/
-                </InputLabel>
+              <InputLabel className={classes.prefix}>
+                http://www.youtube.com/embed/
+              </InputLabel>
               <TextComponent
                 name={input.name}
                 className={classes.input}
@@ -127,4 +127,5 @@ const createYouTubeLink = (TextComponent) => (
 
 const ConnectedYouTubeLink = withStyles(styles)(createYouTubeLink(ConnectedTextbox));
 const YouTubeLink = withStyles(styles)(createYouTubeLink(MaterialTextField));
-export { YouTubeLink as default, ConnectedYouTubeLink }
+
+export { YouTubeLink as default, ConnectedYouTubeLink };

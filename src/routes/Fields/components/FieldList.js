@@ -28,7 +28,6 @@ import {
   showEditFieldModal,
   selectTab,
   editTab,
-  cancelFieldEdit,
   cancelTabEdit
 } from 'routes/Fields/modules/actions';
 import { userTabs as userTabsSelector } from 'routes/Fields/modules/selectors';
@@ -273,25 +272,17 @@ const FieldList = (props) => {
     selectedTab,
     tabSelect,
     tabEdit,
-    fieldEdit,
     fieldDelete,
     cancelTab,
-    cancelField,
     showPreview,
     showEdit,
     userTabs,
     classes
   } = props;
 
-  console.info('selected', selectedTab);
   const editingId = _.get(editingTab, 'id');
   const selectedId = _.get(selectedTab, 'id');
   const editFieldId = _.get(editingField, 'id');
-
-  const handleEditFieldClick = (fields) => (e) => {
-    e.stopPropagation();
-    return (fields.id === editFieldId ? cancelField() : fieldEdit(fields));
-  };
 
   const handleEditTabClick = (tab) => (e) => {
     e.stopPropagation();
@@ -498,7 +489,6 @@ FieldList.defaultProps = {
 const actionCreators = {
   tabEdit     : editTab,
   cancelTab   : cancelTabEdit,
-  cancelField : cancelFieldEdit,
   tabSelect   : selectTab,
   fieldDelete : deleteField,
   showPreview : showPreviewFieldModal,
@@ -534,8 +524,7 @@ FieldList.propTypes = {
   showEdit    : PropTypes.func.isRequired,
   fieldDelete : PropTypes.func.isRequired,
   showPreview : PropTypes.func.isRequired,
-  cancelTab   : PropTypes.func.isRequired,
-  cancelField : PropTypes.func.isRequired
+  cancelTab   : PropTypes.func.isRequired
 };
 export default compose(
   connect(stateProps, actionCreators),

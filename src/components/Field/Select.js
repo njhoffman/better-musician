@@ -8,10 +8,9 @@ import {
   FormHelperText,
   MenuItem,
   Typography,
-  TextField,
   withStyles
 } from '@material-ui/core';
-import { FIELD_EDIT, FIELD_VIEW, FIELD_VIEW_ALT } from 'constants/ui';
+import { FIELD_EDIT, FIELD_VIEW_ALT } from 'constants/ui';
 import createComponent from './createFormField';
 import mapError from './mapError';
 
