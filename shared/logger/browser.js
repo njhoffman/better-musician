@@ -7,7 +7,7 @@ const beautifiers = require('./browser.beautifiers');
 pjson.init({ browser: true, showEmpty: false });
 const subsystems = ['hot-module'];
 const lineLimit = 170;
-const logDelay = 1000;
+const logDelay = 100;
 
 /* eslint-disable no-console */
 const consoleLog = console.log;

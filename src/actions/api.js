@@ -20,6 +20,15 @@ export const configureComplete = (config) => ({
   payload: config
 });
 
+export const getApiVersion = (dispatch) =>
+  dispatch({
+    [CALL_API]: {
+      types:    [API.GET_VERSION_START, API.GET_VERSION_COMPLETE, API.GET_VERSION_ERROR],
+      method:   'POST',
+      endpoint: `${__API_URL__}/version`
+    }
+  });
+
 /* songs */
 
 export const songsDeleteComplete = ({ changed }) => (dispatch) => {

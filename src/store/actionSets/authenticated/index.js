@@ -1,5 +1,5 @@
-import LogOut from './LogOut';
+import logOut from './logOut';
 
 export default {
-  LogOut
+  logOut
 };

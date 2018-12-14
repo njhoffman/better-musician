@@ -1,9 +1,13 @@
+import { commonInitView } from 'store/common';
 import { INIT_VIEW_COMPLETE } from 'constants/ui';
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [INIT_VIEW_COMPLETE] : (state, action) => ({ ...state, initialized: true })
+  [INIT_VIEW_COMPLETE] : (state, action) => ({
+    ...state,
+    ...commonInitView(action)
+  })
 };
 
 // ------------------------------------

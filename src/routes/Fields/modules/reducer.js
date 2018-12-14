@@ -1,3 +1,6 @@
+import { commonInitView } from 'store/common';
+import { INIT_VIEW_COMPLETE } from 'constants/ui';
+
 import * as V from 'constants/views';
 
 const ACTION_HANDLERS = {
@@ -14,7 +17,12 @@ const ACTION_HANDLERS = {
     ({ ...state, selectedTab: action.payload }),
 
   [V.FIELDS_DESELECT_TAB] : (state, action) =>
-    ({ ...state, selectedTab: action.payload })
+    ({ ...state, selectedTab: action.payload }),
+
+  [INIT_VIEW_COMPLETE] : (state, action) => ({
+    ...state,
+    ...commonInitView(action)
+  })
 };
 
 const initialState =  {

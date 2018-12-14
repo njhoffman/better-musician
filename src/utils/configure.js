@@ -8,7 +8,7 @@ import {
   authenticateComplete,
   authenticateError
 } from 'actions/auth';
-import { configureLoad, fetchSongs } from 'actions/api';
+import { configureLoad, fetchSongs, getApiVersion } from 'actions/api';
 import { uiWindowResize } from 'actions/ui';
 import applyAuthConfig from 'utils/auth/clientSettings';
 import { destroySession } from 'utils/auth/sessionStorage';
@@ -160,6 +160,7 @@ const loadConfiguration = ({ endpoints, settings, dev }) => dispatch => {
   return promise
     .then(user => {
       dispatch(authenticateComplete(user, endpoints));
+      getApiVersion(dispatch);
       fetchSongs({ dispatch });
 
       if (firstTime) {
@@ -180,6 +181,7 @@ const loadConfiguration = ({ endpoints, settings, dev }) => dispatch => {
         return Promise.reject(err);
       }
       dispatch(authenticateError([reason], endpoints));
+      getApiVersion(dispatch);
 
       // if (firstTime) dispatch(showFirstTimeLoginErrorModal());
       // if (mustResetPassword) dispatch(showPasswordResetErrorModal());

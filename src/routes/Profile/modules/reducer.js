@@ -1,8 +1,10 @@
 import { CALL_API } from 'middleware/api';
+import { commonInitView } from 'store/common';
+import { INIT_VIEW_COMPLETE } from 'constants/ui';
 
 // ------------------------------------
-// Constants
-// ------------------------------------
+// Action Handlers
+// -----------------------------------
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 export const PROFILE_SUCCESS = 'PROFILE_SUCCESS';
 export const PROFILE_FAILURE = 'PROFILE_FAILURE';
@@ -32,7 +34,11 @@ export const actions = {
 // ------------------------------------
 const ACTION_HANDLERS = {
   [PROFILE_SUCCESS]: (state, action) => state,
-  [PROFILE_FAILURE]: (state, action) => state
+  [PROFILE_FAILURE]: (state, action) => state,
+  [INIT_VIEW_COMPLETE] : (state, action) => ({
+    ...state,
+    ...commonInitView(action)
+  })
 };
 
 // ------------------------------------

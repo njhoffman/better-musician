@@ -180,6 +180,7 @@ export const SongMainTab = ({
     <FormRow className={classes.row}>
       <FormField
         name='title'
+        fullWidth
         type='text'
         label='Song Title'
         {...fieldProps}
@@ -188,6 +189,7 @@ export const SongMainTab = ({
         name='artist.fullName'
         type='text'
         label='Song Artist'
+        fullWidth
         {...fieldProps}
       />
     </FormRow>
@@ -216,6 +218,7 @@ export const SongMainTab = ({
           {...fieldProps}
         />
         <FormField
+          fullWidth
           name='artist.firstName'
           type='text'
           label='First Name'

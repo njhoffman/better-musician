@@ -1,13 +1,12 @@
+import { commonInitView } from 'store/common';
 import { INIT_VIEW_COMPLETE } from 'constants/ui';
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [INIT_VIEW_COMPLETE] : (state, { payload, meta: { actionSets } }) => ({
+  [INIT_VIEW_COMPLETE] : (state, action) => ({
     ...state,
-    initialized : true,
-    viewActionSets   : actionSets.view,
-    commonActionSets : actionSets.common,
+    ...commonInitView(action)
   })
 };
 

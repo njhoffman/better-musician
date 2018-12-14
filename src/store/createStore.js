@@ -7,7 +7,7 @@ import { persistState } from 'redux-devtools';
 import { parse as parseQueryString } from 'query-string';
 // import generateReduxReport from 'redux-usage-report';
 
-import { persistSelector } from 'selectors/dev';
+import { extensionPersistSelector } from 'selectors/dev';
 import { DevTools } from 'components/DevTools/DevTools';
 import apiMiddleware, { actionLogger }  from 'middleware/api';
 import { init as initLog } from 'shared/logger';
@@ -58,7 +58,7 @@ export default (initialState = {}, devConfig) => {
     const devExt = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
     middleware.push(reduxFreeze);
     enhancers.push(persistState(getDebugSessionKey()));
-    enhancers.push(persistSelector);
+    enhancers.push(extensionPersistSelector);
     if (devExt && devConfig.showExtension) {
       debug('Enabling DevTools Chrome Extension');
       composeEnhancers = devExt(devConfig.extensionOptions);

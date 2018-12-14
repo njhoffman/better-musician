@@ -15,7 +15,6 @@ const PreviewFieldForm = ({
       <FormField
         name='previewField'
         mode={viewMode}
-        preview
         centerOnSmall
         {...props}
       />

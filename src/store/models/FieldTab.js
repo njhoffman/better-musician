@@ -1,18 +1,19 @@
 import { sortBy, sumBy, filter } from 'lodash';
 import { many } from 'redux-orm';
+import { LOAD_FIELD_TABS, ADD_FIELD_TAB, DELETE_FIELD_TAB } from 'constants/orm';
 import BaseModel from './BaseModel';
 
 class FieldTab extends BaseModel {
   static reducer(action, model /* , session */) {
     const { payload, type } = action;
     switch (type) {
-      case 'LOAD_FIELD_TABS':
+      case LOAD_FIELD_TABS:
         this.loadData([].concat(payload), model);
         break;
-      case 'ADD_FIELD_TAB':
+      case ADD_FIELD_TAB:
         model.create(Object.assign({}, payload));
         break;
-      case 'DELETE_FIELD_TAB':
+      case DELETE_FIELD_TAB:
         model.withId(payload).delete();
         break;
       default:

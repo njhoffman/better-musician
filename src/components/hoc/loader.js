@@ -4,7 +4,7 @@ import { initViewStart, initViewComplete } from 'actions/ui';
 import { init as initLog } from 'shared/logger';
 
 const { debug }  = initLog('hoc-loader');
-const LoadComponent = (routeName, isAuthenticated, props) => {
+const LoadComponent = (routeName, props) => {
   const {
     store,
     history,
@@ -14,6 +14,8 @@ const LoadComponent = (routeName, isAuthenticated, props) => {
   debug(`Loading view component: ${routeName}View`);
   initViewStart({ routeName, store, history, pathname });
 
+  // TODO: use hoc wrapper
+  const isAuthenticated = store.getState().user.isSignedIn;
   return import(
     /* webpackChunkName: "[request]" */
     `routes/${routeName}/components/${routeName}View`
@@ -27,7 +29,7 @@ const LoadComponent = (routeName, isAuthenticated, props) => {
 const LoadRoute = (routeName, props) => (
   Loadable({
     loading: LoadingIndicator,
-    loader: () => LoadComponent(routeName, false, props),
+    loader: () => LoadComponent(routeName, props),
   })
 );
 export default LoadRoute;

@@ -2,21 +2,23 @@
 // import propTypesMixin from 'redux-orm-proptypes';
 import { fk } from 'redux-orm';
 import { getFieldByType, getDefaultValues } from 'components/Field/FieldTypes';
+import { LOAD_FIELDS, ADD_FIELD, DELETE_FIELD } from 'constants/orm';
+import { FIELDS_DELETE_COMPLETE, FIELDS_UPDATE_COMPLETE } from 'constants/api';
 import BaseModel from './BaseModel';
 
 class Field extends BaseModel {
   static reducer(action, model /* , session */) {
     const { payload, type } = action;
     switch (type) {
-      case 'FIELDS_UPDATE_COMPLETE':
-      case 'LOAD_FIELDS':
+      case FIELDS_UPDATE_COMPLETE:
+      case LOAD_FIELDS:
         this.loadData([].concat(payload), model);
         break;
-      case 'ADD_FIELD':
+      case ADD_FIELD:
         model.create(Object.assign({}, payload));
         break;
-      case 'FIELDS_DELETE_COMPLETE':
-      case 'DELETE_FIELD':
+      case FIELDS_DELETE_COMPLETE:
+      case DELETE_FIELD:
         model.withId(payload).delete();
         break;
       default:

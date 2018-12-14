@@ -1,4 +1,5 @@
 import * as CONF from 'constants/config';
+import * as API from 'constants/api';
 import * as AUTH from 'constants/auth';
 import * as UI from 'constants/ui';
 
@@ -19,7 +20,7 @@ const initialState = {
   },
   app: {
     appVersion: `${__APP_VERSION__}`,
-    apiVersion: '1.3.0'
+    apiVersion: '?.?.?'
   },
   dev: {
     showInspector:    false,
@@ -42,6 +43,12 @@ const configureLoad = (state, { payload: { devConfig, endpoints, clientInfo, app
 
 
 const ACTION_HANDLERS = {
+  [API.GET_VERSION_COMPLETE]: (state, { payload }) => ({
+    ...state,
+    loading: true,
+    app: { ...state.app, apiVersion: payload.version },
+  }),
+
   [CONF.CONFIGURE_START]: (state, action) => ({
     ...state,
     loading: true,

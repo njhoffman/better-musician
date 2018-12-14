@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import * as UI from 'constants/ui';
-
 import { init as initLog } from 'shared/logger';
 
 export const initialState = {
@@ -105,16 +104,13 @@ const initViewStart = (state, { payload: routeName }) => ({ ...state, initializi
 
 const initViewComplete = (state, {
   payload: routeName,
-  meta: { actionSets, pathname }
+  meta: { pathname }
 }) => ({
   ...state,
   initializing     : null,
   currentView      : routeName,
-  viewActionSets   : actionSets.view,
-  commonActionSets : actionSets.common,
-  initializedViews : _.uniqBy([...state.initializedViews, { pathname, routeName }]),
+  initializedViews : _.uniqBy([...state.initializedViews, { pathname, routeName }])
 });
-
 
 const locationChangeView = (state, { payload: { location } }) => {
   const { info, debug } = initLog('ui-reducer');

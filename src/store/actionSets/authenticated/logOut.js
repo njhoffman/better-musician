@@ -47,7 +47,10 @@ export default {
     type: 'UI_INIT_VIEW_COMPLETE',
     payload: 'Login',
     meta: {
-      pathname: '/login'
+      pathname: '/login',
+      actionSets: {
+        common: { }
+      }
     }
   }, {
     type: 'AUTH_CURRENT_ENDPOINT_KEY',

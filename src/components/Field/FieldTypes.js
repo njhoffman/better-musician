@@ -149,13 +149,13 @@ export const getDefaultValues = (typeId, options) => {
 };
 
 export const withFieldTypes = (ParentComponent) => {
-  const WrappedComponent = ({ type, typeId, preview, ...props }) => {
+  const WrappedComponent = ({ type, typeId, ...props }) => {
     const { FormComponent, ...fieldTypeProps } = getFieldByType({ type, typeId });
     return (
       <ParentComponent
         Component={FormComponent}
         fieldType={{ ...fieldTypeProps, type, typeId }}
-        {...{ ...props, preview }}
+        {...{ ...props }}
       />
     );
   };

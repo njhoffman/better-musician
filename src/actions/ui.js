@@ -1,13 +1,6 @@
-import _ from 'lodash';
 import * as UI from 'constants/ui';
 import { injectReducer } from 'store/reducers';
 
-import {
-  authenticatedSets,
-  notAuthenticatedSets,
-  commonSets,
-  viewSets
-} from 'store/actionSets';
 
 export const uiHideDrawerMenu = () => ({ type: UI.DRAWER_MENU_HIDE });
 export const uiShowDrawerMenu = () => ({ type: UI.DRAWER_MENU_SHOW });
@@ -67,14 +60,10 @@ export const initViewStart = ({ routeName, store, history }) => {
 };
 
 export const initViewComplete = ({ routeName, pathname, isAuthenticated, dispatch }) => {
-  const actionSets = {
-    common: _.merge(commonSets, (isAuthenticated ? authenticatedSets : notAuthenticatedSets)),
-    view:  viewSets[`${routeName}ViewSets`]
-  };
   dispatch({
     type: UI.INIT_VIEW_COMPLETE,
     payload: routeName,
-    meta: { pathname, actionSets }
+    meta: { pathname, isAuthenticated }
   });
 };
 

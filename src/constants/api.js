@@ -1,3 +1,7 @@
+export const GET_VERSION_START        = 'API_GET_VERSION_START';
+export const GET_VERSION_COMPLETE     = 'API_GET_VERSION_COMPLETE';
+export const GET_VERSION_ERROR        = 'API_GET_VERSION_ERROR';
+
 export const SONGS_ADD_START          = 'API_SONGS_ADD_START';
 export const SONGS_ADD_COMPLETE       = 'API_SONGS_ADD_COMPLETE';
 export const SONGS_ADD_ERROR          = 'API_SONGS_ADD_ERROR';

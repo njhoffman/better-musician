@@ -1,5 +1,7 @@
 import * as API from 'constants/api';
 import * as UI from 'constants/ui';
+import { commonInitView } from 'store/common';
+
 // import { songs as songsSelector } from 'routes/Songs/modules/selectors';
 
 // ------------------------------------
@@ -54,8 +56,10 @@ const ACTION_HANDLERS = {
     currentSong: payload === state.currentSong ? null : state.currentSong
   }),
 
-  [UI.INIT_VIEW_COMPLETE]: (state, action) =>
-    ({ ...state, initialized: true }),
+  [UI.INIT_VIEW_COMPLETE] : (state, action) => ({
+    ...state,
+    ...commonInitView(action)
+  }),
 
   [SET_CURRENT_SONG]: (state, action) =>
     ({ ...state, currentSong: action.payload }),

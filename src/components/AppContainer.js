@@ -73,7 +73,6 @@ const AppContainer = ({
       <DrawerMenu />
       <Header />
       <Row horizontalAlignment='center' className={`${contentWrapper} ${currentView}`}>
-        <DevToolbar />
         <div className={contentContainer}>
           <Routes
             store={store}
@@ -85,6 +84,7 @@ const AppContainer = ({
       <Footer />
       <div className={footerFiller} />
     </div>
+    <DevToolbar />
   </ErrorBoundary>
 );
 

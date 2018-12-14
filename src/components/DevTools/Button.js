@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import createStyledComponent from './styles/createStyledComponent';
-import * as styles from './styles';
-import { commonStyle, tooltipStyle } from './styles/common';
+import * as styles from './styles/Button';
+import { commonStyle, tooltipStyle } from './styles/Button/common';
 
 const ButtonWrapper = createStyledComponent(styles, 'button');
 const TooltipWrapper = createStyledComponent(tooltipStyle);
@@ -11,6 +11,8 @@ const CommonWrapper = createStyledComponent(commonStyle);
 export default class Button extends Component {
   shouldComponentUpdate(nextProps) {
     return nextProps.children !== this.props.children ||
+      nextProps.wrapperClass !== this.props.wrapperClass ||
+      nextProps.buttonClass !== this.props.buttonClass ||
       nextProps.disabled !== this.props.disabled ||
       nextProps.mark !== this.props.mark ||
       nextProps.size !== this.props.size ||
