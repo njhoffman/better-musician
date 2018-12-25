@@ -3,51 +3,39 @@
 // need forked version of es6-plato with up to date eslint dependencies
 
 const _ = require('lodash');
+const chalk = require('chalk');
+const async = require('async');
 const plato = require('es6-plato');
 const path = require('path');
 const appRoot = require('app-root-path');
-const {
-  statSync, mkdirSync, readdirSync, readFileSync
-} = require('fs');
-
-const lintRules = JSON.parse(readFileSync(`${appRoot}/.eslintrc`, { encoding: 'utf8' }));
-const parsedRules = {
-  ...lintRules,
-  rules: _.omit(lintRules.rules, 'react/jsx-no-bind'),
-  globals: _.keys(lintRules.globals)
-};
+const { statSync, mkdirSync, readdirSync, readFileSync } = require('fs');
 
 // const initLogger = require(`${appRoot}/shared/logger/terminal`);
 // const { warn, info, trace } = initLogger('plato-reports');
 const { warn, info, info: trace } = console;
 
 const testRun = true;
-const reportsDir = testRun ? '~/tmp/plato' : `${appRoot}/reports/plato`;
-const srcFiles = `${appRoot}/src`;
-const serverFiles = `${appRoot}/server`;
-const outputDir = path.join(reportsDir, `${Date.now()}`);
+const reportsDir = `${appRoot}/reports/plato`;
 
-info(`Initializing plato reports for output to: ${outputDir}`);
-info(`Crawling the  ${serverFiles} and ${srcFiles} directories for js/jsx files`);
+const targetDirs = [
+  `${appRoot}/bin`,
+  `${appRoot}/config`,
+  `${appRoot}/src`,
+  `${appRoot}/server`
+];
 
 const ignoredFiles = [
-  // '/src/routes/index.js',
-  // '/src/routes/Songs/index.js',
-  // '/src/routes/Settings/index.js',
-  // '/src/routes/Stats/index.js',
-  // '/src/routes/Reset/index.js',
-  // '/src/routes/Fields/index.js',
-  // '/src/routes/Login/index.js',
-  // '/src/routes/Profile/index.js',
   // '/src/routes/Register/index.js'
 ];
 
 const mkdir = (dirPath) => {
-  try {
-    mkdirSync(dirPath);
-  } catch (e) {
-    if (e.code !== 'EEXIST') {
-      throw e;
+  if (!testRun) {
+    try {
+      mkdirSync(dirPath);
+    } catch (e) {
+      if (e.code !== 'EEXIST') {
+        throw e;
+      }
     }
   }
 };
@@ -63,28 +51,62 @@ const walkSync = (dir, files = []) => {
   return files;
 };
 
-const startTime = new Date().getTime();
+const prepareOptions = (done) => {
+  const startTime = new Date().getTime();
+  const outputDir = testRun ? '/tmp/plato' : path.join(reportsDir, `${Date.now()}`);
+  const lintRules = JSON.parse(readFileSync(`${appRoot}/.eslintrc`, { encoding: 'utf8' }));
+  const parsedRules = {
+    ...lintRules,
+    rules: _.omit(lintRules.rules, 'react/jsx-no-bind'),
+    globals: _.keys(lintRules.globals)
+  };
 
-let fileList = [].concat(
-  walkSync(srcFiles),
-  walkSync(serverFiles)
-);
+  info(`Initializing plato reports for output to: ${outputDir}`);
+  info(`Crawling ${targetDirs.length} directories for js/jsx files...`);
 
-fileList = fileList.filter(file => {
-  const ext = file.split('.').pop();
-  let isIgnored = false;
-  ignoredFiles.forEach(igFile => {
-    if (file.indexOf(igFile) !== -1) {
-      isIgnored = true;
-    }
+  const fileList = [];
+  targetDirs.forEach(targetDir => {
+    info(`\t${targetDir}`);
+    fileList.push(...walkSync(targetDir));
   });
-  return (!isIgnored && (ext === 'js' || ext === 'jsx'));
-});
 
-info(`Found ${fileList.length} files to process.`);
-fileList.forEach((file, idx) => console.log(`\t${idx}: ${file}`));
+  const filteredFiles = fileList.filter(file => {
+    const ext = file.split('.').pop();
+    let isIgnored = false;
+    ignoredFiles.forEach(igFile => {
+      if (file.indexOf(igFile) !== -1) {
+        isIgnored = true;
+      }
+    });
+    return (!isIgnored && (ext === 'js' || ext === 'jsx'));
+  });
 
-const platoFinished = (reports) => {
+  info(`Found ${filteredFiles.length} files to process.`);
+  // filteredFiles.forEach((file, idx) => console.log(`\t${idx}: ${file}`));
+
+  const platoOptions = {
+    title: `Plato Report - ${new Date().toLocaleString()}`,
+    eslint: parsedRules
+  };
+
+  mkdir(outputDir);
+
+  done(null, {
+    platoOptions,
+    fileList: filteredFiles,
+    outputDir,
+    startTime
+  });
+};
+
+const startPlato = ({ fileList, startTime, outputDir, platoOptions }, done) => {
+  info(`Running reports on: ${fileList.length} files`);
+  plato.inspect(fileList, outputDir, platoOptions, (reports) => (
+    done(null, { reports, startTime, fileList })
+  ));
+};
+
+const processReports = ({ reports, startTime, fileList }, done) => {
   const elapsed = (new Date().getTime() - startTime) / 1000;
   info('\n----------------------------\n');
   info(`Generated plato reports for ${fileList.length} files in ${elapsed} seconds`);
@@ -112,28 +134,37 @@ const platoFinished = (reports) => {
   });
 
   const { summary: { total, average } } = plato.getOverviewReport(reports);
-
-  info(
-    '\n'
-    + `Total ${total.eslint} es-lint errors with ${total.sloc}`
-    + ` total lines of code and ${total.maintainability} maintainability`
-  );
-
-  info(
-    `Average: ${average.eslint} es-lint errors with ${average.sloc}`
-    + ` average lines per file and ${average.maintainability} maintainability per file.\n\n`
-  );
+  done(null, { total, average, fileList });
 };
 
-if (!testRun) {
-  mkdir(outputDir);
+if (require.main === module) {
+  async.waterfall([
+    prepareOptions,
+    startPlato,
+    processReports
+  ], (err, { total, average, fileList }) => {
+    info([
+      '\nTotal ',
+      `${chalk.bold(total.eslint)} es-lint errors`,
+      `${chalk.bold(fileList.length)} files analyzed`,
+      `${chalk.bold(total.sloc)} total code lines`,
+      `${chalk.bold(parseInt(total.maintainability, 10))} maintainability`
+    ].join('\n    '));
+
+    info([
+      `\nAverage ${chalk.bold(average.sloc)} lines per file with`,
+      `${chalk.bold(average.maintainability)} maintainability per file.\n\n`
+    ].join(' '));
+  });
 }
 
-const platoOptions = {
-  title: `Plato Report - ${new Date().toLocaleString()}`,
-  eslint: parsedRules
+module.exports = (done) => {
+  async.waterfall([
+    prepareOptions,
+    startPlato,
+    processReports
+  ], done);
 };
 
-plato.inspect(fileList, outputDir, platoOptions, platoFinished);
 
 /* eslint-enable no-console, import/no-extraneous-dependencies, import/no-dynamic-require */

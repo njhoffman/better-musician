@@ -9,7 +9,6 @@
 
 [**Current Version (1.3.0) Unreleased Notes**](./docs/changelogs/trunk.md)
 
-### Other
-
 [**Roadmap**](./docs/ROADMAP.md#roadmap)
+
 [**TODO List**](./docs/ROADMAP.md#todo)

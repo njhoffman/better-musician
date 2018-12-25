@@ -2,76 +2,98 @@
 
 const async = require('async');
 const chalk = require('chalk');
-const path = require('path');
 const { argv } = require('yargs');
 // const { writeFileSync } = require('fs');
 
-const { commitSummary, fileDiff, dependencyDiff } = require('./git');
-const { mdHeader, mdChanges, mdSummary, mdBody, mdDependencies } = require('./changelog.templates');
-const { version: currVersion }  = require('../package.json');
+const platoReports = require('./plato');
 
-const isMajorVersion = Object.keys(argv).some(arg => /major|--major/i.test(arg));
-const getMdPath = (name) => path.resolve(__dirname, `../docs/changelogs/${name}.md`);
+const {
+  commitSummary,
+  fileDiff,
+  depDiff
+} = require('./git');
+
+const {
+  mdHeader,
+  mdChanges,
+  mdSummary,
+  mdBody,
+  mdDepSummary,
+  mdDepOutdated,
+  mdDepDiff
+} = require('./changelog.templates');
+
+const {
+  incrementVersion,
+  getMdPath,
+  outdatedDeps
+} = require('./changelog.utils');
+
+const { version: currVersion, dependencies, devDependencies }  = require('../package.json');
+
 const trunkPath = getMdPath('trunk');
 
 const getVersionInfo = (done) => {
+  const isMajorVersion = Object.keys(argv).some(arg => /major|--major/i.test(arg));
   const lastVersion = currVersion.replace(/\.\d+$/, '.0');
-  const nextVersion = (
-    isMajorVersion ? [
-      `${(parseInt(lastVersion.split('.')[0], 10) + 1)}`,
-      '0',
-      '0'
-    ] : [
-      `${currVersion.split('.')[0]}`,
-      `${(parseInt(lastVersion.split('.')[1], 10) + 1)}`,
-      '0'
-    ]
-  ).join('.');
-  done(null, { lastVersion, nextVersion });
+  const newVersion = incrementVersion(lastVersion, isMajorVersion);
+  const nextVersion = incrementVersion(newVersion, false);
+
+  done(null, { lastVersion, newVersion, nextVersion });
 };
 
-const getData = ({ lastVersion, nextVersion }, allDone) => {
+const getData = ({ lastVersion, newVersion, nextVersion }, allDone) => {
   console.log(
-    `\nProcessing changes from ${chalk.cyan(lastVersion)} to ${chalk.cyan(nextVersion)}`
+    `\nProcessing changes from ${chalk.cyan(lastVersion)} to ${chalk.cyan(newVersion)}`
   );
   async.series({
     commits: (done) => commitSummary(lastVersion, currVersion, done),
     summary: (done) => fileDiff(lastVersion, done),
-    dependencies: (done) => dependencyDiff(lastVersion, done),
-    versions: (done) => done(null, { lastVersion, nextVersion })
+    depsOutdated: (done) => outdatedDeps(done),
+    depsDiff: (done) => depDiff(lastVersion, done),
+    plato: (done) => platoReports(done),
+    versions: (done) => done(null, { lastVersion, newVersion, nextVersion })
   }, allDone);
 };
 
-const generateMarkdown = ({ summary, commits, dependencies, versions }, allDone) => {
-  const { nextVersion, lastVersion } = versions;
-  const plato = { lines: 3840, files: 251, sloc: 132, maint: 75.10 };
-
+const generateMarkdown = ({
+  summary,
+  commits,
+  depsOutdated,
+  depsDiff,
+  plato,
+  versions
+}, allDone) => {
+  const { newVersion, lastVersion, nextVersion } = versions;
   console.log([
     '  -- Got results with',
     `${chalk.bold(commits.total)} commits,`,
-    `${chalk.bold(Object.keys(dependencies.prod).length)} production dependencies`,
-    `${chalk.bold(Object.keys(dependencies.dev).length)} development dependencies`
+    `${chalk.bold(Object.keys(depsDiff.prod).length)} production dependencies`,
+    `${chalk.bold(Object.keys(depsDiff.dev).length)} development dependencies`
   ].join(' '));
 
   const markdown = [
-    mdHeader(nextVersion),
-    mdChanges(lastVersion, summary),
+    mdHeader(newVersion),
+    mdChanges(lastVersion, summary, commits.total),
     mdSummary(plato),
     mdBody(trunkPath),
-    mdDependencies(dependencies)
+    mdDepSummary({
+      outdated: depsOutdated.length,
+      prod: Object.keys(dependencies).length,
+      dev: Object.keys(devDependencies).length
+    }),
+    mdDepOutdated(depsOutdated),
+    mdDepDiff(depsDiff)
   ].join('\n\n');
 
-  console.log(
-    `  -- Generated ${chalk.bold(markdown.length)} lines of markdown`
-  );
-
-  allDone(null, { markdown, nextVersion });
+  console.log(`  -- Generated ${chalk.bold(markdown.length)} lines of markdown`);
+  allDone(null, { markdown, newVersion, nextVersion });
 };
 
-const writeFiles = ({ markdown, nextVersion }, allDone) => {
-  const mdPath = getMdPath(nextVersion);
-  console.log(`  -- Writing markdown to file: ${mdPath}`);
-  console.log(`  -- Resetting trunk file: ${trunkPath}`);
+const writeFiles = ({ markdown, nextVersion, newVersion }, allDone) => {
+  const mdPath = getMdPath(newVersion);
+  console.log(`  -- Writing markdown to file: \t\t${mdPath}`);
+  console.log(`  -- Resetting trunk file for v${chalk.bold(nextVersion)}: \t${trunkPath}`);
   allDone(null, markdown);
 };
 

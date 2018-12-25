@@ -1,6 +1,6 @@
 const simpleGit = require('simple-git')();
 
-const dependencyDiff = (baseVersion, done) => {
+const depDiff = (baseVersion, done) => {
   simpleGit.diff([
     `v${baseVersion}`,
     '--',
@@ -16,7 +16,9 @@ const dependencyDiff = (baseVersion, done) => {
       } else if (section && /([+-])\s*"([^"]+)"\s*:\s*"([^"]+)"/.test(line)) {
         const { $1: op, $2: name, $3: version } = RegExp;
         let versionDisplay = version.replace('git+https://', '');
-        versionDisplay = versionDisplay.length > 25 ? `${versionDisplay.substring(0, 22)}...` : versionDisplay;
+        if (versionDisplay.length > 25) {
+          versionDisplay = `[${versionDisplay.substring(0, 22)}...](${version.replace('git+', '')} "${version}")`;
+        }
         if (deps[section][name]) {
           deps[section][name] = ['CHANGE', deps[section][name][1], versionDisplay];
         } else {
@@ -48,7 +50,7 @@ const commitSummary = (baseVersion, targetVersion, done) => {
 };
 
 module.exports = {
-  dependencyDiff,
+  depDiff,
   fileDiff,
   commitSummary
 };

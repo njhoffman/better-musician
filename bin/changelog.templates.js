@@ -9,20 +9,20 @@ const mdHeader = (nextVersion) => [
   `**${getDate()}**`,
 ].join('\n');
 
-const mdChanges = (lastVersion, { insertions, deletions, files }) => [
-  `**Changes from ${lastVersion}**`,
+const mdChanges = (lastVersion, { insertions, deletions, files }, commits) => [
+  `**Changes since ${lastVersion}**`,
   '',
-  '| Patches | Commits | Files | Insertions | Deletions |',
-  '|:-------:|:-------:|:-----:|:----------:|:---------:|',
-  `| -- | -- | ${files.length} | ${insertions} | ${deletions} |`,
+  '| Commits | Files | Insertions | Deletions |',
+  '|:-------:|:-----:|:----------:|:---------:|',
+  `| ${commits} | ${files.length} | ${insertions} | ${deletions} |`,
 ].join('\n');
 
-const mdSummary = ({ lines, files, sloc, maint }) => [
+const mdSummary = ({ fileList, average, total }) => [
   '**Project Summary**',
   '',
-  '| Total Lines | Total Files | Lines / File | Maintainability |',
+  '| Total Files | Total Lines | Lines / File | Maintainability |',
   '|:-----------:|:-----------:|:------------:|:---------------:|',
-  `| ${lines} | ${files} | ${sloc} | ${maint} |`,
+  `| ${fileList.length} | ${total.sloc} | ${average.sloc} | ${average.maintainability} |`,
 ].join('\n');
 
 const mdBody = (mdFile) => {
@@ -57,16 +57,46 @@ const mdDependency = (title, deps) => [
   '</details>',
 ].join('\n');
 
-const mdDependencies = (dependencies) => [
+
+const mdDepDiff = (dependencies) => [
+  '',
   mdDependency('Core Dependency Updates', dependencies.prod),
   '',
   mdDependency('Development Dependency Updates', dependencies.dev)
 ].join('\n');
+
+const mdDepSummary = ({ outdated, prod, dev }) => [
+  '---',
+  '',
+  '### Dependency Summary ',
+  '',
+  '| Production | Development | Total | Outdated |',
+  '|:-----------:|:-----------:|:------------:|:---------------:|',
+  `| ${prod} | ${dev} | ${parseInt(prod + dev, 10)} | ${outdated} |`,
+
+].join('\n');
+
+const mdDepOutdated = (outdated) => [
+  '',
+  '<details>',
+  '<summary>Outdated Dependencies (click to see list)</summary>',
+  '<p>',
+  '',
+  '| Name | Current | Wanted | Latest | Definition |',
+  '|:-----------:|:-----------:|:------------:|:---------------:|:---------------:|',
+  outdated.map(({ name, current, wanted, latest, definition }) => (
+    `| ${name} | ${current} | ${wanted} | ${latest} | ${definition}`
+  )).join('\n'),
+  '',
+].join('\n');
+
 
 module.exports = {
   mdHeader,
   mdChanges,
   mdSummary,
   mdBody,
-  mdDependencies,
+  mdDepSummary,
+  mdDepOutdated,
+  mdDepDiff,
 };
