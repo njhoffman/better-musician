@@ -81,7 +81,7 @@ async.waterfall([
   generateMarkdown,
   writeFiles
 ], (err, results) => {
-  // console.log(results);
+  console.log(results);
   console.log('\n\n');
 });
 
