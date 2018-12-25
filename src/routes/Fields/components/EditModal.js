@@ -166,8 +166,8 @@ const EditModal = ({
       onExited={modalExit}
       open={isOpen}
       classes={{ paper: `${classes.dialogPaper}` }}>
-      <DialogTitle className={classes.dialogTitle}>
-        <Typography variant='h6'>Editing Field</Typography>
+      <DialogTitle variant='h6' className={classes.dialogTitle}>
+        Editing Field
         <div>
           <Typography className={classes.inline} variant='caption' color='textSecondary'>
             {'Tab #2 :'}

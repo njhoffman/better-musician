@@ -10,15 +10,16 @@ const CommonWrapper = createStyledComponent(commonStyle);
 
 export default class Button extends Component {
   shouldComponentUpdate(nextProps) {
-    return nextProps.children !== this.props.children ||
-      nextProps.wrapperClass !== this.props.wrapperClass ||
-      nextProps.buttonClass !== this.props.buttonClass ||
-      nextProps.disabled !== this.props.disabled ||
-      nextProps.mark !== this.props.mark ||
-      nextProps.size !== this.props.size ||
-      nextProps.primary !== this.props.primary ||
-      nextProps.tooltipPosition !== this.props.tooltipPosition ||
-      nextProps.title !== this.props.title;
+    return true;
+    // return nextProps.children !== this.props.children ||
+    //   nextProps.wrapperClass !== this.props.wrapperClass ||
+    //   nextProps.buttonClass !== this.props.buttonClass ||
+    //   nextProps.disabled !== this.props.disabled ||
+    //   nextProps.mark !== this.props.mark ||
+    //   nextProps.size !== this.props.size ||
+    //   nextProps.primary !== this.props.primary ||
+    //   nextProps.tooltipPosition !== this.props.tooltipPosition ||
+    //   nextProps.title !== this.props.title;
   }
 
   onMouseUp = e => {

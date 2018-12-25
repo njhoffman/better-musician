@@ -23,97 +23,9 @@ import { init as initLog } from 'shared/logger';
 import Button from './Button';
 import ContextMenu from './ContextMenu';
 import Notification from './Notification';
+import styles from './styles';
 
 const { info, warn } = initLog('custom-launcher');
-const styles = (theme) => ({
-  container: {
-    left: 0,
-    fontFamily: 'monaco, Consolas, Lucida Console, monospace',
-    fontSize: '0.8em',
-    overflowY: 'hidden',
-    direction: 'ltr',
-    color: 'white',
-    padding: '0px',
-    backgroundColor: '#000',
-    opacity: 0.9,
-    top: '100px',
-    position: 'absolute',
-    width: '175px',
-    zIndex: 2001,
-    border: 'solid 1px #333'
-  },
-  header: {
-    width: '100%',
-    alignItems: 'center',
-    display: 'flex'
-  },
-  headerRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  headerContainer: {
-    width:  'calc(100% - 30px)',
-    padding: '0px 10px',
-    borderRight: 'solid 1px #333'
-  },
-  label: {
-    opacity: 0.7,
-    fontSize: '1.2em',
-    lineHeight: '1.0em',
-    fontVariant: 'all-small-caps'
-  },
-  value: {
-    color: '#a8c5f3'
-  },
-  expandButtonWrapper: {
-    display: 'inline-flex',
-    width: '40px',
-    height: '100%',
-    justifyContent: 'flex-end',
-    alignContent: 'center'
-  },
-  dashed: {
-    backgroundImage: 'radial-gradient(rgb(51, 55, 58) 0%, rgb(51, 55, 58) 16%, transparent 12%)'
-  },
-  elements: {
-    padding: '5px',
-    display: 'flex',
-    flexDirection: 'column',
-    // justifyContent: 'space-evenly',
-    overflowX: 'hidden',
-    overflowY: 'auto',
-    verticalAlign: 'middle',
-    alignItems: 'center',
-    marginTop: '5px'
-  },
-  buttonActive: {
-    backgroundColor: '#838184',
-    color: '#0e0e0e'
-  },
-  buttonWrapper: {
-    display: 'block',
-    margin: '5px',
-    width: '100%'
-  },
-  wrapperActivated: {},
-  button: { },
-  buttonActivated: {
-    color: 'white',
-    background: 'rgba(0, 60, 40, 1)'
-  },
-  progressWrapper: {
-    marginTop: '5px'
-  },
-  statusTitle: {
-    whiteSpace: 'nowrap',
-    overflowX: 'hidden',
-    textOverflow: 'ellipsis'
-  },
-  statusText: {
-    opacity: 0.5,
-    fontSize: '0.75em'
-  }
-});
 
 class Toolbar extends Component {
   static defaultProps = {
@@ -138,12 +50,6 @@ class Toolbar extends Component {
 
   static defaultProps = {
     theme: 'twilight'
-  };
-
-  defaultMenu = {
-    visible: false,
-    x: 0,
-    y: 0
   };
 
   defaultPosition = {
@@ -216,12 +122,13 @@ class Toolbar extends Component {
     parentKey,
     items: _.keys(menu).map((key, idx) => {
       const { name, sublinks, value } = menu[key];
-      return {
+      return  {
         name,
         parentKey: menuKey,
-        value : (sublinks ? `__${menuKey}-${name}__` : value || key),
+        value : value || key,
         icon:  this.getMenuIcon(menu[key]),
-        key : `${menuKey}.${idx}`
+        key : `${menuKey}.${idx}`,
+        subMenu: sublinks ? `${menuKey}-${name}` : false
       };
     })
   });
@@ -302,55 +209,70 @@ class Toolbar extends Component {
     }
   }
 
-  hoverInMenuItem = (e, parentMenu) => {
+  hoverInMenuItem = (e) => {
     const { menus } = this.state;
-    if (/__(.*)__/.test(e.target.value)) {
-      const menuKey = RegExp.$1;
-      const menu = menus[menuKey];
-      menu.hovering = true;
-      this.showMenu(e, menu, menuKey);
+    const { classes } = this.props;
+    const { parentkey: parentKey, key } = e.currentTarget.dataset;
+    const parentMenu = menus[parentKey];
+    const menuItem = _.find(parentMenu.items, { key });
+    parentMenu.hovering = key;
+    menuItem.className = classes.menuHover;
+    if (menuItem.subMenu) {
+      const subMenu = menus[menuItem.subMenu];
+      this.showMenu(e, subMenu, menuItem.subMenu);
+    } else {
+      this.updateMenu(parentKey, parentMenu);
     }
   }
 
-  hoverOutMenuItem = (e, parentMenu) => {
+  hoverOutMenuItem = (e) => {
     const { menus } = this.state;
-    const parentKey = _.get(e, 'relatedTarget.attributes.data-parentkey.value');
-    if (/__(.*)__/.test(e.target.value)) {
-      const menuKey = RegExp.$1;
-      if (parentKey !== menuKey) {
-        const menu = menus[menuKey];
-        menu.hovering = false;
-        this.hideMenu(e, menu, menuKey);
+    const { classes } = this.props;
+    const { parentkey: parentKey, key } = e.currentTarget.dataset;
+    const { parentkey: newParentKey } = e.relatedTarget.dataset;
+    const parentMenu = menus[parentKey];
+    const menuItemOut = _.find(parentMenu.items, { key });
+    menuItemOut.hovering = false;
+    menuItemOut.className = '';
+    // TODO: hide all submenus not belonging to menuItem
+    if (menuItemOut.subMenu) {
+      const subMenu = menus[menuItemOut.subMenu];
+      if (newParentKey !== menuItemOut.subMenu) {
+        subMenu.hovering = false;
+        this.hideMenu(e, subMenu, menuItemOut.subMenu);
+      } else {
+        menuItemOut.className = classes.sublinkOpen;
+        this.updateMenu(parentKey, parentMenu);
       }
-    } else if (!parentKey) {
-      // this.closeMenus();
     }
   }
 
   hoverOutMenu = (e, parentMenu) => {
     const { menus } = this.state;
+    // console.info('hoverOutMenu', parentMenu, menus);
     const newTarget = _.get(e, 'relatedTarget.attributes.data-parentkey.value');
     if (!newTarget) {
-      this.closeMenus();
+      window.setTimeout(() => {
+        // console.info('closing all menus', menus);
+        // this.closeMenus();
+      }, 2000);
     }
   }
 
   showMenu = (e, menu, menuKey) => {
     const targetPos = e.target.getBoundingClientRect();
-    const newX = menu.parentKey ? targetPos.width + targetPos.x : e.clientX;
+    const newX = menu.parentKey ? targetPos.width + targetPos.x - 2 : e.clientX;
     const newY = menu.parentKey ? targetPos.y : e.clientY;
     const newMenu = { ...menu, x: newX, y: newY, visible: true };
-    this.setState(state => ({
-      ...state,
-      menus: {
-        ...state.menus,
-        [menuKey]: newMenu
-      }
-    }));
+    this.updateMenu(menuKey, newMenu);
   }
 
   hideMenu = (e, menu, menuKey) => {
     const newMenu = ({ ...menu, visible: false })
+    this.updateMenu(menuKey, newMenu);
+  }
+
+  updateMenu = (menuKey, newMenu) => {
     this.setState(state => ({
       ...state,
       menus: {
@@ -371,7 +293,7 @@ class Toolbar extends Component {
     }
   }
 
-  handleDrag(e, ui) {
+  handleDrag = (e, ui) => {
     const { x, y } = this.state.position.delta;
     this.setState({
       position: {
@@ -384,7 +306,7 @@ class Toolbar extends Component {
     });
   }
 
-  onStart() {
+  onDragStart = () => {
     this.setState({
       position :  {
         ...this.state.position,
@@ -393,7 +315,7 @@ class Toolbar extends Component {
     });
   }
 
-  onStop() {
+  onDragStop = () => {
     this.setState({
       position :  {
         ...this.state.position,
@@ -415,6 +337,7 @@ class Toolbar extends Component {
       menus: { ...newMenus }
     }, this._stateUpdated.bind(this));
   }
+
 
   handleExecuteActionSet = (actionSets, actionName) => {
     const { executeActionSet } = this.props;
@@ -504,7 +427,7 @@ class Toolbar extends Component {
 
     // const menuItems = this.generateMenus(_.merge(this.menuItems, { persistedState, commonSets, viewSets }));
 
-    const getClass = (hasSets) => {
+    const getButtonClass = (hasSets) => {
       const myClass = {
         wrapper: `${hasSets ? classes.wrapperActivated : ''} ${classes.buttonWrapper}`,
         button: `${hasSets ? classes.buttonActivated : ''} ${classes.button}`
@@ -526,7 +449,7 @@ class Toolbar extends Component {
               'data-menukey': menuKey
             }}
             buttonProps={{
-              onMouseOver: this.hoverInMenuItem,
+              onMouseEnter: this.hoverInMenuItem,
               onMouseLeave: this.hoverOutMenuItem,
               onClick: this.handleClick
             }}
@@ -535,9 +458,9 @@ class Toolbar extends Component {
           />
         ))}
         <Draggable
-          onStart={() => this.onStart('actionPreview')}
-          onStop={() => this.onStop('actionPreview')}
-          onDrag={(e, ui) => this.handleDrag('actionPreview', e, ui)}>
+          onStart={() => this.onDragStart()}
+          onStop={() => this.onDragStop()}
+          onDrag={(e, ui) => this.handleDrag(e, ui)}>
           <div className={classes.container}>
             <div className={classes.elements} ref={this.getRef}>
               <div className={classes.header}>
@@ -559,16 +482,16 @@ class Toolbar extends Component {
               </div>
               <Divider />
               <Button
-                buttonClass={getClass(commonSets).button}
-                wrapperClass={getClass(commonSets).wrapper}
+                buttonClass={getButtonClass(commonSets).button}
+                wrapperClass={getButtonClass(commonSets).wrapper}
                 onClick={(e) => this.toggleMenu(e, 'commonSets')}
                 theme={theme}>
                 Global Actions
               </Button>
               <Divider />
               <Button
-                buttonClass={getClass(viewSets).button}
-                wrapperClass={getClass(viewSets).wrapper}
+                buttonClass={getButtonClass(viewSets).button}
+                wrapperClass={getButtonClass(viewSets).wrapper}
                 onClick={(e) => this.toggleMenu(e, 'viewSets')}
                 theme={theme}>
                 {currentView} Actions
@@ -582,8 +505,8 @@ class Toolbar extends Component {
               </Button>
               <Divider />
               <Button
-                buttonClass={getClass(false).button}
-                wrapperClass={getClass(false).wrapper}
+                buttonClass={getButtonClass(false).button}
+                wrapperClass={getButtonClass(false).wrapper}
                 onClick={(e) => this.toggleMenu(e, 'persistedState')}
                 theme={theme}>
                 Persist State

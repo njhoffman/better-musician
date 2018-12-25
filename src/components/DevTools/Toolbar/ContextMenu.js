@@ -19,12 +19,13 @@ export default class ContextMenu extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!isEqual(nextProps.items, this.props.items) ||
-      nextProps.visible !== this.props.visible) {
-      // this.updateItems(nextProps.items);
-      this.update();
-    } else {
-    }
+    this.update();
+    // if (!isEqual(nextProps.items, this.props.items) ||
+    //   nextProps.visible !== this.props.visible) {
+    //   this.updateItems(nextProps.items);
+    //   this.update();
+    // } else {
+    // }
   }
 
   componentDidMount() {
@@ -67,9 +68,9 @@ export default class ContextMenu extends Component {
   }
 
   updateMenu() {
-    const { buttonProps, buttonClass } = this.props;
+    const { buttonProps } = this.props;
     this.menuItems = this.items.map(item => {
-      const { name, key, value, type, parentKey, icon } = item;
+      const { name, key, value, type, parentKey, icon, className } = item;
       const buttonStyle = { paddingRight: '25px' };
       if (type === 'button') {
         return item;
@@ -78,7 +79,8 @@ export default class ContextMenu extends Component {
         <button
           key={key}
           value={value}
-          className={buttonClass}
+          className={`${className || ''}`}
+          data-key={key}
           data-parentkey={parentKey}
           style={buttonStyle}
           {...buttonProps}>

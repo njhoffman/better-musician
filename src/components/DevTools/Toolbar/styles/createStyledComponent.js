@@ -27,4 +27,3 @@ export default (styles, component) =>
         getStyle(styles, 'default')({ ...props, theme: getDefaultTheme(props.theme) })
     )
   }`;
-

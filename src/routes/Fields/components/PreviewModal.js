@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import {
   Dialog, DialogContent, Divider, Button,
-  DialogActions, DialogTitle, Typography,
+  DialogActions, DialogTitle,
   Card, CardContent, withStyles
 } from '@material-ui/core';
 import { Column } from 'react-foundation';
@@ -86,10 +86,8 @@ const PreviewFieldModal = ({
     onExited={modalExit}
     open={isOpen}
     classes={{ paper: `${classes.dialogPaper}` }}>
-    <DialogTitle className={classes.dialogTitle}>
-      <Typography variant='h6'>
-        {`${previewField.typeLabel} Preview`}
-      </Typography>
+    <DialogTitle variant='h6' className={classes.dialogTitle}>
+      {`${previewField.typeLabel} Preview`}
     </DialogTitle>
     <DialogContent className={classes.dialogContent}>
       <RadioButtonGroup
@@ -97,9 +95,9 @@ const PreviewFieldModal = ({
         value={viewMode}
         onChange={(e) => changeView(e.target.value)}
         options={{
-          FIELD_EDIT:     'Edit Mode',
-          FIELD_VIEW:     'View Mode',
-          FIELD_VIEW_ALT: 'View Mode #2'
+          [FIELD_EDIT]:     'Edit Mode',
+          [FIELD_VIEW]:     'View Mode',
+          [FIELD_VIEW_ALT]: 'View Mode #2'
         }}
       />
     </DialogContent>
