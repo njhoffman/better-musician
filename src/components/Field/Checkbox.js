@@ -39,32 +39,39 @@ const styles = (theme) => ({
   }
 });
 
-const createCheckbox = (Component) => ({
-  mode,
-  label,
-  classes,
-  ...props
-}) => (
-  <FormControlLabel
-    className={`${classes.root} ${mode === FIELD_VIEW_ALT ? classes.outlined : ''}`}
-    label={label}
-    control={(
-      <Component
-        disabled={mode !== FIELD_EDIT}
-        className={classes.checkbox}
-        {...props}
-      />
-    )}
-  />
-);
+const cbFactory = (props, Component) => {
+  const { mode, label, classes, input } = props;
+
+  return (
+    <FormControlLabel
+      className={`${classes.root} ${mode === FIELD_VIEW_ALT ? classes.outlined : ''}`}
+      label={label}
+      control={(
+        <Component
+          disabled={mode !== FIELD_EDIT}
+          className={classes.checkbox}
+          input={input}
+        />
+      )}
+    />
+  );
+};
+
+const createCheckbox = (Component) => (props) => cbFactory(props, Component);
 
 const defaultProps = {
-  style: {}
+  mode: FIELD_EDIT
 };
 
 const propTypes = {
-  style: PropTypes.instanceOf(Object)
+  mode    : PropTypes.bool,
+  label   : PropTypes.string.isRequired,
+  classes : PropTypes.instanceOf(Object).isRequired,
+  input   : PropTypes.instanceOf(Object).isRequired
 };
+
+cbFactory.defaultProps = defaultProps;
+cbFactory.propTypes = propTypes;
 
 const Checkbox = withStyles(styles)(createCheckbox(MaterialCheckbox));
 Checkbox.defaultProps = defaultProps;

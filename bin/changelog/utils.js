@@ -13,7 +13,7 @@ const incrementVersion = (baseVersion, isMajorVersion) => (
   ]
 ).join('.');
 
-const getMdPath = (name) => path.resolve(__dirname, `../docs/changelogs/${name}.md`);
+const getMdPath = (name) => path.resolve(__dirname, `../../docs/changelogs/${name}.md`);
 
 const outdatedDeps = (done) => npm.load(() => {
   npm.commands.outdated((err, rawOutdated) => {

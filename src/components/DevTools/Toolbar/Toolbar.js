@@ -9,10 +9,21 @@ import Draggable from 'react-draggable';
 import * as themes from 'redux-devtools-themes';
 import {
   MdCheck,
-  MdChevronRight
+  MdChevronRight,
+  MdCheckBox,
+  MdCheckBoxOutlineBlank
 } from 'react-icons/md';
 
-import { devPersistState, devStartActionSet, devEndActionSet, devDoAction } from 'actions/dev';
+import { isTrue } from 'shared/util';
+
+import {
+  devPersistState,
+  devStartActionSet,
+  devEndActionSet,
+  devDoAction,
+  devUpdateSetting
+} from 'actions/dev';
+
 import {
   hudPersistStateSelector,
   currentViewSelector,
@@ -55,11 +66,11 @@ class Toolbar extends Component {
   defaultPosition = {
     activeDrags: 0,
     delta: {
-      x: 0, y: 0
+      x: 0,
+      y: 100
     },
-    controlled: {
-      x: -400, y: 200
-    }
+    controlled: false,
+    mini: false
   };
 
   assignKeys(items) {
@@ -73,44 +84,57 @@ class Toolbar extends Component {
 
   menuItems = {
     logger: [{
-      name: 'Colors',
-      value: true,
+      label: 'Show Colors',
+      name: 'logger.colors',
     }, {
-      name: 'Actions',
-      value: true,
+      label: 'Expand Objects',
+      name: 'logger.expandObjects',
     }, {
-      name: 'Requests',
-      value: true,
-
+      label: 'Clear on Reload',
+      name: 'logger.clearOnReload',
     }, {
-      name: 'Levels',
+      label: 'Log Requests',
+      name: 'logger.logRequests',
+    }, {
+      label: 'Levels',
+      name: 'logger.level',
       sublinks: [{
-        name: 'Fatal',
-        value: 1
+        label: 'Fatal',
+        value: 1,
+        name: 'logger.level'
       }, {
-        name: 'Error',
-        value: 2
+        label: 'Error',
+        value: 2,
+        name: 'logger.level'
       }, {
-        name: 'Warn',
-        value: 3
+        label: 'Warn',
+        value: 3,
+        name: 'logger.level'
       }, {
-        name: 'Info',
-        value: 4
+        label: 'Info',
+        value: 4,
+        name: 'logger.level'
       }, {
-        name: 'Debug',
-        value: 5
+        label: 'Debug',
+        value: 5,
+        name: 'logger.level'
       }, {
-        name: 'Trace',
-        value: 6
+        label: 'Trace',
+        value: 6,
+        name: 'logger.level'
       }]
     }]
   };
 
   getMenuIcon = (menu) => {
+    const { classes } = this.props;
     if (menu.sublinks) {
-      return (<MdChevronRight style={{ position: 'absolute', right: '5px' }}/>);
-    } else if (menu.value === true) {
-      return (<MdCheck style={{ color: 'green', position: 'absolute', right: '5px' }}/>)
+      return (<MdChevronRight className={classes.menuIconSubmenu} />);
+    } else if (/true/i.test(menu.value)) {
+      return (<MdCheckBox className={classes.menuIconOn} />)
+      // return (<MdCheck style={{ color: 'green', position: 'absolute', right: '5px' }}/>)
+    } else if (/false/i.test(menu.value)) {
+      return (<MdCheckBoxOutlineBlank className={classes.menuIconOff} />)
     }
   }
 
@@ -121,9 +145,10 @@ class Toolbar extends Component {
     y: 0,
     parentKey,
     items: _.keys(menu).map((key, idx) => {
-      const { name, sublinks, value } = menu[key];
+      const { name, sublinks, label, value } = menu[key];
       return  {
         name,
+        label,
         parentKey: menuKey,
         value : value || key,
         icon:  this.getMenuIcon(menu[key]),
@@ -145,7 +170,7 @@ class Toolbar extends Component {
     return menuItems;
   };
 
-  shouldComponentUpdate = shouldPureComponentUpdate;
+  // shouldComponentUpdate = shouldPureComponentUpdate;
 
   constructor(props) {
     super(props);
@@ -194,8 +219,31 @@ class Toolbar extends Component {
     }));
   }
 
+  getAllHovering = () => {
+    console.info('All Hovering', _.filter(this.state.menus, (menu) => menu.hovering));
+  }
+
+  getAllSubmenus = (menuKey, submenuList) => {
+    const { menus } =  this.state;
+    const menu = menus[menuKey];
+    menu.items.forEach(({ name, key, subMenu }) => {
+      if (subMenu) {
+        submenuList.push(subMenu);
+        this.getAllSubmenus(subMenu, submenuList);
+      }
+    });
+  }
+
   handleLoggerClick = (e) => {
-    console.info('handleLoggerClick', e);
+    const { menus } = this.state;
+    const { dataset: { key }, value, name } = e.currentTarget;
+    const menu = _.find(menus.logger.items, { name });
+
+    menu.value = !isTrue(menu.value);
+    menu.icon = this.getMenuIcon(menu);
+    menu.className = !menu.value ? this.props.classes.menuTextOff : '';
+
+    this.props.updateSetting(name, menu.value);
   }
 
   handleClick = (e, parentKey) => {
@@ -216,7 +264,7 @@ class Toolbar extends Component {
     const parentMenu = menus[parentKey];
     const menuItem = _.find(parentMenu.items, { key });
     parentMenu.hovering = key;
-    menuItem.className = classes.menuHover;
+    menuItem.className = /false/i.test(menuItem.value) ? classes.menuTextOff : '';
     if (menuItem.subMenu) {
       const subMenu = menus[menuItem.subMenu];
       this.showMenu(e, subMenu, menuItem.subMenu);
@@ -228,18 +276,18 @@ class Toolbar extends Component {
   hoverOutMenuItem = (e) => {
     const { menus } = this.state;
     const { classes } = this.props;
-    const { parentkey: parentKey, key } = e.currentTarget.dataset;
-    const { parentkey: newParentKey } = e.relatedTarget.dataset;
+    const { parentkey: parentKey, key } = _.get(e, 'currentTarget.dataset');
+    const newParentKey = _.get(e, 'relatedTarget.dataset.parentkey');
     const parentMenu = menus[parentKey];
     const menuItemOut = _.find(parentMenu.items, { key });
     menuItemOut.hovering = false;
-    menuItemOut.className = '';
+    menuItemOut.className = /false/i.test(menuItemOut.value) ? classes.menuTextOff : '';
     // TODO: hide all submenus not belonging to menuItem
     if (menuItemOut.subMenu) {
       const subMenu = menus[menuItemOut.subMenu];
       if (newParentKey !== menuItemOut.subMenu) {
         subMenu.hovering = false;
-        this.hideMenu(e, subMenu, menuItemOut.subMenu);
+        this.hideMenu(subMenu, menuItemOut.subMenu);
       } else {
         menuItemOut.className = classes.sublinkOpen;
         this.updateMenu(parentKey, parentMenu);
@@ -249,13 +297,20 @@ class Toolbar extends Component {
 
   hoverOutMenu = (e, parentMenu) => {
     const { menus } = this.state;
-    // console.info('hoverOutMenu', parentMenu, menus);
-    const newTarget = _.get(e, 'relatedTarget.attributes.data-parentkey.value');
+    const newTarget = _.get(e, 'relatedTarget.dataset.parentkey');
+    const outTarget = _.get(e, 'currentTarget.dataset.menukey');
     if (!newTarget) {
-      window.setTimeout(() => {
-        // console.info('closing all menus', menus);
-        // this.closeMenus();
-      }, 2000);
+      const outMenu = menus[outTarget];
+      outMenu.hovering = false;
+      window.setTimeout((({ menus, name }) => {
+        const om = menus[name];
+        if (!om.hovering) {
+          const submenus = [];
+          this.getAllSubmenus(name, submenus);
+          this.hideMenu(om, name);
+          submenus.forEach(sm => this.hideMenu(menus[sm], sm));
+        }
+      }).bind(this, { menus, name: outTarget }), 500);
     }
   }
 
@@ -267,7 +322,7 @@ class Toolbar extends Component {
     this.updateMenu(menuKey, newMenu);
   }
 
-  hideMenu = (e, menu, menuKey) => {
+  hideMenu = (menu, menuKey) => {
     const newMenu = ({ ...menu, visible: false })
     this.updateMenu(menuKey, newMenu);
   }
@@ -283,14 +338,50 @@ class Toolbar extends Component {
   }
 
   toggleMenu = (e, menuName) => {
+    this.closeMenus();
     const { menus } = this.state;
     const menuKey = menuName || e.target.value.replace(/__(.*)__/, '$1');
     const menu = menus[menuKey];
     if (menu.visible) {
-      this.hideMenu(e, menu, menuKey)
+      this.hideMenu(menu, menuKey)
     } else {
       this.showMenu(e, menu, menuKey);
     }
+  }
+
+  moveToolbar = (x, y) => {
+    this.setState({
+      position: {
+        ...this.state.position,
+        controlled: { x, y },
+        delta: { x, y }
+      }
+    });
+  }
+
+  snapLeft = () => {
+    const currPos = this.state.position.delta;
+    if (currPos.x < 10) {
+      this.setState({
+        position: {
+          ...this.state.position,
+          mini: true
+        }
+      });
+    } else {
+      const newPos = { x: 0, y: currPos.y };
+      this.moveToolbar(newPos.x, newPos.y);
+    }
+  }
+
+  expandOut= () => {
+    const currPos = this.state.position.delta;
+    this.setState({
+      position: {
+        ...this.state.position,
+        mini: false
+      }
+    });
   }
 
   handleDrag = (e, ui) => {
@@ -310,6 +401,7 @@ class Toolbar extends Component {
     this.setState({
       position :  {
         ...this.state.position,
+        controlled: false,
         activeDrags: this.state.position.activeDrags + 1
       }
     });
@@ -389,8 +481,15 @@ class Toolbar extends Component {
   }
 
   componentDidUpdate(nextProps) {
-    const { viewSets, commonSets, persistedState } = nextProps;
+    const { viewSets, commonSets, persistedState, devConfig } = nextProps;
     if (!this.state.menus && commonSets) {
+
+      // populate logger setting items
+      this.menuItems.logger.forEach(item  => {
+        item.value = _.get(devConfig, item.name);
+      });
+      console.log(this.menuItems.logger);
+
       _.merge(this.menuItems, { commonSets, viewSets, persistedState });
       const generatedMenus = this.generateMenus(this.menuItems);
       generatedMenus.logger.onClick = this.handleLoggerClick;
@@ -435,7 +534,7 @@ class Toolbar extends Component {
       return myClass;
     };
 
-    const { menus } = this.state;
+    const { menus, position } = this.state;
     return (
       <Fragment>
         {_.keys(menus).map(menuKey => (
@@ -458,13 +557,15 @@ class Toolbar extends Component {
           />
         ))}
         <Draggable
+          position={position.controlled || position.delta}
+          grid={[5, 5]}
           onStart={() => this.onDragStart()}
           onStop={() => this.onDragStop()}
           onDrag={(e, ui) => this.handleDrag(e, ui)}>
-          <div className={classes.container}>
+          <div className={`${position.mini ? classes.miniContainer : ''} ${classes.container}`}>
             <div className={classes.elements} ref={this.getRef}>
               <div className={classes.header}>
-                <div className={classes.headerContainer}>
+                <div className={`${position.mini ? classes.headerMini : ''} ${classes.headerContainer}`}>
                   <div className={classes.headerRow}>
                     <span className={classes.label}>Client</span>
                     <span className={classes.value}>{`v${appVersion}`}</span>
@@ -474,9 +575,19 @@ class Toolbar extends Component {
                     <span className={classes.value}>{`v${apiVersion}`}</span>
                   </div>
                 </div>
-                <div className={classes.expandButtonWrapper}>
-                  <Button theme={theme}>
-                    {`<<`}
+                <div className={classes.visibilityWrapper}>
+                  <Button
+                    wrapperClass={classes.exitButtonWrapper}
+                    buttonClass={classes.exitButton}
+                    theme={theme}>
+                    {`X`}
+                  </Button>
+                  <Button
+                    theme={theme}
+                    wrapperClass={classes.expandButtonWrapper}
+                    className={classes.expandButton}
+                    onClick={() => position.mini ? this.expandOut() : this.snapLeft()} >
+                    {`${position.mini ? `>>` : '<<'}`}
                   </Button>
                 </div>
               </div>
@@ -485,23 +596,25 @@ class Toolbar extends Component {
                 buttonClass={getButtonClass(commonSets).button}
                 wrapperClass={getButtonClass(commonSets).wrapper}
                 onClick={(e) => this.toggleMenu(e, 'commonSets')}
+                disabled={!commonSets || commonSets.length === 0}
                 theme={theme}>
-                Global Actions
+                {`${position.mini ? 'GA' : 'Global Actions'}`}
               </Button>
               <Divider />
               <Button
                 buttonClass={getButtonClass(viewSets).button}
                 wrapperClass={getButtonClass(viewSets).wrapper}
+                disabled={!viewSets || viewSets.length === 0}
                 onClick={(e) => this.toggleMenu(e, 'viewSets')}
                 theme={theme}>
-                {currentView} Actions
+                {`${position.mini ? 'VA' : currentView + ' Actions'}`}
               </Button>
               <Divider />
               <Button
                 wrapperClass={classes.buttonWrapper}
                 onClick={(e) => this.toggleMenu(e, 'logger')}
                 theme={theme}>
-                Logger
+                {`${position.mini ? 'LG' : 'Logger'}`}
               </Button>
               <Divider />
               <Button
@@ -509,7 +622,16 @@ class Toolbar extends Component {
                 wrapperClass={getButtonClass(false).wrapper}
                 onClick={(e) => this.toggleMenu(e, 'persistedState')}
                 theme={theme}>
-                Persist State
+                {`${position.mini ? 'PS' : 'Persist State'}`}
+              </Button>
+              <Divider />
+              <Button
+                buttonClass={getButtonClass(false).button}
+                wrapperClass={getButtonClass(false).wrapper}
+                disabled={true}
+                onClick={(e) => this.toggleMenu(e, 'inspector')}
+                theme={theme}>
+                {`${position.mini ? 'RI' : 'Redux Inspector'}`}
               </Button>
             </div>
             {(this.state.progress > 0 || this.state.statusTitle || this.state.statusText) && (
@@ -542,6 +664,7 @@ class Toolbar extends Component {
 
 const stateProps = (state) => ({
   appConfig      : _.get(state, 'config.app'),
+  devConfig      : _.get(state, 'config.dev'),
   persistedState : hudPersistStateSelector(state),
   commonSets     : commonActionSetsSelector(state),
   viewSets       : viewActionSetsSelector(state),
@@ -554,5 +677,6 @@ const actionCreators = {
   startActionSet:   devStartActionSet,
   doAction:         devDoAction,
   endActionSet:     devEndActionSet,
+  updateSetting:    devUpdateSetting
 }
 export default connect(stateProps, actionCreators)(withStyles(styles)(Toolbar));

@@ -59,10 +59,10 @@ export default (initialState = {}, devConfig) => {
     middleware.push(reduxFreeze);
     enhancers.push(persistState(getDebugSessionKey()));
     enhancers.push(extensionPersistSelector);
-    if (devExt && devConfig.showExtension) {
+    if (devExt && devConfig.extension.show) {
       debug('Enabling DevTools Chrome Extension');
-      composeEnhancers = devExt(devConfig.extensionOptions);
-    } else if (devConfig.showInspector) {
+      composeEnhancers = devExt(devConfig.extension);
+    } else if (devConfig.inspector.show) {
       debug('Enabling On-Screen DevTools');
       enhancers.push(DevTools.instrument({ shouldCatchErrors: true }));
     }

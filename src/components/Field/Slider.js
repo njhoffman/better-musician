@@ -95,7 +95,7 @@ const createSlider = (SliderComponent) => (
     }
 
     render() {
-      const { classes, label, valueDisplay, fullWidth, mode, input, ...props }  = this.props;
+      const { classes, label, valueDisplay, fullWidth, mode, input }  = this.props;
       const { value: currValue } = this.state;
       input.value = currValue;
       return (
@@ -116,7 +116,7 @@ const createSlider = (SliderComponent) => (
             disabled={mode !== FIELD_EDIT}
             onChange={(e, value) => this.setState({ value })}
             value={currValue}
-            {...{ ...props, input }}
+            {...{ input }}
           />
         </FormControl>
       );

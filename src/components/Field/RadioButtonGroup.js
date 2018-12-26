@@ -51,18 +51,24 @@ const RadioGroupForm = createComponent(
 
 const createRadioButtonGroup = (RadioComponent) => (
   class RadioButtonGroup extends Component {
-    static propTypes = {
-      options: PropTypes.oneOfType([
-        PropTypes.array,
-        PropTypes.object
-      ]).isRequired, // can be object or array
-      mode: PropTypes.string,
-      style:  PropTypes.instanceOf(Object)
+    static get propTypes() {
+      return {
+        classes:  PropTypes.instanceOf(Object).isRequired,
+        options: PropTypes.oneOfType([
+          PropTypes.array,
+          PropTypes.object
+        ]).isRequired, // can be object or array
+        mode: PropTypes.string,
+        label: PropTypes.string,
+        input: PropTypes.instanceOf(Object).isRequired
+      };
     }
 
-    static defaultProps = {
-      style: {},
-      mode: FIELD_EDIT
+    static get defaultProps() {
+      return {
+        mode: FIELD_EDIT,
+        label: ''
+      };
     }
 
     state = {
@@ -83,7 +89,7 @@ const createRadioButtonGroup = (RadioComponent) => (
     )
 
     render() {
-      const { label, options, classes, mode, ...props } = this.props;
+      const { label, options, classes, mode, input } = this.props;
       const { value } = this.state;
       const readOnly = mode !== FIELD_EDIT;
       return (
@@ -93,9 +99,11 @@ const createRadioButtonGroup = (RadioComponent) => (
           <FormLabel component='legend'>{label}</FormLabel>
           <RadioComponent
             onChange={(e) => this.handleChange(e)}
-            value={value}
-            {...props}>
-            {_.map(_.keys(options), optKey => this.renderRadioButton(optKey, options[optKey], readOnly))}
+            input={input}
+            value={value}>
+            {_.map(_.keys(options), optKey => (
+              this.renderRadioButton(optKey, options[optKey], readOnly)
+            ))}
           </RadioComponent>
         </FormControl>
       );

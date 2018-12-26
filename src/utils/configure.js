@@ -40,7 +40,7 @@ const getClientWindowProps = () => {
 };
 
 const loadConfiguration = ({ endpoints, settings, dev }) => dispatch => {
-  const { inspectorOptions, showInspector } = dev;
+  const { inspector, inspector: { show: showInspector } } = dev;
   // don't render anything for OAuth redirects
   if (settings.currentLocation && settings.currentLocation.match(/blank=true/)) {
     return Promise.resolve({ blank: true });
@@ -49,13 +49,13 @@ const loadConfiguration = ({ endpoints, settings, dev }) => dispatch => {
   // figure out initial window dimensions
   const clientInfo = getClientWindowProps();
 
-  const devInspector = showInspector && (clientInfo.window.innerWidth > 600 || !inspectorOptions.hideMobile);
+  const devInspector = showInspector && (clientInfo.window.innerWidth > 600 || !inspector.hideMobile);
 
   // dont show osd if mobile viewport
   dispatch(configureLoad({
     endpoints,
     clientInfo,
-    devConfig: { ...dev, showInspector: devInspector }
+    devConfig: { ...dev, inspector: { ...dev.inspector, show: devInspector } }
   }));
 
   // instead of componentDidMount on AppContainer, any drawkback?

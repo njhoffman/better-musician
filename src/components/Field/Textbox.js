@@ -46,7 +46,6 @@ const createTextbox = (TextComponent) => ({
   classes,
   disabled,
   InputProps,
-  preview,
   mode,
   fullWidth,
   disableUnderline,
@@ -61,9 +60,10 @@ const createTextbox = (TextComponent) => ({
         variant='outlined'
         InputProps={{
           readOnly: true,
+          autoComplete: 'off',
           ...InputProps
         }}
-        {...{ ...props, input, meta, label, fullWidth }}
+        {...{ input, meta, label, fullWidth }}
       />
     );
   } else if (mode === FIELD_VIEW) {
@@ -86,7 +86,7 @@ const createTextbox = (TextComponent) => ({
         autoComplete: 'off',
         ...InputProps
       }}
-      {...{ ...props, input, meta, label, fullWidth }}
+      {...{ input, meta, label, fullWidth }}
     />
   );
 };

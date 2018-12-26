@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -64,6 +65,7 @@ const AppContainer = ({
   history,
   currentView,
   classes: { appWrapper, contentWrapper, contentContainer, footerFiller },
+  devToolbarVisible,
   store,
   ...props
 }) => (
@@ -84,7 +86,7 @@ const AppContainer = ({
       <Footer />
       <div className={footerFiller} />
     </div>
-    <DevToolbar />
+    {devToolbarVisible && <DevToolbar visible={devToolbarVisible} />}
   </ErrorBoundary>
 );
 
@@ -93,14 +95,16 @@ AppContainer.defaultProps = {
 };
 
 AppContainer.propTypes = {
-  history:     PropTypes.instanceOf(Object).isRequired,
-  store:       PropTypes.instanceOf(Object).isRequired,
-  classes:     PropTypes.instanceOf(Object).isRequired,
-  currentView: PropTypes.string
+  history           : PropTypes.instanceOf(Object).isRequired,
+  store             : PropTypes.instanceOf(Object).isRequired,
+  classes           : PropTypes.instanceOf(Object).isRequired,
+  currentView       : PropTypes.string,
+  devToolbarVisible : PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  currentView: state.ui.currentView
+  currentView       : _.get(state, 'ui.currentView'),
+  devToolbarVisible : _.get(state, 'config.dev.toolbar.show')
 });
 
 export default compose(

@@ -31,3 +31,10 @@ export const inputText = (form, field, data, delay) => {
   }));
   return newAction;
 };
+
+export const devUpdateSetting = (path, val) => (dispatch) => (
+  dispatch({
+    type: DEV.UPDATE_SETTING,
+    payload: { [path]: val }
+  })
+);

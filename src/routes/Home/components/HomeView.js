@@ -23,6 +23,9 @@ const styles = (theme) => ({
   },
   divider: {
     margin: theme.spacing.unit
+  },
+  button: {
+    margin: '5px'
   }
 });
 
@@ -52,16 +55,19 @@ export const HomeView = ({ classes, showSnackbar }) => (
           </Typography>
           <Button
             color='secondary'
+            className={classes.button}
             onClick={() => showSnackbar('This is a test success message', 'success')}>
             Success
           </Button>
           <Button
             color='secondary'
+            className={classes.button}
             onClick={() => showSnackbar('This is a test information message', 'info')}>
             Info
           </Button>
           <Button
             color='secondary'
+            className={classes.button}
             onClick={() => showSnackbar(
               'This is a test warning message, it is supposed to be very long to simulate multiline text.',
               'warning'
@@ -70,6 +76,7 @@ export const HomeView = ({ classes, showSnackbar }) => (
           </Button>
           <Button
             color='secondary'
+            className={classes.button}
             onClick={() => showSnackbar('This is a test error message', 'error')}>
             Error
           </Button>
@@ -83,18 +90,21 @@ export const HomeView = ({ classes, showSnackbar }) => (
           <Button
             color='secondary'
             variant='outlined'
+            className={classes.button}
             onClick={() => showSnackbar('This is a test success message', 'success', 'Test Success Title', 'left')}>
             Success
           </Button>
           <Button
             color='secondary'
             variant='outlined'
+            className={classes.button}
             onClick={() => showSnackbar('This is a test information message', 'info', 'Test Info Title', 'left')}>
             Info
           </Button>
           <Button
             color='secondary'
             variant='outlined'
+            className={classes.button}
             onClick={() => showSnackbar(
               'This is a test warning message, it is supposed to be very long to simulate multiline text.',
               'warning',
@@ -106,6 +116,7 @@ export const HomeView = ({ classes, showSnackbar }) => (
           <Button
             color='secondary'
             variant='outlined'
+            className={classes.button}
             onClick={() => showSnackbar('This is a test error message', 'error', 'Test Error Title', 'left')}>
             Error
           </Button>
@@ -120,18 +131,21 @@ export const HomeView = ({ classes, showSnackbar }) => (
           <Button
             color='secondary'
             variant='contained'
+            className={classes.button}
             onClick={() => showSnackbar('This is a test success message', 'success', 'Test Success Title', 'over')}>
             Success
           </Button>
           <Button
             color='secondary'
             variant='contained'
+            className={classes.button}
             onClick={() => showSnackbar('This is a test information message', 'info', 'Test Info Title', 'over')}>
             Info
           </Button>
           <Button
             color='secondary'
             variant='contained'
+            className={classes.button}
             onClick={() => showSnackbar(
               'This is a test warning message, it is supposed to be very long to simulate multiline text.',
               'warning',
@@ -143,6 +157,7 @@ export const HomeView = ({ classes, showSnackbar }) => (
           <Button
             color='secondary'
             variant='contained'
+            className={classes.button}
             onClick={() => showSnackbar('This is a test error message', 'error', 'Test Error Title', 'over')}>
             Error
           </Button>

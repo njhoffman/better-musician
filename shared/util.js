@@ -42,6 +42,24 @@ const isJson = (str) => {
   return true;
 };
 
+const isTrue = (value) => {
+  const val = typeof value === 'string'
+    ? value.trim().toLowerCase()
+    : value;
+
+  switch (val) {
+    case true:
+    case 'true':
+    case 1:
+    case '1':
+    case 'on':
+    case 'yes':
+      return true;
+    default:
+      return false;
+  }
+};
+
 const isClass = (func) => (
   typeof func === 'function' && /^class\s/.test(Function.prototype.toString.call(func))
 );
@@ -53,5 +71,6 @@ module.exports = {
   padZeros,
   numCommas,
   isJson,
-  isClass
+  isClass,
+  isTrue
 };

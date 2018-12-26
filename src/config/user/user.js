@@ -52,33 +52,16 @@ export default {
   },
   settings: {},
   dev: {
-    showInspector: false,
-    showChart: false,
-    showToolbar: false,
-    showExtension: true,
-    monitorProps:  userMonitorProps,
-    extensionOptions: {
-      name: 'better-musician',
-      theme: 'twilight',
-      maxAge: 100,
-      styles: {
-        container: {
-          backgroundColor: 'rgb(0, 11, 21)',
-        },
-        buttonBar: {
-          backgroundColor: '#050b16',
-          borderColor: '#1f2a35'
-        }
-      }
-    },
-    inspectorOptions: {
+    inspector: {
+      show: false,
       hideMobile: true,
       actions: {
         exclude: [],
         style: { }
       }
     },
-    chartOptions: {
+    chart: {
+      show: false,
       actions: {
         exclude: [
           '@@redux-form/BLUR',
@@ -93,6 +76,25 @@ export default {
           '@@redux-form/UNREGISTER_FIELD': { color: '#838383' },
         }
       }
-    }
+    },
+    toolbar: {
+      show: true
+    },
+    extension: {
+      show: true,
+      name: 'better-musician',
+      theme: 'twilight',
+      maxAge: 100,
+      styles: {
+        container: {
+          backgroundColor: 'rgb(0, 11, 21)',
+        },
+        buttonBar: {
+          backgroundColor: '#050b16',
+          borderColor: '#1f2a35'
+        }
+      }
+    },
+    monitorProps:  userMonitorProps
   }
 };

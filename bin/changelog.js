@@ -11,7 +11,7 @@ const {
   commitSummary,
   fileDiff,
   depDiff
-} = require('./git');
+} = require('./changelog/git');
 
 const {
   mdHeader,
@@ -21,13 +21,13 @@ const {
   mdDepSummary,
   mdDepOutdated,
   mdDepDiff
-} = require('./changelog.templates');
+} = require('./changelog/templates');
 
 const {
   incrementVersion,
   getMdPath,
   outdatedDeps
-} = require('./changelog.utils');
+} = require('./changelog/utils');
 
 const { version: currVersion, dependencies, devDependencies }  = require('../package.json');
 

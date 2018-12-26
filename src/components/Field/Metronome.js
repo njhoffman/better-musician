@@ -53,7 +53,9 @@ class Metronome extends Component {
   render() {
     const { mode, classes, label, fields } = this.props;
     return (
-      <FormControl fullWidth className={mode === FIELD_VIEW_ALT ? classes.outlined : ''}>
+      <FormControl
+        fullWidth
+        className={mode === FIELD_VIEW_ALT ? classes.outlined : ''}>
         <FormLabel className={classes.fieldLabel}>
           {label}
         </FormLabel>
@@ -75,8 +77,7 @@ class Metronome extends Component {
                 2: '2/4',
                 3: '3/4',
                 4: '4/4',
-                5: '3/4',
-                6: '3/2'
+                5: '3/2'
               }}
             />
           </Column>

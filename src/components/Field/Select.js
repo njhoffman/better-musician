@@ -64,6 +64,7 @@ const SelectForm = createComponent(MaterialSelect, ({
 }) => ({
   ...mapError({ ...props, hasHelperText: false }),
   ...inputProps,
+  ...props,
   value,
   onChange: event => {
     onChange(event.target.value);
@@ -77,10 +78,10 @@ const SelectForm = createComponent(MaterialSelect, ({
 const createSelect = (SelectComponent) => ({
   label,
   options,
+  name,
   mode,
-  input,
-  initialValues,
   classes,
+  input,
   ...props
 }) => {
   if (mode !== FIELD_EDIT) {
@@ -100,7 +101,9 @@ const createSelect = (SelectComponent) => ({
       <InputLabel shrink className={classes.label}>
         {label}
       </InputLabel>
-      <SelectComponent {...{ ...props, input, label }} displayEmpty>
+      <SelectComponent
+        {...{ ...props, input }}
+        displayEmpty>
         {generateMenu(options)}
       </SelectComponent>
     </FormControl>

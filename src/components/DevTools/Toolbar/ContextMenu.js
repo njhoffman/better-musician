@@ -70,8 +70,8 @@ export default class ContextMenu extends Component {
   updateMenu() {
     const { buttonProps } = this.props;
     this.menuItems = this.items.map(item => {
-      const { name, key, value, type, parentKey, icon, className } = item;
-      const buttonStyle = { paddingRight: '25px' };
+      const { name, key, label, value, type, parentKey, icon, className} = item;
+      const buttonStyle = { paddingRight: `${icon ? '25px' : ''}` };
       if (type === 'button') {
         return item;
       }
@@ -79,12 +79,13 @@ export default class ContextMenu extends Component {
         <button
           key={key}
           value={value}
+          name={name}
           className={`${className || ''}`}
           data-key={key}
           data-parentkey={parentKey}
           style={buttonStyle}
           {...buttonProps}>
-          {name}
+          {label || name}
           {icon}
         </button>
       );

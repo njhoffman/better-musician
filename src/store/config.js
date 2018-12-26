@@ -1,3 +1,6 @@
+import _ from 'lodash';
+
+import * as DEV from 'constants/dev';
 import * as CONF from 'constants/config';
 import * as API from 'constants/api';
 import * as AUTH from 'constants/auth';
@@ -23,13 +26,11 @@ const initialState = {
     apiVersion: '?.?.?'
   },
   dev: {
-    showInspector:    false,
-    showChart:        false,
-    showToolbar:      false,
-    showExtension:    false,
-    inspectorOptions: {},
-    chartOptions:     {},
-    loggerOptions:    {}
+    inspector: { },
+    extension: { },
+    chart: { },
+    logger: { },
+    toolbar: { }
   }
 };
 
@@ -41,8 +42,17 @@ const configureLoad = (state, { payload: { devConfig, endpoints, clientInfo, app
   dev:       { ...state.dev, ...devConfig }
 });
 
+const updateDevSetting = (state, payload) => {
+  const key = Object.keys(payload)[0];
+  const val = payload[key];
+  const devState = _.cloneDeep(state.dev);
+  _.set(devState, key, val);
+  return { ...state, dev: devState };
+};
 
 const ACTION_HANDLERS = {
+  [DEV.UPDATE_SETTING]: (state, { payload }) => updateDevSetting(state, payload),
+
   [API.GET_VERSION_COMPLETE]: (state, { payload }) => ({
     ...state,
     loading: true,

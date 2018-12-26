@@ -17,8 +17,8 @@ const styles = (theme) => ({
       margin: '0px'
     },
     flex: '1 1 auto',
-    width: '100%',
-    maxWidth: '100%',
+    // width: '100%',
+    // maxWidth: '100%',
     margin: '4px 0px'
   }
 });
@@ -43,7 +43,6 @@ const FormField = ({
 
 FormField.defaultProps = {
   centerOnSmall : false,
-  preview       : false,
   style         : {},
   large         : 8,
   medium        : 10,
@@ -52,7 +51,6 @@ FormField.defaultProps = {
 
 FormField.propTypes = {
   centerOnSmall : PropTypes.bool,
-  preview       : PropTypes.bool,
   style         : PropTypes.instanceOf(Object),
   small         : PropTypes.number,
   medium        : PropTypes.number,

@@ -11,25 +11,33 @@ export default {
     // cleanSession:        true
   },
   dev: {
-    showInspector: false,
-    showChart: false,
-    showToolbar: true,
-    showExtension: true,
-    extensionOptions: {
+    toolbar: {
+      show: true,
+      position: {
+        y: 100,
+        x: 10
+      },
+      expanded: true
+    },
+    extension: {
+      show: true,
       maxAge: 1000
     },
-    inspectorOptions: {
+    inspector: {
+      show: false,
       hideMobile: true,
     },
-    chartOptions: {
+    chart: {
+      show: false,
       styledActions: {},
       excludedActions: []
     },
-    loggerOptions: {
-      level: 'trace',
+    logger: {
+      level: 6, // trace
       expandObjects: true,
       clearOnReload: true,
-      levels: {},
+      logRequests: true,
+      colors: true,
       subsystems: {
         include: [],
         exclude: [],

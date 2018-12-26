@@ -97,10 +97,10 @@ export const ProfileView = ({
           </Tabs>
         </AppBar>
         <form className={classes.form} autoComplete='off'>
-          <FormRow small={10} medium={8}>
+          <FormRow small={10} medium={6}>
             { ProfileImage(classes) }
           </FormRow>
-          <FormRow small={10} medium={8}>
+          <FormRow small={10} medium={6}>
             <FormField
               fullWidth={false}
               name='email'
@@ -110,18 +110,18 @@ export const ProfileView = ({
             />
           </FormRow>
           <div className={classes.fields}>
-            <FormRow small={10} medium={8}>
+            <FormRow small={10} medium={6}>
               <FormField name='firstName' type='text' label='First Name' fullWidth />
             </FormRow>
-            <FormRow small={10} medium={8}>
+            <FormRow small={10} medium={6}>
               <FormField name='lastName' type='text' label='Last Name' fullWidth />
             </FormRow>
-            <FormRow small={10} medium={8}>
+            <FormRow small={10} medium={6}>
               <FormField name='notificationsEmail' type='text' label='Notifications Email' fullWidth />
             </FormRow>
           </div>
           <Divider className={classes.buttonDivider} />
-          <FormRow small={10} medium={8}>
+          <FormRow small={10} medium={6}>
             <Column className={classes.buttonBar}>
               <Button
                 type='submit'
