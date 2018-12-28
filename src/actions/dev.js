@@ -35,6 +35,6 @@ export const inputText = (form, field, data, delay) => {
 export const devUpdateSetting = (path, val) => (dispatch) => (
   dispatch({
     type: DEV.UPDATE_SETTING,
-    payload: { [path]: val }
+    payload: { [path.replace(/\.\d+$/, '')]: val }
   })
 );

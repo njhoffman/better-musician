@@ -71,52 +71,52 @@ const LoginView = ({
     <Paper elevation={5} className={classes.contentContainer}>
       <div className={classes.loginContainer}>
         {isSignedIn && (
-          <Fragment>
-            <Typography variant='body2'>
-              You are already logged in.  Would you like to log out?!
-              <SignOutButton label='LOGOUT' next={() => { }} />
-            </Typography>
-          </Fragment>
+        <Fragment>
+          <Typography variant='body2'>
+                You are already logged in.  Would you like to log out?!
+            <SignOutButton label='LOGOUT' next={() => { }} />
+          </Typography>
+        </Fragment>
         )}
         {!isSignedIn && (
-          <Fragment>
-            <Typography variant='body1'>
-              Sign in to
-              <br />
-              <i>BetterMusician.io</i>
-            </Typography>
-            <Row>
-              <Column>
-                <OAuthSignInButton
-                  label='Sign Up with Facebook'
-                  primary
-                  iconAlign='left'
-                  iconHeight={1.8}
-                  className={classes.facebookButton}
-                  icon={<SocialIcon name='facebook' />}
-                  provider='facebook'
-                />
-              </Column>
-            </Row>
-            <Row>
-              <Column>
-                <OAuthSignInButton
-                  label='Sign Up With Google'
-                  primary
-                  iconAlign='left'
-                  className={classes.googleButton}
-                  iconHeight={1.8}
-                  icon={<SocialIcon name='google' />}
-                  provider='google'
-                />
-              </Column>
-            </Row>
-            <div className={classes.divider}>
-              <Typography className={classes.dividerText}>or, sign up with email</Typography>
-            </div>
-            <EmailSignInForm next={() => history.push('/songs')} />
-          </Fragment>
-        ) }
+        <Fragment>
+          <Typography variant='body1'>
+                Sign in to
+            <br />
+            <i>BetterMusician.io</i>
+          </Typography>
+          <Row>
+            <Column>
+              <OAuthSignInButton
+                label='Sign Up with Facebook'
+                primary
+                iconAlign='left'
+                iconHeight={1.8}
+                className={classes.facebookButton}
+                icon={<SocialIcon name='facebook' />}
+                provider='facebook'
+              />
+            </Column>
+          </Row>
+          <Row>
+            <Column>
+              <OAuthSignInButton
+                label='Sign Up With Google'
+                primary
+                iconAlign='left'
+                className={classes.googleButton}
+                iconHeight={1.8}
+                icon={<SocialIcon name='google' />}
+                provider='google'
+              />
+            </Column>
+          </Row>
+          <div className={classes.divider}>
+            <Typography className={classes.dividerText}>or, sign up with email</Typography>
+          </div>
+          <EmailSignInForm next={() => history.push('/songs')} />
+        </Fragment>
+        )}
       </div>
     </Paper>
   </Column>
@@ -133,8 +133,9 @@ const stateProps = (state) => ({
   settings: state.login,
   isSignedIn: state.user.isSignedIn
 });
+
 export default compose(
   withRouter,
   connect(stateProps, actionCreators),
-  withStyles(styles)
+  withStyles(styles),
 )(LoginView);

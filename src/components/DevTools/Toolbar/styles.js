@@ -28,6 +28,19 @@ const styles = (theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
   },
+  infoContainer: {
+    width: '90%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    textAlign: 'center'
+  },
+  infoRow: {
+    width: '100%',
+    lineHeight: '1.0', // 1.5
+    fontSize: '0.75em',
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
   headerContainer: {
     width:  'calc(100% - 30px)',
     padding: '5px 15px',
@@ -46,6 +59,17 @@ const styles = (theme) => ({
   value: {
     color: '#a8c5f3'
   },
+  infoLabel: {
+    width: '100%',
+    color: '#baa',
+    fontSize: '1.2em',
+    lineHeight: '1.0em',
+    fontVariant: 'all-small-caps'
+  },
+  infoVal: {
+    width: '100%',
+    color: '#98b5d3'
+  },
   exitButtonWrapper: {
     display: 'block',
     zIndex: 1,
@@ -54,7 +78,6 @@ const styles = (theme) => ({
   exitButton: {
     display: 'block',
     minHeight: '1.2em !important',
-    width: '100%',
     fontWeight: 'bold',
     width: '20px !important',
     padding: '0px !important',
@@ -70,6 +93,7 @@ const styles = (theme) => ({
     // marginBottom: '5px'
   },
   expandButton: {
+    minHeight: '25px',
     display: 'block',
     width: '20px !important',
     padding: '0px !important',
@@ -122,19 +146,55 @@ const styles = (theme) => ({
     backgroundColor: '#262b30 !important',
     // color: '#ffffff !important'
   },
+  menuIconLevelOff: {
+    color: '#444444',
+    height: '0.8em',
+    width: '0.8em',
+    float: 'right',
+    marginTop: '0.2em',
+    marginLeft: '0.8em',
+  },
+  menuIconLevelOn: {
+    color: '#66bb99',
+    marginTop: '0.2em',
+    marginLeft: '0.8em',
+    height: '0.8em',
+    width: '0.8em',
+    float: 'right'
+  },
+  menuIconCheck: {
+    color: '#66bb99',
+    height: '1.2em',
+    width: '1.2em',
+    marginLeft: '0.4em',
+    float: 'right'
+  },
   menuIconOn: {
     color: '#66bb99',
-    position: 'absolute',
-    height: '1.3em',
-    width: '1.3em',
-    right: '2px'
+    height: '1.2em',
+    width: '1.2em',
+    marginLeft: '0.4em',
+    float: 'right'
   },
   menuIconOff: {
-    position: 'absolute',
-    height: '1.3em',
-    width: '1.3em',
-    right: '2px',
+    height: '1.2em',
+    width: '1.2em',
+    marginLeft: '0.4em',
+    float: 'right',
     color: '#666'
+  },
+  menuIconSubmenu: {
+    height: '1.2em',
+    width: '1.2em',
+    marginLeft: '0.4em',
+    float: 'right',
+    fontWeight: 'bold'
+  },
+  menuTextLevelOn: {
+    color: '#9aa'
+  },
+  menuTextLevelSelected: {
+    color: '#fff'
   },
   menuTextOn: {
     color: '#fff !important',
@@ -142,14 +202,6 @@ const styles = (theme) => ({
   menuTextOff: {
     color: '#666 !important',
   },
-  menuIconSubmenu: {
-    position: 'absolute',
-    height: '1.3em',
-    width: '1.3em',
-    right: '2px',
-    fontWeight: 'bold'
-  }
-
 });
 
 export default styles;

@@ -9,7 +9,7 @@ import { configureStart, configureComplete } from 'actions/api';
 import appConfig from 'config';
 import loadConfiguration from 'utils/configure';
 import createStore from 'store/createStore';
-import { startMemoryStats, domStats } from 'utils/app';
+import { domStats } from 'utils/app';
 import { init as initLog } from 'shared/logger';
 import devTools from 'components/DevTools/DevTools';
 
@@ -41,7 +41,6 @@ const render = (Component) => {
     </Provider>,
     MOUNT_NODE
   );
-  startMemoryStats();
 };
 
 const renderError = (err) => {

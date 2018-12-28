@@ -1,24 +1,27 @@
 import _ from 'lodash';
+import flatten from 'flat';
 import { humanMemorySize } from 'shared/util';
 import { init as initLog } from 'shared/logger';
 
-const { debug, error } = initLog('app');
+const { error } = initLog('app');
 
 let lastHeapSize = 0;
-export const startMemoryStats = (interval = 10000) => {
-  const memoryStats = () => {
-    if (window.performance && window.performance.memory) {
-      const { totalJSHeapSize, usedJSHeapSize } = window.performance.memory;
-      const used = humanMemorySize(usedJSHeapSize, true);
-      const total = humanMemorySize(totalJSHeapSize, true);
-      if (Math.abs(usedJSHeapSize - lastHeapSize) > 10485760) {
-        debug(`-- JS Heap Size: ${used} / ${total}`);
-        lastHeapSize = usedJSHeapSize;
-      }
+
+const memoryStats = () => {
+  if (window.performance && window.performance.memory) {
+    const { totalJSHeapSize, usedJSHeapSize } = window.performance.memory;
+    const used = humanMemorySize(usedJSHeapSize, true);
+    const total = humanMemorySize(totalJSHeapSize, true);
+    if (Math.abs(usedJSHeapSize - lastHeapSize) > 10485760) {
+      // debug(`-- JS Heap Size: ${used} / ${total}`);
+      lastHeapSize = usedJSHeapSize;
     }
-  };
-  setTimeout(memoryStats, interval);
+    return { used, total };
+  }
+  return false;
 };
+
+export const startMemoryStats = (interval = 10000) => setTimeout(memoryStats, interval);
 
 export const domStats = () => {
   const stats = { maxDepth: 0, totalNodes: 0, totalDepth: 0 };
@@ -71,3 +74,70 @@ export const onError = (err, { componentStack }, props) => {
   console.error(err, `Propkeys: ${Object.keys(props).join(', ')}`);
   /* eslint-enable no-console */
 };
+
+const memorySizeOf = (obj) => {
+  let bytes = 0;
+
+  /* eslint-disable no-case-declarations, no-restricted-syntax, no-prototype-builtins, no-continue */
+  const sizeOf = (childObj) => {
+    if (childObj !== null && childObj !== undefined) {
+      switch (typeof childObj) {
+        case 'number':
+          bytes += 8;
+          break;
+        case 'string':
+          bytes += childObj.length * 2;
+          break;
+        case 'boolean':
+          bytes += 4;
+          break;
+        case 'object':
+          const objClass = Object.prototype.toString
+            .call(childObj).slice(8, -1);
+
+          if (objClass === 'Object' || objClass === 'Array') {
+            for (const key in childObj) {
+              if (!childObj.hasOwnProperty(key)) {
+                continue;
+              }
+              sizeOf(childObj[key]);
+            }
+          } else {
+            bytes += childObj.toString().length * 2;
+          }
+          break;
+        default:
+          bytes += 0;
+          break;
+      }
+    }
+    return bytes;
+  };
+
+  return humanMemorySize(sizeOf(obj));
+};
+
+export const getStateStats = (currState) => {
+  const stateFlat = flatten(currState);
+  const stateFields = {};
+
+  Object.keys(stateFlat).forEach(fieldKey => {
+    const base = fieldKey
+      .split('.')
+      .slice(0, -1)
+      .join('.');
+    stateFields[base] = !stateFields[base] ? 1 : stateFields[base] + 1;
+  });
+
+  return {
+    keys:       Object.keys(stateFields).length,
+    primitives: Object.keys(stateFlat).length,
+    size:       memorySizeOf(currState)
+  };
+};
+
+export const getClientStats = () => ({
+  // maxDepth, totalNodes, totalDepth, averageDepth
+  dom: domStats(),
+  memory: memoryStats()
+});

@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Paper, withStyles, TablePagination } from '@material-ui/core';
+import { Paper, TablePagination } from '@material-ui/core';
 import { Column } from 'react-foundation';
+import connectHocs from 'components/hoc/connect';
 
 // import SongsPagination from './SongsPagination';
 import {
@@ -44,6 +44,7 @@ export const SongsView = ({
   perPage,
   songCount,
   classes,
+  logger,
   ...props
 }) => (
   <Column small={12} medium={11} large={10} className={classes.root}>
@@ -77,17 +78,24 @@ SongsView.propTypes = {
   setCurrent: PropTypes.func.isRequired
 };
 
-const mapActionCreators = {
+const actionCreators = {
   setPerPage: setPaginationPerPage,
   setCurrent: setPaginationCurrent
 };
 
-const mapStateToProps = (state) => ({
+const stateProps = (state) => ({
   currentPage: state.SongsView.paginationCurrent,
   perPage:     state.SongsView.paginationPerPage,
   songCount:   [].concat(_.get(state, 'orm.Song.items')).length
 });
 
-const withConnect = connect(mapStateToProps, mapActionCreators);
-const decorators = (View) => withConnect(withStyles(styles)(View));
-export default decorators(SongsView);
+export default connectHocs({
+  redux: [stateProps, actionCreators],
+  styles
+}, SongsView);
+
+// export default compose(
+//   withLogger,
+//   connect(stateProps, actionCreators),
+//   withStyles(styles),
+// )(SongsView);

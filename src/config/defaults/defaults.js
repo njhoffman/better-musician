@@ -34,10 +34,20 @@ export default {
     },
     logger: {
       level: 6, // trace
+      colors: {
+        trace: '#ccffff',
+        debug: '#88ffee',
+        info:  '#44aabb',
+        log :  '#00aa66',
+        warn:  '#aa6622',
+        error: '#ff0000',
+        fatal: '#ff0000'
+      },
+      showColors: true,
       expandObjects: true,
       clearOnReload: true,
       logRequests: true,
-      colors: true,
+      logActions: true,
       subsystems: {
         include: [],
         exclude: [],
