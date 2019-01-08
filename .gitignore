@@ -9,6 +9,8 @@ rethinkdb_data
 
 dist
 coverage
+reports/coverage/**
+reports/plato/**
 
 tmp/
 .idea/
