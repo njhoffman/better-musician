@@ -57,14 +57,14 @@ const cbFactory = (props, Component) => {
   );
 };
 
-const createCheckbox = (Component) => (props) => cbFactory(props, Component);
+const createCheckbox = (Component) => withStyles(styles)((props) => cbFactory(props, Component));
 
 const defaultProps = {
   mode: FIELD_EDIT
 };
 
 const propTypes = {
-  mode    : PropTypes.bool,
+  mode    : PropTypes.string,
   label   : PropTypes.string.isRequired,
   classes : PropTypes.instanceOf(Object).isRequired,
   input   : PropTypes.instanceOf(Object).isRequired
@@ -73,12 +73,8 @@ const propTypes = {
 cbFactory.defaultProps = defaultProps;
 cbFactory.propTypes = propTypes;
 
-const Checkbox = withStyles(styles)(createCheckbox(MaterialCheckbox));
-Checkbox.defaultProps = defaultProps;
-Checkbox.propTypes = propTypes;
+const Checkbox = createCheckbox(MaterialCheckbox);
 
-const ConnectedCheckbox = withStyles(styles)(createCheckbox(CheckboxFormField));
-ConnectedCheckbox.defaultProps = defaultProps;
-ConnectedCheckbox.propTypes = propTypes;
+const ConnectedCheckbox = createCheckbox(CheckboxFormField);
 
 export { Checkbox as default, ConnectedCheckbox };

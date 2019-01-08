@@ -62,23 +62,16 @@ class Field extends BaseModel {
   }
 
   get fieldProps() {
-    const { name: tabName } = this.fieldtabSet.toModelArray()[0];
-    const {
-      id, label, name, typeId, typeLabel,
-      options, defaultValue, width, multiple
-    } = this;
+    // const { name: tabName } = this.fieldtabSet.toModelArray()[0];
+    const { id, label, name, typeId, options, multiple } = this;
 
     return {
       id,
       label,
-      tabName,
-      defaultValue,
       options,
       name,
-      width,
-      multiple,
       typeId,
-      typeLabel
+      multiple
     };
   }
 

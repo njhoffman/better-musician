@@ -20,6 +20,9 @@ export default {
       expanded: true
     },
     extension: {
+      // styles, trace, traceLimit, shouldCatchErrors,
+      // shouldHotReload, shouldRecordChanges, shouldStartLocked
+      trace: true,
       show: true,
       maxAge: 1000
     },

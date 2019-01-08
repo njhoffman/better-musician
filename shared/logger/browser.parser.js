@@ -18,15 +18,22 @@ const consoleGroupEnd = console.groupEnd;
 
 // TODO : work on client side parsing with prettyjson-256, chokes on undefined items
 const removeEmpty = (obj) => {
+  if (!_.isObject(obj)) {
+    return obj;
+  }
+
   Object.keys(obj).forEach(key => {
-    if (obj[key] && typeof obj[key] === 'object') {
-      removeEmpty(obj[key]);
-    } else if (obj[key] === undefined || obj[key] === null) {
+    const curr = obj[key];
+    if (curr && _.isObject(curr)) {
+      removeEmpty(curr);
+    } else if (curr === undefined || curr === null) {
       /* eslint-disable no-param-reassign */
       delete obj[key];
       /* eslint-enable no-param-reassign */
     }
   });
+
+
   return obj;
 };
 
@@ -90,7 +97,7 @@ const parseLog = (subsystem, style, options, messages) => {
     [].concat(toProcess)
       .filter((msg) => !_.isEmpty(msg))
       .forEach((message, i) => {
-        const msg = removeEmpty(message);
+        const msg = removeEmpty(_.cloneDeep(message));
         let rendered = [];
         if (_.isArray(msg) && msg[0].split('%c').length === msg.length) {
           // if has own color code formatting, don't send it through json parser

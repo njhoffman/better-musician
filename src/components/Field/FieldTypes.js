@@ -149,17 +149,20 @@ export const getDefaultValues = (typeId, options) => {
 };
 
 export const withFieldTypes = (ParentComponent) => {
+  const compName = ParentComponent.displayName || ParentComponent.name;
   const WrappedComponent = ({ type, typeId, ...props }) => {
-    const { FormComponent, ...fieldTypeProps } = getFieldByType({ type, typeId });
+    const { FormComponent, label, ...fieldTypeProps } = getFieldByType({ type, typeId });
+    /* eslint-disable no-param-reassign */
+    ParentComponent.displayName = `${compName}(${label})`;
     return (
       <ParentComponent
         Component={FormComponent}
-        fieldType={{ ...fieldTypeProps, type, typeId }}
+        fieldType={{ ...fieldTypeProps, type, typeId, label }}
         {...{ ...props }}
       />
     );
   };
-  WrappedComponent.displayName = `withFieldType(${ParentComponent.displayName || ParentComponent.name})`;
+  WrappedComponent.displayName = `withFieldType(${compName})`;
   return WrappedComponent;
 };
 

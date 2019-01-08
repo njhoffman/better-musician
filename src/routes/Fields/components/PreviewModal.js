@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { Column } from 'react-foundation';
 
-import RadioButtonGroup from 'components/Field/RadioButtonGroup';
+import FormField from 'components/Field';
 import { changeViewMode } from 'routes/Fields/modules/actions';
 
 import { PREVIEW_FIELD_MODAL, FIELD_VIEW, FIELD_EDIT, FIELD_VIEW_ALT } from 'constants/ui';
@@ -80,7 +80,8 @@ const PreviewFieldModal = ({
   previewField,
   changeView,
   modalExit,
-  viewMode
+  viewMode,
+  ...props
 }) => (
   <Dialog
     onExited={modalExit}
@@ -90,10 +91,10 @@ const PreviewFieldModal = ({
       {`${previewField.typeLabel} Preview`}
     </DialogTitle>
     <DialogContent className={classes.dialogContent}>
-      <RadioButtonGroup
-        row
-        value={viewMode}
-        onChange={(e) => changeView(e.target.value)}
+      <FormField
+        name='viewMode'
+        type='radiogroup'
+        onChange={(val) => changeView(val)}
         options={{
           [FIELD_EDIT]:     'Edit Mode',
           [FIELD_VIEW]:     'View Mode',
@@ -106,7 +107,7 @@ const PreviewFieldModal = ({
         <CardContent>
           <PreviewFieldForm
             viewMode={viewMode}
-            initialValues={{ previewField: previewField.defaultValue }}
+            initialValues={{ previewField: previewField.defaultValue, viewMode }}
             {...previewField}
           />
         </CardContent>

@@ -463,29 +463,31 @@ class Toolbar extends Component {
   expandOut= () => {
     this.setState(prevState => ({
       position: {
-        ...prevState,
+        ...prevState.position,
         mini: false
       }
     }));
   }
 
   handleDrag = (e, ui) => {
-    const { position: { x, y } } = this.state;
-    this.setState(prevState => ({
-      position: {
-        ...prevState,
-        delta: {
-          x: x + ui.deltaX,
-          y: y + ui.deltaY
+    this.setState(prevState => {
+      const { position: { delta: { x, y } } } = prevState;
+      return {
+        position: {
+          ...prevState.position,
+          delta: {
+            x: x + ui.deltaX,
+            y: y + ui.deltaY
+          }
         }
       }
-    }));
+    });
   }
 
   onDragStart = () => {
     this.setState(prevState => ({
       position :  {
-        ...prevState,
+        ...prevState.position,
         controlled: false,
         activeDrags: prevState.position.activeDrags + 1
       }

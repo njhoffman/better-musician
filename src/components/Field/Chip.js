@@ -35,17 +35,16 @@ const Chip = ({
 );
 
 Chip.defaultProps = {
-  label: '',
-  viewType: FIELD_EDIT,
+  mode: FIELD_EDIT,
   style: {}
 };
 
 Chip.propTypes = {
-  label:    PropTypes.string,
-  viewType: PropTypes.string,
-  meta:     PropTypes.instanceOf(Object).isRequired,
-  style:    PropTypes.instanceOf(Object),
-  input:    PropTypes.instanceOf(Object).isRequired
+  label : PropTypes.string.isRequired,
+  mode  : PropTypes.string,
+  meta  : PropTypes.instanceOf(Object).isRequired,
+  style : PropTypes.instanceOf(Object),
+  input : PropTypes.instanceOf(Object).isRequired
 };
 
 export default withStyles(styles)(Chip);

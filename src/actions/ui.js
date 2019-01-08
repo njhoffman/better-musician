@@ -24,11 +24,13 @@ export const uiShowModal = (name, viewType, meta) => ({
   meta: { variant: viewType, ...meta }
 });
 
-export const uiUpdateModal = (name, meta) => ({
-  type: UI.MODAL_UPDATE,
-  payload: name,
-  meta
-});
+export const uiUpdateModal = (name, meta) => (dispatch) => {
+  dispatch({
+    type: UI.MODAL_UPDATE,
+    payload: name,
+    meta
+  });
+};
 
 
 export const uiShowSongModal = (type) => (dispatch) => {

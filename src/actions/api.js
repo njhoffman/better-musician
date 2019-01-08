@@ -77,14 +77,14 @@ export const songsAddError = (response) => (dispatch) => {
   dispatch({
     type: UI.SNACKBAR_SHOW,
     meta: { variant: 'error', title: 'Song Add Error' },
-    payload: `${JSON.stringify(response.errors)}`
+    payload: `${JSON.stringify(response.errors || response.error)}`
   });
 
   dispatch({
     type: UI.MODAL_UPDATE,
     meta: {
       type: UI.SONG_MODAL,
-      props: { errors: response.errors }
+      props: { errors: response.errors || response.error }
     }
   });
 };
@@ -118,14 +118,14 @@ export const songsUpdateError = (response) => (dispatch) => {
   dispatch({
     type: UI.SNACKBAR_SHOW,
     meta: { variant: 'error', title: 'Song Update Error' },
-    payload: `${JSON.stringify(response.errors)}`
+    payload: `${JSON.stringify(response.errors || response.error)}`
   });
 
   dispatch({
     type: UI.MODAL_UPDATE,
     meta: {
       type: UI.SONG_MODAL,
-      props: { errors: response.errors }
+      props: { errors: response.errors || response.error }
     }
   });
 };
@@ -206,7 +206,7 @@ export const profileUpdateError = (response) => (dispatch) => {
   dispatch({ type: API.PROFILE_UPDATE_ERROR, user: response });
   dispatch({
     type: UI.SNACKBAR_SHOW,
-    payload: `${JSON.stringify(response.errors)}`,
+    payload: `${JSON.stringify(response.errors || response.error)}`,
     meta: { variant: 'error', title: 'Profile Update Error' }
   });
 };
@@ -239,7 +239,7 @@ export const settingsUpdateError = (response) => (dispatch) => {
   dispatch({ type: API.SETTINGS_UPDATE_ERROR, user: response });
   dispatch({
     type: UI.SNACKBAR_SHOW,
-    payload: `${JSON.stringify(response.errors)}`,
+    payload: `${JSON.stringify(response.errors || response.error)}`,
     meta: { variant: 'error', title: 'Profile Update Error' }
   });
 };

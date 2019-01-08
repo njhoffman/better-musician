@@ -5,7 +5,7 @@ import { Row, Column } from 'react-foundation';
 import { FormControl, FormLabel, withStyles } from '@material-ui/core';
 import { FIELD_VIEW_ALT } from 'constants/ui';
 import NumberField from './Number';
-import Select from './Select';
+import { ConnectedSelect } from './Select';
 
 const styles = (theme) => ({
   outlined: {
@@ -69,7 +69,7 @@ class Metronome extends Component {
           </Column>
           <Column small={5} className={classes.inputWrapper}>
             <Field
-              component={Select}
+              component={ConnectedSelect}
               name={`${fields.name}.signature`}
               label='Time Signature'
               options={{

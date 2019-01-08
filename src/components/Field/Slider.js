@@ -20,7 +20,7 @@ const SliderForm = createComponent(
     onChange: (event, fieldVal) => {
       onChange(fieldVal);
       if (onChangeFromField) {
-        onChangeFromField(fieldVal);
+        onChangeFromField(event, fieldVal);
       }
     }
   })
@@ -95,9 +95,8 @@ const createSlider = (SliderComponent) => (
     }
 
     render() {
-      const { classes, label, valueDisplay, fullWidth, mode, input }  = this.props;
+      const { classes, label, valueDisplay, fullWidth, mode, input, ...props }  = this.props;
       const { value: currValue } = this.state;
-      input.value = currValue;
       return (
         <FormControl
           component='fieldset'
@@ -114,9 +113,14 @@ const createSlider = (SliderComponent) => (
           <SliderComponent
             classes={{ container: classes.slider }}
             disabled={mode !== FIELD_EDIT}
-            onChange={(e, value) => this.setState({ value })}
+            onChange={(e, value) => {
+              this.setState({ value });
+            }}
             value={currValue}
-            {...{ input }}
+            {...{
+              ...props,
+              input: { ...input, value: parseInt(input.value, 10) }
+            }}
           />
         </FormControl>
       );

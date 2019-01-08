@@ -30,7 +30,7 @@ PreviewFieldForm.defaultProps = {
 };
 
 PreviewFieldForm.propTypes = {
-  viewMode       : PropTypes.oneOf([FIELD_VIEW, FIELD_EDIT, FIELD_VIEW_ALT]),
+  viewMode : PropTypes.oneOf([FIELD_VIEW, FIELD_EDIT, FIELD_VIEW_ALT]),
   typeId: PropTypes.number.isRequired,
   options: PropTypes.oneOfType([
     PropTypes.instanceOf(Object),

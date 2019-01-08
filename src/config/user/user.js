@@ -84,7 +84,7 @@ export default {
       show: true,
       name: 'better-musician',
       theme: 'twilight',
-      maxAge: 100,
+      maxAge: 200,
       styles: {
         container: {
           backgroundColor: 'rgb(0, 11, 21)',

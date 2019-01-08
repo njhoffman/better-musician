@@ -8,7 +8,7 @@ const loggerHoc = (options = {}, Component) => {
   const {
     countRenders = true,
     countRendersDivisor = 1,
-    // logPropChanges = false,
+    logProps = false
     // logStateChanges = false
   } = options;
   const longName = Component.displayName || Component.name;
@@ -22,6 +22,7 @@ const loggerHoc = (options = {}, Component) => {
     componentWillMount() {
       const { devConfig } = this.props;
       this.logger = initLog(shortName, devConfig.logger);
+      this.logProps();
     }
 
     logRenders = (isState) => {
@@ -32,7 +33,13 @@ const loggerHoc = (options = {}, Component) => {
       }
       const total = count.state + count.stateless;
       if (countRenders && total % countRendersDivisor === 0) {
-        this.logger.info(`Render counter: ${total}`);
+        this.logger.debug(`Render counter: ${total}`);
+      }
+    }
+
+    logProps = () => {
+      if (logProps) {
+        this.logger.debug('Component props', this.props);
       }
     }
 

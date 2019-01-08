@@ -129,7 +129,6 @@ const SongEditModal = ({
   modalExit,
   tabChange,
   currentTab,
-  initialValues,
   theme: { app: { formField } },
 }) => {
   const tabProps = { lastActiveField, activeField, variant };
@@ -159,7 +158,6 @@ const SongEditModal = ({
             <FormField
               key={id}
               mode={fieldMode(variant, fieldView)}
-              initialValues={initialValues}
               {...fieldProps}
             />
           ))}
