@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# run npm notes to list TODOs
+npm run reports:notes
+
+# unused dependency check
+npm run reports:depcheck
+
+# run tests and coverage for good measure
+npm run test:coverage

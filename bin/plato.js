@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-/* eslint-disable no-console, import/no-extraneous-dependencies, import/no-dynamic-require */
-// need forked version of es6-plato with up to date eslint dependencies
+
+// TODO: fix eslint produces spaced-comment error from shebang
 
 const _ = require('lodash');
 const chalk = require('chalk');
 const async = require('async');
+// TODO: need forked version of es6-plato with up to date eslint dependencies
 const plato = require('es6-plato');
 const path = require('path');
 const appRoot = require('app-root-path');
@@ -14,14 +15,16 @@ const { statSync, mkdirSync, readdirSync, readFileSync } = require('fs');
 // const { warn, info, trace } = initLogger('plato-reports');
 const { warn, info, info: trace } = console;
 
-const testRun = true;
+let outputFiles = true;
+const verbosity = 1; // 0, 1, or 2 (most verbose)
 const reportsDir = `${appRoot}/reports/plato`;
 
+// TODO: make this and file output configurable with commands
 const targetDirs = [
   `${appRoot}/bin`,
   `${appRoot}/config`,
-  `${appRoot}/src`,
-  `${appRoot}/server`
+  `${appRoot}/lib`,
+  `${appRoot}/test`
 ];
 
 const ignoredFiles = [
@@ -29,7 +32,7 @@ const ignoredFiles = [
 ];
 
 const mkdir = (dirPath) => {
-  if (!testRun) {
+  if (outputFiles) {
     try {
       mkdirSync(dirPath);
     } catch (e) {
@@ -53,16 +56,18 @@ const walkSync = (dir, files = []) => {
 
 const prepareOptions = (done) => {
   const startTime = new Date().getTime();
-  const outputDir = testRun ? '/tmp/plato' : path.join(reportsDir, `${Date.now()}`);
-  const lintRules = JSON.parse(readFileSync(`${appRoot}/.eslintrc`, { encoding: 'utf8' }));
+  const outputDir = !outputFiles ? '/tmp/plato' : path.join(reportsDir, `${Date.now()}`);
+  const lintRules = JSON.parse(readFileSync(`${appRoot}/bin/.eslintrc`, { encoding: 'utf8' }));
+
   const parsedRules = {
     ...lintRules,
     rules: _.omit(lintRules.rules, 'react/jsx-no-bind'),
     globals: _.keys(lintRules.globals)
   };
 
-  info(`Initializing plato reports for output to: ${outputDir}`);
-  info(`Crawling ${targetDirs.length} directories for js/jsx files...`);
+  info(chalk.bold('\n** BetterMusician-api plato reports generator **\n'));
+  info(`  Initializing plato reports for output to: ${outputDir}`);
+  info(`  Crawling ${targetDirs.length} directories for js/jsx files...`);
 
   const fileList = [];
   targetDirs.forEach(targetDir => {
@@ -81,7 +86,7 @@ const prepareOptions = (done) => {
     return (!isIgnored && (ext === 'js' || ext === 'jsx'));
   });
 
-  info(`Found ${filteredFiles.length} files to process.`);
+  info(`  Found ${filteredFiles.length} files to process.`);
   // filteredFiles.forEach((file, idx) => console.log(`\t${idx}: ${file}`));
 
   const platoOptions = {
@@ -100,7 +105,7 @@ const prepareOptions = (done) => {
 };
 
 const startPlato = ({ fileList, startTime, outputDir, platoOptions }, done) => {
-  info(`Running reports on: ${fileList.length} files`);
+  info(`  Running reports on: ${fileList.length} files`);
   plato.inspect(fileList, outputDir, platoOptions, (reports) => (
     done(null, { reports, startTime, fileList })
   ));
@@ -108,8 +113,9 @@ const startPlato = ({ fileList, startTime, outputDir, platoOptions }, done) => {
 
 const processReports = ({ reports, startTime, fileList }, done) => {
   const elapsed = (new Date().getTime() - startTime) / 1000;
-  info('\n----------------------------\n');
-  info(`Generated plato reports for ${fileList.length} files in ${elapsed} seconds`);
+  info(
+    `  Generated plato reports for ${chalk.bold(fileList.length)} files in ${elapsed} s\n`
+  );
   //
   // complexity [ 'methodAggregate', 'settings', 'classes', 'dependencies', 'errors', 'filePath', 'lineEnd',
   //   'lineStart', 'maintainability', 'methods', 'methodAverage', 'srcPath', 'srcPathAlias',
@@ -124,7 +130,7 @@ const processReports = ({ reports, startTime, fileList }, done) => {
 
     if (messages.length > 0) {
       warn(`\t${file.replace(appRoot, '')}`);
-    } else {
+    } else if (verbosity > 1) {
       trace(`\t${file.replace(appRoot, '')} : clean`);
     }
 
@@ -159,12 +165,11 @@ if (require.main === module) {
 }
 
 module.exports = (done) => {
+  // dont output files when calling from another script
+  outputFiles = false;
   async.waterfall([
     prepareOptions,
     startPlato,
     processReports
   ], done);
 };
-
-
-/* eslint-enable no-console, import/no-extraneous-dependencies, import/no-dynamic-require */
