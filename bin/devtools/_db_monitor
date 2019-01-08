@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# node bin/monitor
+cp config/nodemon/nodemon-db-monitor.json . && ./node_modules/.bin/nodemon --config ./nodemon-db-monitor.json

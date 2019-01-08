@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# node bin/seeder.js
+cp config/nodemon/nodemon-seeder.json . && ./node_modules/.bin/nodemon --config ./nodemon-seeder.json
