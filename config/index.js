@@ -7,9 +7,7 @@ const ip = require('ip');
 const { name, version } = require('../package.json');
 const environments = require('./environments.js');
 const configWebpack = require('./webpack');
-const logger = require('../shared/logger')('app:config');
-
-logger.info('Creating project configuration.');
+const initLogger = require('../shared/logger/terminal');
 
 const config = {
   base  : path.resolve(__dirname, '..'),
@@ -55,6 +53,9 @@ Object.keys(config.paths).forEach(pathKey => {
   config.paths[pathKey] = base.bind(null, config.paths[pathKey]);
 });
 config.paths.base = base;
+
+const logger = initLogger('app:config');
+logger.info('Creating project configuration.');
 
 const overrides = environments[config.env];
 if (overrides) {

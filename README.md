@@ -5,7 +5,7 @@
 [![Dependencies](https://img.shields.io/david/njhoffman/better-musician.svg)](https://github.com/njhoffman/better-musician)
 [![Dev Dependencies](https://img.shields.io/david/dev/njhoffman/better-musician.svg)](https://github.com/njhoffman/better-musician)
 
-[![Code Size](https://img.shields.io/github/languages/code-size/badges/shields.svg)]([![](https://img.shields.io/librariesio/github/phoenixframework/phoenix.svg)](https://github.com/njhoffman/better-musician))
+[![Code Size](https://img.shields.io/github/languages/code-size/badges/shields.svg)](https://github.com/njhoffman/better-musician)
 [![Repo Size](https://img.shields.io/github/repo-size/badges/shields.svg)](https://github.com/njhoffman/better-musician)
 [![Last Commit](https://img.shields.io/github/last-commit/google/skia.svg)](https://github.com/njhoffman/better-musician)
 [![GitHub issues](https://img.shields.io/github/issues/njhoffman/better-musician.svg)](https://github.com/njhoffman/better-musician/issues)

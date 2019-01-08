@@ -2,7 +2,7 @@ const _ = require('lodash');
 const { argv } = require('yargs');
 const webpack = require('webpack');
 
-const logger = require('../../shared/logger')('app:config:webpack');
+const initLogger = require('../../shared/logger/terminal');
 const initLoader = require('./loaders');
 const baseConfig = require('./base.js');
 const devConfig = require('./development');
@@ -10,6 +10,7 @@ const prodConfig = require('./production');
 
 module.exports = (config) => {
   const { __TEST__, __API_URL__ } = config.globals;
+  const logger = initLogger('app:config:webpack');
   logger.info(`API Path Global: ${__API_URL__}`);
   const APP_ENTRY = config.paths.client('app.js');
 
