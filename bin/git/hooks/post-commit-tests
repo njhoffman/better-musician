@@ -7,4 +7,4 @@ npm run reports:notes
 npm run reports:depcheck
 
 # run tests and coverage for good measure
-npm run test:coverage
+# npm run test:coverage
