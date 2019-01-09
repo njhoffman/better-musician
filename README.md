@@ -16,16 +16,15 @@
 TODO: Add badges for Uptime robot status, code climate maintainability, technical debt
 -->
 
-NodeJS RESTful API server for handling requests from [better-musician](https://github.com/njhoffman/better-musician).
+Better Musician is a web app for musicians to facilitate storing/searching/cataloguing their musical repertoire.
 
-**Core Technology Stack**
-* Webpack
-* React
-* Redux
+It features a dynamic field builder that allows users to build their own templates, only displaying relevant information to them.
 
-Based on the [templates](https://github.com/njhoffman/templates-client) core framework. Will be eventually included as a submodule with an eject script to deploy core files.
+The app is currently in the beta stage.
 
-* [Change Log](https://github.com/njhoffman/better-musician/CHANGELOG.md)
-* [Developer Notes](https://github.com/njhoffman/better-musician/docs/NOTES.md)
-* [Road Map](https://github.com/njhoffman/better-musician/docs/ROADMAP.md)
-* [templates wiki](https://github.com/njhoffman/templates/wiki)
+Based on the [templates-client](https://github.com/njhoffman/templates-client) core framework. Will be eventually included as a submodule with an eject script to deploy core files.
+
+* [Change Log](https://github.com/njhoffman/better-musician/tree/master/CHANGELOG.md)
+* [Developer Notes](https://github.com/njhoffman/better-musician/tree/master/docs/NOTES.md)
+* [Road Map](https://github.com/njhoffman/better-musician/docs/tree/master/ROADMAP.md)
+* [templates-client wiki](https://github.com/njhoffman/templates-client/wiki)
