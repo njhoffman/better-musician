@@ -1,16 +1,22 @@
 .DS_STORE
 *.log
 
+_*
 .eslintcache
-node_modules
-rethinkdb_data
+.nyc_output/
+node_modules/
+rethinkdb_data/
 .happypack
 .coveralls.yml
 
-dist
+cypress/screenshots/
+cypress/videos/
+dist/**
 coverage
 reports/coverage/**
 reports/plato/**
+
+.coveralls.yml
 
 tmp/
 .idea/
